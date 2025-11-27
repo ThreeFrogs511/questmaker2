@@ -1,0 +1,113 @@
+{
+    "races": [
+
+    {
+        "race": "Elf",
+        "description": "The most powerful race of Questmaker. The elves are the meat and bones of the Li'ark empire, a militaristic-expansionist juggernaut. The elves nobles see themselves as the Chosen Ones, and look down on all the other races."
+    },
+    {
+        "race": "Half-Elf",
+        "description": "A minority of elves, persecuted for being mixed with humans. They are a second-class citizens in Li'ark."
+    },
+    {
+        "race": "Human",
+        "description": "Formerly the dominant race of Questmaker, an epidemic wiped out almost all of them. Now a minority, they are now wandering vagabonds, travelling aimlessly across the continent."
+    },
+    {
+        "race": "Dwarf",
+        "description": "Outstanding merchants, their business acumen propelled Salor to undisputed economic power."
+    },
+    {
+        "race": "Felinois",
+        "description": " Humanoids with the appearance of cats, they inhabit the arid and desolate land of Mozara. Conquered centuries ago by the elves, most of them are now exploited as slaves."
+
+    },
+    {
+        "race": "Orc",
+        "description": "Considered by many to be mindless barbarians, orcs are above all pious beings devoted to their Goddess.  At war with the elves for centuries, they harbor an unspeakable hatred for Li'ark."
+    }
+
+
+], 
+
+"classes" : [
+  {
+    "class": "Barbarian",
+    "description": "Primal strength. Rage-fueled combat. High durability and melee power.",
+    "abilities": {
+      "Strength": 15,
+      "Dexterity": 13,
+      "Constitution": 14,
+      "Wisdom": 12,
+      "Intelligence": 8,
+      "Charisma": 10
+    },
+    "mainAbility" : "Strength"
+  },
+  {
+    "class": "Bard",
+    "description": "Magic through music. Support, charm, inspiration, and versatility.",
+    "abilities": {
+      "Strength": 8,
+      "Dexterity": 14,
+      "Constitution": 13,
+      "Wisdom": 12,
+      "Intelligence": 10,
+      "Charisma": 15
+    },
+    "mainAbility" : "Charisma"
+  },
+  {
+    "class": "Cleric",
+    "description": "Divine magic. Healing, protection, and powerful radiant spells.",
+    "abilities": {
+      "Strength": 13,
+      "Dexterity": 12,
+      "Constitution": 14,
+      "Wisdom": 15,
+      "Intelligence": 10,
+      "Charisma": 8
+    },
+    "mainAbility" : "Wisdom"
+  },
+  {
+    "class": "Wizard",
+    "description": "Spellbook-based arcane mastery. Broadest spell variety in the game.",
+    "abilities": {
+      "Strength": 8,
+      "Dexterity": 13,
+      "Constitution": 14,
+      "Wisdom": 12,
+      "Intelligence": 15,
+      "Charisma": 10
+    },
+    "mainAbility" : "Intelligence"
+  },
+  {
+    "class": "Fighter",
+    "description": "Martial master. Simple, effective, adaptable in any combat style.",
+    "abilities": {
+      "Strength": 15,
+      "Dexterity": 13,
+      "Constitution": 14,
+      "Wisdom": 12,
+      "Intelligence": 10,
+      "Charisma": 8
+    },
+    "mainAbility" : "Strength"
+  },
+  {
+    "class": "Monk",
+    "description": "Ki-powered martial arts. Fast, precise, mobile combat techniques.",
+    "abilities": {
+      "Strength": 12,
+      "Dexterity": 15,
+      "Constitution": 13,
+      "Wisdom": 14,
+      "Intelligence": 10,
+      "Charisma": 8
+    },
+    "mainAbility" : "Dexterity"
+  }
+]
+}

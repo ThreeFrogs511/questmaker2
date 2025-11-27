@@ -1,0 +1,144 @@
+[
+  {
+    
+    "meta": {
+        "title": "A terrible hangover",
+        "start_node": "intro"
+        },
+
+        "nodes": {
+
+            "intro": {
+                "text": "You wake up naked on a beach. Your brain is foggy, you have a terrible headache. Worse, you don't remember anything...about anything. You suffer from a case of amnesia. You remember only one thing : your name and your class. What's your reaction?",
+                "choices": [
+                    { "text": "Twerk like there is tomorrow", "next": "depart_route" },
+                    { "text": "Damn the sky for what's happening to you (Persuasion DC 12).", "type": "check", "stat": "charisma", "dc": 12, "success": "negociation_reussie", "fail": "negociation_ratee" },
+                    { "text": "Blame the Jews", "next": "game_over_drunk" }
+                ]
+            },
+            "negociation_reussie": {
+                "text": "<span class='npc'>Vieil Homme:</span> 'Très bien, vous avez la langue bien pendue. Disons 100 pièces d'or, mais partez vite !'",
+                "effects": { "flag": "bonus_gold" },
+                "choices": [
+                    { "text": "Partir vers la crypte.", "next": "depart_route" }
+                ]
+            },
+            "negociation_ratee": {
+                "text": "<span class='npc'>Vieil Homme:</span> 'Ne poussez pas votre chance, mercenaire. C'est 50 pièces ou rien.'",
+                "choices": [
+                    { "text": "Accepter à contrecœur.", "next": "depart_route" },
+                    { "text": "Partir.", "next": "game_over_refusal" }
+                ]
+            },
+            "depart_route": {
+                "text": "<span class='narrator'>Vous arrivez à l'entrée de la crypte après une heure de marche. L'entrée est sombre et une odeur fétide s'en échappe. Vous voyez deux chemins.</span>",
+                "choices": [
+                    { "text": "Allumer une torche et entrer par la porte principale.", "next": "hall_principal" },
+                    { "text": "Chercher une entrée secrète (Investigation DC 10).", "type": "check", "stat": "intelligence", "dc": 10, "success": "entree_secrete", "fail": "hall_principal_surprise" }
+                ]
+            },
+            "entree_secrete": {
+                "text": "<span class='narrator'>Vous trouvez une fissure dans la roche couverte de lierre. Vous vous glissez à l'intérieur et arrivez directement derrière un garde gobelin endormi.</span>",
+                "choices": [
+                    { "text": "L'assassiner silencieusement.", "next": "salle_tresor", "effects": { "item": "Dague Gobeline" } },
+                    { "text": "Le contourner.", "next": "salle_tresor" }
+                ]
+            },
+            "hall_principal": {
+                "text": "<span class='narrator'>Vous entrez. Un gobelin monte la garde. Il vous voit immédiatement !</span><br><br><span class='npc'>Gobelin:</span> 'Kreee ! Intrus !'",
+                "choices": [
+                    { "text": "Attaquer (Combat).", "type": "combat", "enemyHp": 10, "enemyDmg": 4, "win": "victoire_gobelin", "lose": "mort" },
+                    { "text": "Tenter de l'intimider (Force DC 13).", "type": "check", "stat": "strength", "dc": 13, "success": "gobelin_fuit", "fail": "combat_force" }
+                ]
+            },
+            "hall_principal_surprise": {
+                "text": "<span class='narrator'>Vous cherchez une entrée secrète mais faites tomber un rocher. Le bruit alerte les gardes ! Vous êtes pris en embuscade.</span>",
+                "effects": { "hp": -5 },
+                "choices": [
+                    { "text": "Se défendre ! (Vous avez perdu 5 PV)", "next": "hall_principal" }
+                ]
+            },
+            "combat_force": {
+                "text": "<span class='narrator'>Le gobelin rit de votre tentative et vous poignarde.</span>",
+                "effects": { "hp": -3 },
+                "choices": [
+                    { "text": "Contre-attaquer !", "type": "combat", "enemyHp": 10, "enemyDmg": 4, "win": "victoire_gobelin", "lose": "mort" }
+                ]
+            },
+            "gobelin_fuit": {
+                "text": "<span class='narrator'>Le gobelin lâche son arme et s'enfuit en courant vers la sortie. La voie est libre.</span>",
+                "choices": [
+                    { "text": "Avancer vers la salle du fond.", "next": "salle_tresor" }
+                ]
+            },
+            "victoire_gobelin": {
+                "text": "<span class='narrator'>Le gobelin s'effondre. Vous essuyez votre lame. Vous trouvez une petite potion sur lui.</span>",
+                "effects": { "item": "Potion de Soin" },
+                "choices": [
+                    { "text": "Boire la potion (+5 PV) et avancer.", "next": "salle_tresor", "effects": { "hp": 5, "removeItem": "Potion de Soin" } },
+                    { "text": "Garder la potion et avancer.", "next": "salle_tresor" }
+                ]
+            },
+            "salle_tresor": {
+                "text": "<span class='narrator'>Vous arrivez dans la salle du trésor. La relique est posée sur un piédestal. Mais un piège semble protéger l'objet.</span>",
+                "choices": [
+                    { "text": "Désamorcer le piège (Dextérité DC 14).", "type": "check", "stat": "dexterity", "dc": 14, "success": "relique_recuperee", "fail": "piege_declenche" },
+                    { "text": "Prendre la relique et courir (Risqué).", "next": "piege_declenche" }
+                ]
+            },
+            "piege_declenche": {
+                "text": "<span class='narrator'>CLIC ! Des fléchettes empoisonnées volent de tous les côtés !</span>",
+                "effects": { "hp": -8 },
+                "choices": [
+                    { "text": "Aïe ! Vérifier si je suis vivant.", "next": "check_survival" }
+                ]
+            },
+            "check_survival": {
+                "text": "...",
+                "type": "redirect_condition", 
+                "condition": "hp_gt_0",
+                "true": "relique_recuperee_blesse",
+                "false": "mort"
+            },
+            "relique_recuperee": {
+                "text": "<span class='narrator'>Avec des doigts de fée, vous désactivez le mécanisme. Vous prenez la relique sacrée.</span>",
+                "effects": { "item": "Relique Sacrée" },
+                "choices": [
+                    { "text": "Retourner à la taverne.", "next": "fin_victoire" }
+                ]
+            },
+            "relique_recuperee_blesse": {
+                "text": "<span class='narrator'>Vous êtes blessé et saignez, mais vous avez la relique en main.</span>",
+                "effects": { "item": "Relique Sacrée" },
+                "choices": [
+                    { "text": "Retourner à la taverne en boitant.", "next": "fin_victoire" }
+                ]
+            },
+            "fin_victoire": {
+                "text": "<span class='narrator'>Le vieil homme vous accueille avec un sourire. Il vous remet votre bourse.</span><br><br><span class='success-log'>FÉLICITATIONS ! Vous avez terminé l'aventure.</span>",
+                "effects": { "gold": 50 }, 
+                "choices": [
+                    { "text": "Rejouer", "next": "intro", "action": "reset" }
+                ]
+            },
+            "mort": {
+                "text": "<span class='combat-log'>Votre vision se trouble... Vous vous effondrez sur le sol froid. Votre aventure s'arrête ici.</span>",
+                "choices": [
+                    { "text": "Recommencer", "next": "intro", "action": "reset" }
+                ]
+            },
+            "game_over_drunk": {
+                "text": "<span class='narrator'>Vous buvez jusqu'à l'oubli. Le lendemain, vous apprenez qu'un autre aventurier a récupéré le trésor. Vous avez raté votre chance.</span>",
+                "choices": [
+                    { "text": "Recommencer", "next": "intro", "action": "reset" }
+                ]
+            },
+            "game_over_refusal": {
+                "text": "<span class='narrator'>Vous quittez la taverne. Peut-être trouverez-vous une quête mieux payée ailleurs... mais pas aujourd'hui.</span>",
+                "choices": [
+                    { "text": "Recommencer", "next": "intro", "action": "reset" }
+                ]
+            }
+        }
+    }
+]
