@@ -52,20 +52,9 @@ export default function SummaryCreation(
                 abilityScores.Charisma
             );
 
-            // calculating hitpoints value
-            const hp = newCharacter.calculateHitpoints();
-
-            // calculating dopamine value
-            let dopamine:number = 0;
-            const chosenClassStats = classes.find(n => n.class === currentUser.user_class);
-            if(chosenClassStats) {
-                const mainAbility = chosenClassStats.mainAbility;
-                const mainAbilityValue= Object.entries(abilityScores).find(([key, value]) => {
-                    if (key === mainAbility) return value;
-                })
-                dopamine = mainAbilityValue ? newCharacter.calculateDopamine(mainAbilityValue[1]) : 0;
-            }
-            
+            // calculating hitpoints and dopamine values
+            const hp:number = newCharacter.calculateHitpoints();
+            const dopamine:number = newCharacter.calculateDopamine(classes, currentUser, abilityScores) ?? 0;
 
             // updating and finishing the profile
             const feedback = await newCharacter.completeProfile(currentUser.id, hp, dopamine);

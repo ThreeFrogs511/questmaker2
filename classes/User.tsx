@@ -46,11 +46,30 @@ export default class Users  {
         return hitpoints;
     }
 
-    calculateDopamine(ability:number) {
+    // calculateDopamine(ability:number) {
+    //     const diceRoll = Math.round(Math.random() * (10-1));
+    //     const mainAbilityModifier = Math.floor((ability-10)/2);
+    //     const dopamine = Math.round(diceRoll+mainAbilityModifier);
+    //     return dopamine;
+    // }
+
+    calculateDopamine(classes:any, currentUser:any, abilityScores:any) {
+        // we fetch the presets stats of the chosen class
+        const chosenClassStats = classes.find((n: { class: any; }) => n.class === currentUser.user_class);
+        if(chosenClassStats) {
+            // each class has a 'main' ability, we get it
+            const mainAbility = chosenClassStats.mainAbility;
+            
+            // we fetch the value of the 'main ability' set by the user during character creation
+            const mainAbilityValue= Object.entries(abilityScores).find(([key, value]) => {
+                if (key === mainAbility) return value;
+            }) as [string, number] | undefined;
+
         const diceRoll = Math.round(Math.random() * (10-1));
-        const mainAbilityModifier = Math.floor((ability-10)/2);
+        const mainAbilityModifier = mainAbilityValue && mainAbilityValue[1]  ? Math.floor((mainAbilityValue[1]-10)/2) : 0;
         const dopamine = Math.round(diceRoll+mainAbilityModifier);
         return dopamine;
+        }
     }
 
     async completeProfile(id:number, hp:number, dopamine:number) {

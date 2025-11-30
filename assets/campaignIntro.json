@@ -7,7 +7,7 @@
     },
     "nodes": {
       "intro_beach": {
-        "text": "You wake up, washed ashore on a lonely beach, naked as a newborn. Your skull pounds like a war drum and nausea twists your guts. You look left, then right: nothing but sand and sea. You try to remember what happened, but nothing comes. Absolutely nothing.",
+        "text": "You wake up, washed ashore on a lonely beach, naked as a newborn. Your skull pounds like a war drum and nausea twists your guts. You look left, then right: nothing but sand and sea. You try to remember what happened, but nothing comes. <strong>Absolutely nothing</strong>.",
         "choices": [
           { "text": "Force your mind to remember who you are and what happened.", "next": "amnesia_realization" }
         ]
@@ -23,7 +23,7 @@
       "discover_medallion": {
         "text": "You pick up a small, old medallion half-buried in the sand. You open it. Inside, a short sentence is engraved. You read it.",
         "choices": [
-          { "text": "\"Do not forget where you come from, my dear [USERNAME].\"", "next": "decide_to_leave_beach" }
+          { "text": "\"<i>Do not forget where you come from, my dear <span style=\"color:yellow\">[USERNAME]</span></i>.\"", "next": "decide_to_leave_beach" }
         ]
       },
 
@@ -37,9 +37,9 @@
       "rock_wall": {
         "text": "An imposing wall of stone rises ahead of you. If you want to leave the beach, you will have to overcome this obstacle. You feel tired and weak, your body still shaken by whatever happened before you woke up. Climbing will not be easy, but staying here is not an option.",
         "choices": [
-          { "text": "Try to climb the rocky wall anyway. (Strength DC 15)", "next": "rock_climb_success", "fail":"rock_climb_fail", "check":"str", "dc" : 15 },
-          { "text": "Scan the area for a clever way up. (Intelligence DC 12)", "next": "rock_search_solution_success", "fail":"rock_search_solution_fail", "check": "int","dc" : 12 },
-          { "text": "Play it safe and look for another path along the cliff.", "next": "rock_long_way" }
+          { "text": "Try to climb the rocky wall anyway. <span style=\"color:yellow\">(Strength DC 15)</span>", "next": "rock_climb_success", "fail":"rock_climb_fail", "check":"str", "dc" : 15 },
+          { "text": "Scan the area for a clever way up. <span style=\"color:yellow\">(Intelligence DC 12)</span>", "next": "rock_search_solution_success", "fail":"rock_search_solution_fail", "check": "int","dc" : 12 },
+          { "text": "Play it safe and look for another path along the cliff. <span style=\"color:red\">(HP Penalty)</span>", "next": "rock_long_way" }
         ]
       },
 
@@ -51,9 +51,9 @@
       },
 
         "rock_climb_fail": {
-        "text": "You attempt to climb the wall despite your aching muscles. it's going fine for a while, but when the top is at arm's length, those very arms of yours give up and you fall, head first, into the warm but fortunately soft sand. The easy way isn't goign to cut it for you. You'll need to find another way up.",
+        "text": "You attempt to climb the wall despite your aching muscles. it's going fine for a while, but when the top is at arm's length, those very arms of yours give up and you fall, head first, into the warm but fortunately soft sand. The easy way isn't going to cut it for you. You'll need to find another way up.",
         "choices": [
-          { "text": "Scan the area for a clever way up. (Intelligence DC 12)", "next": "rock_search_solution_success", "fail":"rock_search_solution_fail", "check": "int", "dc": 12},
+          { "text": "Scan the area for a clever way up. <span style=\"color:yellow\">(Intelligence DC 12)</span>", "next": "rock_search_solution_success", "fail":"rock_search_solution_fail", "check": "int", "dc": 12},
           { "text": "Play it safe and look for another path along the cliff.", "next": "rock_long_way" }
         ]
       },
@@ -67,7 +67,7 @@
       "rock_search_solution_fail": {
         "text": "You analyze your surroundings. Besides a few wandering crabs and algae, you eye catches nothing of value. The smart way up is out of the question.",
         "choices": [
-          { "text": "Try to climb the rocky wall anyway. (Strength DC 15)", "next": "rock_climb_success", "fail":"rock_climb_fail", "check":"str", "dc" : 15 },
+          { "text": "Try to climb the rocky wall anyway. <span style=\"color:yellow\">(Strength DC 15)</span>", "next": "rock_climb_success", "fail":"rock_climb_fail", "check":"str", "dc" : 15 },
           { "text": "Turn toward the land beyond the cliff.", "next": "cliff_top" }
         ]
       },
@@ -80,7 +80,7 @@
       },
 
       "cliff_top": {
-        "text": "At the top, you take one last look at the endless ocean stretching toward the horizon. There is no turning back now. Ahead of you, two paths present themselves. To your left: a misty bridge crossing a deep ravine, its planks old and suspicious. To your right: a dark forest, thick with twisted trees and shadows hiding who-knows-what.",
+        "text": "At the top, you take one last look at the endless ocean stretching toward the horizon. There is no turning back now. Ahead of you, two paths present themselves. To your left: a misty bridge crossing a deep ravine, its planks old and suspicious. To your right: a dark forest, thick with twisted trees and shadows hiding who-knows-what. What do you choose ?",
         "choices": [
           { "text": "Take the misty, fragile bridge.", "next": "bridge_start" },
           { "text": "Enter the dark, unnerving forest.", "next": "forest_entry" }
@@ -113,8 +113,8 @@
         "choices": [
           { "text": "Hand over the medallion without resisting.", "next": "bandits_take_medallion" },
           { "text": "Refuse and prepare to fight, even if it means dying here.", "next": "stand_your_ground" },
-          { "text": "Search your mind for a fire spell and try to cast it. (Intelligence DC 12)", "next": "attempt_fireball_success", "fail" :"attempt_fireball_fail", "check":"int", "dc":12 },
-          { "text": "These bandits don't look too bright. Attempt to negotiate with a well-crafted lie. (Charisma DC 15)", "next": "attempt_negotiation_success", "fail": "attempt_negotiation_fail", "check": "cha", "dc": 15 }
+          { "text": "Search your mind for a fire spell and try to cast it. <span style=\"color:yellow\">(Intelligence DC 12)</span>", "next": "attempt_fireball_success", "fail" :"attempt_fireball_fail", "check":"int", "dc":12 },
+          { "text": "These bandits don't look too bright. Attempt to negotiate with a well-crafted lie. <span style=\"color:yellow\">(Charisma DC 15)</span>", "next": "attempt_negotiation_success", "fail": "attempt_negotiation_fail", "check": "cha", "dc": 15 }
         ]
       },
 
@@ -154,7 +154,7 @@
       },
 
       "attempt_negotiation_fail": {
-        "text": "You raise your hands, not in surrender. You try to come up with a good story that would instill doubt among the bandits. But your mind goes blank, you can't find your words, you stutter. A total disaster. The bandits, pissed that you dared open your mouth, will cut out your tongue first.",
+        "text": "You raise your hands, but not in surrender. You try to come up with a good story that would instill doubt among the bandits. But your mind goes blank, you can't find your words, you stutter. A total disaster. The bandits, pissed that you dared open your mouth, will cut out your tongue first.",
         "choices": [
           { "text": "Brace yourself for the inevitable.", "next": "eden_rescue_bandits" }
         ]
@@ -175,7 +175,7 @@
       },
 
       "eden_rescue_bandits_leader": {
-        "text": "In the chaos, the leader seizes you and uses you as a living shield. You feel the cold steel of his blade against your neck. \"Show yourself!\" he roars at the unseen archer. For a moment, everything is still. Then a final arrow flies. It grazes your shoulder and sinks deep into the bandit’s back. He stiffens, drops his weapon and collapses at your feet, not dead but deeply asleep. Some kind of potent sleeping poison coats the arrowhead.",
+        "text": "In the chaos, the leader seizes you and uses you as a living shield. You feel the cold steel of his blade against your neck. \"Show yourself!\" he roars at the unseen archer. For a moment, everything is still. Then a final arrow flies. It grazes your shoulder but somehow manages to sink deep into the bandit’s back. He stiffens, drops his weapon and collapses at your feet, not dead but deeply asleep. Some kind of potent sleeping poison coats the arrowhead.",
         "choices": [
           { "text": "Turn toward the mysterious archer who saved you.", "next": "eden_appears_common" }
         ]
@@ -198,9 +198,9 @@
       "spider_web": {
         "text": "After nearly an hour of walking, you stumble upon a gigantic spiderweb stretching from tree to tree, thick as a curtain. You push aside some of the silk and freeze. A monstrous spider is at work, wrapping one of its prey in webbing. Not just any prey: a frail elf, whose twisted body shows he died slowly and painfully.",
         "choices": [
-          { "text": "Retreat carefully and try to hide without making a sound. (Dexterity DC 15)", "next": "hide_from_spider_success", "fail":"hide_from_spider_fail", "check":"dex", "dc":15 },
-          { "text": "Grab a sturdy branch and let out a menacing roar. (Charisma DC 18)", "next": "scaring_spider_success", "fail":"scaring_spider_fail", "check":"cha", "dc":18 },
-          { "text": "Try to recall a basic fire spell and use magic. (Intelligence DC 12)", "next": "forest_attempt_fireball_success", "fail": "forest_attempt_fireball_fail", "check": "int", "dc":12 }
+          { "text": "Retreat carefully and try to hide without making a sound. <span style=\"color:yellow\">(Dexterity DC 15)</span>", "next": "hide_from_spider_success", "fail":"hide_from_spider_fail", "check":"dex", "dc":15 },
+          { "text": "Grab a sturdy branch and let out a menacing roar. <span style=\"color:yellow\">(Charisma DC 18)</span>", "next": "scaring_spider_success", "fail":"scaring_spider_fail", "check":"cha", "dc":18 },
+          { "text": "Try to recall a basic fire spell and use magic. <span style=\"color:yellow\">(Intelligence DC 12)</span>", "next": "forest_attempt_fireball_success", "fail": "forest_attempt_fireball_fail", "check": "int", "dc":12 }
         ]
       },
 
@@ -219,7 +219,7 @@
       },
 
       "scaring_spider_success": {
-        "text": "You snatch up a thick branch and brandish it like a makeshift spear. Then, you scream at the giant spider in a deep, threatening voice. The beast jumps then freezes. Examines you, not knowing if confronting a scary beast like you is worth its life. Finally, the spider obeys its survival instinct and climbs on the webbed trees. You take this opportunity to hide behind a tree.",
+        "text": "You snatch up a thick branch and brandish it like a makeshift spear. Then, you scream at the giant spider in a deep, threatening voice. The beast jumps then freezes. It examines you, not knowing if confronting a scary beast like you is worth its life. Finally, the spider obeys its survival instinct and climbs on the webbed trees. You take this opportunity to hide behind a tree.",
         "choices": [
           { "text": "Face what seems to be your end.", "next": "eden_rescue_spider_danger" }
         ]
@@ -261,28 +261,28 @@
       },
 
       "eden_appears_common": {
-        "text": "You hear a cheerful whistle and a finger snap before you see anyone. A man steps out of his hiding place and calmly pulls his arrows from the fresh corpses of the bandits. He walks past you at first, ignoring you as if you were just another piece of scenery. Then he stops by the unconscious leader at your feet. Only then does he turn toward you.",
+        "text": "You hear a cheerful whistle and a finger snap before you see anyone. A man steps out of his hiding place and calmly pulls his arrows from the fresh corpses of the bandits. He walks past you at first, ignoring you as if you were just another piece of scenery. Then he stops by the unconscious leader at your feet. Only then does he turn toward you. He starts laughing.",
         "choices": [
           { "text": "Take a proper look at your savior.", "next": "eden_description_and_clothes" }
         ]
       },
 
       "eden_appears_common_negotiation": {
-        "text": "You hear a cheerful whistle and a finger snap before you see anyone. A man steps out of his hiding place and calmly surveys the bodies scattered around you, nodding once as if inspecting a job already done. He walks past you at first, ignoring you as if you were just another piece of scenery. Then he stops by the unconscious leader at your feet. Only then does he turn toward you.",
+        "text": "You hear a cheerful whistle and a finger snap before you see anyone. A man steps out of his hiding place and calmly surveys the bodies scattered around you, nodding once as if inspecting a job already done. He walks past you at first, ignoring you as if you were just another piece of scenery. Then he stops by the unconscious leader at your feet. Only then does he turn toward you. He starts laughing.",
         "choices": [
           { "text": "Take a proper look at your savior.", "next": "eden_description_and_clothes" }
         ]
       },
 
       "eden_appears_forest": {
-        "text": "You hear a cheerful whistle and a finger snap before you see anyone. A man steps out of his hiding place and calmly pulls his arrows from the corpse of the giant spider. He walks past you at first, ignoring you as if you were just another piece of scenery. Then he stops by the broken body of the elf still tangled in the web. Only then does he turn toward you.",
+        "text": "You hear a cheerful whistle and a finger snap before you see anyone. A man steps out of his hiding place and calmly pulls his arrows from the corpse of the giant spider. He walks past you at first, ignoring you as if you were just another piece of scenery. Then he stops by the broken body of the elf still tangled in the web. Only then does he turn toward you. He starts laughing.",
         "choices": [
           { "text": "Take a proper look at your savior.", "next": "eden_description_and_clothes_forest" }
         ]
       },
 
       "eden_description_and_clothes": {
-        "text": "The hunter bursts out laughing when he really looks at you. \"Isn't it a bit cold to walk around with your backside out in the open, [RACE]?\" he says. A thick beard covers half his face, greasy long hair hides the other half. An eyepatch covers his left eye. He points at one of the corpses lying nearby. \"Go on, get dressed. They won't need their clothes where they're going.\" You strip one of the dead and finally cover your skin with warm, rough fabric. If you had lost your medallion in the chaos, you find it again and hang it back around your neck.",
+        "text": "\"<i>Hey there, stranger ! Isn't it a bit cold to walk around with your backside out in the open?</i>\" he says. <br> A shy beard eats half his face, greasy long hair hides the other half. An eyepatch covers his left eye. He points at one of the corpses lying nearby.<br> \"<i>Go on, get dressed. They won't need their clothes where they're going...</i>\" <br> You strip one of the dead and finally envelop your skin with warm, rough fabric. If you had lost your medallion in the chaos, you find it again and hang it back around your neck.",
         "choices": [
           { "text": "Ask who he is and what he is doing here.", "next": "eden_explains_hunt_bridge_alt" },
           { "text": "Thank him for saving your life.", "next": "eden_explains_hunt_bridge" }
@@ -290,36 +290,37 @@
       },
 
       "eden_description_and_clothes_forest": {
-        "text": "The hunter bursts out laughing when he really looks at you. \"Isn't it a bit cold to walk around with your backside out in the open, [RACE]?\" he says. A thick beard covers half his face, greasy long hair hides the other half. An eyepatch covers his left eye. He points at the dead elf hanging in the web. \"Go on, get dressed. He won't need his clothes where he's going.\" You strip the unfortunate elf and finally cover your skin with warm, rough fabric. If you had lost your medallion in the chaos, you find it again and hang it back around your neck.",
+        "text": "\"<i>Hey there, stranger ! Isn't it a bit cold to walk around with your backside out in the open?</i>\" he says.<br> A shy beard eats half his face, greasy long hair hides the other half. An eyepatch covers his left eye. He points at the dead elf hanging in the web. \"<i>Go on then, take his clothes. This poor elf certainly won't need them anymore... </i>\" <br> You strip the unfortunate elf and finally envelop your skin with warm, rough fabric. If you had lost your medallion in the chaos, you find it again and hang it back around your neck.",
         "choices": [
           { "text": "Ask who he is and what he is doing here.", "next": "eden_explains_hunt_forest_alt" },
           { "text": "Thank him for saving your life.", "next": "eden_explains_hunt_forest" }
         ]
       },
 
+
       "eden_explains_hunt_bridge": {
-        "text": "The hunter shrugs. \"Saving you? That too, I suppose,\" he says. \"But truth is, I was mostly interested in that one.\" He nudges the unconscious bandit leader with his boot. \"Name's Regalus. Nasty piece of work. There's a bounty of a thousand gold pieces on his head if I bring him back alive. Not bad for a few days of work.\" He nods toward the arrow still sticking from the man's back. \"Sleeping poison. Very efficient.\"",
+        "text": "The hunter shrugs. \"<i>Saving you? That too, I suppose. But truth is, I was mostly interested in that one.</i>\" He nudges the unconscious bandit leader with his boot.<br> \"<i>Name's Regalus. Nasty piece of work. There's a bounty of a thousand gold pieces on his head if I bring him back alive. Not bad for a few days of work.</i>\" He nods toward the arrow still sticking from the man's back. <br>\"<i>Sleeping poison. Very efficient.</i>\"",
         "choices": [
           { "text": "Follow him to his horse and the captured bandit.", "next": "eden_to_horse" }
         ]
       },
 
       "eden_explains_hunt_bridge_alt": {
-        "text": "\"Funny attitude for someone who was about to end up gutted by a pack of roadside scum,\" he says with a crooked smile. \"If you insist: I'm a bounty hunter, and I just caught my latest prey. I was heading to the nearest city, cutting across this area, when I spotted a golden opportunity: Regalus and his little gang of idiots.\" He jerks his chin toward the unconscious bandit leader. \"The poison on my arrows makes the perfect sleeping draught, ideal for a hunter like me. I decided to put it to good use. Saving you was just a side effect. Fortunate for you, isn't it?\"",
+        "text": "\"<i>Funny attitude for someone who was about to end up gutted by a pack of roadside scum...</i>\" he says with a crooked smile.<br> \"<i>If you insist: I'm a bounty hunter, and I just caught my latest prey. I was heading to the nearest city, cutting across this area, when I spotted a golden opportunity: Regalus and his little gang of idiots.</i>\" He jerks his chin toward the unconscious bandit leader.<br> \"<i>The poison on my arrows makes the perfect sleeping draught, ideal for a hunter like me. I decided to put it to good use. Saving you was just a side effect. Fortunate for you, isn't it?</i>\"",
         "choices": [
           { "text": "Follow him to his horse and the captured bandit.", "next": "eden_to_horse" }
         ]
       },
 
       "eden_explains_hunt_forest": {
-        "text": "The hunter snorts. \"Saving you?\" he repeats. \"Oh, that too, I suppose. Truth is, I was far more interested in this creature's venom.\" He jerks his chin toward the spider’s corpse. \"Potent stuff. A powerful sleeping draught. I'm a bounty hunter, you see. I actually caught my latest target not far from here, but to do that I had to use the very last drops of venom I had left. So stumbling on this spider was a blessing... and stumbling on you as well, of course, ahem.\"",
+        "text": "The hunter snorts. \"<i>Saving you? Oh, that too, I suppose. Truth is, I was far more interested in this creature's venom.</i>\" He jerks his chin toward the spider’s corpse. <br> \"<i>Potent stuff. A powerful sleeping draught. I'm a bounty hunter, you see. I actually caught my latest target not far from here, Regalus is the name, (not that his name actually matters), but to do that I had to use the very last drops of venom I had left. So stumbling on this spider was a blessing... and stumbling on you as well, of course, ahem.</i>\"",
         "choices": [
           { "text": "Follow him through the trees to his horse.", "next": "eden_to_horse_forest" }
         ]
       },
 
       "eden_explains_hunt_forest_alt": {
-        "text": "\"Strange way of talking for someone who was about to end up in an oversized insect's stomach,\" the hunter says with a half-smile. \"If you insist: I'm a bounty hunter, and I've just bagged my latest prey. I was on my way to the nearest city, cutting through this forest, when I noticed those webs above us.\" He points at the strands between the trees. \"The venom of these creatures makes the perfect sleeping draught, ideal for someone in my line of work. So I decided to bring it down. Saving you was just a side effect, fortunate for you, wouldn't you say?\" He jerks a thumb toward the deeper woods. \"Anyway, I've hidden my horse a bit further on. You should come with me. I know this forest like the back of my hand and, believe me, these insects live in colonies, if you catch my drift.\"",
+        "text": "\"<i>Strange way of talking for someone who was about to end up in an oversized insect's stomach...</i>\" the hunter says with a half-smile.<br> \"<i>If you insist: I'm a bounty hunter, and I've just bagged my latest prey. Regalus is the name. Nasty piece of work, with a gorgeous bounty on his head.  I was on my way to the nearest city, cutting through this forest, when I noticed those webs above us.</i>\" He points at the strands between the trees.<br> \"<i>The venom of these creatures makes the perfect sleeping draught, ideal for someone in my line of work. So I decided to bring it down. Saving you was just a side effect, fortunate for you, wouldn't you say?</i>\".",
         "choices": [
           { "text": "Follow him through the trees to his horse.", "next": "eden_to_horse_forest" }
         ]
@@ -335,39 +336,34 @@
       "eden_to_horse_forest": {
         "text": "You follow the hunter through the undergrowth until you reach a small clearing. His horse waits there, calm and patient. A large man is already tied across the saddle, snoring loudly: Regalus, no doubt under the effect of the sleeping poison. The hunter adjusts the ropes with quick, efficient gestures.",
         "choices": [
-          { "text": "Ask what he intends to do with this man.", "next": "eden_small_talk_forest" }
+          { "text": "Ask what he intends to do with this man.", "next": "eden_small_talk" }
         ]
       },
 
       "eden_small_talk": {
-        "text": "\"What I'm going to do with him?\" the hunter snorts. \"Boil him with vegetables and potatoes. What do you think? I'm taking him to collect the bounty, of course.\" He smirks.",
+        "text": "\"<i>What I'm going to do with him?</i>\" the hunter snorts. <br>\"<i>Boil him with vegetables and potatoes. What do you think? I'm taking him to collect the bounty, of course.</i>\" He smirks.",
         "choices": [
           { "text": "Listen as he turns the conversation back to you.", "next": "eden_asks_story" }
         ]
       },
 
-       "eden_small_talk_forest": {
-        "text": "\"What I'm going to do with him?\" the hunter snorts. \"Boil him with vegetables and potatoes. What do you think? I'm taking him to collect the bounty, of course.\" He smirks. \"The venom I use on my arrows makes a perfect sleeping draught. Very handy for someone in my line of work. I used my last vial on this one, so crossing paths with that juicy spider right after was a stroke of luck.\"",
-        "choices": [
-          { "text": "Listen as he turns the conversation back to you.", "next": "eden_asks_story" }
-        ]
-      },
+    
       "eden_asks_story": {
-        "text": "The hunter tilts his head, studying you. \"Anyway,\" he says, \"enough about me. What's your story? Not that I really care, but I'm curious to know what a clown like you is doing, naked, in the middle of these wild lands.\"",
+        "text": "The hunter tilts his head, studying you. \"<i>Anyway,</i>\" he says, \"<i>enough about me. What's your story? Not that I really care, but I'm curious to know what a clown like you is doing, naked, in the middle of these wild lands.</i>\"",
         "choices": [
           { "text": "Tell him about your amnesia and how you woke up on the beach.", "next": "eden_reacts_amnesia" }
         ]
       },
 
       "eden_reacts_amnesia": {
-        "text": "You explain that you woke up on the beach with no memory of your past, no idea who you were, until you found the medallion with your name on it. The hunter listens, surprisingly silent. \"Amnesia, huh?\" he finally mutters. He stares at you for a long moment, as if weighing an idea in his head. He gestures at the saddle, inviting you to climb up. Then he clicks his tongue and jerks his chin toward the horse.",
+        "text": "You explain that you woke up on the beach with no memory of your past, no idea who you were, until you found the medallion with your name on it. The hunter listens, surprisingly silent. \"<i>Amnesia, huh?</i>\" he finally mutters. He stares at you for a long moment, as if weighing an idea in his head. He gestures at the saddle, inviting you to climb up. Then he clicks his tongue and jerks his chin toward the horse.",
         "choices": [
           { "text": "Climb onto the horse behind him.", "next": "eden_ride_to_city" }
         ]
       },
 
       "eden_ride_to_city": {
-        "text": "You climb up behind the bounty hunter. The horse shifts under your combined weight. \"You must be hungry and thirsty,\" he says. \"The bounty on Regalus will pay for the first round.\" With a click of his tongue, the horse starts at a trot, then a gallop, crossing the valley at full speed. After a moment, he speaks again. \"The name's Eden. Pleasure to meet you. The nearest city is about two hours away. I hope your backside can handle the ride, stranger.\" The wind lashes your face as the land rushes by and your strange new journey truly begins.",
+        "text": "You climb up behind the bounty hunter. The horse shifts under your combined weight. \"<i>You must be hungry and thirsty,</i>\" he says. \"<i>The bounty on Regalus will pay for the first round.</i>\"<br> With a click of his tongue, the horse starts at a trot, then a gallop, crossing the valley at full speed. After a moment, he speaks again.<br> \"<i>The name's Eden. Pleasure to meet you. The nearest city is about two hours away. I hope your backside can handle the ride, stranger.</i>\" <br>The wind lashes your face as the land rushes by and <strong>your strange new journey truly begins.</strong>",
         "choices": []
       }
     }

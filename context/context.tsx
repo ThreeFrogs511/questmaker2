@@ -98,7 +98,8 @@ export function UserDataProvider({children} :  { children: React.ReactNode }) {
     return(
     <>
     <UserDataContext.Provider value={{currentUser, setCurrentUser, isFetchingDone, setIsFetchingDone}}>
-        {isFetchingDone ? children : <Loading />}
+        {children}
+  {!isFetchingDone && <Loading />}
     </UserDataContext.Provider>
     </>
     )
