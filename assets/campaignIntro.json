@@ -9,7 +9,7 @@
       "intro_beach": {
         "text": "You wake up, washed ashore on a lonely beach, naked as a newborn. Your skull pounds like a war drum and nausea twists your guts. You look left, then right: nothing but sand and sea. You try to remember what happened, but nothing comes. <strong>Absolutely nothing</strong>.",
         "choices": [
-          { "text": "Force your mind to remember who you are and what happened.", "next": "amnesia_realization" }
+          { "text": "Force your mind to remember who you are and what happened.", "next": "amnesia_realization"}
         ]
       },
 
@@ -19,6 +19,8 @@
           { "text": "Reach for the strange object buried in the sand.", "next": "discover_medallion" }
         ]
       },
+   
+    
 
       "discover_medallion": {
         "text": "You pick up a small, old medallion half-buried in the sand. You open it. Inside, a short sentence is engraved. You read it.",
@@ -37,9 +39,9 @@
       "rock_wall": {
         "text": "An imposing wall of stone rises ahead of you. If you want to leave the beach, you will have to overcome this obstacle. You feel tired and weak, your body still shaken by whatever happened before you woke up. Climbing will not be easy, but staying here is not an option.",
         "choices": [
-          { "text": "Try to climb the rocky wall anyway. <span style=\"color:yellow\">(Strength DC 15)</span>", "next": "rock_climb_success", "fail":"rock_climb_fail", "check":"str", "dc" : 15 },
-          { "text": "Scan the area for a clever way up. <span style=\"color:yellow\">(Intelligence DC 12)</span>", "next": "rock_search_solution_success", "fail":"rock_search_solution_fail", "check": "int","dc" : 12 },
-          { "text": "Play it safe and look for another path along the cliff. <span style=\"color:red\">(HP Penalty)</span>", "next": "rock_long_way" }
+          { "text": "Try to climb the rocky wall anyway. <span style=\"color:yellow\">(Strength DC 15)</span>", "next": "rock_climb_success", "fail":"rock_climb_fail", "check":"str", "dc" : 95 },
+          { "text": "Scan the area for a clever way up. <span style=\"color:yellow\">(Intelligence DC 12)</span>", "next": "rock_search_solution_success", "fail":"rock_search_solution_fail", "check": "int","dc" : 92 },
+          { "text": "Play it safe and look for another path along the cliff. <span style=\"color:red\">(HP Penalty)</span>", "next": "rock_long_way", "penalty":{"ability": "hp", "value": 5} }
         ]
       },
 
@@ -53,8 +55,8 @@
         "rock_climb_fail": {
         "text": "You attempt to climb the wall despite your aching muscles. it's going fine for a while, but when the top is at arm's length, those very arms of yours give up and you fall, head first, into the warm but fortunately soft sand. The easy way isn't going to cut it for you. You'll need to find another way up.",
         "choices": [
-          { "text": "Scan the area for a clever way up. <span style=\"color:yellow\">(Intelligence DC 12)</span>", "next": "rock_search_solution_success", "fail":"rock_search_solution_fail", "check": "int", "dc": 12},
-          { "text": "Play it safe and look for another path along the cliff.", "next": "rock_long_way" }
+          { "text": "Scan the area for a clever way up. <span style=\"color:yellow\">(Intelligence DC 12)</span>", "next": "rock_search_solution_success", "fail":"rock_search_solution_fail", "check": "int", "dc": 92},
+          { "text": "Play it safe and look for another path along the cliff. <span style=\"color:red\">(HP Penalty)</span>", "next": "rock_long_way", "penalty":{"ability": "hp", "value": 5} }
         ]
       },
 
@@ -67,8 +69,8 @@
       "rock_search_solution_fail": {
         "text": "You analyze your surroundings. Besides a few wandering crabs and algae, you eye catches nothing of value. The smart way up is out of the question.",
         "choices": [
-          { "text": "Try to climb the rocky wall anyway. <span style=\"color:yellow\">(Strength DC 15)</span>", "next": "rock_climb_success", "fail":"rock_climb_fail", "check":"str", "dc" : 15 },
-          { "text": "Turn toward the land beyond the cliff.", "next": "cliff_top" }
+          { "text": "Try to climb the rocky wall anyway. <span style=\"color:yellow\">(Strength DC 15)</span>", "next": "rock_climb_success", "fail":"rock_climb_fail", "check":"str", "dc" : 95 },
+          { "text": "Play it safe and look for another path along the cliff. <span style=\"color:red\">(HP Penalty)</span>", "next": "rock_long_way", "penalty":{"ability": "hp", "value": 5} }
         ]
       },
 

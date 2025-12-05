@@ -7,11 +7,11 @@ export default function Audio({isPressed, setIsPressedAction, currentNode, curre
     isPressed:boolean,
     setIsPressedAction:React.Dispatch<React.SetStateAction<boolean>>,
     currentNode:keyof Nodes | undefined,
-    currentCampaign:Nodes
+    currentCampaign:Nodes | undefined
 }) {
 
     // the voice over
-    const [play, {stop}] = useSound(`/voices/${currentNode ?? Object.keys(currentCampaign)[0]}.mp3`, {
+    const [play, {stop}] = useSound(`/voices/${currentNode}.mp3`, {
         interrupt:true
     })
 

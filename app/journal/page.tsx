@@ -70,8 +70,9 @@ export default function journal() {
 
   // sorting list based on the page number
   useEffect(() => {
+    changingPageSound();
+
     if (allQuests) {
-      changingPageSound();
       if (whichPage === 0) {
         const currentQuests = allQuests.filter(n => n.completed === false)
         setDisplayedQuests(currentQuests);
