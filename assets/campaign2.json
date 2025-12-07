@@ -11,14 +11,17 @@
         "text": "You ride through the valley at full speed. Eden pushes his horse relentlessly. Behind you, Regalus—the bandit leader who nearly killed you—sleeps soundly despite the violent motion. After several hours on horseback, you reach Kelia’s Crossing, a fortified elven city. Two elven legionaries guard the gate—playing cards until they notice Eden approaching.",
         "choices": [
           { 
-          "text": "Let Eden speak to the legionary.", 
+          "text": "[START COMBAT]", 
           "next": "elf_and_eden_talk",
+          "combat_starting": true,
           "enemy": [
-            {"name": "Elf assassin"}, 
+             "Elf assassin", 
             {"str": 12, "dex": 10, "con": 10,"int": 10, "wis": 10, "cha": 10},
-            {"starting_hp": 20},
-            {"starting_dopamine": 20}
-          ]
+             20,
+             20,
+             {"slash": 10, "fireball": 5}
+          ],
+          "enemy_moves": {"fist": 10, "fireball": 5, "restoration": 2}
         }
         ]
       },
@@ -26,11 +29,16 @@
       "combat_testing" : {
         "text": "test",
         "choices": [
-          {"text" : "Slash", "dmg":10, "combat": true},
-          {"text" : "Fireball", "dmg":10, "combat": true}
-        ],
-      
-        "enemy_moves": ["fist", "fireball", "restoration"]
+          {"text" : "Slash", "userDmg":10, "combat_on": true},
+          {"text" : "Fireball", "userDmg":10, "combat_on": true}
+        ]
+      },
+
+      "combat_testing_victory" : {
+        "text": "You won. Xp earned :",
+        "choices": [
+          {"text" : "Continue", "next": "placeholder"}
+        ]
       },
 
       "elf_and_eden_talk": {

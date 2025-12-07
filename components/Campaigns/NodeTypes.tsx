@@ -23,17 +23,27 @@
   type?: "check" | "combat" | "redirect_condition";
   stat?: string;
   dc?: number;
-  alt?:{type:string, value:string};
+  alt?:Alt[];
   success?: string;
   fail?: string;
   win?: string;
   lose?: string;
+  enemy:Enemy;
   enemyHp?: number;
   enemyDmg?: number;
+  userDmg?:number;
+  combat_on?:boolean;
+  combat_started?:boolean;
   effects?: Record<string, unknown>;
   action?: string;
   penalty?:{ability:string, value:number};
   };
+
+
+type Alt = {
+  type:string; 
+  value:string
+}
 
   // describe the type for the currentUser global state
 export type User = {
@@ -57,5 +67,19 @@ cha : number | null,
 profile_completed : boolean,
 damage_taken: number
 }
-
    
+export type Enemy = [
+  string,
+  {"str": number, "dex":number, "con": number,"int": number, "wis": number, "cha": number},
+  number,
+  number,
+  Object
+]
+
+export type Encounter = {
+  name?:string; 
+  stats?:{"str": number, "dex":number, "con": number,"int": number, "wis": number, "cha": number},
+  hp?:number; 
+  dopamine?:number; 
+  movesets?:Object
+}

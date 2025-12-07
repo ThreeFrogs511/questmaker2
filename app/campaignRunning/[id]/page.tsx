@@ -40,6 +40,7 @@ async function startNewCampaign() {
         })
         .then(values => { 
             setCurrentNode(values.first);
+            // setCurrentNode("remembering_how_to_fight")
             setCurrentCampaignTitle(values.title);
             })
         .catch(err => console.log(err));

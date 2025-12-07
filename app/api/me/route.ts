@@ -21,7 +21,7 @@ const sessionRows = await sql `
     AND expires_at > NOW();`;
 
 const userRows = await sql`
-    SELECT id, username, email, xp, hp, user_class, lvl, race,
+    SELECT id, username, email, xp, hp, user_class, lvl, race, gender,
            str, dex, con, int, wis, cha, damage_taken, dopamine, dopamine_consumed, profile_completed
     FROM users
     WHERE id = ${sessionRows[0].user_id}`;
