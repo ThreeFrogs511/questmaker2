@@ -12,7 +12,7 @@ import { Nodes, Choice, Encounter } from "./NodeTypes";
 // components and custom hooks
 import PressPlayIcon from "./PressPlayIcon";
 import Audio from "./Audio";
-import CombatLog from "./CombatLog";
+import CombatInterface from "./CombatInterface";
 
 export default function CampaignHandler({
   currentNode, currentCampaign, setCurrentNodeAction, currentCampaignTitle} :
@@ -63,11 +63,10 @@ async function startNewCampaign(id:string) {
 
   useEffect(() => {
     if (currentCampaign && currentNode) {
-      // console.log(currentNode)
     gameplay.current.updateNode(currentNode)
     gameplay.current.prepareChoicesForPlayer(setAllChoicesAvailable, currentCampaign[currentNode].choices, userPastChoices);
 
-    // activate the combat log
+    // activate the combat log when it's combat time
     if (currentCampaign[currentNode].choices) {
       const combatOn = currentCampaign[currentNode].choices.find(n => {
         if (n.combat_on) return n;
@@ -78,8 +77,7 @@ async function startNewCampaign(id:string) {
   }, [currentCampaign, currentNode])
 
 
-
-
+  // handle the keyboard navigation option
   useEffect(() => {
   function handleKeyboardSelection(e:any) {
       if (keyboardPressed) return;
@@ -111,7 +109,7 @@ async function startNewCampaign(id:string) {
 
 
  return (
-    <section className="grid grid-rows-4 w-full h-dvh  gap-10! font-minecraft lg:p-10">
+    <section className=" w-full h-dvh max-h-full gap-10! lg:p-10">
 
       {/* handles the audio */}
 
@@ -122,28 +120,33 @@ async function startNewCampaign(id:string) {
       currentCampaign={currentCampaign && currentCampaign}
       />
 
-      {/* <Bar /> */}
+      {/* combat interface */}
+        {isCombatOn && 
+        <CombatInterface 
+        combatLog={combatLog} 
+        enemyData={enemyData} 
+        gameplay={gameplay.current} 
+        currentNode={currentNode} 
+        setCurrentNodeAction={setCurrentNodeAction} />}
     
       {/* narration container*/}
-        <div className="row-start-1! row-end-3!">
+        <div className="h-[55dvh] max-h-[55dvh] lg:h-[40dvh] lg:max-h-[40dvh] lg:mb-5!">
 
             {/* headers wrapper */}
-            <div id="titleWrapper" className="  h-[20%] flex items-center overflow-hidden lg:mb-10!">
+            <div id="titleWrapper" className=" h-[20%] flex items-center overflow-hidden">
               <h1 
-              className="text-lg! lg:text-4xl! font-bold text-amber-400">
+              className="text-lg! lg:text-4xl! font-bold font-minecraft text-amber-400">
                 {currentCampaignTitle && currentCampaignTitle} 
               </h1>
               <PressPlayIcon isPressed={isPressed} setIsPressedAction={setIsPressed}/>
             </div>
 
             {/* content wrapper */}
-            <div className="text-sm!  lg:text-xl! tracking-widest max-h-[40dvh]  h-full overflow-auto lg:overflow-hidden text-gray-200 leading-relaxed">
-              <div className="text-justify">
+            <div className="text-sm! h-[80%] max-h-[80%] lg:text-2xl! xl:mt-8! tracking-wide overflow-auto lg:overflow-hidden text-gray-200 leading-relaxed">
+              <div className="text-justify mt-5!">
                 {/* narration */}
-                {(currentNode && currentCampaign) && parse(currentCampaign[currentNode].text)}
+                <div>{(currentNode && currentCampaign) && parse(currentCampaign[currentNode].text)}</div>
 
-                {/* combat log */}
-                {isCombatOn && <CombatLog combatLog={combatLog} enemyData={enemyData} />}
               </div>
 
               <p className={` font-semibold mt-5! ${abilityCheckData.success ? 'text-green-400' : 'text-red-600'}`}>
@@ -154,9 +157,9 @@ async function startNewCampaign(id:string) {
         </div>
         
         {/* Choices Container */}
-            <div className=" row-span-2 overflow-y-auto! p-2 lg:p-8 h-full ">
+            <div className="  h-[40dvh] max-h[40dvh] lg:h-[50dvh] lg:max-h-[50dvh] overflow-y-auto! p-2 lg:p-8 lg:mt-5  ">
 
-              <div className=" grid grid-cols-1 mt-5 ">
+              <div className=" grid grid-cols-1">
                 {allChoicesAvailable && allChoicesAvailable.map((item, key) => { 
                   return <button 
                   key={key}
@@ -164,11 +167,11 @@ async function startNewCampaign(id:string) {
                   userPastChoices.length>0 ? setUserPastChoices((prev) => [...prev, item.text] ) : setUserPastChoices([item.text]);
                   gameplay.current && gameplay.current.determineNextNode(setCurrentNodeAction, item, setAbilityCheckData);
                   }}
-                  className="hover:outline-4! border-4! my-2! border-white lg:border-0! outline-white! rounded-lg p-4 text-left">
-                  <div className="flex items-start grow">
+                  className="hover:outline-2! border-2! my-1! border-white lg:border-0! outline-white! rounded-lg p-4! text-left">
+                  <div className="flex items-center grow">
                     <span className="text-amber-400 font-bold mr-3 text-xl">{key+1}.</span>
                     <div>
-                      <h3 className="text-white font-semibold mb-1 lg:text-xl!">{parse(item.text)}</h3>
+                      <h3 className="text-white font-semibold mb-1 text-xs! lg:text-xl!">{parse(item.text)}</h3>
                     </div>
                   </div>
                 </button>

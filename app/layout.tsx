@@ -21,7 +21,7 @@ export default function RootLayout({
       <html lang="en">
         <body>
           <UserDataProvider>
-          <div className="wrapper px-4 sm:px-6 md:px-10 lg:px-20 xl:px-40 2xl:px-60 max-w-[1600px] mx-auto h-full!">
+          <div className=" px-4 sm:px-6 md:px-10 lg:px-20 xl:px-40 2xl:px-60 max-w-[1600px] mx-auto h-dvh!">
             {children}
           </div>
           </UserDataProvider>

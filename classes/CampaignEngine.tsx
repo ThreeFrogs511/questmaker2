@@ -84,13 +84,13 @@ export default class Engine {
       } else if (currentChoice.combat_on) {
         // the main combat system
 
-        if (this.encounter) {
-          if (!this.combatLockOn) {
-            this.combatLockOn=true;
-             await this.combat.system(currentChoice, this.encounter, setCurrentNode, this.node)
-            .then(() => this.combatLockOn=false);
-          }
-        }
+        // if (this.encounter) {
+        //   if (!this.combatLockOn) {
+        //     this.combatLockOn=true;
+        //      await this.combat.system(currentChoice, this.encounter, setCurrentNode, this.node)
+        //     .then(() => this.combatLockOn=false);
+        //   }
+        // }
 
       } else {
         setCurrentNode(currentChoice.next);
@@ -98,6 +98,15 @@ export default class Engine {
       }
      }
 
+     async handlePlayerCombatChoices(item:any, setCurrentNode:any, setNbOfTurn:any, setSoundEffect:any) {
+       if (this.encounter) {
+          if (!this.combatLockOn) {
+            this.combatLockOn=true;
+             await this.combat.system(item, this.encounter, setCurrentNode, this.node, setNbOfTurn, setSoundEffect)
+            .then(() => this.combatLockOn=false);
+          }
+        }
+     }
 
     prepareChoicesForPlayer(setAllAvailableChoices:any, choices:any, userPastChoices:any) {
       this.choicesOptions.handler(setAllAvailableChoices, choices, userPastChoices)
