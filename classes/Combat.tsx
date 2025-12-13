@@ -240,7 +240,7 @@ export default class Combat {
       const userDex= this.currentUser.dex;
       const userModifier = userDex && Math.floor((userDex-10)/2);
       this.userAC = userModifier ? 10+userModifier : 10;
-      console.log("Your AC is " + this.userAC)
+      console.log("modifier:"+ userModifier);
 
       //enemy AC
       const enemyDex = encounter.stats ? encounter.stats.dex : 10;

@@ -15,7 +15,7 @@ export default class ExclusivePaths {
         const nextNode = currentChoice.next;
         const userRace = currentUser.race;
         const userGender = currentUser.gender;
-   
+        const userClass = currentUser.user_class;
         // fetching the "alt" array
         const alt = currentChoice.alt
         
@@ -39,6 +39,11 @@ export default class ExclusivePaths {
                     case "gender":
                     this.handlingGenderPaths(alt[i].value, setCurrentNode, userGender ?? '', currentChoice);
                     break;
+
+                    case"class":
+                    this.handlingClassPaths(alt[i].value, setCurrentNode, userClass ?? '', currentChoice);
+                    break;
+
                 }
               
                 // because there's only one instance of the mother class "Engine"
@@ -69,6 +74,28 @@ export default class ExclusivePaths {
             this.nextNodeAlt = `${nextNode}_${value}`;                
             setCurrentNode(this.nextNodeAlt);
         }
+    };
+
+    handlingClassPaths(value:string, setCurrentNode:any, userClass:string, currentChoice:Choice) {
+        const nextNode = currentChoice.next;
+        if (value === userClass.toLowerCase()) {
+            this.nextNodeAlt = `${nextNode}_${value}`;                
+            setCurrentNode(this.nextNodeAlt);
+        }
+    };
+
+    handlingChoicesPaths(currentChoice:Choice, setCurrentNode:any, userPastNodes:any) {
+        const nextNode = currentChoice.next;
+        let relevantStoryPaths:string | null = null;
+        if (currentChoice.nodeRef) {
+            for (let i = 0 ; i < currentChoice.nodeRef.length ; i++) {
+               if (userPastNodes.includes(currentChoice.nodeRef[i])) {
+                !relevantStoryPaths ? relevantStoryPaths=currentChoice.nodeRef[i] : relevantStoryPaths+='+'+currentChoice.nodeRef[i];
+               }
+            }   
+        }
+        console.log(`${nextNode}[${relevantStoryPaths}]`)
+        setCurrentNode(`${nextNode}[${relevantStoryPaths}]`);
     };
 }
 

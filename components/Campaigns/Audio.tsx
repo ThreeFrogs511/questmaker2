@@ -11,7 +11,7 @@ export default function Audio({isPressed, setIsPressedAction, currentNode, curre
 }) {
 
     // the voice over
-    const [play, {stop}] = useSound(`/voices/${currentNode}.mp3`, {
+    const [play, {stop}] = useSound(`/voices/${currentNode ?? 'blank'}.mp3`, {
         interrupt:true
     })
 

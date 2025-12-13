@@ -4,7 +4,7 @@ import { ProgressBar } from "pixel-retroui"
 import { useUserContext } from "@/context/context";
 import { useState, useRef } from "react";
 import { Encounter, Nodes } from "./NodeTypes";
-
+// import punch from '../../public/icons/punch.svg'
 // used to interpret HTML in JSON
 import parse from "html-react-parser";
 import { useEffect } from "react";
@@ -34,7 +34,20 @@ setCurrentNodeAction:React.Dispatch<React.SetStateAction<keyof Nodes | undefined
 
     const [userHealthInPercentage, setUserHealthInPercentage] = useState<number>(100)
 
-    const userAttacks = [{text:"Punch", userDmg:10}, {text:"Fireball", userDmg:10}, {text:"Return", userDmg:null}];
+    const userAttacks = [
+        {text:"Return", userDmg:null},
+        {text:"Punch", userDmg:10}, 
+        {text:"Fireball", userDmg:10}, 
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
+        ];
     const userMoves = ["Attacks", "Inventory"]
 
     const [nbOfTurn, setNbOfTurn] = useState(1);
@@ -82,13 +95,13 @@ setCurrentNodeAction:React.Dispatch<React.SetStateAction<keyof Nodes | undefined
         <>
         <section id="combatInterface" className="fixed w-dvw h-dvh top-0 bottom-0 right-0 left-0 flex flex-col bg-black">
             <h2 id="turn" className=" lg:text-4xl! font-bold font-minecraft text-center text-amber-400 h-[10dvh] mt-5!">Turn {nbOfTurn}</h2>
-            <div id="arena" className=" h-[50dvh]">
+            <div id="arena" className=" h-[80dvh]">
                 <div id="healthBars" className="flex items-center h-[70%] ">
                     <div id="userSide" className="w-[80%] lg:w-[50%] mx-auto">
                         <div className="text-center flex flex-col">{currentUser.username ?? 'You'} <span>AC : {userAC}</span><span>{Math.floor(userHealthInPercentage)}%</span></div>
-                        <div className="w-[70%] mx-auto"><Bar /> </div>
+                        <div className="w-[70%] mx-auto"><Bar /></div>
                     </div>
-                    <div className="w-[10%]  h-full flex items-center justify-center font-minecraft text-xl">VS</div>
+                    <div className="w-[10%] h-full flex items-center justify-center font-minecraft text-xl">VS</div>
                     <div id="enemySide" className="w-[80%] lg:w-[50%]  mx-auto">
                         <div className="text-center flex flex-col justify-between">{enemyData?.name} <span>AC : {userAC}</span> <span>{Math.floor((enemyFullHealth && enemyHealth && enemyData?.hp) ? (enemyData.hp > 0 ? enemyHealth*100 : 0) : 0)}%</span></div>
                         <div className="w-[70%] mx-auto">
@@ -106,24 +119,18 @@ setCurrentNodeAction:React.Dispatch<React.SetStateAction<keyof Nodes | undefined
                     <div className="text-center mt-5">{parse(combatLog ?? ``)}</div>
                 </div>
             </div>
-            <div id="combatChoices" className=" h-[50dvh]">
-                <div className=" grid grid-cols-1">
+                <div id="combatChoices" className={`grid grid-cols-6 cursor-pointer grid-rows-2 lg:grid-cols-12 lg:grid-rows-1 content-center px-2! lg:px-5 gap-2 h-[20dvh] mb-2`}>
                 {userAttacks.map((item, key) => { 
-                return <button 
+                return <figure
                     key={key}
                     onPointerDown={ () => { 
                         item.text !== 'Return' ? gameplay.handlePlayerCombatChoices(item, setCurrentNodeAction, setNbOfTurn, setSoundEffect) : console.log("return");
                     }}
-                    className="hover:outline-2! border-2! my-1! border-white lg:border-0! outline-white! rounded-lg p-4! text-left">
-                    <div className="flex items-center grow">
-                    <span className="text-amber-400 font-bold mr-3 text-xl">{key+1}.</span>
-                    <div>
-                    <h3 className="text-white font-semibold mb-1 text-xs! lg:text-xl!">{parse(item.text)}</h3>
-                    </div>
-                    </div>
-                </button>
+                    className="hover:border-4! text-center border-2!  max-h-full! aspect-square box-border! border-white outline-white! rounded-lg ">
+                    {/* <h3 className="text-white font-semibold mb-1 text-xs! lg:text-xl!">{parse(item.text ?? '')}</h3> */}
+                    {item.text && <img src={`/icons/${item.text.toLowerCase()}.svg`} alt="" className="max-w-full h-auto"/>}
+                    </figure>
                 })}
-            </div>
             </div>
 
   

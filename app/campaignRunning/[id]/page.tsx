@@ -16,8 +16,6 @@ async function startNewCampaign() {
     const response = await fetch(`/api/campaigns/${id}`);
     const result = await response.json();
 
-    console.log(result)
-
     return result;
 }
 
@@ -39,8 +37,8 @@ async function startNewCampaign() {
         return values;
         })
         .then(values => { 
-            // setCurrentNode(values.first);
-            setCurrentNode("remembering_how_to_fight")
+            setCurrentNode(values.first);
+            // setCurrentNode("remembering_how_to_fight")
             setCurrentCampaignTitle(values.title);
             })
         .catch(err => console.log(err));

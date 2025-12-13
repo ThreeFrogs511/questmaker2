@@ -6,7 +6,6 @@ import Penalties from "./Penalties";
 import ExclusivePaths from "./ExclusivePaths";
 import Combat from "./Combat";
 import ChoicesOptions from "./Choices";
-import { log } from "console";
 
 
 export default class Engine {
@@ -61,7 +60,7 @@ export default class Engine {
     }    
 
 
-    async determineNextNode(setCurrentNode:any, currentChoice:any, setAbilityCheckData:any) {
+    async determineNextNode(setCurrentNode:any, currentChoice:any, setAbilityCheckData:any, userPastNodes:any) {
       if(currentChoice.check) {
         this.abilityChecks.handler(currentChoice, setCurrentNode, setAbilityCheckData, this.node, this.currentUser);
 
@@ -81,16 +80,9 @@ export default class Engine {
         setCurrentNode(currentChoice.next);
         this.updateNode(currentChoice.next);
       
-      } else if (currentChoice.combat_on) {
-        // the main combat system
-
-        // if (this.encounter) {
-        //   if (!this.combatLockOn) {
-        //     this.combatLockOn=true;
-        //      await this.combat.system(currentChoice, this.encounter, setCurrentNode, this.node)
-        //     .then(() => this.combatLockOn=false);
-        //   }
-        // }
+      } else if (currentChoice.nodeRef) {
+        this.exclusivePaths.handlingChoicesPaths(currentChoice, setCurrentNode, userPastNodes);
+        setAbilityCheckData((prev: any) => ({...prev, success:null, value:null, status:false}));
 
       } else {
         setCurrentNode(currentChoice.next);
@@ -112,6 +104,7 @@ export default class Engine {
       this.choicesOptions.handler(setAllAvailableChoices, choices, userPastChoices)
     }
  
+    // crucial to update the current node and keep one instance for one campaign
     updateNode(node:string) {
       this.node = node;
     }

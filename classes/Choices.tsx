@@ -1,5 +1,5 @@
 
-import { Nodes, Choice, User } from "@/components/Campaigns/NodeTypes";
+import { Choice, User } from "@/components/Campaigns/NodeTypes";
 
 export default class ChoicesOptions {
 
@@ -18,7 +18,6 @@ export default class ChoicesOptions {
     }
 
     filterOutExpiredChoices(choices:Choice[], userPastChoices:any) {
-        // console.log(choices)
         // global choices like ['CONTINUE'], ['START COMBAT'] or user's movesets cannot be removed
         const lockedChoices = ['[CONTINUE]', '[START COMBAT]', '[Punch]', '[Fireball]'];
 
