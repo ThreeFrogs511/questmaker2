@@ -28,7 +28,7 @@
   fail?: string;
   win?: string;
   lose?: string;
-  enemy:Enemy;
+  enemy_id?:string;
   enemyHp?: number;
   enemyDmg?: number;
   userDmg?:number;
@@ -54,7 +54,7 @@ email: string | null,
 hp: number | null,
 xp: number | null,
 dopamine: number | null,
-dopamine_consumed:number | null,
+dopamine_consumed:number,
 gender: string | null
 user_class : string | null,
 race: string | null,
@@ -70,18 +70,14 @@ profile_completed : boolean,
 damage_taken: number
 }
    
-export type Enemy = [
-  string,
-  {"str": number, "dex":number, "con": number,"int": number, "wis": number, "cha": number},
-  number,
-  number,
-  Object
-]
+
 
 export type Encounter = {
+  enemy_id?:string;
   name?:string; 
   stats?:{"str": number, "dex":number, "con": number,"int": number, "wis": number, "cha": number},
   hp?:number; 
   dopamine?:number; 
-  movesets?:Object
+  movesets?:Object,
+  ac?:number
 }

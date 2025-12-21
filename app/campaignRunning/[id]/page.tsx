@@ -1,31 +1,31 @@
 'use client'
-import { useEffect, useRef, useState} from "react";
-import { useUserContext } from "@/context/context";
+import { useEffect,  useState} from "react";
 import CampaignHandler from "@/components/Campaigns/CampaignHandler";
 // main types
-import { Nodes, Node, Choice } from "@/components/Campaigns/NodeTypes";
+import { useNarrationStore } from "@/stores/useNarrationStore";
 
 
 export default function campaignRunning({params} : {params: Promise<{ id: string }>}) {
 
 
-async function startNewCampaign() {
-    const {id} = await params;
-    if (!id) throw new Error('No campaign id selected');
+    async function startNewCampaign() {
+        const {id} = await params;
+        if (!id) throw new Error('No campaign id selected');
 
-    const response = await fetch(`/api/campaigns/${id}`);
-    const result = await response.json();
+        const response = await fetch(`/api/campaigns/${id}`);
+        const result = await response.json();
 
-    return result;
-}
+        return result;
+    }
 
-    const [currentCampaign, setCurrentCampaign] = useState<Nodes>();
-    // current node aka current scene
-    const [currentNode, setCurrentNode] = useState<keyof Nodes | undefined>();
+    // narration store
+    const currentCampaign = useNarrationStore(state => state.currentCampaign);
+    const setCurrentCampaign = useNarrationStore(state => state.setCurrentCampaign);
+    const setCampaignTitle = useNarrationStore(state => state.setCampaignTitle);
+    const currentNode = useNarrationStore(state => state.currentNode);
+    const updateNode = useNarrationStore(state => state.updateNode);
 
-    const [currentCampaignTitle, setCurrentCampaignTitle] = useState<string>();
-
-    const [isCampaignLaunched, setIsCampaignLaunched] = useState(false);
+    const [hasCampaignLaunched, setHasCampaignLaunched] = useState(false);
 
     useEffect(() => {
         startNewCampaign()
@@ -37,25 +37,20 @@ async function startNewCampaign() {
         return values;
         })
         .then(values => { 
-            setCurrentNode(values.first);
-            // setCurrentNode("remembering_how_to_fight")
-            setCurrentCampaignTitle(values.title);
+            // updateNode(values.first);
+            updateNode("remembering_how_to_fight")
+            setCampaignTitle(values.title);
             })
         .catch(err => console.log(err));
     }, []);
 
     useEffect(() => {
-        if (currentCampaign && currentNode) setIsCampaignLaunched(true);
+        if (currentCampaign && currentNode) setHasCampaignLaunched(true);
     }, [currentCampaign, currentNode])
 
     return (
         <>
-        {isCampaignLaunched ?
-        <CampaignHandler 
-        currentNode={currentNode} 
-        currentCampaign={currentCampaign} 
-        setCurrentNodeAction={setCurrentNode}
-        currentCampaignTitle={currentCampaignTitle}/> : <h3>Loading</h3>}
+            {hasCampaignLaunched ? <CampaignHandler /> : <h3>Loading</h3>}
         </>
     )
 }

@@ -1,28 +1,12 @@
 'use client'
-import { useState, useEffect } from 'react';
+
 import { ProgressBar } from 'pixel-retroui';
-import { useUserContext } from '@/context/context';
+
+import { useUserStore } from '@/stores/useUserStore';
 
 export default function Bar() {
 
-    const {currentUser, isFetchingDone} = useUserContext();
-
-    const maxDopamine= currentUser.dopamine;
-    const [currentDopamine, setCurrentDopamine] = useState<number>(100);
-
-        
-        function calculatingDopamine() {
-            if (currentUser.dopamine && currentUser.dopamine_consumed) {
-                const percentageOfDopamineLost = Math.floor((currentUser.dopamine_consumed / currentUser.dopamine)*100);
-                setCurrentDopamine(100-percentageOfDopamineLost);
-            };
-        }
-
-        useEffect(() => {
-            if (currentUser && isFetchingDone) {
-                calculatingDopamine();
-            }
-        }, [isFetchingDone])
+    const currentUser = useUserStore(state => state.currentUser);
 
     return(
         <>
@@ -31,7 +15,8 @@ export default function Bar() {
                 color="blue"
                 borderColor="white"
                 className="w-full"
-                progress={currentDopamine}
+                progress={(currentUser && currentUser.dopamine) ? 
+                (currentUser.dopamine/currentUser.dopamine_consumed)*100-currentUser.dopamine_consumed : 0}
             />
         </>
     )

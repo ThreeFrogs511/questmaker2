@@ -1,0 +1,21 @@
+[
+    {
+        "id": "abc123",
+        "name": "Assassin",
+        "stats": {
+            "str": 12,
+            "dex": 10,
+            "con": 10,
+            "int": 10,
+            "wis": 10,
+            "cha": 10
+        },
+        "hp": 8,
+        "dopamine": 20,
+        "movesets": {
+            "headbutt": 3,
+            "slash": 2
+        },
+        "ac":10
+    }
+]

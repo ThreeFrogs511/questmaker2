@@ -1,10 +1,9 @@
 'use client'
-import useSound from 'use-sound';
 import { Press_Start_2P } from 'next/font/google';
-import { Button, Card, Input } from 'pixel-retroui';
-import { useUserContext } from '@/context/context';
+import { Button, Input } from 'pixel-retroui';
 
 import Quest from '@/classes/Quest';
+import { useUserStore } from '@/stores/useUserStore';
 
 const PressStartFont = Press_Start_2P({
       subsets: ['latin'],
@@ -27,7 +26,7 @@ export default function Toolbar({setDisplayedQuestsAction, setAllQuestsAction,
     whichPage: number
 }) {   
 
-    const {currentUser} = useUserContext();
+    const currentUser = useUserStore(state => state.currentUser);
 
     async function submitToDoClick() {
         const value = (document.getElementById('todo') as HTMLInputElement).value;

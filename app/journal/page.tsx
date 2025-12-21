@@ -5,11 +5,11 @@ import { useUserContext } from "@/context/context";
 import List from "@/components/journal/List";
 import Toolbar from "@/components/journal/Toolbar"
 import { Press_Start_2P } from 'next/font/google';
-import ProgressBar from '@/components/userStats/ProgressBar'
 import Footer from "@/components/global/Footer"
 import Header from "@/components/global/Header"
 
-
+import { useUserStore } from "@/stores/useUserStore";
+import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
 
 const PressStartFont = Press_Start_2P({
       subsets: ['latin'],
@@ -18,7 +18,9 @@ const PressStartFont = Press_Start_2P({
 
 export default function journal() {
 
-  const { currentUser, isFetchingDone} = useUserContext();
+  const {isFetchingDone} = useUserContext();
+  const currentUser = useUserStore(state => state.currentUser);
+  const resetDraft = useCharacterCreationStore(state => state.resetDraft)
 
   type List = {
     id: number | null,
@@ -44,44 +46,66 @@ export default function journal() {
 
 
   const fetchingTodos = async () => {
-      const id = currentUser.id;
-      const response = await fetch(`/api/todo/${id}`);
-      const originalList= await response.json();
-      !originalList.error && setAllQuests(originalList);
+      if (currentUser) {
+        const id = currentUser.id;
+        const response = await fetch(`/api/todo/${id}`);
+        const originalList= await response.json();
+        !originalList.error && setAllQuests(originalList);
 
-      // displaying only current quests as default display
-      if (!originalList.error) {
-        const currentQuests = originalList.filter((n: { completed: boolean; }) => n.completed === false)
-        setDisplayedQuests(currentQuests);
+        // displaying only current quests as default display
+        if (!originalList.error) {
+          const currentQuests = originalList.filter((n: { completed: boolean; }) => n.completed === false)
+          setDisplayedQuests(currentQuests);
+        }
+        // quests fetching is done
+        setAreQuestsLoaded(true);
+      } else {
+        console.log('error: no id')
       }
-      // quests fetching is done
-      setAreQuestsLoaded(true);
     
   };
 
 
 
+  useEffect(() => {
+    resetDraft({});
+  },[])
     
   // fetching data at rendering
   useEffect(() => {
-    currentUser.id && fetchingTodos();
+    (currentUser && currentUser.id) && fetchingTodos();
   }, [isFetchingDone]);
 
 
   // sorting list based on the page number
   useEffect(() => {
-    changingPageSound();
 
     if (allQuests) {
-      if (whichPage === 0) {
-        const currentQuests = allQuests.filter(n => n.completed === false)
+      switch (whichPage) {
+        case 0 :         
+        const currentQuests = allQuests.filter(n => n.completed === false);
         setDisplayedQuests(currentQuests);
-      } else if (whichPage === 1) {
-        const archivedQuests = allQuests.filter(n => n.completed === true)
+        break;
+
+        case 1 :
+        const archivedQuests = allQuests.filter(n => n.completed === true);
         setDisplayedQuests(archivedQuests);
-      } else if (whichPage === 2) {
+        break;
+
+        case 2 :
         setDisplayedQuests(allQuests);
+        break;
+
       }
+      // if (whichPage === 0) {
+      //   const currentQuests = allQuests.filter(n => n.completed === false)
+      //   setDisplayedQuests(currentQuests);
+      // } else if (whichPage === 1) {
+      //   const archivedQuests = allQuests.filter(n => n.completed === true)
+      //   setDisplayedQuests(archivedQuests);
+      // } else if (whichPage === 2) {
+      //   setDisplayedQuests(allQuests);
+      // }
     }
   }, [whichPage])
 

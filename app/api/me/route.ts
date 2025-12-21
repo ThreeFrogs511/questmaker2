@@ -22,7 +22,7 @@ const sessionRows = await sql `
 
 const userRows = await sql`
     SELECT id, username, email, xp, hp, user_class, lvl, race, gender,
-           str, dex, con, int, wis, cha, damage_taken, dopamine, dopamine_consumed, profile_completed
+           str, dex, con, int, wis, cha, ac, damage_taken, dopamine, dopamine_consumed, profile_completed
     FROM users
     WHERE id = ${sessionRows[0].user_id}`;
 

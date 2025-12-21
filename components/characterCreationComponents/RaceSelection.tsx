@@ -5,6 +5,7 @@ import { useUserContext } from '@/context/context';
 import { Button, Card } from 'pixel-retroui';
 import Title from './Title'
 import presets from '../../assets/characterPresets.json'
+import { useCharacterCreationStore } from '@/stores/useCharacterCreationStore'
 
 export default function RaceSelection({indexTitle, setIndexTitleAction} : {
     indexTitle:number,
@@ -12,18 +13,20 @@ export default function RaceSelection({indexTitle, setIndexTitleAction} : {
     }) {
 
     const races = presets.races;
-    const {currentUser, setCurrentUser} = useUserContext();
+    // const {currentUser, setCurrentUser} = useUserContext();
     const [raceDescription, setRaceDescription] = useState<string | undefined>('');
   
+    const updateDraft = useCharacterCreationStore(state => state.updateDraft);
+    const draft = useCharacterCreationStore(state => state.draft);
     
     useEffect(() => {
-        if (!currentUser.race) return;
+        if (!draft.race) return;
         
-        if (currentUser.race) {
-            const chosenRace = races.find( n => n.race === currentUser.race);
+        if (draft.race) {
+            const chosenRace = races.find( n => n.race === draft.race);
             setRaceDescription(chosenRace?.description);
         }
-    }, [currentUser.race])
+    }, [draft.race])
 
     return(
         <>
@@ -40,10 +43,13 @@ export default function RaceSelection({indexTitle, setIndexTitleAction} : {
                         <Button
                         key={index}
                         bg="black"
-                        textColor={currentUser.race === c.race ? "yellow" : "white"}
-                        borderColor={currentUser.race === c.race ? "yellow" : "white"}
+                        textColor={draft.race === c.race ? "yellow" : "white"}
+                        borderColor={draft.race === c.race ? "yellow" : "white"}
                         data-id="race-option"
-                        onPointerDown={() => setCurrentUser(prev => ({...prev, race: c.race}))}
+                        onPointerDown={() => {
+                        updateDraft({race:c.race})
+                        // setCurrentUser(prev => ({...prev, race: c.race}))
+                        }}
                         className={` px-4 max-h-full py-1! lg:py-5! xl:py-5! 2xl:py-5! 
                         text-center cursor-pointer text-sm! sm:text-base! md:text-lg! lg:text-xl! 
                         xl:text-xl! 2xl:text-2xl! text-wrap `}>
@@ -61,7 +67,7 @@ export default function RaceSelection({indexTitle, setIndexTitleAction} : {
                     data-id="race-option"
                     className="px-4 py-5! row-span-1 text-center
                     text-sm sm:text-base md:text-lg! lg:text-xl! xl:text-xl! 2xl:text-xl! overflow-auto">
-                        {!currentUser.race ? "Select a race to view its description." : raceDescription }
+                        {!draft.race ? "Select a race to view its description." : raceDescription }
                 </Card>
             </section>
 

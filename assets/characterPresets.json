@@ -35,79 +35,79 @@
     "class": "Barbarian",
     "description": "Primal strength. Rage-fueled combat. High durability and melee power.",
     "abilities": {
-      "Strength": 15,
-      "Dexterity": 13,
-      "Constitution": 14,
-      "Wisdom": 12,
-      "Intelligence": 8,
-      "Charisma": 10
+      "str": 15,
+      "dex": 13,
+      "con": 14,
+      "wis": 12,
+      "int": 8,
+      "cha": 10
     },
-    "mainAbility" : "Strength"
+    "mainAbility" : "str"
   },
   {
     "class": "Bard",
     "description": "Magic through music. Support, charm, inspiration, and versatility.",
     "abilities": {
-      "Strength": 8,
-      "Dexterity": 14,
-      "Constitution": 13,
-      "Wisdom": 12,
-      "Intelligence": 10,
-      "Charisma": 15
+      "str": 8,
+      "dex": 14,
+      "con": 13,
+      "wis": 12,
+      "int": 10,
+      "cha": 15
     },
-    "mainAbility" : "Charisma"
+    "mainAbility" : "cha"
   },
   {
     "class": "Cleric",
     "description": "Divine magic. Healing, protection, and powerful radiant spells.",
     "abilities": {
-      "Strength": 13,
-      "Dexterity": 12,
-      "Constitution": 14,
-      "Wisdom": 15,
-      "Intelligence": 10,
-      "Charisma": 8
+      "str": 13,
+      "dex": 12,
+      "con": 14,
+      "wis": 15,
+      "int": 10,
+      "cha": 8
     },
-    "mainAbility" : "Wisdom"
+    "mainAbility" : "wis"
   },
   {
     "class": "Wizard",
     "description": "Spellbook-based arcane mastery. Broadest spell variety in the game.",
     "abilities": {
-      "Strength": 8,
-      "Dexterity": 13,
-      "Constitution": 14,
-      "Wisdom": 12,
-      "Intelligence": 15,
-      "Charisma": 10
+      "str": 8,
+      "dex": 13,
+      "con": 14,
+      "wis": 12,
+      "int": 15,
+      "cha": 10
     },
-    "mainAbility" : "Intelligence"
+    "mainAbility" : "int"
   },
   {
     "class": "Fighter",
     "description": "Martial master. Simple, effective, adaptable in any combat style.",
     "abilities": {
-      "Strength": 15,
-      "Dexterity": 13,
-      "Constitution": 14,
-      "Wisdom": 12,
-      "Intelligence": 10,
-      "Charisma": 8
+      "str": 15,
+      "dex": 13,
+      "con": 14,
+      "wis": 12,
+      "int": 10,
+      "cha": 8
     },
-    "mainAbility" : "Strength"
+    "mainAbility" : "str"
   },
   {
     "class": "Monk",
     "description": "Ki-powered martial arts. Fast, precise, mobile combat techniques.",
     "abilities": {
-      "Strength": 12,
-      "Dexterity": 15,
-      "Constitution": 13,
-      "Wisdom": 14,
-      "Intelligence": 10,
-      "Charisma": 8
+      "str": 12,
+      "dex": 15,
+      "con": 13,
+      "wis": 14,
+      "int": 10,
+      "cha": 8
     },
-    "mainAbility" : "Dexterity"
+    "mainAbility" : "dex"
   }
 ]
 }

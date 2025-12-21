@@ -2,6 +2,7 @@
 
 import Title from './Title'
 import { useUserContext } from '@/context/context'
+import { useCharacterCreationStore } from '@/stores/useCharacterCreationStore'
 import { Input, Button } from "pixel-retroui"
 
 export default function nameGenderSelection({indexTitle, setIndexTitleAction }: {
@@ -10,6 +11,8 @@ export default function nameGenderSelection({indexTitle, setIndexTitleAction }: 
 }) {
 
     const {currentUser, setCurrentUser} = useUserContext();
+    const updateDraft = useCharacterCreationStore(state => state.updateDraft);
+    const draft = useCharacterCreationStore(state => state.draft);
     const gendersList = ['Male', 'Female'];
 
     return(
@@ -42,8 +45,10 @@ export default function nameGenderSelection({indexTitle, setIndexTitleAction }: 
                         type="text"
                         className="w-full focus:outline-none p-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
                         placeholder="Your hero's name..."
-                        value={currentUser.username ?? ''}
-                        onChange={(e) => setCurrentUser(prev => ({...prev, username: e.target.value}))}/>
+                        value={draft.username ?? ''}
+                        onChange={(e) => {
+                            updateDraft({username:e.target.value})
+                            setCurrentUser(prev => ({...prev, username: e.target.value}))}}/>
                 </div>
                 <div className="w-full mx-auto flex flex-col items-center! gap-5">
                     {gendersList.map((item, index) => (
@@ -55,7 +60,9 @@ export default function nameGenderSelection({indexTitle, setIndexTitleAction }: 
                         className={`px-4 max-h-full w-full py-5! lg:py-5! xl:py-5! 2xl:py-5! 
                         text-center cursor-pointer text-sm sm:text-base md:text-lg! lg:text-xl! 
                         xl:text-xl! 2xl:text-2xl! text-wrap `}
-                        onPointerDown={() => setCurrentUser(prev => ({...prev, gender: item}))}>
+                        onPointerDown={() => {
+                            updateDraft({gender:item})
+                            setCurrentUser(prev => ({...prev, gender: item}))}}>
                             {item}
                         </Button>
                     ))}

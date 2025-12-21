@@ -1,9 +1,9 @@
 import { ProgressBar } from 'pixel-retroui';
-import { useUserContext } from '@/context/context';
+import { useUserStore } from '@/stores/useUserStore';
 
 export default function Bar() {
 
-    const {currentUser, setCurrentUser} = useUserContext();
+    const currentUser = useUserStore(state => state.currentUser);
 
     return(
         <>
@@ -12,7 +12,7 @@ export default function Bar() {
             color="green"
             borderColor="white"
             className="w-full"
-            progress={currentUser.xp ? currentUser.xp : 0}
+            progress={currentUser && currentUser.xp ? currentUser.xp : 0}
             />
         </>
     )

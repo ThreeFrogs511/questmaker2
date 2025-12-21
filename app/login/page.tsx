@@ -4,6 +4,7 @@ import { Card, Button, Input } from "pixel-retroui";
 import { Press_Start_2P } from 'next/font/google';
 import { useUserContext } from '@/context/context';
 import { useRouter } from 'next/navigation';
+import { useUserStore } from "@/stores/useUserStore";
 
 
 
@@ -16,7 +17,7 @@ export default function AuthPage() {
 
   const router = useRouter()
   const { currentUser, setCurrentUser, setIsFetchingDone, isFetchingDone} = useUserContext()
-  
+  const login = useUserStore(state => state.login);
 
   const [title, setTitle] = useState<string | undefined>('');
   const [error, setError] = useState<string | undefined>();
@@ -64,10 +65,14 @@ export default function AuthPage() {
         body: JSON.stringify({email: email.trim(), user_password:password.trim()})
       });
 
-      const login = await response.json();
+      const feedback = await response.json();
 
-      if (login.success) {
-        const userData =  login.userData;
+      if (feedback.success) {
+        const userData = feedback.userData;
+        // zustand function
+        login({...userData});
+
+        // context function
         setCurrentUser({...userData});
         !userData.profile_completed ? router.push('/characterCreation') : router.push('/journal');
       } else {

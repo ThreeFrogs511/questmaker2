@@ -4,7 +4,8 @@ import { useUserContext } from '@/context/context'
 import { Card, Button, Input } from 'pixel-retroui'
 import { Press_Start_2P } from 'next/font/google'
 import { useRouter } from 'next/navigation';
-
+import { useUserStore } from '@/stores/useUserStore'
+import { useCharacterCreationStore } from '@/stores/useCharacterCreationStore'
 
 const PressStartFont = Press_Start_2P({
     subsets: ['latin'],
@@ -14,7 +15,9 @@ const PressStartFont = Press_Start_2P({
 export default function SignupPage() {
 
     const router = useRouter();
-    const {currentUser, setCurrentUser, isFetchingDone} = useUserContext();
+    const {setCurrentUser, isFetchingDone} = useUserContext();
+
+    const updateDraft = useCharacterCreationStore(state => state.updateDraft);
 
     const [error, setError] = useState<string | undefined>()
     const [title, setTitle] = useState<string | undefined>('');
@@ -43,7 +46,6 @@ export default function SignupPage() {
         e.preventDefault()
         setError('');
         const email = (document.getElementById('email') as HTMLInputElement).value;
-        // const username= (document.getElementById('username') as HTMLInputElement).value;
         const password = (document.getElementById('password') as HTMLInputElement).value;
         const confirm = (document.getElementById('confirm') as HTMLInputElement).value;
         const emailRegex = /^(?=.{1,254}$)(?=.{1,64}@)[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/;
@@ -74,6 +76,10 @@ export default function SignupPage() {
             });
             const feedback = await response.json();
             if (feedback.success) {
+
+                // zustand
+                updateDraft({id: feedback.id, email: email.trim()});
+                
                 setCurrentUser(prev => ({...prev, id: feedback.id, email: email.trim()}));
                 router.push('/characterCreation');
             } else {
@@ -121,20 +127,6 @@ export default function SignupPage() {
                     "
                 >
                     <div className="flex flex-col gap-6">
-
-                        {/* <div className="w-[90%] mx-auto">
-                            <Input
-                                bg="black"
-                                textColor="white"
-                                borderColor="white"
-                                id="username"
-                                type="text"
-                                className="w-full focus:outline-none p-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
-                                placeholder="Username"
-                            />
-                        </div> */}
-
-
                         <div className="w-[90%] mx-auto">
                             <Input
                                 bg="black"
@@ -174,14 +166,13 @@ export default function SignupPage() {
                     </div>
 
                     <Button
-                        bg="black"
-                        textColor="white"
-                        borderColor="white"
-                        shadow="white"
-                        type="submit"
-                        className="w-[90%] mx-auto! lg:mb-5! xl:mb-15! lg:mt-5! xl:mt-5! 2xl:mt-10! py-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
-                        onClick={(e) => submitHandler(e)}
-                    >
+                    bg="black"
+                    textColor="white"
+                    borderColor="white"
+                    shadow="white"
+                    type="submit"
+                    className="w-[90%] mx-auto! lg:mb-5! xl:mb-15! lg:mt-5! xl:mt-5! 2xl:mt-10! py-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
+                    onClick={(e) => submitHandler(e)}>
                         Begin my adventure
                     </Button>
                 </form>

@@ -1339,29 +1339,18 @@
                     "text": "[START COMBAT]",
                     "next": "bar_fight_combat",
                     "combat_started": true,
-                    "enemy": [
-                        "Assassin",
-                        {
-                            "str": 10,
-                            "dex": 8,
-                            "con": 10,
-                            "int": 10,
-                            "wis": 10,
-                            "cha": 10
-                        },
-                        8,
-                        10,
-                        {
-                            "Slash": 10,
-                            "Headbutt": 5
-                        }
-                    ]
+                    "enemy_id": "abc123"
                 }
             ]
         },
         "bar_fight_combat": {
             "text": "PLACEHOLDER",
-            "choices": [{"text": "", "combat_on": true}]
+            "choices": [
+                {
+                    "text": "",
+                    "combat_on": true
+                }
+            ]
         },
         "assassin_lunges_at_you": {
             "text": "You send the assassin sprawling with a final punch. Nearby, the dwarf slams one elf’s head into the floor, then hurls the second straight at you. You narrowly dodge—Eden does the same. The cuckold, slower to react, takes the impact full on. At that moment, the assassin regains his senses and makes a desperate charge, blade aimed at your chest. You have no time to dodge. You're done for...",
@@ -1793,7 +1782,7 @@
             "choices": [
                 {
                     "text": "Restart",
-                    "next": "remembering_how_to_fight"
+                    "next": "bar_fight_combat"
                 }
             ]
         }

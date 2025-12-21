@@ -1,18 +1,21 @@
 
 'use client'
 import { useUserContext } from "@/context/context"
-import { Card, Button } from "pixel-retroui"
+import { Card } from "pixel-retroui"
 import Title from './Title'
-import presets from '../../assets/characterPresets.json'
+import { useCharacterCreationStore } from '@/stores/useCharacterCreationStore'
+import { useEffect } from "react"
+
+
 
 
     type Abilities = {
-        Strength:number,
-        Dexterity:number,
-        Constitution: number,
-        Intelligence: number,
-        Wisdom: number,
-        Charisma: number,
+        str:number,
+        dex:number,
+        con: number,
+        int: number,
+        wis: number,
+        cha: number
     }
 
 export default function AbilityScoresSelection({abilityScores, setAbilityScoresAction, indexTitle, setIndexTitleAction, pointsToSpare, setPointsToSpareAction} : {
@@ -24,8 +27,9 @@ export default function AbilityScoresSelection({abilityScores, setAbilityScoresA
     setPointsToSpareAction: React.Dispatch<React.SetStateAction<number>>
 }) {
 
-    const {currentUser} = useUserContext();
-
+    const abilitiesName = ['Strength', 'Dexterity', 'Constitution', 'Intelligence', 'Wisdom', 'Charisma'];
+    const updateDraft = useCharacterCreationStore(state => state.updateDraft);
+    const draft = useCharacterCreationStore(state => state.draft);
 
     function usingAbilityPoints(e:any) {
         type targetAbility = keyof Abilities;
@@ -64,6 +68,8 @@ export default function AbilityScoresSelection({abilityScores, setAbilityScoresA
     }
 
 
+
+
     return(
         <>
         <section id="abilityScoresSelectionContainer" 
@@ -78,7 +84,7 @@ export default function AbilityScoresSelection({abilityScores, setAbilityScoresA
             shadowColor="white"
             className="p-4 text-center h-full flex flex-col justify-around row-span-2">
                 <h3 className="text-sm! sm:text-base! lg:text-xl! xl:text-xl! 2xl:text-xl!">You have <span className="text-yellow-400">{pointsToSpare}</span> ability points</h3>
-                {Object.entries(abilityScores).map(([key, value]) => (
+                {Object.entries(abilityScores).map(([key, value], index) => (
                     <div 
                     key={key}
                     className="grid grid-cols-6 text-sm! sm:text-base! lg:text-xl! xl:text-xl! 2xl:text-xl!">
@@ -89,7 +95,7 @@ export default function AbilityScoresSelection({abilityScores, setAbilityScoresA
                         onPointerDown={(e) => usingAbilityPoints(e)}>
                             -
                         </span>
-                        <span className="col-span-3 cursor-pointer">{key}</span> 
+                        <span className="col-span-3 cursor-pointer">{abilitiesName[index]}</span> 
                         <span className={`col-span-1 cursor-pointer ${value<10 ? "text-red-600" : "text-yellow-400"}`}>{value}</span>
                         <span className="col-span-1 cursor-pointer hover:text-yellow-400 active:text-yellow-400" 
                         id={key} 

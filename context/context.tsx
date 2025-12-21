@@ -3,28 +3,9 @@ import { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation'
 import Loading from '@/context/loading';
-
-type User = {
-    id: number | null,
-    username: string | null,
-    email: string | null,
-    hp: number | null,
-    xp: number | null,
-    dopamine: number | null,
-    dopamine_consumed:number | null,
-    gender: string | null
-    user_class : string | null,
-    race: string | null,
-    lvl : number | null,
-    str : number | null,
-    dex : number | null,
-    con : number | null,
-    int : number | null,
-    wis : number | null,
-    cha : number | null,
-    profile_completed : boolean,
-    damage_taken: number
-}
+import { User } from '@/types/types';
+import { useUserStore } from '@/stores/useUserStore';
+import { useCharacterCreationStore } from '@/stores/useCharacterCreationStore';
 
 type userContextType = {
     currentUser: User,
@@ -41,6 +22,10 @@ export function UserDataProvider({children} :  { children: React.ReactNode }) {
 
     const router = useRouter();
     const pathname = usePathname();
+
+    const login = useUserStore(state => state.login);
+
+    const updateDraft = useCharacterCreationStore(state => state.updateDraft);
 
     // global state, user data
     const [currentUser, setCurrentUser] = useState<User>({
@@ -61,10 +46,10 @@ export function UserDataProvider({children} :  { children: React.ReactNode }) {
         int :10,
         wis :10,
         cha :10,
+        ac:null,
         profile_completed: false,
         damage_taken:0
     })
-
     
     const [isFetchingDone, setIsFetchingDone] = useState(false);
     
@@ -75,14 +60,15 @@ export function UserDataProvider({children} :  { children: React.ReactNode }) {
 
                 // if we found an existing session, we automatically log the user back
                 if (data.authenticated) {
-                    // storing the user data in global state
-                    setCurrentUser(data.user);
-
+                    login({...data.user});
                     // if the account exists but no fully completed
                     if (!data.user.profile_completed) {
-                        router.push('characterCreation')
+                        updateDraft({id:data.user.id, email:data.user.email});
+                        router.push('characterCreation');
+                        
                     } else {
                         pathname === '/' ? router.push('/journal') : router.push(`${pathname}`);
+                        // pathname==='/characterCreation'&& router.push('/journal');
                     }
                 } else {
                     pathname === '/signup' ? router.push("/signup") : router.push("/login");

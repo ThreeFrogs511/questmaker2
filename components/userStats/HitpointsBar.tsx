@@ -1,10 +1,20 @@
+'use client'
+import { useState, useEffect} from 'react';
 import { ProgressBar } from 'pixel-retroui';
-import { useUserContext } from '@/context/context';
-import { useEffect, useState } from 'react';
+import { useUserStore } from '@/stores/useUserStore';
+import { useNarrationStore } from '@/stores/useNarrationStore';
 
 export default function Bar() {
 
-    const {currentUser} = useUserContext();
+    const currentUser = useUserStore(state => state.currentUser);
+    const [hpInPercentage, setHpInPercentage] = useState(0);
+
+    useEffect(() => {
+        if (currentUser && currentUser.hp) {
+            const percentage = ((currentUser.hp-currentUser.damage_taken)/currentUser.hp)*100;
+            setHpInPercentage(percentage<0 ? 0 : percentage);
+        }
+    }, [currentUser.damage_taken])
 
     return(
         <>
@@ -13,7 +23,7 @@ export default function Bar() {
             color="red"
             borderColor="white"
             className="w-full"
-            progress={currentUser.hp ? (currentUser.hp/currentUser.hp)*100-currentUser.damage_taken : 0}
+            progress={hpInPercentage}
             />
         </>
     )

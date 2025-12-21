@@ -4,28 +4,34 @@ import RaceSelection from "@/components/characterCreationComponents/RaceSelectio
 import ClassSelection from "@/components/characterCreationComponents/ClassSelection"
 import AbilityScoresSelection from "@/components/characterCreationComponents/AbilityScoresSelection"
 import SummaryCreation from "@/components/characterCreationComponents/SummaryCreation"
+import { useCharacterCreationStore } from '@/stores/useCharacterCreationStore'
 
 
 
 import { useUserContext } from "@/context/context"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 export default function characterCreation() {
 
-    const {currentUser, setCurrentUser} = useUserContext();
 
+    const draft = useCharacterCreationStore(state => state.draft);
+
+    useEffect(() => {
+        console.log(draft)
+    }, [draft])
+    
     // determines which title and page to display
     const [indexTitle, setIndexTitle] = useState(0);
 
     // handles the user's choices
     const [abilityScores, setAbilityScores] = useState(
         {
-            Strength:10,
-            Dexterity:10,
-            Constitution: 10,
-            Intelligence: 10,
-            Wisdom: 10,
-            Charisma: 10,
+            str: 10,
+            dex: 10,
+            con: 10,
+            int: 10,
+            wis: 10,
+            cha: 10,
         })
     const [pointsToSpare, setPointsToSpare] = useState(5);
    

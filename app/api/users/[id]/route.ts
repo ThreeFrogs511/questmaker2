@@ -35,7 +35,8 @@ export async function PATCH(
                   profile_completed = $14,
                   damage_taken=$15,
                   dopamine=$16,
-                  dopamine_consumed=$17
+                  dopamine_consumed=$17,
+                  ac=$18
                   WHERE id = ${id}`;
     const result = await sql.unsafe(
       query, [
@@ -55,7 +56,8 @@ export async function PATCH(
         true, 
         0, 
         data.dopamine,
-        0
+        0,
+        data.ac
       ]); 
     
     

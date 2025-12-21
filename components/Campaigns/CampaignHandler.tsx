@@ -1,37 +1,42 @@
 'use client'
 import { useEffect, useRef, useState} from "react";
-import { useUserContext } from "@/context/context";
+import { useUserStore } from "@/stores/useUserStore";
+import { useNarrationStore} from "@/stores/useNarrationStore";
 import Engine from "@/classes/CampaignEngine";
-
+import useSound from "use-sound";
+import PreloadAudio from "./PreloadAudio";
 // used to interpret HTML in JSON
 import parse from "html-react-parser";
 
 // main types
-import { Nodes, Choice, Encounter } from "./NodeTypes";
+
+import {Nodes, Choice, Encounter} from '@/types/types'
 
 // components and custom hooks
 import PressPlayIcon from "./PressPlayIcon";
-import Audio from "./Audio";
-import CombatInterface from "./CombatInterface";
+import Voices from "./Voices";
+import CombatInterface from "./CombatComponents/CombatInterface";
+import Music from "./CombatComponents/Music";
+import { useCombatStore } from "@/stores/useCombatStore";
 
-export default function CampaignHandler({
-  currentNode, currentCampaign, setCurrentNodeAction, currentCampaignTitle} :
-  {
-    currentNode:keyof Nodes | undefined,
-    setCurrentNodeAction:React.Dispatch<React.SetStateAction<keyof Nodes | undefined>>
-    currentCampaign:Nodes | undefined,
-    currentCampaignTitle: string | undefined
-  }
-) {
+export default function CampaignHandler() {
 
-async function startNewCampaign(id:string) {
-  const response = await fetch(`/api/campaigns/${id}`);
-  const result = await response.json();
-  return result;
-}
+    const { voice, battleMusic } = PreloadAudio();
+    // user store
+    const currentUser = useUserStore(state => state.currentUser);
+    const updateStats = useUserStore(state => state.updateStats);
+   
 
-    // global user state
-    const {currentUser, setCurrentUser} = useUserContext();
+    // narration store
+    const currentCampaign = useNarrationStore(state => state.currentCampaign);
+    const campaignTitle = useNarrationStore(state => state.campaignTitle);
+    const currentNode = useNarrationStore(state => state.currentNode);
+    const updateNode = useNarrationStore(state => state.updateNode);
+  
+    // combat store
+    const setCombatLog = useCombatStore(state => state.setCombatLog);
+    const clearCombatLog = useCombatStore(state => state.clearCombatLog);
+    const updateEnemy = useCombatStore(state => state.updateEnemy);
 
     // store the currently available choices 
     const [allChoicesAvailable, setAllChoicesAvailable] = useState<Choice[]>();
@@ -54,96 +59,107 @@ async function startNewCampaign(id:string) {
     // prevents double clicking on keyboard and errors
     const [keyboardPressed, setKeyboardPressed]= useState(false);
 
-
     // combat system requirements
-    const [combatLog, setCombatLog] = useState<string |null>(null);
-    const [enemyData, setEnemyData] = useState<Encounter | undefined>();
     const [isCombatOn, setIsCombatOn] = useState(false);
+
+    // lock the choices option to allow a small delay between each node for loading purposes
+    const isLocked = useRef(false);
 
     
     // new instance for this campaign
-    const gameplay = useRef<Engine>(new Engine(currentCampaign, currentNode, currentUser, setCurrentUser, setCombatLog, enemyData, setEnemyData));
+    const gameplay = useRef<Engine>(new Engine( 
+      currentNode, 
+      currentUser, 
+      updateStats, 
+      setCombatLog, 
+      clearCombatLog, 
+      updateEnemy));
 
 
-    useEffect(() => {
-       console.log(currentUser)
-    }, [userPastNodes])
 
   useEffect(() => {
     if (currentCampaign && currentNode) {
 
-    // updating the node to allow the engine to run smoothly
-    gameplay.current.updateNode(currentNode)
+      // manually updating the engine node
+      gameplay.current.updateNode(currentNode)
 
-    //handle all the choices filters
-    gameplay.current.prepareChoicesForPlayer(setAllChoicesAvailable, currentCampaign[currentNode].choices, userPastChoices);
- 
-    // stores the nodes
-    userPastNodes.length>0 ? setUserPastNodes((prev) => [...prev, currentNode] ) : setUserPastNodes([currentNode]);
-   
+      //cleaning and preparing the choices displayed to the player
+      gameplay.current.prepareChoicesForPlayer(setAllChoicesAvailable, currentCampaign[currentNode].choices, userPastChoices);
+  
+      // storing the past nodes  for story purposes
+      userPastNodes.length>0 ? setUserPastNodes((prev) => [...prev, currentNode] ) : setUserPastNodes([currentNode]);
 
-    // activate the combat log when it's combat time
-    if (currentCampaign[currentNode].choices) {
-      const combatOn = currentCampaign[currentNode].choices.find(n => {
-        if (n.combat_on) return n;
-      });
-      combatOn ? setIsCombatOn(true) : setIsCombatOn(false);
-    }
+      // activating the combat interface when it's combat time
+      if (currentCampaign[currentNode].choices) {
+        const combatOn = currentCampaign[currentNode].choices.find(n => {
+          if (n.combat_on) return n;
+        });
+        if (combatOn){ 
+          setIsCombatOn(true)
+        } else {
+          setIsCombatOn(false);
+        }
+      }
     } 
+
+    // locking choices for a few seconds when they appear to avoid bugs due to spamming 
+    isLocked.current=true;
+    new Promise<void>(resolve => {setTimeout(() => {resolve()}, 500)})
+    .then(() => isLocked.current=false)
+
   }, [currentCampaign, currentNode])
 
 
   // handle the keyboard navigation option
   useEffect(() => {
-  function handleKeyboardSelection(e:any) {
-      if (keyboardPressed) return;
+    function handleKeyboardSelection(e:any) {
+        if (keyboardPressed || isLocked.current) return;
 
 
-        setKeyboardPressed(true);
-        if (allChoicesAvailable && (e.key === "1" || e.key === '&')) {
-          userPastChoices.length>0 ? setUserPastChoices((prev) => [...prev, allChoicesAvailable[0]?.text] ) : setUserPastChoices([allChoicesAvailable[0]?.text]);
-          gameplay.current.determineNextNode(setCurrentNodeAction, allChoicesAvailable[0], setAbilityCheckData, userPastNodes);
-          setKeyboardPressed(false);
-
-        } else if (allChoicesAvailable && (e.key === "2" || e.key ==="é")) {
-            userPastChoices.length>0 ? setUserPastChoices((prev) => [...prev, allChoicesAvailable[1]?.text] ) : setUserPastChoices([allChoicesAvailable[1]?.text]);
-            gameplay.current.determineNextNode(setCurrentNodeAction, allChoicesAvailable[1], setAbilityCheckData, userPastNodes);
-          setKeyboardPressed(false);
-
-        } else if(allChoicesAvailable && (e.key === "3" || e.key==="\"")) {
-            userPastChoices.length>0 ? setUserPastChoices((prev) => [...prev, allChoicesAvailable[2]?.text] ) : setUserPastChoices([allChoicesAvailable[2]?.text]);
-            gameplay.current.determineNextNode(setCurrentNodeAction, allChoicesAvailable[2], setAbilityCheckData, userPastNodes);
+          setKeyboardPressed(true);
+          if (allChoicesAvailable && (e.key === "1" || e.key === '&')) {
+            if (!allChoicesAvailable[0]) return;
+            userPastChoices.length>0 ? setUserPastChoices((prev) => [...prev, allChoicesAvailable[0]?.text] ) : setUserPastChoices([allChoicesAvailable[0]?.text]);
+            gameplay.current.determineNextNode(updateNode, allChoicesAvailable[0], setAbilityCheckData, userPastNodes);
             setKeyboardPressed(false);
-        } else {
-          setKeyboardPressed(false);
-          return;
-        }
-  }
-  document.addEventListener('keydown', handleKeyboardSelection);
-  return () => document.removeEventListener('keydown', handleKeyboardSelection);
+
+          } else if (allChoicesAvailable && (e.key === "2" || e.key ==="é")) {
+              if (!allChoicesAvailable[1]) return;
+              userPastChoices.length>0 ? setUserPastChoices((prev) => [...prev, allChoicesAvailable[1]?.text] ) : setUserPastChoices([allChoicesAvailable[1]?.text]);
+              gameplay.current.determineNextNode(updateNode, allChoicesAvailable[1], setAbilityCheckData, userPastNodes);
+            setKeyboardPressed(false);
+
+          } else if(allChoicesAvailable && (e.key === "3" || e.key==="\"")) {
+              if (!allChoicesAvailable[2]) return;
+              userPastChoices.length>0 ? setUserPastChoices((prev) => [...prev, allChoicesAvailable[2]?.text] ) : setUserPastChoices([allChoicesAvailable[2]?.text]);
+              gameplay.current.determineNextNode(updateNode, allChoicesAvailable[2], setAbilityCheckData, userPastNodes);
+              setKeyboardPressed(false);
+          } else {
+            setKeyboardPressed(false);
+            return;
+          }
+    }
+    document.addEventListener('keydown', handleKeyboardSelection);
+    return () => document.removeEventListener('keydown', handleKeyboardSelection);
   }, [allChoicesAvailable])
 
+  //if the user's stats changed during the campaign, we also need to
+  //manually update the state in the engine as it doesn't
+  //act as a normal state but as an fixed attribute
+  useEffect(()=> {
+    console.log( currentUser.damage_taken)
+    gameplay.current.updateUser(currentUser)
+  },[currentUser])
 
  return (
     <section className=" w-full h-dvh max-h-full gap-10! lg:p-10">
 
-      {/* handles the audio */}
+      {/* handles the story audio */}
+      <Voices play={voice.play} stop={voice.stop} isPressed={isPressed} />
 
-      <Audio 
-      isPressed={isPressed} 
-      setIsPressedAction={setIsPressed} 
-      currentNode={currentNode} 
-      currentCampaign={currentCampaign && currentCampaign}
-      />
-
-      {/* combat interface */}
-        {isCombatOn && 
-        <CombatInterface 
-        combatLog={combatLog} 
-        enemyData={enemyData} 
-        gameplay={gameplay.current} 
-        currentNode={currentNode} 
-        setCurrentNodeAction={setCurrentNodeAction} />}
+      {/* combat interface and music */}
+      {isCombatOn && <Music play={battleMusic.play} stop={battleMusic.stop}/> }
+      {isCombatOn && <CombatInterface gameplay={gameplay.current} />}
     
       {/* narration container*/}
         <div className="h-[50dvh] max-h-[50dvh] lg:h-[40dvh] lg:max-h-[40dvh] lg:mb-5!">
@@ -152,22 +168,26 @@ async function startNewCampaign(id:string) {
             <div id="titleWrapper" className=" h-[20%] flex items-center overflow-hidden">
               <h1 
               className="text-lg! lg:text-4xl! font-bold font-minecraft text-amber-400">
-                {currentCampaignTitle && currentCampaignTitle} 
+                {campaignTitle ? campaignTitle : 'Campagne'} 
               </h1>
+
               <PressPlayIcon isPressed={isPressed} setIsPressedAction={setIsPressed}/>
+
             </div>
 
             {/* content wrapper */}
             <div className="text-sm! h-[80%] max-h-[80%] lg:text-2xl! xl:mt-8! tracking-wide overflow-auto lg:overflow-hidden text-gray-200 lg:leading-relaxed">
               <div className="text-justify mt-2! lg:mt-5!">
+
                 {/* narration */}
-                <div>{(currentNode && currentCampaign) && parse(currentCampaign[currentNode].text)}</div>
+                <div>{(currentNode && currentCampaign) && parse(currentCampaign[currentNode].text ?? '')}</div>
 
               </div>
 
               <p className={` font-semibold mt-5! ${abilityCheckData.success ? 'text-green-400' : 'text-red-600'}`}>
                 {abilityCheckData.status ? 'YOU ROLL ' + abilityCheckData.value : '' }
               </p>
+
             </div>
 
         </div>
@@ -180,8 +200,9 @@ async function startNewCampaign(id:string) {
                   return <button 
                   key={key}
                   onPointerDown={ () => { 
+                  if(isLocked.current) return;
                   userPastChoices.length>0 ? setUserPastChoices((prev) => [...prev, item.text] ) : setUserPastChoices([item.text]);
-                  gameplay.current && gameplay.current.determineNextNode(setCurrentNodeAction, item, setAbilityCheckData, userPastNodes);
+                  gameplay.current && gameplay.current.determineNextNode(updateNode, item, setAbilityCheckData, userPastNodes);
                   }}
                   className="hover:outline-2! border-2! my-1! border-white lg:border-0! outline-white! rounded-lg p-4! text-left">
                   <div className="flex items-center grow">

@@ -19,7 +19,7 @@ export default class ChoicesOptions {
 
     filterOutExpiredChoices(choices:Choice[], userPastChoices:any) {
         // global choices like ['CONTINUE'], ['START COMBAT'] or user's movesets cannot be removed
-        const lockedChoices = ['[CONTINUE]', '[START COMBAT]', '[Punch]', '[Fireball]'];
+        const lockedChoices = ['[CONTINUE]', '[START COMBAT]', '[Punch]', '[Fireball]', '[RESTART]'];
 
         // we remove choices that were already made to avoid unwanted loops
         const filteredChoices = choices.filter((n: any) => {

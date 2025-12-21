@@ -7,8 +7,11 @@ import Progress from '@/components/userStats/ProgressBar'
 import Footer from "@/components/global/Footer"
 import Header from "@/components/global/Header"
 
+import { useUserStore } from '@/stores/useUserStore'
+
 export default function Profile() {
-    const { currentUser} = useUserContext()
+
+    const currentUser = useUserStore(state => state.currentUser);
 
     return (
         <>
