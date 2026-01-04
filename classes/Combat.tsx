@@ -1,50 +1,47 @@
 
 import {Nodes, User, Encounter, Choice } from '@/types/types'
 import Enemy from './Enemy';
+import { useUserStore } from '@/stores/useUserStore';
+import { useCombatStore } from '@/stores/useCombatStore';
+
 export default class Combat {
 
     private currentUser;
     private updateStats;
-
+    private userModifier;
     private clearCombatLog;
     private setCombatLog;
     private userFirstToAttack:boolean;
     private updateEnemy;
-    private nbOfTurn:number;
-
     private tempUserStats: User | undefined;
-  
-
     private createEnemy;
+    private enemyModifier;
     private encounter: Encounter | undefined;
-
     private fight_over:boolean;
     
     
 
+
     constructor(
-      currentUser:User, 
-      updateStats: (patch: Partial<User>) => void, 
       setCombatLog:any,
       clearCombatLog:any,
-      updateEnemy:(patch: Partial<Encounter | undefined>) => void
+      // updateEnemy:(patch: Partial<Encounter | undefined>) => void
       ) {
 
-        this.currentUser = currentUser;
-        this.updateStats=updateStats;
-  
-        this.nbOfTurn=1;
-
+        this.currentUser = useUserStore.getState().currentUser;
+        this.updateStats = useUserStore.getState().updateStats;
+        this.userModifier=0;
         this.setCombatLog = setCombatLog;
         this.clearCombatLog = clearCombatLog;
 
         this.userFirstToAttack=true;
-        this.updateEnemy=updateEnemy;
-
         this.tempUserStats;
-        this.createEnemy = new Enemy();
-        this.encounter;
 
+        this.createEnemy = new Enemy();
+        // this.updateEnemy=updateEnemy;
+        this.updateEnemy=useCombatStore.getState().updateEnemy;
+        this.encounter;
+        this.enemyModifier=0;
         this.fight_over=false;
     }   
 
@@ -54,6 +51,7 @@ export default class Combat {
       // user initiative
       const userDex= this.currentUser.dex;
       const userModifier = userDex && Math.floor((userDex-10)/2);
+      this.userModifier=userModifier ?? 0;
       let initiativeRollUser = userModifier && Math.floor(Math.random() * 20)+1+userModifier;
 
 
@@ -63,6 +61,7 @@ export default class Combat {
       if (this.encounter && this.encounter.stats && this.encounter.stats.dex) {
       const enemyDex = this.encounter.stats.dex;
       const enemyModifier =  Math.floor((enemyDex-10)/2);
+      this.enemyModifier = enemyModifier ?? 0;
       initiativeRollEnemy = Math.floor(Math.random() * 20)+1+enemyModifier;
       }
 
@@ -79,13 +78,13 @@ export default class Combat {
       }
     }
 
-    handleAttackRolls(AC:number) {
-      let attackRoll = Math.floor(Math.random() * 20)+1+(AC-10);
+    handleAttackRolls(AC:number, modifier:number) {
+      let attackRoll = Math.floor(Math.random() * 20)+1+modifier+(AC-10);
       const hit = AC>attackRoll ? false : true;
       return {hit:hit, roll:attackRoll};
     }
 
-        // AC = determine the probability of avoiding enemy's attacks
+    // AC = determine the probability of avoiding enemy's attacks
     calculatingAC() {
 
       //enemy AC
@@ -98,16 +97,23 @@ export default class Combat {
 
     }
 
-    preparingCombat(currentChoice:Choice) {
+    calculatingMainModifierForAttackRolls() {
+      // 
+    }
 
+    preparingCombat(currentChoice:Choice, clearNbOfTurn:any) {
+
+      //resetting nb of turn
+      clearNbOfTurn(1);
       // creating a virtual user stats object
       this.tempUserStats = {...this.currentUser}
     
-      // fetching the main combat object
-      this.encounter= this.createEnemy.fetchEnemyData(currentChoice.enemy_id);
+      // fetching the main combat object, used for setting up enemy or resetting the fight
+      this.encounter = {...this.createEnemy.fetchEnemyData(currentChoice.enemy_id)};
+      if (!this.encounter) return;
+
       this.updateEnemy({...this.encounter});
 
-      if (!this.encounter) return;
       this.handleIniative();
       this.calculatingAC();
     }
@@ -118,29 +124,37 @@ export default class Combat {
       node:keyof Nodes | undefined, 
       setNbofTurn:any, 
       clearNbOfTurn:any, 
-      setSoundEffect:any, 
-      updateStats:any ) {
-      
+      setSoundEffect:any) {
+
         // the main system is here
         // either the user or the enemy attack first based on the initiative
         // then we wait 1sec to add a realistic delay between the attacks
         // then the other player attacks
         // only then we unlock the attack options
+
         if (this.userFirstToAttack)  { 
           this.clearCombatLog()
-          await this.handleUserTurn(item, setCurrentNode, node, setSoundEffect, clearNbOfTurn, updateStats);
+          await this.handleUserTurn(item, setCurrentNode, node, setSoundEffect, clearNbOfTurn);
+          
+          // if user win, we kill everything
+          if (this.fight_over) return;
+
           await new Promise<void>((resolve => {setTimeout(() => resolve(), 1000);}))
-          await this.handleEnemyTurn(setCurrentNode, setSoundEffect,  clearNbOfTurn, updateStats);
+          await this.handleEnemyTurn(setCurrentNode, setSoundEffect,  clearNbOfTurn, node);
           await new Promise<void>(resolve => {setTimeout(() => {resolve()}, 1000);})
           if(!this.fight_over) setNbofTurn(1);
           
         } else {
           this.clearCombatLog()
-          await this.handleEnemyTurn(setCurrentNode, setSoundEffect,  clearNbOfTurn, updateStats);
+          await this.handleEnemyTurn(setCurrentNode, setSoundEffect,  clearNbOfTurn,node);
+          
+          // if the user lose, we kill everything
+          if (this.fight_over) return;
+
           await new Promise<void>((resolve => {setTimeout(() => resolve(), 1000);}))
-          await this.handleUserTurn(item, setCurrentNode, node, setSoundEffect,  clearNbOfTurn, updateStats);
+          await this.handleUserTurn(item, setCurrentNode, node, setSoundEffect,  clearNbOfTurn);
           await new Promise<void>(resolve => {setTimeout(() => {resolve()}, 1000);});
-          if(this.fight_over) setNbofTurn(1);
+          if(!this.fight_over) setNbofTurn(1);
           
         }
         
@@ -152,8 +166,7 @@ export default class Combat {
       setCurrentNode:any, 
       node:keyof Nodes | undefined, 
       setSoundEffect:any, 
-      clearNbOfTurn:any, 
-      updateStats:any) {
+      clearNbOfTurn:any) {
 
       return new Promise<void>( async (resolve) => {
         this.fight_over &&= false;
@@ -168,7 +181,7 @@ export default class Combat {
           // the user remove x% of the enemy HP.
         if (finalDmg && this.encounter && this.encounter.hp) {
 
-          const attackRoll = this.handleAttackRolls(this.encounter.ac ?? 10);
+          const attackRoll = this.handleAttackRolls(this.encounter.ac ?? 10, this.userModifier);
 
           if (!attackRoll.hit) {
             setSoundEffect('user_miss')
@@ -186,24 +199,30 @@ export default class Combat {
             </div>`;
             this.setCombatLog(log);
 
-            // calculating new enemy hp...
+
+            // AFTER THE USER'S MOVE, WE NEED TO UPDATE THE NEW ENEMY HP VALUE
+            // AND THEIR HP BAR SEPARATELY
+
+            //1) updating the enemy hp value
             this.encounter.hp = Math.floor(this.encounter.hp-finalDmg);
+
+            //2) updating the hitpoints bar outside this class
             if (this.encounter && this.encounter.hp!==undefined) {
-              // testing
               this.updateEnemy({hp:this.encounter.hp})
             }
           
-            // if the player wins
+            // DEALING WITH THE FALLOUT : IF THE PLAYER WIN OR NOT
             if (this.encounter.hp <=0) {
+              // prevent another turn from incrementing because the fight is over
+              this.fight_over=true;
               // small delay
               await new Promise<void>(resolve => {setTimeout(() => {resolve()}, 1000);})
               // clearing log and nb of turn
               this.clearCombatLog();
               clearNbOfTurn(1);
-              // prevent another turn from incrementing because the fight is over
-              this.fight_over=true;
               // updating user's stats in the state with the virtual user state used in this class
-              updateStats(this.currentUser);
+              // updateStats({...this.currentUser});
+              this.updateStats({...this.currentUser});
               // finally moving on to the victory node
               setCurrentNode(`${node}_victory`);
               resolve();
@@ -215,7 +234,11 @@ export default class Combat {
         })
       }
 
-    async handleEnemyTurn(setCurrentNode:any, setSoundEffect:any, clearNbOfTurn:any, updateStats:any) {
+    async handleEnemyTurn(
+    setCurrentNode:any, 
+    setSoundEffect:any, 
+    clearNbOfTurn:any,  
+    node:keyof Nodes | undefined) {
       return new Promise<void>( async (resolve) => {
         // We extract all the attacks that can be used by the enemy 
         if (!this.encounter) return;
@@ -232,7 +255,7 @@ export default class Combat {
           const enemyFinalDmg = Math.floor(Math.random()*enemyDmg)+1;
 
           // we calculate if the enemy hit or miss
-          const attackRoll = this.handleAttackRolls(this.currentUser.ac ?? 10);
+          const attackRoll = this.handleAttackRolls(this.currentUser.ac ?? 10, this.enemyModifier);
 
           if (!attackRoll.hit) {
             setSoundEffect('enemy_miss')
@@ -253,27 +276,33 @@ export default class Combat {
           // incrementing the total damage taken
           this.currentUser.damage_taken = this.currentUser.damage_taken + enemyFinalDmg;
 
+          //prevent the damage to be superior to the hp in order to avoid negative values
+          this.currentUser.damage_taken >= this.currentUser.hp && (this.currentUser.damage_taken = this.currentUser.hp);
+
           // calculate the user's current virtual hp compared to total damage taken
           const hpLeft = this.currentUser.hp-this.currentUser.damage_taken;
 
-          // updating the real stats to update the hp bar in the combatInterface component
-          updateStats({damage_taken:this.currentUser.damage_taken});
+          // updating the real state to update the hp bar in the combatInterface component
+          // updateStats({damage_taken:this.currentUser.damage_taken});
+          this.updateStats({damage_taken:this.currentUser.damage_taken});
 
-          // if the player loses
+          // FALLOUT : if the player loses or not
           if (hpLeft<=0) {
+            // prevent another turn from incrementing because the fight is over
+            this.fight_over=true;
+
             // adding a small delay 
             await new Promise<void>(resolve => {setTimeout(() => {resolve()}, 1000);})
             // clearing log and nb of turn
             this.clearCombatLog();
-            clearNbOfTurn(1);
-
-            // resetting the user stats 
-            updateStats({damage_taken: this.tempUserStats?.damage_taken});
+         
 
             // moving to the game over and restart node
-            setCurrentNode("game_over");
-            // prevent another turn from incrementing because the fight is over
-            this.fight_over=true;
+            setCurrentNode(`${node}_game_over`);
+            clearNbOfTurn(1);
+            // resetting the user stats and enemy
+            // updateStats({damage_taken: this.tempUserStats?.damage_taken});        
+            this.updateStats({damage_taken: this.tempUserStats?.damage_taken});        
             resolve();
           } else {
             resolve();
@@ -283,5 +312,8 @@ export default class Combat {
       })
     }
 
+    // updateStats(patch:any) {
+    //   useUserStore.getState().updateStats(patch);
+    // }
    
 }

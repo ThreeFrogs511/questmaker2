@@ -1,8 +1,8 @@
 'use client'
 import { Button, Card } from "pixel-retroui"
 import { useEffect, useState, useRef } from "react"
-import CampaignIndex from "@/components/Campaigns/CampaignIndex"
-import CampaignMenuScreen from "@/components/Campaigns/CampaignMenuScreen"
+import CampaignIndex from "@/components/campaign/CampaignIndex"
+import CampaignMenuScreen from "@/components/campaign/CampaignMenuScreen"
 
 export default function campaignList() {
 

@@ -1,13 +1,9 @@
 
-import { Choice, User } from "@/components/Campaigns/NodeTypes";
-
+import { Choice, User } from "@/types/types";
+import { useUserStore } from "@/stores/useUserStore";
 export default class ChoicesOptions {
 
-    private currentUser:User;
-   
-
-    constructor(currentUser:User) {
-        this.currentUser=currentUser;
+    constructor() {
     
     }
 
@@ -33,13 +29,14 @@ export default class ChoicesOptions {
     }
 
     insertDynamicInfo(filteredChoices:Choice[]) {
+        const currentUser = useUserStore.getState().currentUser;
         if (filteredChoices) {
             const dynamicChoices = filteredChoices.map(((n: Choice) => {
                 if (n.text.includes('[USERNAME]')) {
-                    n.text = n.text.replace('[USERNAME]', `${this.currentUser.username ?? ''}`)
+                    n.text = n.text.replace('[USERNAME]', `${currentUser.username ?? ''}`)
                     return n;
                 } else if (n.text.includes('[RACE]')) {
-                    n.text = n.text.replace('[RACE]', `${this.currentUser.race ?? ''}`)
+                    n.text = n.text.replace('[RACE]', `${currentUser.race ?? ''}`)
                     return n;
                 } else {
                     return n;
@@ -49,34 +46,3 @@ export default class ChoicesOptions {
         }
     }
 }
-
-
-
-    // prepareChoicesForPlayer(setAllAvailableChoices:any, choices:any, userPastChoices:any) {
-
-    // // global choices like ['CONTINUE'], ['START COMBAT'] or user's movesets cannot be removed
-    // const lockedChoices = ['[CONTINUE]', ['START COMBAT']];
-
-    // // we remove choices that were already made to avoid unwanted loops
-    // const availableChoices = choices.filter((n: any) => {
-    //   if (!userPastChoices.includes(n.text)) {
-    //      return n;
-    //   } else if (userPastChoices.includes(n.text) && lockedChoices.includes(n.text)) {
-    //     return n;
-    //   }
-
-    // });
-    // if (this.node && availableChoices) {
-    //   const dynamicChoices = availableChoices.map(((n: { text: string; }) => {
-    //       if (n.text.includes('[USERNAME]')) {
-    //         n.text = n.text.replace('[USERNAME]', `${this.currentUser.username ?? ''}`)
-    //         return n;
-    //       } else if (n.text.includes('[RACE]')) {
-    //           n.text = n.text.replace('[RACE]', `${this.currentUser.race ?? ''}`)
-    //           return n;
-    //       } else {
-    //         return n;
-    //       }
-    //   }));
-    //   setAllAvailableChoices(dynamicChoices);
-    // }}

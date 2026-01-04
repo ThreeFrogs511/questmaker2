@@ -12,7 +12,7 @@ export async function POST(request: Request) {
   try {
     const data = await request.json();
 
-    const result = await sql/*sql*/`
+    const result = await sql`
       INSERT INTO todo (body, completed, user_id)
       VALUES (${data.body}, ${data.completed}, ${data.user_id})
       RETURNING id, body, completed

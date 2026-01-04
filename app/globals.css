@@ -48,5 +48,25 @@ body {
 
 }
 
+/* 1) neutralise partout (si nécessaire) */
+.ProgressBar-module__pixelProgressbar___naQch{
+  transition: none;
+}
+
+/* 2) anime uniquement quand c’est une barre XP */
+.xpBar .ProgressBar-module__pixelProgressbar___naQch{
+  transition: width 1s ease !important;
+  will-change: width !important;
+}
+
+.progressBarContainer .hpContainer .ProgressBar-module__pixelProgressbar___naQch{
+  transition: width 1s ease !important;
+  will-change: width !important;
+}
+.progressBarContainer .dopamineContainer .ProgressBar-module__pixelProgressbar___naQch{
+  transition: width 1s ease !important;
+  will-change: width !important;
+}
+
 
 /* loading CSS */

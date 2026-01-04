@@ -1,5 +1,5 @@
-
-import { Choice, User } from "@/components/Campaigns/NodeTypes";
+import { useUserStore } from "@/stores/useUserStore";
+import {Choice} from '@/types/types'
 
 export default class ExclusivePaths {
 
@@ -9,9 +9,10 @@ export default class ExclusivePaths {
         this.nextNodeAlt = null;
     }
 
-    handler(currentChoice:Choice, setCurrentNode:any, currentUser:User) {
+    handler(currentChoice:Choice, setCurrentNode:any) {
 
         // setting up
+        const currentUser = useUserStore.getState().currentUser;
         const nextNode = currentChoice.next;
         const userRace = currentUser.race;
         const userGender = currentUser.gender;

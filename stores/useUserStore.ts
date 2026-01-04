@@ -7,6 +7,8 @@ type UserStore = {
   logout: () => void
   updateProfile: (patch: Partial<User>) => void
   updateStats: (patch: Partial<User>) => void
+  addXp: (delta: number) => void
+  addDamage: (delta: number) => void
   attacks: Object
   fetchSelectedAttacks: (attacks:Object) => void
 }
@@ -83,6 +85,28 @@ export const useUserStore = create<UserStore>((set) => ({
         },
       }
     }),
+
+    addXp: (delta) => 
+      set((state) => {
+        if (!state.currentUser) return state
+        return {
+          currentUser: {
+            ...state.currentUser,
+            xp: (state.currentUser.xp ?? 0) + delta
+          }
+        }
+      }), 
+
+    addDamage: (delta) => 
+      set((state) => {
+        if (!state.currentUser) return state
+        return {
+          currentUser: {
+            ...state.currentUser,
+            damage_taken: (state.currentUser.damage_taken ?? 0) + delta
+          }
+        }
+      }), 
     attacks:{},
     fetchSelectedAttacks : (object) => set(({attacks:object}))
 }))

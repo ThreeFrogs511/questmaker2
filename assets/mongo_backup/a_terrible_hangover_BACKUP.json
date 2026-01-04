@@ -51,6 +51,7 @@
                     "next": "rock_climb_success",
                     "fail": "rock_climb_fail",
                     "check": "str",
+                    "xp": 15,
                     "dc": 15
                 },
                 {
@@ -58,6 +59,7 @@
                     "next": "rock_search_solution_success",
                     "fail": "rock_search_solution_fail",
                     "check": "int",
+                    "xp": 12,
                     "dc": 12
                 },
                 {
@@ -65,7 +67,7 @@
                     "next": "rock_long_way",
                     "penalty": {
                         "ability": "hp",
-                        "value": 5
+                        "value": 2
                     }
                 }
             ]
@@ -87,6 +89,7 @@
                     "next": "rock_search_solution_success",
                     "fail": "rock_search_solution_fail",
                     "check": "int",
+                    "xp": 12,
                     "dc": 12
                 },
                 {
@@ -94,7 +97,7 @@
                     "next": "rock_long_way",
                     "penalty": {
                         "ability": "hp",
-                        "value": 5
+                        "value": 2
                     }
                 }
             ]
@@ -116,6 +119,7 @@
                     "next": "rock_climb_success",
                     "fail": "rock_climb_fail",
                     "check": "str",
+                    "xp": 15,
                     "dc": 15
                 },
                 {
@@ -123,7 +127,7 @@
                     "next": "rock_long_way",
                     "penalty": {
                         "ability": "hp",
-                        "value": 5
+                        "value": 2
                     }
                 }
             ]
@@ -207,6 +211,7 @@
                     "next": "attempt_negotiation_success",
                     "fail": "attempt_negotiation_fail",
                     "check": "cha",
+                    "xp": 15,
                     "dc": 15
                 }
             ]
@@ -227,6 +232,7 @@
                     "next": "attempt_fireball_success",
                     "fail": "attempt_fireball_fail",
                     "check": "int",
+                    "xp": 12,
                     "dc": 12
                 },
                 {
@@ -234,6 +240,7 @@
                     "next": "attempt_negotiation_success",
                     "fail": "attempt_negotiation_fail",
                     "check": "cha",
+                    "xp": 15,
                     "dc": 15
                 }
             ]
@@ -254,6 +261,7 @@
                     "next": "attempt_fireball_success",
                     "fail": "attempt_fireball_fail",
                     "check": "int",
+                    "xp" : 12,
                     "dc": 12
                 },
                 {
@@ -261,6 +269,7 @@
                     "next": "attempt_negotiation_success",
                     "fail": "attempt_negotiation_fail",
                     "check": "cha",
+                    "xp" : 15,
                     "dc": 15
                 }
             ]
@@ -281,6 +290,7 @@
                     "next": "attempt_fireball_success",
                     "fail": "attempt_fireball_fail",
                     "check": "int",
+                    "xp": 12,
                     "dc": 12
                 },
                 {
@@ -288,6 +298,7 @@
                     "next": "attempt_negotiation_success",
                     "fail": "attempt_negotiation_fail",
                     "check": "cha",
+                    "xp": 15,
                     "dc": 15
                 }
             ]
@@ -399,6 +410,7 @@
                     "next": "hide_from_spider_success",
                     "fail": "hide_from_spider_fail",
                     "check": "dex",
+                    "xp": 15,
                     "dc": 15
                 },
                 {
@@ -406,6 +418,7 @@
                     "next": "scaring_spider_success",
                     "fail": "scaring_spider_fail",
                     "check": "cha",
+                    "xp": 18,
                     "dc": 18
                 },
                 {
@@ -413,6 +426,7 @@
                     "next": "forest_attempt_fireball_success",
                     "fail": "forest_attempt_fireball_fail",
                     "check": "int",
+                    "xp": 12,
                     "dc": 12
                 }
             ]
@@ -1344,7 +1358,7 @@
             ]
         },
         "bar_fight_combat": {
-            "text": "PLACEHOLDER",
+            "text": "",
             "choices": [
                 {
                     "text": "",
@@ -1387,6 +1401,7 @@
                     "next": "fight_over_provoke",
                     "fail": "fight_over_provoke_fail",
                     "check": "cha",
+                    "xp": 15,
                     "dc": 15
                 }
             ]
@@ -1407,6 +1422,7 @@
                     "next": "fight_over_provoke",
                     "fail": "fight_over_provoke_fail",
                     "check": "cha",
+                    "xp": 15,
                     "dc": 15
                 },
                 {
@@ -1431,6 +1447,7 @@
                     "next": "fight_over_provoke",
                     "fail": "fight_over_provoke_fail",
                     "check": "cha",
+                    "xp": 15,
                     "dc": 15
                 },
                 {
@@ -1764,10 +1781,26 @@
             "text": "“Now that that’s settled, let’s get to work, my dear partner. Questmaker has its first contract.” You follow Eden toward the nearest inn, more confident than when you woke in pain on the beach, yet still haunted by unease. Someone wants you dead for a life you no longer remember, and your only clue is the shadowy medallion at your neck. <strong>Whatever its secret is, it has already begun to stir.</strong>",
             "choices": [
                 {
-                    "text": "[END]"
+                    "text": "[END]",
+                    "next": "end_screen",
+                    "campaignEnd": true,
+                    "relevantNodes" : [
+                        {"node": "bridge_start", "text": "You chose the bridge; not the best decision, but not the stupidest."}, 
+                        {"node":"forest_entry", "text": "You crossed the shadowy forest; it's like you're asking for trouble."}, 
+                        {"node": "killing_regalus", "text": "You killed Regalus; an eye for an eye."}, 
+                        {"node":"sparing_regalus", "text": "You spared Regalus; how kind of you! "}, 
+                        {"node":"revealing_eden_location", "text": "You sold Eden to the angry elves in the tarven. He won't forget that anytime soon!"}
+                    ]
+
+
                 }
             ]
         },
+        "end_screen": {
+            "text": "",
+            "choices" : []
+        },
+
         "bar_fight_combat_victory": {
             "text": "You won!",
             "choices": [
@@ -1777,12 +1810,12 @@
                 }
             ]
         },
-        "game_over": {
+        "bar_fight_combat_game_over": {
             "text": "You lost. Try again ?",
             "choices": [
                 {
-                    "text": "Restart",
-                    "next": "bar_fight_combat"
+                    "text": "[RESTART]",
+                    "next": "remembering_how_to_fight"
                 }
             ]
         }

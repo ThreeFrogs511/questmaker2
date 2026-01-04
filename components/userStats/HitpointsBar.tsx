@@ -2,7 +2,7 @@
 import { useState, useEffect} from 'react';
 import { ProgressBar } from 'pixel-retroui';
 import { useUserStore } from '@/stores/useUserStore';
-import { useNarrationStore } from '@/stores/useNarrationStore';
+
 
 export default function Bar() {
 
@@ -12,19 +12,21 @@ export default function Bar() {
     useEffect(() => {
         if (currentUser && currentUser.hp) {
             const percentage = ((currentUser.hp-currentUser.damage_taken)/currentUser.hp)*100;
-            setHpInPercentage(percentage<0 ? 0 : percentage);
-        }
-    }, [currentUser.damage_taken])
+            setHpInPercentage(percentage<0 ? 20 : percentage);
+        } 
+    }, [currentUser, currentUser.hp, currentUser.damage_taken])
 
     return(
         <>
-         <ProgressBar
+        <div className='hpContainer'>
+            <ProgressBar
             size="md"
             color="red"
             borderColor="white"
             className="w-full"
             progress={hpInPercentage}
             />
+        </div>
         </>
     )
 }

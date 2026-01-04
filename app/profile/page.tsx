@@ -3,7 +3,7 @@ import { Card } from 'pixel-retroui'
 import { useUserContext } from '@/context/context'
 import Hitpoints from '@/components/userStats/HitpointsBar'
 import DopamineBar from '@/components/userStats/DopamineBar'
-import Progress from '@/components/userStats/ProgressBar'
+import Progress from '@/components/userStats/XpBar'
 import Footer from "@/components/global/Footer"
 import Header from "@/components/global/Header"
 
@@ -63,12 +63,12 @@ export default function Profile() {
                 borderColor="white"
                 shadowColor="white"
                 className="p-6! text-center grow">
-                    <div className="mb-5! mt-2!">
+                    <div className="mb-5! mt-2! progressBarContainer ">
                         <span className='text-lg! sm:text-lg! md:text-xl! lg:text-2xl!'>Hp</span>
                         <div className='w-[95%] mx-auto my-3'><Hitpoints /></div>
                     </div>
 
-                    <div className="mb-5!">
+                    <div className="mb-5! progressBarContainer ">
                         <span className='text-lg! sm:text-lg! md:text-xl! lg:text-2xl!'>Dopamine</span>
                         <div className='w-[95%] mx-auto my-3'><DopamineBar /></div>
                     </div>
@@ -93,27 +93,27 @@ export default function Profile() {
                 <ul className='flex flex-col justify-evenly h-[80%] max-h-full'>
                     <li className=" w-[80%] mx-auto py-2 flex justify-between text-lg! sm:text-lg! md:text-2xl!">
                         <span>Strength</span> 
-                        <span className='text-yellow-400'>{currentUser?.str ?? 10}</span>
+                        <span className='text-yellow-400'>{currentUser?.str ?? ''}</span>
                     </li>
                     <li className=" w-[80%] mx-auto py-2 flex justify-between text-lg! sm:text-lg! md:text-2xl!">
                         <span>Dexterity</span> 
-                        <span className='text-yellow-400'>{currentUser?.dex ?? 10}</span>
+                        <span className='text-yellow-400'>{currentUser?.dex ?? ''}</span>
                     </li>
                     <li className=" w-[80%] mx-auto py-2 flex justify-between text-lg! sm:text-lg! md:text-2xl!">
                         <span>Constitution</span> 
-                        <span className='text-yellow-400'>{currentUser?.con ?? 10}</span>
+                        <span className='text-yellow-400'>{currentUser?.con ?? ''}</span>
                     </li>
                     <li className=" w-[80%] mx-auto py-2 flex justify-between text-lg! sm:text-lg! md:text-2xl!">
                         <span>Intelligence</span> 
-                        <span className='text-yellow-400'>{currentUser?.int ?? 10}</span>
+                        <span className='text-yellow-400'>{currentUser?.int ?? ''}</span>
                     </li>
                     <li className=" w-[80%] mx-auto py-2 flex justify-between text-lg! sm:text-lg! md:text-2xl!">
                         <span>Wisdom</span> 
-                        <span className='text-yellow-400'>{currentUser?.wis ?? 10}</span>
+                        <span className='text-yellow-400'>{currentUser?.wis ?? ''}</span>
                     </li>
                     <li className=" w-[80%] mx-auto mb-5 py-2 flex justify-between text-lg! sm:text-lg! md:text-2xl!">
                         <span>Charisma</span> 
-                        <span className='text-yellow-400'>{currentUser?.cha ?? 10}</span>
+                        <span className='text-yellow-400'>{currentUser?.cha ?? ''}</span>
                     </li>
                 </ul>
             </Card>

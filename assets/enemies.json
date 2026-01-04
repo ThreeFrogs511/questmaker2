@@ -10,7 +10,7 @@
             "wis": 10,
             "cha": 10
         },
-        "hp": 8,
+        "hp": 10,
         "dopamine": 20,
         "movesets": {
             "headbutt": 3,

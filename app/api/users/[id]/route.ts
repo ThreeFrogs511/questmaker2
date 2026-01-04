@@ -6,7 +6,68 @@ import crypto from "crypto";
 
 
 
-// completing the profile
+//updating the user's stats, after a campaign done for example
+
+export async function PUT(
+  request: Request,
+  {params} : {params: Promise<{id: string }> }  
+) {
+  const {id} = await params;
+  const data = await request.json();
+
+  if (!id) return NextResponse.json({error: "User id not found"});
+
+    const query = `UPDATE users SET 
+      race = $1, 
+      user_class = $2, 
+      str=$3,
+      dex=$4,
+      con=$5,
+      int=$6,
+      wis=$7,
+      cha=$8,
+      username=$9,
+      gender=$10,
+      lvl=$11,
+      xp=$12,
+      hp=$13,
+      profile_completed = $14,
+      damage_taken=$15,
+      dopamine=$16,
+      dopamine_consumed=$17,
+      ac=$18
+      WHERE id = $19`;
+    const result = await sql.unsafe(
+      query, [
+        data.race, 
+        data.user_class, 
+        data.str, 
+        data.dex, 
+        data.con, 
+        data.int, 
+        data.wis, 
+        data.cha, 
+        data.username, 
+        data.gender, 
+        data.lvl, 
+        data.xp, 
+        data.hp, 
+        true, 
+        data.damage_taken, 
+        data.dopamine,
+        data.dopamine_consumed,
+        data.ac ?? 10,
+        id
+      ]); 
+
+    if (result.count === 0) return NextResponse.json({error: "no user found"});
+
+    return NextResponse.json({success: true});
+
+
+
+}
+// completing the profile at the end of character creation
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }

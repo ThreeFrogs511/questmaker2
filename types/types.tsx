@@ -38,6 +38,9 @@
   action?: string;
   nodeRef?:Array<string>;
   penalty?:{ability:string, value:number};
+  campaignEnd?: boolean
+  relevantNodes?: Array<{node:string, text:string}>
+  xp?: number;
   };
 
 
