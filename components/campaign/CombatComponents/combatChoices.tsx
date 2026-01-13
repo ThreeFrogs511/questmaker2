@@ -1,10 +1,10 @@
 'use client'
 
 import { useCombatStore } from "@/stores/useCombatStore";
-import { useNarrationStore } from "@/stores/useNarrationStore";
-import { useUserStore } from "@/stores/useUserStore";
+import { useEffect, useRef, useState } from "react";
 
-export default function combatAttacks({gameplay, setSoundEffectAction} : {gameplay:any, setSoundEffectAction:any}) {
+export default function combatChoices({gameplay, setSoundEffectAction} : {gameplay:any, setSoundEffectAction:any}) {
+
     const userAttacks = [
         {text:"inventory", userDmg:null},
         {text:"punch", userDmg:10}, 
@@ -21,19 +21,14 @@ export default function combatAttacks({gameplay, setSoundEffectAction} : {gamepl
         ];
 
 
-    //user store
-    const updateStats = useUserStore(state => state.updateStats);
-
-    // narration store
-    const updateNode = useNarrationStore(state => state.updateNode);
 
     // combat store
     const hasRoundStarted = useCombatStore(state => state.hasRoundStarted);
     const updateRoundStatus = useCombatStore(state => state.updateRoundStatus);
-    const setNbOfTurn = useCombatStore(state => state.setNbOfTurn);
-    const clearNbOfTurn = useCombatStore(state => state.clearNbOfTurn);
-    const menuNavigation = useCombatStore(state => state.menuNavigation);
+    const isInventoryOpened = useCombatStore(state => state.isInventoryOpened);
     // 
+
+
 
     return(
         <>
@@ -43,20 +38,16 @@ export default function combatAttacks({gameplay, setSoundEffectAction} : {gamepl
                 key={key}
                 onPointerDown={ () => { 
                     if (hasRoundStarted) return;
-                    if (item.text === 'return') {
-                        menuNavigation('')
-                        return;
-                    } else {
                         updateRoundStatus(true);
-                        gameplay.handlePlayerCombatChoices(item, updateNode, setNbOfTurn, clearNbOfTurn, setSoundEffectAction)
+                        gameplay.handlePlayerCombatChoices(item, setSoundEffectAction)
                         .then(() => updateRoundStatus(false));
-                    }
                 }}
                 className={
                     hasRoundStarted ?
                     `text-center border-2! cursor-not-allowed!  max-h-full! aspect-square overflow-hidden opacity-50 rounded-lg`
                     :
-                    `hover:border-3! text-center border-2! cursor-pointer!   max-h-full! aspect-square overflow-hidden border-white rounded-lg`} >
+                    `hover:border-3! text-center border-2! cursor-pointer!  max-h-full! aspect-square overflow-hidden ${(item.text === 'inventory' && isInventoryOpened) ? 'border-amber-400!': 'border-white'} rounded-lg`}
+                  >
                 {item.text && <img src={`/icons/${item.text.toLowerCase()}.svg`} alt="" className="max-w-full h-auto"/>}
                 </figure>
             })}

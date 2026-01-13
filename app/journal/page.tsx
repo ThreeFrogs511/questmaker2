@@ -130,7 +130,7 @@ export default function journal() {
     <>
     <div className="wrapper">
       <Header />
-      <section id="todo-list">
+      <section id="todo-list" className="h-full overflow-hidden">
         <div id='journal-navigation' className="flex justify-between items-center mb-3">
           <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" className="size-10 cursor-pointer" 
           onClick={() => setWhichPage(prev => prev ===0 ? 2 : prev-1)}> 

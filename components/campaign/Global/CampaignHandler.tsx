@@ -9,7 +9,7 @@ import parse from "html-react-parser";
 
 // main types
 
-import {Choice} from '@/types/types'
+import {Choice, Data} from '@/types/types'
 
 // components and custom hooks
 import DataVisualizer from "./DataVisualizer";
@@ -22,94 +22,72 @@ import { useCombatStore } from "@/stores/useCombatStore";
 
 export default function CampaignHandler() {
 
+  //preloading the audio
+  const { voice, battleMusic } = PreloadAudio();
 
-    //preloading the audio
-    const { voice, battleMusic } = PreloadAudio();
 
-
-    // user store
-    const currentUser = useUserStore(state => state.currentUser);
-    const updateStats = useUserStore(state => state.updateStats);
-   
-
-    // narration store
-    const currentCampaign = useNarrationStore(state => state.currentCampaign);
-    const campaignTitle = useNarrationStore(state => state.campaignTitle);
-    const currentNode = useNarrationStore(state => state.currentNode);
-    const updateNode = useNarrationStore(state => state.updateNode);
+  // user store
+  const currentUser = useUserStore(state => state.currentUser);
   
-    // combat store
-    const setCombatLog = useCombatStore(state => state.setCombatLog);
-    const clearCombatLog = useCombatStore(state => state.clearCombatLog);
-    const updateEnemy = useCombatStore(state => state.updateEnemy);
-    const clearNbOfTurn = useCombatStore(state => state.clearNbOfTurn);
+  // narration store
+  const currentCampaign = useNarrationStore(state => state.currentCampaign);
+  const campaignTitle = useNarrationStore(state => state.campaignTitle);
+  const currentNode = useNarrationStore(state => state.currentNode);
 
+  // combat store
+  const setCombatLog = useCombatStore(state => state.setCombatLog);
+  const clearCombatLog = useCombatStore(state => state.clearCombatLog);
+  const resetNbOfTurn = useCombatStore(state => state.resetNbOfTurn);
 
-    // store the currently available choices 
-    const [allChoicesAvailable, setAllChoicesAvailable] = useState<Choice[]>();
+  // store the currently available choices 
+  const [allChoicesAvailable, setAllChoicesAvailable] = useState<Choice[]>();
 
-    // display the ability check, penalties and other results onscreen
-    const [data, setData] = 
-    useState<{type:string | null, status:boolean; value:number | null; target: string | null, success:boolean | null}>({type:null, status:false, value:null, target:null, success:null});
-    
+  // state that displays the ability check results, penalties and other data onscreen
+  const [data, setData] = useState<Data>({type:null, status:false, value:null, target:null, success:null});
   
-    // stores the user's past options choices in the campaign to prevent double-dipping
-    const [userPastChoices, setUserPastChoices] = useState<Array<string>>([])
+  // stores the user's past decisions
+  const [userPastChoices, setUserPastChoices] = useState<Array<string>>([])
 
-    // handles the story paths by storing the current nodes
-    // used to unlock exclusive path based on user's past choices
-    // FYI : userPastChoices stores the choices options while userPastNodes the nodes
-    const [userPastNodes, setUserPastNodes] = useState<Array<string>>([]);
+  // stores the nodes' history
+  const [userPastNodes, setUserPastNodes] = useState<Array<string>>([]);
 
-    // handles the on/off option for the voice over
-    const [isPressed, setIsPressed] = useState(true);
+  // handles the on/off option for the voice over
+  const [isPressed, setIsPressed] = useState(true);
 
-    // prevents double clicking on keyboard and errors
-    const [keyboardPressed, setKeyboardPressed]= useState(false);
+  // prevents double clicking on keyboard and errors
+  const [keyboardPressed, setKeyboardPressed]= useState(false);
 
-    // combat interface activation
-    const [isCombatOn, setIsCombatOn] = useState(false);
+  // combat interface activation
+  const [isCombatOn, setIsCombatOn] = useState(false);
 
-    // end screen activation
-    const [isCampaignOver, setIsCampaignOver] = useState(false);
+  // end screen activation
+  const [isCampaignOver, setIsCampaignOver] = useState(false);
 
-    // lock the choices option to allow a small delay between each node for loading purposes
-    const isLocked = useRef(false);
+  // lock the choices option to allow a small delay between each node for loading purposes
+  const isLocked = useRef(false);
 
-    
-    // RUNNING THE MAIN ENGINE
-    const gameplay = useRef<Engine>(new Engine( 
-      currentNode, 
-      currentUser, 
-      setCombatLog, 
-      clearCombatLog)
-    );
+  
+  // RUNNING THE MAIN ENGINE
+  const gameplay = useRef<Engine>(new Engine(currentNode));
 
 
 
   useEffect(() => {
     if (currentCampaign && currentNode) {
 
-
       // manually updating the engine node
-      gameplay.current.updateNode(currentNode)
+      gameplay.current.setNodeInsideEngine(currentNode)
 
       //cleaning and preparing the choices displayed to the player
       gameplay.current.prepareChoicesForPlayer(setAllChoicesAvailable, currentCampaign[currentNode].choices, userPastChoices);
   
-      // storing the past nodes for story purposes
+      // storing the nodes history, the story path
       userPastNodes.length>0 ? setUserPastNodes((prev) => [...prev, currentNode] ) : setUserPastNodes([currentNode]);
 
-      // activating the combat interface when it's combat time
+      // activating the combat interface when combat is on
       if (currentCampaign[currentNode].choices) {
-        const combatOn = currentCampaign[currentNode].choices.find(n => {
-          if (n.combat_on) return n;
-        });
-        if (combatOn){ 
-          setIsCombatOn(true);
-        } else {
-          setIsCombatOn(false);
-        }
+        const combatOn = currentCampaign[currentNode].choices.find(n => {if (n.combat_on) return n});
+        combatOn ? setIsCombatOn(true) : setIsCombatOn(false);
       }
 
       // activating the end screen when the campaign is over
@@ -118,7 +96,7 @@ export default function CampaignHandler() {
       }
     } 
 
-    // locking choices for a few seconds when they appear to avoid bugs due to spamming 
+    // locking choices for a few seconds when they appear to avoid bugs due to button/click spamming 
     isLocked.current=true;
     new Promise<void>(resolve => {setTimeout(() => {resolve()}, 500)})
     .then(() => isLocked.current=false)
@@ -126,7 +104,7 @@ export default function CampaignHandler() {
   }, [currentCampaign, currentNode])
 
 
-  // handle the keyboard navigation option
+  // handle the navigation by keyboard
   useEffect(() => {
     function handleKeyboardSelection(e:any) {
         if (keyboardPressed || isLocked.current) return;
@@ -136,19 +114,19 @@ export default function CampaignHandler() {
           if (allChoicesAvailable && (e.key === "1" || e.key === '&')) {
             if (!allChoicesAvailable[0]) return;
             userPastChoices.length>0 ? setUserPastChoices((prev) => [...prev, allChoicesAvailable[0]?.text] ) : setUserPastChoices([allChoicesAvailable[0]?.text]);
-            gameplay.current.determineNextNode(updateNode, allChoicesAvailable[0], setData, userPastNodes, clearNbOfTurn);
+            gameplay.current.determineNextNode(allChoicesAvailable[0], setData, userPastNodes, resetNbOfTurn);
             setKeyboardPressed(false);
 
           } else if (allChoicesAvailable && (e.key === "2" || e.key ==="é")) {
               if (!allChoicesAvailable[1]) return;
               userPastChoices.length>0 ? setUserPastChoices((prev) => [...prev, allChoicesAvailable[1]?.text] ) : setUserPastChoices([allChoicesAvailable[1]?.text]);
-              gameplay.current.determineNextNode(updateNode, allChoicesAvailable[1], setData, userPastNodes, clearNbOfTurn);
+              gameplay.current.determineNextNode(allChoicesAvailable[1], setData, userPastNodes, resetNbOfTurn);
             setKeyboardPressed(false);
 
           } else if(allChoicesAvailable && (e.key === "3" || e.key==="\"")) {
               if (!allChoicesAvailable[2]) return;
               userPastChoices.length>0 ? setUserPastChoices((prev) => [...prev, allChoicesAvailable[2]?.text] ) : setUserPastChoices([allChoicesAvailable[2]?.text]);
-              gameplay.current.determineNextNode(updateNode, allChoicesAvailable[2], setData, userPastNodes, clearNbOfTurn);
+              gameplay.current.determineNextNode(allChoicesAvailable[2], setData, userPastNodes, resetNbOfTurn);
               setKeyboardPressed(false);
           } else {
             setKeyboardPressed(false);
@@ -159,12 +137,6 @@ export default function CampaignHandler() {
     return () => document.removeEventListener('keydown', handleKeyboardSelection);
   }, [allChoicesAvailable])
 
-  //if the user's stats changed during the campaign, we also need to
-  //manually update the state in the engine as it doesn't
-  //act as a normal state anymore but as a fixed attribute
-  useEffect(()=> {
-    gameplay.current.updateUser(currentUser);
-  },[currentUser])
 
  return (
     <section className=" w-full h-dvh max-h-full gap-10! lg:p-10">
@@ -175,14 +147,17 @@ export default function CampaignHandler() {
       {/* combat interface and music */}
       {isCombatOn && <BattleMusic play={battleMusic.play} stop={battleMusic.stop}/> }
       {isCombatOn && <CombatInterface gameplay={gameplay.current} />}
+
+      {/* end screen component */}
+      {isCampaignOver && <EndScreenInterface gameplay={gameplay.current}/>}
     
       {/* narration container*/}
-        <div className="h-[50dvh] max-h-[50dvh] lg:h-[40dvh] lg:max-h-[40dvh] lg:mb-5!">
+        <div className="h-[48dvh] lg:h-[40dvh] lg:mb-5!">
 
             {/* headers wrapper */}
             <div id="titleWrapper" className=" h-[20%] flex items-center overflow-hidden">
               <h1 
-              className="text-lg! lg:text-4xl! font-bold font-minecraft text-amber-400">
+              className="text-lg! lg:text-2xl! font-bold font-minecraft text-amber-400">
                 {campaignTitle ? campaignTitle : 'Campaign'} 
               </h1>
 
@@ -192,8 +167,8 @@ export default function CampaignHandler() {
             </div>
 
             {/* content wrapper */}
-            <div className="text-lg! h-[80%] max-h-[80%] lg:text-2xl! xl:mt-8! tracking-wide overflow-auto lg:overflow-hidden text-gray-200 lg:leading-relaxed">
-              <div className="text-justify mt-2! lg:mt-5!">
+            <div className="text-sm! h-[80%] max-h-[80%] lg:text-xl! lg:mt-5 tracking-wide overflow-auto lg:overflow-hidden text-gray-200 lg:leading-relaxed">
+              <div className="text-justify mt-2!">
 
                 {/* narration */}
                 <div>{(currentNode && currentCampaign) && parse(currentCampaign[currentNode].text ?? '')}</div>
@@ -216,13 +191,13 @@ export default function CampaignHandler() {
                   onPointerDown={ () => { 
                   if(isLocked.current) return;
                   userPastChoices.length>0 ? setUserPastChoices((prev) => [...prev, item.text] ) : setUserPastChoices([item.text]);
-                  gameplay.current && gameplay.current.determineNextNode(updateNode, item, setData, userPastNodes, clearNbOfTurn);
+                  gameplay.current && gameplay.current.determineNextNode(item, setData, userPastNodes, resetNbOfTurn);
                   }}
                   className="hover:outline-2! border-2! my-1! border-white lg:border-0! outline-white! rounded-lg p-4! text-left">
                   <div className="flex items-center grow">
-                    <span className="text-amber-400 font-bold mr-3 text-xl">{key+1}.</span>
+                    <span className="text-amber-400 font-bold mr-3 lg:text-xl text-base">{key+1}.</span>
                     <div>
-                      <h3 className="text-white font-semibold mb-1 text-lg! lg:text-xl!">{parse(item.text)}</h3>
+                      <h3 className="text-white font-semibold mb-1 text-sm! lg:text-xl!">{parse(item.text)}</h3>
                     </div>
                   </div>
                 </button>
@@ -231,7 +206,7 @@ export default function CampaignHandler() {
 
             </div>    
       
-      {isCampaignOver && <EndScreenInterface gameplay={gameplay.current}/>}
+
 
     </section>
 

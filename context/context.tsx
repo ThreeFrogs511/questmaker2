@@ -22,9 +22,7 @@ export function UserDataProvider({children} :  { children: React.ReactNode }) {
 
     const router = useRouter();
     const pathname = usePathname();
-
     const login = useUserStore(state => state.login);
-
     const updateDraft = useCharacterCreationStore(state => state.updateDraft);
 
     // global state, user data
@@ -53,39 +51,51 @@ export function UserDataProvider({children} :  { children: React.ReactNode }) {
     
     const [isFetchingDone, setIsFetchingDone] = useState(false);
     
-      useEffect(() => {
+    useEffect(() => {
         fetch("/api/me")
             .then(r => r.json())
             .then(data => {
 
-                // if we found an existing session, we automatically log the user back
+                // handling basic errors
+                if (data.error) {
+                    console.log("error:" + data.error); //handling the error
+                    pathname === '/signup' ? router.push("/signup") : router.push("/login");
+                    // trigger on
+                    setIsFetchingDone(true);
+                    return;
+                };
+
+                // successful fetch
                 if (data.authenticated) {
+                    // storing the user's data in the global object
                     login({...data.user});
-                    // if the account exists but no fully completed
+                    
+                    // handling existing but incomplete profile
                     if (!data.user.profile_completed) {
                         updateDraft({id:data.user.id, email:data.user.email});
-                        router.push('characterCreation');
-                        
+                        router.push('/characterCreation');
                     } else {
                         pathname === '/' ? router.push('/journal') : router.push(`${pathname}`);
-                        // pathname==='/characterCreation'&& router.push('/journal');
                     }
-                } else {
-                    pathname === '/signup' ? router.push("/signup") : router.push("/login");
-                }
-
-                if (data.err) {
-                    console.log("error:" + data.err); 
-                }
+                };
+                // trigger on
                 setIsFetchingDone(true);
+            })
+
+            // catching and handling other errors
+            .catch(err => {
+                console.log("error : " + err);
+                pathname === '/signup' ? router.push("/signup") : router.push("/login");
+                // trigger on
+                setIsFetchingDone(true);
+                return;
             });
     }, []);
     
     return(
     <>
     <UserDataContext.Provider value={{currentUser, setCurrentUser, isFetchingDone, setIsFetchingDone}}>
-        {children}
-  {!isFetchingDone && <Loading />}
+        {!isFetchingDone ? <Loading /> : children}
     </UserDataContext.Provider>
     </>
     )

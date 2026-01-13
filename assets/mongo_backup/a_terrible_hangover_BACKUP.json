@@ -261,7 +261,7 @@
                     "next": "attempt_fireball_success",
                     "fail": "attempt_fireball_fail",
                     "check": "int",
-                    "xp" : 12,
+                    "xp": 12,
                     "dc": 12
                 },
                 {
@@ -269,7 +269,7 @@
                     "next": "attempt_negotiation_success",
                     "fail": "attempt_negotiation_fail",
                     "check": "cha",
-                    "xp" : 15,
+                    "xp": 15,
                     "dc": 15
                 }
             ]
@@ -1784,23 +1784,35 @@
                     "text": "[END]",
                     "next": "end_screen",
                     "campaignEnd": true,
-                    "relevantNodes" : [
-                        {"node": "bridge_start", "text": "You chose the bridge; not the best decision, but not the stupidest."}, 
-                        {"node":"forest_entry", "text": "You crossed the shadowy forest; it's like you're asking for trouble."}, 
-                        {"node": "killing_regalus", "text": "You killed Regalus; an eye for an eye."}, 
-                        {"node":"sparing_regalus", "text": "You spared Regalus; how kind of you! "}, 
-                        {"node":"revealing_eden_location", "text": "You sold Eden to the angry elves in the tarven. He won't forget that anytime soon!"}
+                    "relevantNodes": [
+                        {
+                            "node": "bridge_start",
+                            "text": "You chose the bridge; not the best decision, but not the stupidest."
+                        },
+                        {
+                            "node": "forest_entry",
+                            "text": "You crossed the shadowy forest; it's like you're asking for trouble."
+                        },
+                        {
+                            "node": "killing_regalus",
+                            "text": "You killed Regalus; an eye for an eye."
+                        },
+                        {
+                            "node": "sparing_regalus",
+                            "text": "You spared Regalus; how kind of you! "
+                        },
+                        {
+                            "node": "revealing_eden_location",
+                            "text": "You sold Eden to the angry elves in the tarven. He won't forget that anytime soon!"
+                        }
                     ]
-
-
                 }
             ]
         },
         "end_screen": {
             "text": "",
-            "choices" : []
+            "choices": []
         },
-
         "bar_fight_combat_victory": {
             "text": "You won!",
             "choices": [

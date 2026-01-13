@@ -1,4 +1,5 @@
 import { MongoClient, ObjectId } from "mongodb";
+import { NextResponse } from 'next/server';
 
 
 async function fetchingCampaign(id:string) {
@@ -24,14 +25,15 @@ request: Request,
 
     try {
         const {id} = await params;
-
-        if (!id) throw new Error('No campaign id selected');
+        if (!id) return NextResponse.json({error:"no id found"});
 
         const data = await fetchingCampaign(id);
-        return Response.json(data);
+        if (!data) return NextResponse.json({error:"no campaign found"});
+
+        return NextResponse.json(data);
 
     } catch (err) {
-        return Response.json(`error : ${err}`);
+        return NextResponse.json({error: "internal error"});
     }
 
 

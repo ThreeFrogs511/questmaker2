@@ -17,52 +17,34 @@ export async function PUT(
 
   if (!id) return NextResponse.json({error: "User id not found"});
 
-    const query = `UPDATE users SET 
-      race = $1, 
-      user_class = $2, 
-      str=$3,
-      dex=$4,
-      con=$5,
-      int=$6,
-      wis=$7,
-      cha=$8,
-      username=$9,
-      gender=$10,
-      lvl=$11,
-      xp=$12,
-      hp=$13,
-      profile_completed = $14,
-      damage_taken=$15,
-      dopamine=$16,
-      dopamine_consumed=$17,
-      ac=$18
-      WHERE id = $19`;
-    const result = await sql.unsafe(
-      query, [
-        data.race, 
-        data.user_class, 
-        data.str, 
-        data.dex, 
-        data.con, 
-        data.int, 
-        data.wis, 
-        data.cha, 
-        data.username, 
-        data.gender, 
-        data.lvl, 
-        data.xp, 
-        data.hp, 
-        true, 
-        data.damage_taken, 
-        data.dopamine,
-        data.dopamine_consumed,
-        data.ac ?? 10,
-        id
-      ]); 
+  // the 'sql' template tag protects the database from sql injection
+  const result = await sql`
+  UPDATE users SET
+    race = ${data.race},
+    user_class = ${data.user_class},
+    str = ${data.str},
+    dex = ${data.dex},
+    con = ${data.con},
+    int = ${data.int},
+    wis = ${data.wis},
+    cha = ${data.cha},
+    username = ${data.username},
+    gender = ${data.gender},
+    lvl = ${data.lvl},
+    xp = ${data.xp},
+    hp = ${data.hp},
+    profile_completed = ${true},
+    damage_taken = ${data.damage_taken},
+    dopamine = ${data.dopamine},
+    dopamine_consumed = ${data.dopamine_consumed},
+    ac = ${data.ac ?? 10}
+  WHERE id = ${id}`;
 
-    if (result.count === 0) return NextResponse.json({error: "no user found"});
 
-    return NextResponse.json({success: true});
+  // if no user found, error
+  if (result.count === 0) return NextResponse.json({error: "no user found"});
+
+  return NextResponse.json({success: true});
 
 
 
@@ -79,48 +61,28 @@ export async function PATCH(
 
     if (!id) return NextResponse.json({error: "User id not found"});
 
-    const query = `UPDATE users SET 
-                  race = $1, 
-                  user_class = $2, 
-                  str=$3,
-                  dex=$4,
-                  con=$5,
-                  int=$6,
-                  wis=$7,
-                  cha=$8,
-                  username=$9,
-                  gender=$10,
-                  lvl=$11,
-                  xp=$12,
-                  hp=$13,
-                  profile_completed = $14,
-                  damage_taken=$15,
-                  dopamine=$16,
-                  dopamine_consumed=$17,
-                  ac=$18
-                  WHERE id = ${id}`;
-    const result = await sql.unsafe(
-      query, [
-        data.race, 
-        data.user_class, 
-        data.str, 
-        data.dex, 
-        data.con, 
-        data.int, 
-        data.wis, 
-        data.cha, 
-        data.username, 
-        data.gender, 
-        1, 
-        0, 
-        data.hp, 
-        true, 
-        0, 
-        data.dopamine,
-        0,
-        data.ac
-      ]); 
-    
+    const result = await sql`
+    UPDATE users SET
+      race = ${data.race},
+      user_class = ${data.user_class},
+      str = ${data.str},
+      dex = ${data.dex},
+      con = ${data.con},
+      int = ${data.int},
+      wis = ${data.wis},
+      cha = ${data.cha},
+      username = ${data.username},
+      gender = ${data.gender},
+      lvl = ${1},
+      xp = ${0},
+      hp = ${data.hp},
+      profile_completed = ${true},
+      damage_taken = ${0},
+      dopamine = ${data.dopamine},
+      dopamine_consumed = ${0},
+      ac = ${data.ac}
+    WHERE id = ${id}
+    `;
     
     // when the users finish their account, we log them and
     // save their session with a token

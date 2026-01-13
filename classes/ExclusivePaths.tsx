@@ -3,10 +3,8 @@ import {Choice} from '@/types/types'
 
 export default class ExclusivePaths {
 
-    private nextNodeAlt:string | null;
 
     constructor() {
-        this.nextNodeAlt = null;
     }
 
     handler(currentChoice:Choice, setCurrentNode:any) {
@@ -14,6 +12,7 @@ export default class ExclusivePaths {
         // setting up
         const currentUser = useUserStore.getState().currentUser;
         const nextNode = currentChoice.next;
+        let altNode;
         const userRace = currentUser.race;
         const userGender = currentUser.gender;
         const userClass = currentUser.user_class;
@@ -27,37 +26,28 @@ export default class ExclusivePaths {
 
                 // if the user's race or gender is not concerned
                 // we simply move to the standard next node
-                if (i === alt.length && !this.nextNodeAlt) {
-                    setCurrentNode(nextNode); 
-                    break;
+                if (i === alt.length) {
+                    return nextNode;
                 }
 
                 switch(alt[i].type) {
                     case "race": 
-                    this.handlingRacePaths(alt[i].value, setCurrentNode, userRace ?? '', currentChoice);
+                    altNode = this.handlingRacePaths(alt[i].value, setCurrentNode, userRace ?? '', currentChoice);
                     break;
 
                     case "gender":
-                    this.handlingGenderPaths(alt[i].value, setCurrentNode, userGender ?? '', currentChoice);
+                    altNode = this.handlingGenderPaths(alt[i].value, setCurrentNode, userGender ?? '', currentChoice);
                     break;
 
                     case"class":
-                    this.handlingClassPaths(alt[i].value, setCurrentNode, userClass ?? '', currentChoice);
+                    altNode = this.handlingClassPaths(alt[i].value, setCurrentNode, userClass ?? '', currentChoice);
                     break;
 
                 }
               
-                // because there's only one instance of the mother class "Engine"
-                // we need to reset this attribute in order to reuse it later
-                // else it'll keep the old value
-                if (this.nextNodeAlt) {
-                    this.nextNodeAlt=null;
-                    break;
-                };
-
-                
+           
             }
-          
+           return altNode;
         }
     
     }
@@ -65,27 +55,27 @@ export default class ExclusivePaths {
     handlingRacePaths(value:string, setCurrentNode:any, race:string, currentChoice:Choice) {
         const nextNode = currentChoice.next;
         if (value === race.toLowerCase()) {
-            this.nextNodeAlt = `${nextNode}_${value}`;
-            setCurrentNode(this.nextNodeAlt);
+            const nextNodeAlt = `${nextNode}_${value}`;
+            return nextNodeAlt;
         }
     };
     handlingGenderPaths(value:string, setCurrentNode:any, gender:string, currentChoice:Choice) {
         const nextNode = currentChoice.next;
         if (value === gender.toLowerCase()) {
-            this.nextNodeAlt = `${nextNode}_${value}`;                
-            setCurrentNode(this.nextNodeAlt);
+            const nextNodeAlt = `${nextNode}_${value}`;    
+            return nextNodeAlt;
         }
     };
 
     handlingClassPaths(value:string, setCurrentNode:any, userClass:string, currentChoice:Choice) {
         const nextNode = currentChoice.next;
         if (value === userClass.toLowerCase()) {
-            this.nextNodeAlt = `${nextNode}_${value}`;                
-            setCurrentNode(this.nextNodeAlt);
+            const nextNodeAlt = `${nextNode}_${value}`; 
+            return nextNodeAlt;
         }
     };
 
-    handlingChoicesPaths(currentChoice:Choice, setCurrentNode:any, userPastNodes:any) {
+    handlingChoicesPaths(currentChoice:Choice, userPastNodes:any) {
         const nextNode = currentChoice.next;
         let relevantStoryPaths:string | null = null;
         if (currentChoice.nodeRef) {
@@ -95,36 +85,7 @@ export default class ExclusivePaths {
                }
             }   
         }
-        console.log(`${nextNode}[${relevantStoryPaths}]`)
-        setCurrentNode(`${nextNode}[${relevantStoryPaths}]`);
+        const nextNodeAlt = `${nextNode}[${relevantStoryPaths}]`;
+        return nextNodeAlt;
     };
 }
-
-
-// old version
-//  handleExclusivePaths(currentChoice:any, setCurrentNode:any) {
-
-//       // fetching the "alt" object
-//       const alt = currentChoice.alt;
-//       // race exclusive paths
-//       if (alt.type === "race") {
-       
-//         const nextNode = currentChoice.next;
-//         const userRace = this.currentUser.race;
-//         let nextNodeAlt;
-
-//         // if the user has the right gender, we alter the node.
-//         alt.value === userRace?.toLowerCase() ? nextNodeAlt = `${nextNode}_${alt.value}` : nextNodeAlt=nextNode;
-//         setCurrentNode(nextNodeAlt);
-
-//       // gender exclusive paths
-//       } else if (alt.type === "gender") {
-//         const nextNode = currentChoice.next;
-//         const userGender = this.currentUser.gender;
-//         let nextNodeAlt;
-
-//         // if the user has the right gender, we alter the node.
-//         alt.value === userGender?.toLowerCase() ? nextNodeAlt = `${nextNode}_${alt.value}` : nextNodeAlt=nextNode;
-//         setCurrentNode(nextNodeAlt);
-//       }
-//     }

@@ -1,4 +1,3 @@
-// app/api/todo/[id]/route.ts
 import { NextResponse } from 'next/server';
 import { sql } from '@/server/connexion';
 
@@ -24,7 +23,7 @@ export async function GET(
     return NextResponse.json(todos);
 
   } catch (err) {
-    return NextResponse.json({error: String(err)});
+    return NextResponse.json({error: 'internal error'});
   }
 }
 

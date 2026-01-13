@@ -84,3 +84,11 @@ export type Encounter = {
   movesets?:Object,
   ac?:number
 }
+
+export type Data = {
+  type:string | null;
+  status:boolean; 
+  value:number | null; 
+  target: string | null;
+  success:boolean | null;
+}

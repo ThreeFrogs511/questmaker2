@@ -10,24 +10,20 @@ export async function POST(
 ) {
 
   try {
-    const data = await request.json();
 
+    const data = await request.json();
     // hashing
     const hash = await bcrypt.hash(data.password, 10);
 
-    // preparing the query
-    const query = `INSERT INTO users (email, user_password, profile_completed) VALUES($1, $2, $3)
-    RETURNING id`;
-    
-    // executing the query
-    const result = await sql.unsafe(query, [
-      data.email,
-      hash,
-      false
-    ]);
 
-    // storing and returning the newly created id 
-    const insertedId = result[0].id; 
+    // executing the query (no unsafe)
+    const result = await sql`
+    INSERT INTO users (email, user_password, profile_completed)
+    VALUES (${data.email}, ${hash}, ${false})
+    RETURNING id
+    `;
+
+    const insertedId = result[0]?.id;
     
     return NextResponse.json({ success: true, id:insertedId});
 

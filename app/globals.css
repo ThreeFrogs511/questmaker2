@@ -19,20 +19,6 @@
 }
 
 
-/* @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-} */
-
-/* @media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-} */
-
 body {
   min-height: 100% !important; 
   background: var(--bg-main);
@@ -50,7 +36,9 @@ body {
 
 /* 1) neutralise partout (si nécessaire) */
 .ProgressBar-module__pixelProgressbar___naQch{
-  transition: none;
+  /* transition: none; */
+  transition: width .1s ease !important;
+  will-change: width !important;
 }
 
 /* 2) anime uniquement quand c’est une barre XP */

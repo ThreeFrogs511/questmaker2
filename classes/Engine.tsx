@@ -1,19 +1,20 @@
 'use client'
 // describe the 'nodes' global object
 
-import {Nodes, User, Encounter } from '@/types/types'
+import {Nodes, User} from '@/types/types'
 import AbilityChecks from "./AbilityChecks";
 import Penalties from "./Penalties";
 import ExclusivePaths from "./ExclusivePaths";
-import Combat from "./Combat";
+import Combat from "./CombatSystem/Combat";
 import ChoicesOptions from "./Choices";
 
+import { useNarrationStore } from '@/stores/useNarrationStore';
 
 export default class Engine {
 
     // main attributes
     private node;
-    private currentUser;
+    private updateNode;
 
     // campaign attribute
     private relevantChoices:Array<string>;
@@ -25,26 +26,18 @@ export default class Engine {
     private exclusivePaths;
     private combat:any;
     private choicesOptions;
-    private setCombatLog;
-    private clearCombatLog
 
     // combat
     combatLockOn:boolean;
 
-    constructor(
-      node:keyof Nodes | undefined, 
-      currentUser:User, 
-      setCombatLog:React.Dispatch<React.SetStateAction<any>>, 
-      clearCombatLog:React.Dispatch<React.SetStateAction<any>>) {
+    constructor(node:keyof Nodes | undefined,) {
 
         // campaign
         this.node = node;
-        this.currentUser=currentUser;
+        this.updateNode = useNarrationStore.getState().updateNode;
         this.accumulatedXp=0;
 
-        // combat
-        this.setCombatLog = setCombatLog;
-        this.clearCombatLog = clearCombatLog;
+
         this.combatLockOn = false;
 
         // secondary classes
@@ -62,42 +55,42 @@ export default class Engine {
 
     // THIS METHOD DETERMINES THE NEXT NODE BASED ON THE USER'S CHOICE.
     // IF THE NODE IS UNIQUE (PENALTY, ABILITY CHECKS, COMBAT), WE HANDLE IT HERE
-    async determineNextNode(updateNode:any, currentChoice:any, setData:any, userPastNodes:any, clearNbOfTurn:any) {
+    async determineNextNode(currentChoice:any, setData:any, userPastNodes:any, clearNbOfTurn:any) {
 
       // ability checks
       if (currentChoice.check) {
         const check = this.abilityChecks.handler(currentChoice, this.node);
         if (check === null || check === undefined) return;
         if (check.result === false) {
-          currentChoice.fail && updateNode(currentChoice.fail);
+          currentChoice.fail && this.updateNode(currentChoice.fail);
           setData((prev: any) => ({...prev, type:'ability', success:false, value:check.value, status:true}));
         } else {
-          updateNode(currentChoice.next);
+          this.updateNode(currentChoice.next);
           setData((prev: any) => ({...prev, type:'ability', success:true, value:check.value, status:true}));
           this.accumulatedXp = this.accumulatedXp + currentChoice.xp;
         };
 
       //penalties
       } else if (currentChoice.penalty) {
-        this.penalties.handler(currentChoice, updateNode, setData);
+        this.penalties.handler(currentChoice, setData);
+        this.updateNode(currentChoice.next);
 
       //exclusive dialog, choice options
       } else if (currentChoice.alt) {
-        this.exclusivePaths.handler(currentChoice, updateNode);
+        const nextNode = this.exclusivePaths.handler(currentChoice, this.updateNode);
+        this.updateNode(nextNode);
         setData((prev: any) => ({...prev, success:null, value:null, status:false}));
       
       // launching combat
       } else if (currentChoice.combat_started) {
-        this.combat = new Combat(
-          this.setCombatLog, 
-          this.clearCombatLog, 
-        )
+        this.combat = new Combat();
         this.combat.preparingCombat(currentChoice, clearNbOfTurn);
-        updateNode(currentChoice.next);
+        this.updateNode(currentChoice.next);
 
       //exclusive dialog, choices based on the user's past decisions
       } else if (currentChoice.nodeRef) {
-        this.exclusivePaths.handlingChoicesPaths(currentChoice, updateNode, userPastNodes);
+        const nextNode = this.exclusivePaths.handlingChoicesPaths(currentChoice, userPastNodes);
+        this.updateNode(nextNode);
         setData((prev: any) => ({...prev, success:null, value:null, status:false}));
 
       //launching the end screen, displaying the relevant decisions made by the user
@@ -107,33 +100,41 @@ export default class Engine {
             return n.text;
           };
         });
-        updateNode(currentChoice.next);
+        this.updateNode(currentChoice.next);
 
       //normal nodes
       } else {
-        updateNode(currentChoice.next);
+        this.updateNode(currentChoice.next);
         setData((prev: any) => ({...prev, success:null, value:null, status:false}));
       }
     }
 
     //FOR COMBAT ONLY : IF THE PLAYER MAKES A MOVE, WE CALL THIS METHOD
-    async handlePlayerCombatChoices(item:any, updateNode:any, setNbOfTurn:any, clearNbOfTurn:any, setSoundEffect:any) {
+    async handlePlayerCombatChoices(item:any, setSoundEffect:any) {
+
+        // if the user open their inventory
+          if (item.text ==="inventory") {
+            this.combat.inventoryHandler();
+            return;
+          };
+
+          // if the user choose an attack
           if (!this.combatLockOn) {
             this.combatLockOn=true;
-             await this.combat.system(item, updateNode, this.node, setNbOfTurn, clearNbOfTurn, setSoundEffect)
+            await this.combat.system(item, this.node, setSoundEffect)
             .then(() => this.combatLockOn=false);
         }
     }
 
     // THE DISPLAYED CHOICES MUST BE FILTERED, FORMATTED, PREPARED. WE HANDLE IT HERE.
     prepareChoicesForPlayer(setAllAvailableChoices:any, choices:any, userPastChoices:any) {
-      this.choicesOptions.handler(setAllAvailableChoices, choices, userPastChoices)
+      this.choicesOptions.handler(setAllAvailableChoices, choices, userPastChoices);
     }
 
     // we use this method to save the new user's data in the database at the end of the campaign
     async savingUserData(currentUser:User) {
       if (!currentUser) return;
-      const response = await fetch(`/api/users/${this.currentUser.id}`, {
+      const response = await fetch(`/api/users/${currentUser.id}`, {
         method: 'PUT',
         headers: {'content-type': 'application/JSON'},
         body: JSON.stringify(currentUser)
@@ -145,21 +146,14 @@ export default class Engine {
       } else {
         console.log("erreur lors de la mise à jour")
       }
-
-
     }
 
-    // setter to update the current node inside the class 
-    updateNode(node:string) {
+    // setter to update the node inside the class 
+    setNodeInsideEngine(node:string) {
       this.node = node;
     }
 
-    // setter to update the current user data inside the class
-    updateUser(currentUser:User) {
-      this.currentUser = {...currentUser};
-    }
-
-    // getter to display the relevant choices array outside the class
+    // getters to display the decisions made during the campaign and the total xp gained in the end screen
     getRelevantChoices() {
       return this.relevantChoices;
     }

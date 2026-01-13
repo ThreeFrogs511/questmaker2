@@ -1,10 +1,10 @@
 'use client'
 import Bar from "../../userStats/HitpointsBar"
 import { ProgressBar } from "pixel-retroui"
-import { useState, useRef} from "react";
+import { useState} from "react";
 
-import CombatAttacks from "./CombatAttacks";
-
+import CombatChoices from "./combatChoices";
+import Inventory from "./Inventory";
 
 // used to interpret HTML in JSON
 import parse from "html-react-parser";
@@ -23,11 +23,14 @@ export default function CombatInterface({gameplay}: {gameplay:any}) {
     const enemy = useCombatStore(state => state.enemy);
     const nbOfTurn = useCombatStore(state => state.nbOfTurn);
     const hasRoundStarted = useCombatStore(state => state.hasRoundStarted);
+    const isInventoryOpened = useCombatStore(state => state.isInventoryOpened);
+
     // local states
     const [enemyFullHealth, setEnemyFullHealth] = useState<number|undefined>();
     const [enemyHealth, setEnemyHealth] = useState<number | undefined>();
     const [userHealthInPercentage, setUserHealthInPercentage] = useState<number>(100)
     const [loader, setLoaoder] = useState(false);
+
     // player store
     const currentUser = useUserStore(state => state.currentUser);
 
@@ -88,11 +91,11 @@ export default function CombatInterface({gameplay}: {gameplay:any}) {
     return(
         <>
 
-        {!loader && <div id="loaderHider" className="fixed h-dvh top-0 bottom-0 left-0 right-0 w-dvw z-999 bg-black"></div>}
+        {!loader && <div id="loaderHider" className="fixed h-dvh top-0 bottom-0 left-0 right-0 w-dvw z-998 bg-black"></div>}
 
         <section id="combatInterface" className="fixed w-dvw h-dvh top-0 bottom-0 right-0 left-0 flex flex-col bg-black">
             <h2 id="turn" className=" lg:text-4xl! font-bold font-minecraft text-center  h-[5dvh] mt-5!">Turn <span className="text-amber-400">{nbOfTurn}</span></h2>
-            { !hasRoundStarted ? <h3 className=" mt-1! lg:text-2xl! font-bold font-minecraft text-center  max-h-[5dvh] h-[5dvh]">Make a move !</h3> : <div className=" mt-1! h-[5dvh]"></div>}
+            { !hasRoundStarted ? <h3 className=" mt-1! lg:text-2xl! font-bold font-minecraft text-center  max-h-[5dvh] h-[5dvh]">Make a move !</h3> : <div className=" mt-1! min-h-[5dvh]"></div>}
             <div id="arena" className=" h-[80dvh]">
                 <div id="healthBars" className="flex items-center h-[70%] ">
                     <div id="userSide" className="w-[80%] lg:w-[50%] mx-auto">
@@ -106,7 +109,13 @@ export default function CombatInterface({gameplay}: {gameplay:any}) {
                     <div id="enemySide" className="w-[80%] lg:w-[50%]  mx-auto">
                         <div className="text-center flex flex-col justify-between">{enemy?.name} 
                             <span>AC : {enemy?.ac ?? 10}</span> 
-                            <span>{(enemy && enemy.hp) && Math.floor(enemy.hp<=0 ? 0 : enemy.hp)+'/'+enemyFullHealth}</span></div>
+                            <span>
+                                {enemy
+                                    ? `${Math.max(0, Math.floor(enemy.hp ?? 0))}/${enemyFullHealth ?? 0}`
+                                    : null
+                                }
+                            </span>
+                        </div>
                         <div className="w-[70%] mx-auto">
                             <ProgressBar
                                 size="md"
@@ -122,7 +131,8 @@ export default function CombatInterface({gameplay}: {gameplay:any}) {
                     <div className="text-center mt-5">{parse(combatLog ?? ``)}</div>
                 </div>
             </div>
-            <CombatAttacks gameplay={gameplay} setSoundEffectAction={setSoundEffect}/>        
+            <CombatChoices gameplay={gameplay} setSoundEffectAction={setSoundEffect}/>
+            {isInventoryOpened && <Inventory gameplay={gameplay} setSoundEffectAction={setSoundEffect}/>}        
             </section>
         
         </>

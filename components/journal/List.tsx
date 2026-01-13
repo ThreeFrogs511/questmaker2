@@ -114,8 +114,8 @@ async function deletion(id:number | null) {
 
   return(
         <>
-        <ul>
-        {displayedQuests ? displayedQuests.map((item, index) => (
+        <ul className='h-full!'>
+        {(displayedQuests && displayedQuests.length>0) ? displayedQuests.map((item, index) => (
           <li 
           data-id={item.id}
           data-completion={item.completed}
@@ -148,7 +148,7 @@ async function deletion(id:number | null) {
             </svg>
           </li>
 
-        )) : <p className='object-center font-minecraft text-2xl'>You have no tasks yet.</p>}
+        )) : <p className='object-center text-center mt-75! font-minecraft text-2xl'>You have no tasks yet.</p>}
       </ul>
         </>
     )

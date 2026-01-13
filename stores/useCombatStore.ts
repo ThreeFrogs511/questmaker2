@@ -17,10 +17,13 @@ type useCombatStore = {
 
     nbOfTurn : number
     setNbOfTurn : (patch: Partial<number>) => void
-    clearNbOfTurn :(nbOfTurn: number) => void
+    resetNbOfTurn :(nbOfTurn: number) => void
 
     menu: string
     menuNavigation: (menu : string) => void
+
+    isInventoryOpened: boolean;
+    openInventory : (isInventoryOpened : boolean) => void
 }
 
 
@@ -45,8 +48,11 @@ export const useCombatStore = create<useCombatStore>((set) => ({
     updateRoundStatus: (bool) => set(({hasRoundStarted:bool})),
     nbOfTurn: 1,
     setNbOfTurn : () => set(state => ({nbOfTurn : state.nbOfTurn + 1})),
-    clearNbOfTurn: (number) => set(({nbOfTurn:number})),
-    menu: '',
-    menuNavigation : (string) => set({menu:string})
+    resetNbOfTurn: (number) => set(({nbOfTurn:number})),
 
+    menu: '',
+    menuNavigation : (string) => set({menu:string}),
+
+    isInventoryOpened: false,
+    openInventory : (bool) => set(({isInventoryOpened:bool}))
 }))

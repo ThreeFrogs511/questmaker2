@@ -1,113 +1,108 @@
 {
     "races": [
-
-    {
-        "race": "Elf",
-        "description": "The most powerful race of Questmaker. The elves are the meat and bones of the Li'ark empire, a militaristic-expansionist juggernaut. The elves nobles see themselves as the Chosen Ones, and look down on all the other races."
-    },
-    {
-        "race": "Half-Elf",
-        "description": "A minority of elves, persecuted for being mixed with humans. They are a second-class citizens in Li'ark."
-    },
-    {
-        "race": "Human",
-        "description": "Formerly the dominant race of Questmaker, an epidemic wiped out almost all of them. Now a minority, they are now wandering vagabonds, travelling aimlessly across the continent."
-    },
-    {
-        "race": "Dwarf",
-        "description": "Outstanding merchants, their business acumen propelled Salor to undisputed economic power."
-    },
-    {
-        "race": "Felinois",
-        "description": " Humanoids with the appearance of cats, they inhabit the arid and desolate land of Mozara. Conquered centuries ago by the elves, most of them are now exploited as slaves."
-
-    },
-    {
-        "race": "Orc",
-        "description": "Considered by many to be mindless barbarians, orcs are above all pious beings devoted to their Goddess.  At war with the elves for centuries, they harbor an unspeakable hatred for Li'ark."
-    }
-
-
-], 
-
-"classes" : [
-  {
-    "class": "Barbarian",
-    "description": "Primal strength. Rage-fueled combat. High durability and melee power.",
-    "abilities": {
-      "str": 15,
-      "dex": 13,
-      "con": 14,
-      "wis": 12,
-      "int": 8,
-      "cha": 10
-    },
-    "mainAbility" : "str"
-  },
-  {
-    "class": "Bard",
-    "description": "Magic through music. Support, charm, inspiration, and versatility.",
-    "abilities": {
-      "str": 8,
-      "dex": 14,
-      "con": 13,
-      "wis": 12,
-      "int": 10,
-      "cha": 15
-    },
-    "mainAbility" : "cha"
-  },
-  {
-    "class": "Cleric",
-    "description": "Divine magic. Healing, protection, and powerful radiant spells.",
-    "abilities": {
-      "str": 13,
-      "dex": 12,
-      "con": 14,
-      "wis": 15,
-      "int": 10,
-      "cha": 8
-    },
-    "mainAbility" : "wis"
-  },
-  {
-    "class": "Wizard",
-    "description": "Spellbook-based arcane mastery. Broadest spell variety in the game.",
-    "abilities": {
-      "str": 8,
-      "dex": 13,
-      "con": 14,
-      "wis": 12,
-      "int": 15,
-      "cha": 10
-    },
-    "mainAbility" : "int"
-  },
-  {
-    "class": "Fighter",
-    "description": "Martial master. Simple, effective, adaptable in any combat style.",
-    "abilities": {
-      "str": 15,
-      "dex": 13,
-      "con": 14,
-      "wis": 12,
-      "int": 10,
-      "cha": 8
-    },
-    "mainAbility" : "str"
-  },
-  {
-    "class": "Monk",
-    "description": "Ki-powered martial arts. Fast, precise, mobile combat techniques.",
-    "abilities": {
-      "str": 12,
-      "dex": 15,
-      "con": 13,
-      "wis": 14,
-      "int": 10,
-      "cha": 8
-    },
-    "mainAbility" : "dex"
-  }
-]
+        {
+            "race": "Elf",
+            "description": "The most powerful race of Questmaker. The elves are the meat and bones of the Li'ark empire, a militaristic-expansionist juggernaut. The elves nobles see themselves as the Chosen Ones, and look down on all the other races."
+        },
+        {
+            "race": "Half-Elf",
+            "description": "A minority of elves, persecuted for being mixed with humans. They are a second-class citizens in Li'ark."
+        },
+        {
+            "race": "Human",
+            "description": "Formerly the dominant race of Questmaker, an epidemic wiped out almost all of them. Now a minority, they are now wandering vagabonds, travelling aimlessly across the continent."
+        },
+        {
+            "race": "Dwarf",
+            "description": "Outstanding merchants, their business acumen propelled Salor to undisputed economic power."
+        },
+        {
+            "race": "Felinois",
+            "description": " Humanoids with the appearance of cats, they inhabit the arid and desolate land of Mozara. Conquered centuries ago by the elves, most of them are now exploited as slaves."
+        },
+        {
+            "race": "Orc",
+            "description": "Considered by many to be mindless barbarians, orcs are above all pious beings devoted to their Goddess.  At war with the elves for centuries, they harbor an unspeakable hatred for Li'ark."
+        }
+    ],
+    "classes": [
+        {
+            "class": "Barbarian",
+            "description": "Primal strength. Rage-fueled combat. High durability and melee power.",
+            "abilities": {
+                "str": 15,
+                "dex": 13,
+                "con": 14,
+                "wis": 12,
+                "int": 8,
+                "cha": 10
+            },
+            "mainAbility": "str"
+        },
+        {
+            "class": "Bard",
+            "description": "Magic through music. Support, charm, inspiration, and versatility.",
+            "abilities": {
+                "str": 8,
+                "dex": 14,
+                "con": 13,
+                "wis": 12,
+                "int": 10,
+                "cha": 15
+            },
+            "mainAbility": "cha"
+        },
+        {
+            "class": "Cleric",
+            "description": "Divine magic. Healing, protection, and powerful radiant spells.",
+            "abilities": {
+                "str": 13,
+                "dex": 12,
+                "con": 14,
+                "wis": 15,
+                "int": 10,
+                "cha": 8
+            },
+            "mainAbility": "wis"
+        },
+        {
+            "class": "Wizard",
+            "description": "Spellbook-based arcane mastery. Broadest spell variety in the game.",
+            "abilities": {
+                "str": 8,
+                "dex": 13,
+                "con": 14,
+                "wis": 12,
+                "int": 15,
+                "cha": 10
+            },
+            "mainAbility": "int"
+        },
+        {
+            "class": "Fighter",
+            "description": "Martial master. Simple, effective, adaptable in any combat style.",
+            "abilities": {
+                "str": 15,
+                "dex": 13,
+                "con": 14,
+                "wis": 12,
+                "int": 10,
+                "cha": 8
+            },
+            "mainAbility": "str"
+        },
+        {
+            "class": "Monk",
+            "description": "Ki-powered martial arts. Fast, precise, mobile combat techniques.",
+            "abilities": {
+                "str": 12,
+                "dex": 15,
+                "con": 13,
+                "wis": 14,
+                "int": 10,
+                "cha": 8
+            },
+            "mainAbility": "dex"
+        }
+    ]
 }
