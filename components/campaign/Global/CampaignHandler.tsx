@@ -171,7 +171,7 @@ export default function CampaignHandler() {
               <div className="text-justify mt-2!">
 
                 {/* narration */}
-                <div>{(currentNode && currentCampaign) && parse(currentCampaign[currentNode].text ?? '')}</div>
+                <div>{(currentNode && currentCampaign) && parse(currentCampaign[currentNode]?.text ?? '')}</div>
 
               </div>
 

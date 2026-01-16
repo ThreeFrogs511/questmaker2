@@ -16,9 +16,7 @@ export default function characterCreation() {
 
     const draft = useCharacterCreationStore(state => state.draft);
 
-    useEffect(() => {
-        console.log(draft)
-    }, [draft])
+
     
     // determines which title and page to display
     const [indexTitle, setIndexTitle] = useState(0);

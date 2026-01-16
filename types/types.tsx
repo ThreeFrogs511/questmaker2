@@ -71,6 +71,7 @@ cha : number | null,
 ac: number | null,
 profile_completed : boolean,
 damage_taken: number
+coins: number
 }
    
 
@@ -91,4 +92,14 @@ export type Data = {
   value:number | null; 
   target: string | null;
   success:boolean | null;
+}
+
+
+
+export type ListType = {
+    id : number | null,
+    body: string | null,
+    completed:boolean | null,
+    list: string | null,
+    user_id: number | null
 }

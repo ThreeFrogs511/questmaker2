@@ -56,7 +56,7 @@ export default class Engine {
     // THIS METHOD DETERMINES THE NEXT NODE BASED ON THE USER'S CHOICE.
     // IF THE NODE IS UNIQUE (PENALTY, ABILITY CHECKS, COMBAT), WE HANDLE IT HERE
     async determineNextNode(currentChoice:any, setData:any, userPastNodes:any, clearNbOfTurn:any) {
-
+      
       // ability checks
       if (currentChoice.check) {
         const check = this.abilityChecks.handler(currentChoice, this.node);

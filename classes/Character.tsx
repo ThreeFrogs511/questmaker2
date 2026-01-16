@@ -98,7 +98,8 @@ export default class Character {
         cha : draft.cha ?? 10,
         ac:this.ac ?? null,
         profile_completed: true,
-        damage_taken:0
+        damage_taken:0,
+        coins:0
     }
     return newUser;
 
@@ -108,25 +109,25 @@ export default class Character {
         this.calculateDopamine(classes, draft);
         this.calculateAC(draft);
         try {
-        const response = await fetch(`/api/users/${this.id}`, {
-            method: 'PATCH',
-            headers: {"content-type": "application/JSON"},
-            body: JSON.stringify({
-                username: this.username,
-                gender: this.gender,
-                race:this.race,
-                user_class:this.user_class,
-                str:this.str,
-                dex:this.dex,
-                con:this.con,
-                int:this.int,
-                wis:this.wis,
-                cha:this.cha,
-                hp:this.hp,
-                ac:this.ac,
-                dopamine:this.dopamine
-            })
-        });
+            const response = await fetch(`/api/users/${this.id}`, {
+                method: 'PATCH',
+                headers: {"content-type": "application/JSON"},
+                body: JSON.stringify({
+                    username: this.username,
+                    gender: this.gender,
+                    race:this.race,
+                    user_class:this.user_class,
+                    str:this.str,
+                    dex:this.dex,
+                    con:this.con,
+                    int:this.int,
+                    wis:this.wis,
+                    cha:this.cha,
+                    hp:this.hp,
+                    ac:this.ac,
+                    dopamine:this.dopamine
+                })
+            });
         const feedback = await response.json();
         return feedback;
         } catch (err) {

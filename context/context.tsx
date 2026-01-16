@@ -2,17 +2,12 @@
 import { createContext, useContext, useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { usePathname } from 'next/navigation'
-import Loading from '@/context/loading';
-import { User } from '@/types/types';
+// import Loading from '@/context/loading';
 import { useUserStore } from '@/stores/useUserStore';
 import { useCharacterCreationStore } from '@/stores/useCharacterCreationStore';
 
 type userContextType = {
-    currentUser: User,
-    setCurrentUser: React.Dispatch<React.SetStateAction<User>>,
-    isFetchingDone: boolean,
-    setIsFetchingDone: React.Dispatch<React.SetStateAction<boolean>>,
-
+    isFetchingDone: boolean
 }
 
 const UserDataContext = createContext<userContextType | null>(null);
@@ -24,31 +19,6 @@ export function UserDataProvider({children} :  { children: React.ReactNode }) {
     const pathname = usePathname();
     const login = useUserStore(state => state.login);
     const updateDraft = useCharacterCreationStore(state => state.updateDraft);
-
-    // global state, user data
-    const [currentUser, setCurrentUser] = useState<User>({
-        id: null, 
-        username:null, 
-        email:null, 
-        xp:null, 
-        hp:null, 
-        dopamine: null,
-        dopamine_consumed: 0,
-        gender: null,
-        user_class:null, 
-        race:null,
-        lvl:null,
-        str :10,
-        dex :10,
-        con :10,
-        int :10,
-        wis :10,
-        cha :10,
-        ac:null,
-        profile_completed: false,
-        damage_taken:0
-    })
-    
     const [isFetchingDone, setIsFetchingDone] = useState(false);
     
     useEffect(() => {
@@ -59,7 +29,8 @@ export function UserDataProvider({children} :  { children: React.ReactNode }) {
                 // handling basic errors
                 if (data.error) {
                     console.log("error:" + data.error); //handling the error
-                    pathname === '/signup' ? router.push("/signup") : router.push("/login");
+                    // pathname === '/signup' ? router.push("/signup") : router.push("/login");
+                    router.push('/titleScreen');
                     // trigger on
                     setIsFetchingDone(true);
                     return;
@@ -69,6 +40,7 @@ export function UserDataProvider({children} :  { children: React.ReactNode }) {
                 if (data.authenticated) {
                     // storing the user's data in the global object
                     login({...data.user});
+                    console.log(data.user)
                     
                     // handling existing but incomplete profile
                     if (!data.user.profile_completed) {
@@ -94,8 +66,9 @@ export function UserDataProvider({children} :  { children: React.ReactNode }) {
     
     return(
     <>
-    <UserDataContext.Provider value={{currentUser, setCurrentUser, isFetchingDone, setIsFetchingDone}}>
-        {!isFetchingDone ? <Loading /> : children}
+    <UserDataContext.Provider value={{isFetchingDone}}>
+        {/* {!isFetchingDone ? <Loading /> : children} */}
+        {children}
     </UserDataContext.Provider>
     </>
     )

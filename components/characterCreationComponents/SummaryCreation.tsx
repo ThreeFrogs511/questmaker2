@@ -7,6 +7,7 @@ import presets from '../../assets/characterPresets.json'
 import { useUserStore } from "@/stores/useUserStore"
 import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore"
 import { useEffect } from "react"
+import { User } from "@/types/types"
 
 
     type Abilities = {
@@ -38,68 +39,12 @@ export default function SummaryCreation(
     const updateDraft = useCharacterCreationStore(state => state.updateDraft);
 
     const classes = presets.classes;
-
-    // this function create a User class then sends the data to the
-    // PATCH API that update and complete the user profile
-    // async function handleCharacterCreation() {
-    //     if (
-    //     draft.race && 
-    //     draft.user_class && 
-    //     draft.username && 
-    //     draft.email && 
-    //     draft.id && 
-    //     draft.gender
-    //     ) {
-    //         const newCharacter = new User(
-    //             currentUser.username, 
-    //             currentUser.gender, 
-    //             currentUser.race, 
-    //             currentUser.user_class, 
-    //             abilityScores.str, 
-    //             abilityScores.dex, 
-    //             abilityScores.con, 
-    //             abilityScores.int,
-    //             abilityScores.wis, 
-    //             abilityScores.cha
-    //         );
-
-    //         // calculating hitpoints and dopamine values
-    //         const hp:number = newCharacter.calculateHitpoints();
-    //         const dopamine:number = newCharacter.calculateDopamine(classes, currentUser, abilityScores) ?? 0;
-
-    //         // updating and finishing the profile
-    //         const feedback = await newCharacter.completeProfile(currentUser.id, hp, dopamine);
-    //         if (feedback.success) {
-    //             // storing the last bit of data into the global state
-    //             setCurrentUser(prev => ({...prev, 
-    //                 str:abilityScores.str,
-    //                 dex: abilityScores.dex,
-    //                 con: abilityScores.con,
-    //                 int: abilityScores.int,
-    //                 wis: abilityScores.wis,
-    //                 cha: abilityScores.cha,
-    //                 hp:hp,
-    //                 dopamine: dopamine,
-    //                 lvl:1,
-    //                 profile_completed:true,
-    //                 damage_taken:0,
-    //                 dopamine_consumed:0,
-    //                 ac:null
-    //                 }));
-    //                 console.log(currentUser)
-    //                 login(currentUser);
-    //             // router.push("/journal");
-    //         } else {
-    //             console.log(feedback.error);
-    //         }
-    //     }
-    // }
     async function handleCharacterCreation2() {
         if (draft.race && draft.user_class && draft.username && draft.email && draft.id && draft.gender) {
             const player = new Character({...draft}, updateDraft);
             const feedback = await player.completeProfile(draft, classes);
             if (feedback.success) {
-                const newUser = player.buildUserFromDraft(draft);
+                const newUser:User = player.buildUserFromDraft(draft);
                 login(newUser);
                 // resetDraft({});
                 router.push('/journal');

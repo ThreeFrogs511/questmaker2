@@ -16,8 +16,9 @@ const PressStartFont = Press_Start_2P({
 export default function AuthPage() {
 
   const router = useRouter()
-  const { currentUser, setCurrentUser, setIsFetchingDone, isFetchingDone} = useUserContext()
+  const { isFetchingDone} = useUserContext()
   const login = useUserStore(state => state.login);
+  const currentUser = useUserStore(state => state.currentUser)
 
   const [title, setTitle] = useState<string | undefined>('');
   const [error, setError] = useState<string | undefined>();
@@ -71,9 +72,7 @@ export default function AuthPage() {
         const userData = feedback.userData;
         // zustand function
         login({...userData});
-
-        // context function
-        setCurrentUser({...userData});
+        console.log(userData)
         !userData.profile_completed ? router.push('/characterCreation') : router.push('/journal');
       } else {
         setError("Unknown user");
@@ -93,7 +92,6 @@ export default function AuthPage() {
             sm:text-2xl!
             md:text-3xl!
             lg:text-4xl!
-            xl:text-4xl!
             text-stone-300 
             ${PressStartFont.className}
           `}

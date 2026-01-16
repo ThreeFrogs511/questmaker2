@@ -1,8 +1,10 @@
 'use client'
-import { Button, Card } from "pixel-retroui"
-import { useEffect, useState, useRef } from "react"
+import { useEffect, useState} from "react"
 import CampaignIndex from "@/components/campaign/CampaignIndex"
 import CampaignMenuScreen from "@/components/campaign/CampaignMenuScreen"
+import Header from "@/components/global/Header"
+import Footer from "@/components/global/Footer"
+import Loading from "../loading"
 
 export default function campaignList() {
 
@@ -37,17 +39,19 @@ export default function campaignList() {
 
   return (
     <>
+    <div className="wrapper">
+        <Header />
        { 
         !hasChosenACampaign ?
-        <div className="min-h-screen w-full bg-black text-white px-6 py-10 font-mono">
-            <h1 className="text-center text-3xl! tracking-wide mb-10! font-minecraft">
+        <div className="h-full w-full bg-black text-white px-6 py-10 font-mono">
+            <h1 className="text-center text-2xl! md:text-3xl! tracking-wide mb-10! font-minecraft">
             Select your campaign
             </h1>
 
             { isListFetched ? 
             <CampaignIndex campaignList={campaignList} 
             setHasChosenACampaignAction={setHasChosenACampaign} 
-            setSelectedCampaignAction={setSelectedCampaign}/> : <h3>Loading</h3>
+            setSelectedCampaignAction={setSelectedCampaign}/> : <Loading />
             }
         </div>
         : <CampaignMenuScreen 
@@ -55,6 +59,8 @@ export default function campaignList() {
         setHasChosenACampaignAction={setHasChosenACampaign}
         />
         }
+        <Footer />
+    </div>
     </>
     
   )

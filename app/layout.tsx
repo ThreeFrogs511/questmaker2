@@ -21,7 +21,7 @@ export default function RootLayout({
       <html lang="en">
         <body>
           <UserDataProvider>
-          <div className=" px-4 sm:px-6 md:px-10 lg:px-20 xl:px-40 2xl:px-60 max-w-[1600px] mx-auto h-dvh!">
+          <div className=" px-4! lg:px-20! max-w-[1600px] w-full! mx-auto h-dvh! overflow-x-hidden">
             {children}
           </div>
           </UserDataProvider>

@@ -34,7 +34,8 @@ export const useUserStore = create<UserStore>((set) => ({
         cha :10,
         ac:null,
         profile_completed: false,
-        damage_taken:0
+        damage_taken:0,
+        coins:0
     },
 
   login: (user) =>
@@ -61,7 +62,8 @@ export const useUserStore = create<UserStore>((set) => ({
         cha :10,
         ac:null,
         profile_completed: false,
-        damage_taken:0
+        damage_taken:0,
+        coins:0
     } }),
 
   updateProfile: (patch) =>

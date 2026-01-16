@@ -1,40 +1,68 @@
 'use client'
-import { Button } from "pixel-retroui"
+import { Press_Start_2P } from 'next/font/google';
+import { useEffect, useState } from "react";
+import { useRouter } from 'next/navigation';
+
+
+const PressStartFont = Press_Start_2P({
+    subsets: ['latin'],
+    weight:'400'
+})
 
 export default function titleScreen() {
+
+    const [hasInteracted, setHasInteracted] = useState(false);
+    const [flashEffect, setFlashEffect] = useState(false);
+    let timer:any;
+    const router = useRouter()
+
+    function flashingEffect() {
+        new Promise<void>(resolve => {
+            timer = setTimeout(() => {
+                        setFlashEffect(true);
+                        console.log("flash est true")
+                        resolve();
+            }, 1000);
+        })
+        .then(() => {
+        clearTimeout(timer);
+        timer = setTimeout(() => {
+                    setFlashEffect(false);
+                    console.log("flash est de nouveau false")
+                    flashingEffect();
+            }, 1000);
+        })
+    }
+
+    useEffect(() => {
+        if (flashEffect) return;
+        flashingEffect()
+        return () => clearTimeout(timer);  
+
+    },[])
+
+    useEffect(() => {
+        if (!hasInteracted) return;
+        router.push('/login');
+
+    },[hasInteracted])
+
+
+
+
     return(
         <>
         <section 
         id="titleScreenWrapper"
-        className="h-dvh grid grid-rows-[70%_auto] gap-5">
-            <figure className="md:flex md:justify-center md:pt-0 pt-10 
-            grid! grid-rows-auto items-center">
-                <img src="./pictures/title_screen.png" alt="title screen" className="grow-0! max-h-full h-auto row-span-2" />
-            </figure>
-            <div 
-            id="titleScreenMenu"
-            className="flex flex-col items-center gap-3 
-            w-full sm:w-[70%]! lg:w-[50%]! xl:w-[50%]! 2xl:w-[50%]!  mx-auto
-            text-2xl! lg:text-3xl! xl:text-4xl! 2xl:text-4xl!">
-                <Button
-                bg="black"
-                textColor="white"
-                borderColor="white"
-                shadow="white"
-                className="w-[80%] p-1! lg:p-5! xl:p-5! 2xl:p-5!">
-                Start
-                </Button>
-                <Button
-                bg="black"
-                textColor="white"
-                borderColor="white"
-                shadow="white"
-                className="w-[80%] p-1! lg:p-5! xl:p-5! 2xl:p-5!">
-                Continue game
-                </Button>
-
+        className="cursor-pointer h-dvh grid grid-rows-[60%_40%] gap-5"
+        onPointerDown={() => setHasInteracted(true)}>
+            <div className="flex flex-col justify-center">
+            <h1 className={`${PressStartFont.className} text-2xl! sm:text-4xl! text-center text-stone-300 tracking-widest!`}>QUESTMAKER</h1>
             </div>
-
+            <div 
+            className={!flashEffect ? `text-black` : `text-white`}>
+                <p className="font-minecraft text-center text-base">Click or Touch the screen to start</p>
+            </div>
         </section>
         </>
     )

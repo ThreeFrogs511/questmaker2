@@ -1,7 +1,7 @@
 'use client'
 import { Press_Start_2P } from 'next/font/google';
 import { Button, Input } from 'pixel-retroui';
-
+import { ListType } from '@/types/types';
 import Quest from '@/classes/Quest';
 import { useUserStore } from '@/stores/useUserStore';
 
@@ -11,17 +11,10 @@ const PressStartFont = Press_Start_2P({
   });
 
 
- type List = {
-    id: number | null,
-    body: string | null,
-    completed:boolean | null,
-    list: string | null
-  }
-
 export default function Toolbar({setDisplayedQuestsAction, setAllQuestsAction, 
     setWhichPageAction, whichPage} : {
-    setDisplayedQuestsAction: React.Dispatch<React.SetStateAction<Array<List> | null>>,
-    setAllQuestsAction: React.Dispatch<React.SetStateAction<Array<List> | null>>,
+    setDisplayedQuestsAction: React.Dispatch<React.SetStateAction<Array<ListType> | null>>,
+    setAllQuestsAction: React.Dispatch<React.SetStateAction<Array<ListType> | null>>,
     setWhichPageAction: React.Dispatch<React.SetStateAction<number>>,
     whichPage: number
 }) {   

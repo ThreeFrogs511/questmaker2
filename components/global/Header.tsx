@@ -2,7 +2,6 @@
 import { Press_Start_2P } from 'next/font/google';
 import { useState } from 'react';
 import Menu from '@/components/global/Menu'
-import { useUserContext } from '@/context/context';
 
 const PressStartFont = Press_Start_2P({
     subsets: ['latin'],
@@ -19,14 +18,14 @@ export default function Header() {
         {/* menu */}
         <section 
         id="menu"
-        className={!isMenuOpen ? 'z-999 fixed bg-black w-0 h-full overflow-hidden ' : 'z-999 fixed right-0 bg-black w-screen h-full overflow-hidden'}>
+        className={!isMenuOpen ? 'z-999 fixed bg-black transition-all! ease-in-out w-0 h-full right-0 left-0 top-0 bottom-0  overflow-hidden ' : 'z-999 fixed  bg-black transition-all! ease-out  right-0 left-0 top-0 bottom-0 w-screen h-full overflow-hidden'}>
             <Menu setIsMenuOpenAction={setIsMenuOpen} />
         </section>
 
         {/* header */}
         
-        <header className='flex py-5 mb-5 justify-between items-center'>
-            <h1 className={`text-base! lg:text-2xl!  text-stone-300 ${PressStartFont.className}`}>Questmaker</h1>
+        <header className='flex py-5 justify-between items-center'>
+            <h1 className={`text-base! lg:text-xl!  text-stone-300 ${PressStartFont.className}`}>Questmaker</h1>
             <svg 
                 fill="none" 
                 xmlns="http://www.w3.org/2000/svg" 

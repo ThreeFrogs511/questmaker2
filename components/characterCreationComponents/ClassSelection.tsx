@@ -23,7 +23,6 @@ export default function ClassSelection(
 }) {
   
   const classes = presets.classes;
-  const {setCurrentUser} = useUserContext();
   const [classDescription, setClassDescription] = useState<string | undefined>("");
 
   const updateDraft = useCharacterCreationStore(state => state.updateDraft);
@@ -64,7 +63,6 @@ export default function ClassSelection(
               data-id="class-option"
               onPointerDown={() => {
                 updateDraft({user_class:c.class});
-                // setCurrentUser(prev => ({...prev, user_class: c.class}))
               }}
               className={`px-4 max-h-full py-1! lg:py-5! xl:py-5! 2xl:py-5! 
               text-center cursor-pointer text-sm! sm:text-base! md:text-lg! lg:text-xl! 

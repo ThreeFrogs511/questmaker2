@@ -14,7 +14,7 @@ export default function CampaignIndex({campaignList, setHasChosenACampaignAction
 
     return (
    
-        <div className="flex flex-col gap-6 max-w-2xl mx-auto">
+        <div className="flex gap-6 max-w-2xl mx-auto h-[80%] w-[90%] md:h-auto! md:w-auto! ">
             {campaignList.map(c => (
             <Card
                 key={c.id}
@@ -22,10 +22,10 @@ export default function CampaignIndex({campaignList, setHasChosenACampaignAction
                 textColor="white"
                 borderColor="white"
                 shadowColor="white"
-                className="p-4 flex flex-col gap-5 items-center"
+                className="md:p-4! p-2 flex flex-col gap-5 justify-evenly items-center "
             >
-                <h2 className="text-2xl! text-amber-400">{c.name}</h2>
-                <p className="text-center tracking-widest">{c.description}</p>
+                <h2 className="text-lg! md:text-2xl! text-amber-400">{c.name}</h2>
+                <p className="text-center tracking-widest md:text-sm! text-xs!">{c.description}</p>
                 <Button
                 bg="black"
                 textColor="white"

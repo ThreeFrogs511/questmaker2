@@ -36,21 +36,31 @@ export default function Profile() {
                             textColor="white"
                             borderColor="white"
                             shadowColor="white"
-                            className="text-center mb-10! lg:mb-4!"
-                        >
-                            <div className="p-2 grid grid-cols-4">
-                                <figure className="col-span-2 flex justify-center">
-                                    <img
-                                        src="./portrait_male.webp"
-                                        alt="portrait"
-                                        className="h-auto w-[90%]"
-                                    />
-                                </figure>
-
-                                <ul className="ml-5! col-span-2 flex flex-col justify-evenly items-start">
-                                    <li className='text-lg! md:text-2xl!'>{currentUser?.username}</li>
-                                    <li className='text-lg!  md:text-2xl!'>Level {currentUser?.lvl}</li>
-                                    <li className='text-lg!  md:text-2xl!'>{currentUser?.user_class}</li>
+                            className="text-center mb-10! lg:mb-4!">
+                            <div className="p-2 ">
+                                <ul className="ml-1! flex flex-col justify-evenly items-start">
+                                    <li className='text-base! w-full md:text-lg! grid grid-cols-2'>
+                                        <div>Username:</div> 
+                                        <div className='text-amber-300'>{currentUser?.username}</div>
+                                    </li>
+                                    <li className='text-base! w-full md:text-lg! grid grid-cols-2'>
+                                        <div>Level:</div> 
+                                        <div className='text-amber-300'>{currentUser?.lvl}</div>
+                                    </li>
+                                    <li className='text-base! w-full md:text-lg! grid grid-cols-2'>
+                                        <div>Class:</div> 
+                                        <div className='text-amber-300'>{currentUser?.user_class}</div>
+                                    </li>
+                                    <li className='text-base! w-full md:text-lg! grid grid-cols-2'>
+                                        <div>Race:</div> 
+                                        <div className='text-amber-300'>{currentUser?.race}</div>
+                                    </li>
+                            
+                                    <li className='text-base! w-full md:text-lg! grid grid-cols-2'>
+                                        <div>Coins:</div> 
+                                        <div className='text-amber-300'>{currentUser?.coins}</div>
+                                    </li>
+                            
                                 </ul>
                             </div>
                         </Card>
@@ -61,19 +71,19 @@ export default function Profile() {
                         textColor="white"
                         borderColor="white"
                         shadowColor="white"
-                        className="p-6! text-center grow">
+                        className="p-2! text-center grow">
                             <div className="mb-5! mt-2! progressBarContainer ">
-                                <span className='text-lg! sm:text-lg! md:text-xl! lg:text-2xl!'>Hp</span>
+                                <span className='text-base!  md:text-lg!'>Hp</span>
                                 <div className='w-[95%] mx-auto my-3'><Hitpoints /></div>
                             </div>
 
                             <div className="mb-5! progressBarContainer ">
-                                <span className='text-lg! sm:text-lg! md:text-xl! lg:text-2xl!'>Dopamine</span>
+                                <span className='text-base!  md:text-lg!'>Dopamine</span>
                                 <div className='w-[95%] mx-auto my-3'><DopamineBar /></div>
                             </div>
 
                             <div className="mb-5!">
-                                <span className='text-lg! sm:text-lg! md:text-xl! lg:text-2xl!'>Xp</span>
+                                <span className='text-base!  md:text-lg!'>Xp</span>
                             <div className='w-[95%] mx-auto my-3'><Progress /></div> 
                             </div>
                         </Card>
@@ -87,30 +97,30 @@ export default function Profile() {
                         shadowColor="white"
                         className="text-center"
                     >
-                        <p className="mb-6! text-lg! sm:text-lg! md:text-2xl! pt-5 ">User stats</p> 
+                        <p className="mb-3! text-lg! sm:text-lg! md:text-2xl! pt-2 ">User stats</p> 
 
                         <ul className='flex flex-col justify-evenly h-[80%] max-h-full'>
-                            <li className=" w-[80%] mx-auto py-2 flex justify-between text-lg! sm:text-lg! md:text-2xl!">
+                            <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
                                 <span>Strength</span> 
                                 <span className='text-yellow-400'>{currentUser?.str ?? ''}</span>
                             </li>
-                            <li className=" w-[80%] mx-auto py-2 flex justify-between text-lg! sm:text-lg! md:text-2xl!">
+                            <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
                                 <span>Dexterity</span> 
                                 <span className='text-yellow-400'>{currentUser?.dex ?? ''}</span>
                             </li>
-                            <li className=" w-[80%] mx-auto py-2 flex justify-between text-lg! sm:text-lg! md:text-2xl!">
+                            <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
                                 <span>Constitution</span> 
                                 <span className='text-yellow-400'>{currentUser?.con ?? ''}</span>
                             </li>
-                            <li className=" w-[80%] mx-auto py-2 flex justify-between text-lg! sm:text-lg! md:text-2xl!">
+                            <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
                                 <span>Intelligence</span> 
                                 <span className='text-yellow-400'>{currentUser?.int ?? ''}</span>
                             </li>
-                            <li className=" w-[80%] mx-auto py-2 flex justify-between text-lg! sm:text-lg! md:text-2xl!">
+                            <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
                                 <span>Wisdom</span> 
                                 <span className='text-yellow-400'>{currentUser?.wis ?? ''}</span>
                             </li>
-                            <li className=" w-[80%] mx-auto mb-5 py-2 flex justify-between text-lg! sm:text-lg! md:text-2xl!">
+                            <li className=" w-[80%] mx-auto mb-5 py-2 flex justify-between text-base!  md:text-lg!">
                                 <span>Charisma</span> 
                                 <span className='text-yellow-400'>{currentUser?.cha ?? ''}</span>
                             </li>

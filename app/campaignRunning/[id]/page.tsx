@@ -1,6 +1,7 @@
 'use client'
 import { useEffect,  useState} from "react";
 import CampaignHandler from "@/components/campaign/Global/CampaignHandler";
+import Loading from "@/app/loading";
 // main types
 import { useNarrationStore } from "@/stores/useNarrationStore";
 
@@ -50,7 +51,7 @@ export default function campaignRunning({params} : {params: Promise<{ id: string
 
     return (
         <>
-            {hasCampaignLaunched ? <CampaignHandler /> : <h3>Loading</h3>}
+            {hasCampaignLaunched ? <CampaignHandler /> : <Loading />}
         </>
     )
 }

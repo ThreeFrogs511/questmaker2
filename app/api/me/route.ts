@@ -28,7 +28,7 @@ export async function GET() {
         // fetching user's data and handling errors
         const userRows = await sql`
         SELECT id, username, email, xp, hp, user_class, lvl, race, gender,
-        str, dex, con, int, wis, cha, ac, damage_taken, dopamine, dopamine_consumed, profile_completed
+        str, dex, con, int, wis, cha, ac, damage_taken, dopamine, dopamine_consumed, profile_completed, coins
         FROM users
         WHERE id = ${userId}`;
 

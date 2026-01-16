@@ -1,10 +1,9 @@
 'use client'
 import { useState, useRef, useEffect} from 'react'
 import { useUserContext } from '@/context/context'
-import { Card, Button, Input } from 'pixel-retroui'
+import { Button, Input } from 'pixel-retroui'
 import { Press_Start_2P } from 'next/font/google'
 import { useRouter } from 'next/navigation';
-import { useUserStore } from '@/stores/useUserStore'
 import { useCharacterCreationStore } from '@/stores/useCharacterCreationStore'
 
 const PressStartFont = Press_Start_2P({
@@ -15,9 +14,10 @@ const PressStartFont = Press_Start_2P({
 export default function SignupPage() {
 
     const router = useRouter();
-    const {setCurrentUser, isFetchingDone} = useUserContext();
+    const {isFetchingDone} = useUserContext();
 
     const updateDraft = useCharacterCreationStore(state => state.updateDraft);
+    
 
     const [error, setError] = useState<string | undefined>()
     const [title, setTitle] = useState<string | undefined>('');
@@ -79,8 +79,6 @@ export default function SignupPage() {
 
                 // zustand
                 updateDraft({id: feedback.id, email: email.trim()});
-                
-                setCurrentUser(prev => ({...prev, id: feedback.id, email: email.trim()}));
                 router.push('/characterCreation');
             } else {
                 setError("error:" + feedback.err)
