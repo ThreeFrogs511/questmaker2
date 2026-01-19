@@ -1,1 +1,13 @@
-FROM node:20-alpine AS deps 
+FROM node:20-alpine AS base
+
+WORKDIR /app
+
+COPY package*.json ./
+
+RUN npm ci
+
+COPY . .
+
+CMD ["npm", "run" ,"dev"]
+
+EXPOSE 3000

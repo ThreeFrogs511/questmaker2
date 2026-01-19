@@ -54,7 +54,7 @@ export default function titleScreen() {
         <>
         <section 
         id="titleScreenWrapper"
-        className="cursor-pointer h-dvh grid grid-rows-[60%_40%] gap-5"
+        className="cursor-pointer h-dvh  grid grid-rows-[60%_40%] gap-5 overflow-hidden"
         onPointerDown={() => setHasInteracted(true)}>
             <div className="flex flex-col justify-center">
             <h1 className={`${PressStartFont.className} text-2xl! sm:text-4xl! text-center text-stone-300 tracking-widest!`}>QUESTMAKER</h1>

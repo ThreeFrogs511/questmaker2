@@ -29,8 +29,10 @@ export function UserDataProvider({children} :  { children: React.ReactNode }) {
                 // handling basic errors
                 if (data.error) {
                     console.log("error:" + data.error); //handling the error
-                    // pathname === '/signup' ? router.push("/signup") : router.push("/login");
-                    router.push('/titleScreen');
+                    // pathname === '/signup' ? router.push("/signup") : router.push("/titleScreen");
+                    // pathname === '/login' ? router.push("/login") : router.push("/titleScreen");
+                    
+                    // router.push('/titleScreen');
                     // trigger on
                     setIsFetchingDone(true);
                     return;

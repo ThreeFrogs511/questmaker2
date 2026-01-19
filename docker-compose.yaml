@@ -1,0 +1,26 @@
+services:
+  web:
+    build: .
+    ports:
+      - "3000:3000"
+    env_file:
+      - .env.local
+    depends_on:
+      - db
+      - mongo
+
+  db:
+    image: postgres:18
+    env_file:
+      - .env.local
+    volumes:
+      - db_data:/var/lib/postgresql
+      - ./questmaker.sql:/docker-entrypoint-initdb.d/001_dump.sql:ro
+
+  mongo:
+    image: mongo:7
+    env_file:
+      - .env.local
+
+volumes:
+  db_data:
