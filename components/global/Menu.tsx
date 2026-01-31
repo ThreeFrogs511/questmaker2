@@ -49,7 +49,7 @@ export default function Menu({setIsMenuOpenAction} : {
                 </Link> 
 
                 {/* inventory*/}
-                <Link href='#'className="w-full flex hover:text-amber-300!" onClick={() => setIsMenuOpenAction(prev => !prev)}> 
+                <Link href='/inventory'className="w-full flex hover:text-amber-300!" onClick={() => setIsMenuOpenAction(prev => !prev)}> 
                     {/* <Button  textColor="white" bg="transparent" borderColor="white" shadow="white" className="w-3/4"> */}
                         <p className={style}>Inventory</p>
                     {/* </Button>  */}

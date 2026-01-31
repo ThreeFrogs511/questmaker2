@@ -28,6 +28,7 @@ export async function GET(
 }
 
 
+// compléter ou annuler la complétion d'une quête
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -35,26 +36,36 @@ export async function PATCH(
 
   try {
     const { id } = await params
+    if (!id) return NextResponse.json({error:"id null"});
+
     const data = await request.json();
+
+    // nombre de quêtes max qu'un utilisateur peut valider en 1 heure, évite les abus
     const nbOfQuestsMax = 5;
 
+    //filtre de sécurité
     if (data.completed === undefined) return NextResponse.json({ error: 'Missing field: completed' })
     if (!data.taskUserId || !data.currentUser || !data.currentUser.id) return NextResponse.json({error: 'missing id'});
+
+    //filtre d'intégrité, on vérifie que l'user est bien propriétaire de la quête qu'il souhaite valider
     if (data.taskUserId !== data.currentUser?.id) return NextResponse.json({error:"You are not authorized to use this action"});
 
-    //fetching quest limit
+    // On requête la table limitateur de quêtes
+    //L'utilisateur n'a le droit de valider que 5 quêtes par heure, cette table garde un historique des complétions
+    //et évite les abus
     const questLimit = await sql`
     SELECT * FROM quest_rate_limit
     WHERE user_id = ${data.currentUser.id}
     `;
 
 
-    // storing the current window_start value
+    // variable qui stocke l'intervalle de temps qui détermine si l'user a le droit de compléter une quête ou non
     let windowStartMs;
-    // storing the current count value
+    // variable qui stocke le nombre de quêtes validées durant l'intervalle de temps. Max = 5.
     let currentCount;
 
-    // if no limit entry yet, we create it
+    // Si l'utilisateur valide sa première quête, on lui crée une entrée 
+    //dans la table de limitateur de quêtes
     if (questLimit.length <=0) {
       const newLimit = await sql`
       INSERT INTO quest_rate_limit(user_id) VALUES (${data.currentUser.id})
@@ -62,24 +73,27 @@ export async function PATCH(
 
       if (newLimit.length <=0) return NextResponse.json({error: 'Failed to create new quest profile, please try again'});
       
+      //par défaut, window_start débute à l'heure actuelle et count = 0.
       windowStartMs = new Date(newLimit[0].window_start).getTime();
       currentCount = 0;
 
+    //sinon on récupère simplement les données existantes
     } else {
       windowStartMs = new Date(questLimit[0].window_start).getTime();
       currentCount = questLimit[0].count;
     }
 
-    // collecting and calculating time window data
+    // On calcule l'heure actuelle. Puis on détermine via l'intervalle de temps si 
+    // cela fait au moins 1h depuis la dernière complétion
     const currentTimeMs = Date.now();
-    // returns false or true
     const OneHourPassed = (currentTimeMs - windowStartMs) >= 3600000;
 
-    // if the user has created 5 or more quests in a row and an hour hasn't passed yet, we block it
+    // Si l'user a complété 5 quêtes à la suite, en moins d'une heure, on refuse la nouvelle complétion et
+    //on retourne une réponse
     if (currentCount >= nbOfQuestsMax && !OneHourPassed && data.completed === true) return NextResponse.json({limit: true});
   
     
-    // then, we finally update the task
+    // Si la limite n'est pas atteinte, on autorise la complétion en mettant à jour la quête concernée
     const update = await sql`
       UPDATE todo
       SET completed = ${data.completed}
@@ -89,7 +103,9 @@ export async function PATCH(
     if (update.length <=0) return NextResponse.json({error: "error during the update"});
 
   
-    // if the user has created 5 or more quests in a row BUT one hour has passed, we update the count accordingly 
+
+    //On met à jour le limitateur. Ici si l'user a créé +5 quêtes mais que la limite de temps 
+    //s'est écoulée, on reset le compteur et l'intervalle
     if (currentCount>=nbOfQuestsMax && OneHourPassed && data.completed === true) {
       const resetLimit = await sql`
       UPDATE quest_rate_limit
@@ -99,8 +115,10 @@ export async function PATCH(
       RETURNING count`
       if (resetLimit.length<=0) return NextResponse.json({error:"problem while updating data"});
 
+
+    //si l'user a créé <5 quêtes, on incrémente le compteur, et on insère l'heure de la dernière entrée 
+    //comme début de l'intervalle
     } else if (currentCount <nbOfQuestsMax && data.completed === true) {
-      // we update quest_rate_limit and we add the new count and new window_start if the count is inferior to 5
       const newCount = currentCount +1;
       const updateLimit = await sql`
       UPDATE quest_rate_limit
@@ -110,6 +128,9 @@ export async function PATCH(
       RETURNING count`;
       if (updateLimit.length<=0) return NextResponse.json({error: "internal server error. Try later."});
 
+
+    //ici on gère l'annulation de quêtes. Si l'user veut revenir en arrière et "décompléter"
+    //une quête. On décremente le compteur (minimum 0) et on reset l'intervalle par défaut
     } else if (data.completed === false) {
       const newCount = currentCount <= 0 ? 0 : currentCount - 1;
       const updateLimit = await sql`
@@ -121,9 +142,10 @@ export async function PATCH(
       if (updateLimit.length<=0) return NextResponse.json({error: "internal server error. Try later."});
     }
 
-    // then, updating coins value
+    // Si tout est ok, on met à jour le portefeuille virtuel de l'user
+    //Il gagne +1 s'il complète une quête, -1 s'il en annule une (pour reset)
     let updatedCoins = data.completed ? data.currentUser.coins + 1 : data.currentUser.coins - 1;
-    updatedCoins = updatedCoins<0 ? 0 : updatedCoins;
+    updatedCoins = updatedCoins<0 ? 0 : updatedCoins; // la somme ne peut pas être négative
 
     const res = await sql`
     UPDATE users
@@ -133,6 +155,9 @@ export async function PATCH(
 
     if (res.length <=0) return NextResponse.json({error:"error during coins update"});
 
+
+    //Enfin, on retourne une réponse côté client avec la confirmation de succès de l'opération
+    //et la valeur actualisée du portefeuille
     return NextResponse.json({ success: true, coins:res});
 
   } catch (err) {

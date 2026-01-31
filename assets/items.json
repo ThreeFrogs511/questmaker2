@@ -1,0 +1,43 @@
+[
+    
+    {
+        "name": "small health potion",
+        "type": "consumable",
+        "target": "damage_taken",
+        "value": 5
+    },
+    {
+        "name": "small dopamine potion",
+        "type": "consumable",
+        "target": "dopamine_consumed",
+        "value": 5
+    },
+    {
+        "name": "kitchen knife",
+        "type": "weapon",
+        "baseDmg": 10,
+        "typeDmg": "physical"
+    },
+    {
+        "name": "rusty sword",
+        "type": "weapon",
+        "baseDmg":12,
+        "typeDmg": "physical",
+        "attribute": ["str"]
+    },
+    {
+        "name": "small wand",
+        "type": "weapon",
+        "baseDmg": 12,
+        "typeDmg": "magical",
+        "attribute": ["int", "wis", "cha"]
+    },
+    {
+        "name": "hunter's bow",
+        "type": "weapon",
+        "baseDmg": 10,
+        "typeDmg": "physical",
+        "attribute": ["dex"]
+    }
+
+]

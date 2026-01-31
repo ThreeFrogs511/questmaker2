@@ -1,6 +1,5 @@
 'use client'
 import { useCombatStore } from "@/stores/useCombatStore"
-import { useEffect } from "react";
 
 
 export default function Inventory({gameplay, setSoundEffectAction} : {gameplay:any, setSoundEffectAction:any}) {
@@ -31,7 +30,7 @@ export default function Inventory({gameplay, setSoundEffectAction} : {gameplay:a
 
     return(
         <>
-        < div className="fixed h-dvh top-0 bottom-0 left-0 right-0 w-dvw z-998 flex justify-center items-center">
+        <div className="fixed h-dvh top-0 bottom-0 left-0 right-0 w-dvw z-998 flex justify-center items-center">
             <div className="h-[90%] w-[90%] bg-black  overflow-hidden border-4! border-white! rounded-lg! p-5">
                 <div 
                 className="cursor-pointer"
