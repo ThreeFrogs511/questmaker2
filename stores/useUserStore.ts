@@ -9,8 +9,8 @@ type UserStore = {
   updateStats: (patch: Partial<User>) => void
   addXp: (delta: number) => void
   addDamage: (delta: number) => void
-  attacks: Object
-  fetchSelectedAttacks: (attacks:Object) => void
+  attacks: object
+  fetchSelectedAttacks: (attacks:object) => void
 }
 
 export const useUserStore = create<UserStore>((set) => ({

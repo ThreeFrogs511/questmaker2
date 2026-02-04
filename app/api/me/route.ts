@@ -9,10 +9,10 @@ export async function GET() {
 
         // cookies
         const cookieStore = await cookies();
-        const token:any = cookieStore.get("session")?.value;
+        const token = cookieStore.get("session")?.value;
 
         // checking if the token exists
-        if (!token) return NextResponse.json({error: 'no logged session'});
+        if (!token) throw new Error('');
 
 
         // fetching the session and handling errors
@@ -23,17 +23,17 @@ export async function GET() {
         AND expires_at > NOW();`;
 
         const userId = sessionRows?.[0]?.user_id;
-        if (!userId) return NextResponse.json({ error: "invalid or expired session" });
+        if (!userId) throw new Error('');
 
         // fetching user's data and handling errors
         const userRows = await sql`
-        SELECT id, username, email, xp, hp, user_class, lvl, race, gender,
+        SELECT id, username, xp, hp, user_class, lvl, race, gender,
         str, dex, con, int, wis, cha, ac, damage_taken, dopamine, dopamine_consumed, profile_completed, coins
         FROM users
         WHERE id = ${userId}`;
 
         if (!userRows || userRows.length === 0) {
-            return NextResponse.json({ error: "user not found" });
+            throw new Error('');
         };
 
 
@@ -43,9 +43,10 @@ export async function GET() {
             user: userRows[0]
         });
 
-    } catch (err) {
-        console.log(err)
-        return NextResponse.json({error: 'internal error'});
+    } catch (err: unknown) {
+        
+        return NextResponse.json({err: 'internal error'});
+
     }
 }
 

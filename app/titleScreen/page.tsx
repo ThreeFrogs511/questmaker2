@@ -9,18 +9,18 @@ const PressStartFont = Press_Start_2P({
     weight:'400'
 })
 
-export default function titleScreen() {
+export default function TitleScreen() {
 
     const [hasInteracted, setHasInteracted] = useState(false);
     const [flashEffect, setFlashEffect] = useState(false);
-    let timer:any;
+    let timer: ReturnType<typeof setTimeout>;
     const router = useRouter()
 
     function flashingEffect() {
         new Promise<void>(resolve => {
             timer = setTimeout(() => {
                         setFlashEffect(true);
-                        console.log("flash est true")
+
                         resolve();
             }, 1000);
         })
@@ -28,7 +28,7 @@ export default function titleScreen() {
         clearTimeout(timer);
         timer = setTimeout(() => {
                     setFlashEffect(false);
-                    console.log("flash est de nouveau false")
+
                     flashingEffect();
             }, 1000);
         })

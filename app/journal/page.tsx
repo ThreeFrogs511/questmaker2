@@ -1,4 +1,4 @@
-"use client";
+"use client"
 import { useEffect, useState } from "react";
 import { useUserContext } from "@/context/context";
 import List from "@/components/journal/List";
@@ -15,7 +15,7 @@ const PressStartFont = Press_Start_2P({
   weight: "400",
 });
 
-export default function journal() {
+export default function Journal() {
   const { isFetchingDone } = useUserContext();
   const currentUser = useUserStore((state) => state.currentUser);
   const resetDraft = useCharacterCreationStore((state) => state.resetDraft);

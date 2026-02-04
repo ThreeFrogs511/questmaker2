@@ -6,7 +6,7 @@ import Header from "@/components/global/Header"
 import Footer from "@/components/global/Footer"
 import Loading from "../loading"
 
-export default function campaignList() {
+export default function CampaignList() {
 
     type List = {
         id:number;
@@ -29,13 +29,6 @@ export default function campaignList() {
     }, [])
 
 
- const campaigns = [
-    { id: 1, name: "Curse of Strahd" },
-    { id: 2, name: "Storm King’s Thunder" },
-    { id: 3, name: "Descent Into Avernus" },
-    { id: 4, name: "Tomb of Annihilation" },
-    { id: 5, name: "Out of the Abyss" },
-  ]
 
   return (
     <>

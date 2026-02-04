@@ -1,6 +1,5 @@
-import { NextRequest, NextResponse } from 'next/server';
+import { NextResponse } from 'next/server';
 import { sql } from '@/server/connexion';
-import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
 import crypto from "crypto";
 
@@ -49,7 +48,7 @@ export async function PUT(
 
 
 }
-// completing the profile at the end of character creation
+// when the user finish their profile after signing up
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
@@ -84,7 +83,6 @@ export async function PATCH(
     WHERE id = ${id}
     `;
     
-    // when the users finish their account, we log them and
     // save their session with a token
     const token = crypto.randomBytes(32).toString("hex");
     
