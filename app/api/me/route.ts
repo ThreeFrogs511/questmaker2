@@ -12,7 +12,7 @@ export async function GET() {
         const token = cookieStore.get("session")?.value;
 
         // checking if the token exists
-        if (!token) throw new Error('');
+        if (!token) throw new Error('pas de cookie ');
 
 
         // fetching the session and handling errors
@@ -23,7 +23,7 @@ export async function GET() {
         AND expires_at > NOW();`;
 
         const userId = sessionRows?.[0]?.user_id;
-        if (!userId) throw new Error('');
+        if (!userId) throw new Error('pas de user id');
 
         // fetching user's data and handling errors
         const userRows = await sql`
@@ -33,7 +33,7 @@ export async function GET() {
         WHERE id = ${userId}`;
 
         if (!userRows || userRows.length === 0) {
-            throw new Error('');
+            throw new Error('pas d\'user existant');
         };
 
 
@@ -43,9 +43,10 @@ export async function GET() {
             user: userRows[0]
         });
 
-    } catch (err: unknown) {
-        
-        return NextResponse.json({err: 'internal error'});
+    } catch (err) {
+   
+
+       return NextResponse.json({ err: (err as Error).message }, { status: 401 })
 
     }
 }

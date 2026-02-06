@@ -21,7 +21,6 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
 
 
   useEffect(() => {
-    console.log("fonction context activée");
     fetch("/api/me")
       .then((r) => r.json())
       .then((data) => {
@@ -32,7 +31,9 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
             router.push("/characterCreation");
           } else {
             login({ ...data.user });
-            // pathname ==='/characterCreation' && router.push("/journal");
+           
+             pathname === '/' && router.push("/journal");
+         
             console.log(data.user);
           }
         }
@@ -59,6 +60,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
     <>
       <UserDataContext.Provider value={{ isFetchingDone }}>
         {isFetchingDone && children}
+        {/* {children} */}
       </UserDataContext.Provider>
     </>
   );

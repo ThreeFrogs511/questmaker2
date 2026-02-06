@@ -8,11 +8,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+
+  
   return (
     <html lang="en">
       <body>
         <UserDataProvider>
-          <div className=" px-4! lg:px-20! max-w-[1600px] w-full! mx-auto h-dvh! overflow-x-hidden">
+          <div className=" px-4! lg:px-20! max-w-400 w-full! mx-auto h-dvh! overflow-x-hidden">
             {children}
           </div>
         </UserDataProvider>
