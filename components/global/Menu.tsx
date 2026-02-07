@@ -42,7 +42,7 @@ export default function Menu({setIsMenuOpenAction} : {
                 </Link> 
 
                 {/* Character Sheet */}
-                <Link href='/profile'className="w-full flex hover:text-amber-300!" onClick={() => setIsMenuOpenAction(prev => !prev)}> 
+                <Link href='/characterSheet'className="w-full flex hover:text-amber-300!" onClick={() => setIsMenuOpenAction(prev => !prev)}> 
                     {/* <Button  textColor="white" bg="transparent" borderColor="white" shadow="white" className="w-3/4"> */}
                         <p className={style}>Character Sheet</p>
                     {/* </Button>  */}
@@ -56,9 +56,9 @@ export default function Menu({setIsMenuOpenAction} : {
                 </Link> 
 
                 {/* Settings */}
-                <Link href='#'className="w-full flex hover:text-amber-300!" onClick={() => setIsMenuOpenAction(prev => !prev)}> 
+                <Link href='/profileSettings'className="w-full flex hover:text-amber-300!" onClick={() => setIsMenuOpenAction(prev => !prev)}> 
                     {/* <Button  textColor="white" bg="transparent" borderColor="white" shadow="white" className="w-3/4"> */}
-                        <p className={style}>Settings</p>
+                        <p className={style}>Profile Settings</p>
                     {/* </Button>  */}
                 </Link> 
 

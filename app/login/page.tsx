@@ -1,89 +1,76 @@
-'use client'
+"use client";
 import { useEffect, useRef, useState } from "react";
 import { Card, Button, Input } from "pixel-retroui";
-import { Press_Start_2P } from 'next/font/google';
-import { useUserContext } from '@/context/context';
-import { useRouter } from 'next/navigation';
+import { Press_Start_2P } from "next/font/google";
+import { useUserContext } from "@/context/context";
+import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/useUserStore";
 
-
-
 const PressStartFont = Press_Start_2P({
-    subsets: ['latin'],
-    weight:'400'
-})
+  subsets: ["latin"],
+  weight: "400",
+});
 
 export default function AuthPage() {
+  const router = useRouter();
+  const { isFetchingDone } = useUserContext();
+  const login = useUserStore((state) => state.login);
 
-  const router = useRouter()
-  const { isFetchingDone} = useUserContext()
-  const login = useUserStore(state => state.login);
-  const currentUser = useUserStore(state => state.currentUser)
-
-  const [title, setTitle] = useState<string | undefined>('');
+  const [title, setTitle] = useState<string | undefined>("");
   const [error, setError] = useState<string | undefined>();
   const [isTyping, setIsTyping] = useState(true);
 
-  const counter = useRef(0);
-
+  const counter = useRef(-1);
 
   // displaying the page title with a typewriter effect
   useEffect(() => {
     if (isFetchingDone) {
-      const authTitle:string = "Continue your journey";
-      setTitle('C');
+      const authTitle: string = "Continue your journey";
+
       const intervalId = setInterval(() => {
         if (isTyping) {
           if (!isTyping) return;
-          setIsTyping(prev => !prev);
-          setTitle(prev => prev + authTitle.charAt(counter.current));
+          setIsTyping((prev) => !prev);
+          setTitle((prev) => prev + authTitle.charAt(counter.current));
           counter.current++;
-          setIsTyping(prev => !prev);
-          }
+          setIsTyping((prev) => !prev);
+        }
       }, 50);
       return () => clearInterval(intervalId);
     }
-    
-  }, [isFetchingDone]);
-    
-    async function submitHandler(e:any) {
-      e.preventDefault();
-      let email = (document.getElementById('email') as HTMLInputElement).value;
-      let password = (document.getElementById('password') as HTMLInputElement).value;
-      const emailRegex = /^(?=.{1,254}$)(?=.{1,64}@)[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+(?:\.[A-Za-z0-9!#$%&'*+/=?^_`{|}~-]+)*@(?:[A-Za-z0-9](?:[A-Za-z0-9-]{0,61}[A-Za-z0-9])?\.)+[A-Za-z]{2,63}$/;
+  }, [isFetchingDone, isTyping]);
 
-      if (email === '' || password === '') {
-        setError('Please fill out all the field.')
-        return;
-      } else if (!emailRegex.test(email)) {
-        setError('Invalid email')
-        return;
-      };
+  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    const email = (document.getElementById("email") as HTMLInputElement).value;
+    const password = (document.getElementById("password") as HTMLInputElement)
+      .value;
 
-      const response = await fetch(`/api/login`, {
-        method: 'POST',
-        headers:{'content-type': 'application/JSON'},
-        body: JSON.stringify({email: email.trim(), user_password:password.trim()})
-      });
+    const response = await fetch(`/api/login`, {
+      method: "POST",
+      headers: { "content-type": "application/JSON" },
+      body: JSON.stringify({
+        email: email.trim(),
+        user_password: password.trim(),
+      }),
+    });
+    const feedback = await response.json();
 
-      const feedback = await response.json();
-
-      if (feedback.success) {
-        const userData = feedback.userData;
-        // zustand function
-        login({...userData});
-        console.log(userData)
-        !userData.profile_completed ? router.push('/characterCreation') : router.push('/journal');
+    if (feedback.success) {
+      const userData = feedback.userData;
+      if (!userData.profile_completed) {
+        router.push("/characterCreation");
       } else {
-        setError("Unknown user");
+        login({ ...userData});
+        router.push("/journal");
       }
-    }
+    };
+
+    if (feedback.err) setError(feedback.err);
+  }
 
   return (
-    <div
-      id="authWrapper"
-      className="h-dvh w-full flex flex-col items-center"
-    >
+    <div id="authWrapper" className="h-dvh w-full flex flex-col items-center">
       <div className="h-[20%] flex flex-col justify-center my-5">
         <h2
           className={`
@@ -116,34 +103,32 @@ export default function AuthPage() {
           mx-auto
           mt-10
         "
+        onSubmit={submitHandler}
       >
-      
+        <div className="w-[90%] mx-auto">
+          <Input
+            bg="black"
+            textColor="white"
+            borderColor="white"
+            id="email"
+            type="email"
+            className="w-full focus:outline-none p-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
+            placeholder="Email"
+          />
+        </div>
 
-          <div className="w-[90%] mx-auto">
-            <Input
-              bg="black"
-              textColor="white"
-              borderColor="white"
-              id="email"
-              type="email"
-              className="w-full focus:outline-none p-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
-              placeholder="Email"
-            />
-          </div>
+        <div className="w-[90%] mx-auto">
+          <Input
+            bg="black"
+            textColor="white"
+            borderColor="white"
+            id="password"
+            type="password"
+            className="w-full focus:outline-none p-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
+            placeholder="Password"
+          />
+        </div>
 
-          <div className="w-[90%] mx-auto">
-            <Input
-              bg="black"
-              textColor="white"
-              borderColor="white"
-              id="password"
-              type="password"
-              className="w-full focus:outline-none p-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
-              placeholder="Password"
-            />
-          </div>
-
-      
         <div className="w-[90%] flex flex-col items-center">
           <Button
             bg="black"
@@ -152,7 +137,6 @@ export default function AuthPage() {
             shadow="white"
             type="submit"
             className="w-full mt-5! py-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
-            onClick={(e) => submitHandler(e)}
           >
             Resume my adventure
           </Button>
@@ -165,7 +149,6 @@ export default function AuthPage() {
       <p className="font-minecraft mt-5! text-red-600">{error}</p>
 
       <div className="mt-8 flex flex-col space-y-2 text-sm">
-
         <a href="/signup" className="font-minecraft mb-5 hover:underline!">
           Create an account
         </a>

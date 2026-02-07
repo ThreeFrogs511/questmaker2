@@ -4,17 +4,11 @@ import RaceSelection from "@/components/characterCreationComponents/RaceSelectio
 import ClassSelection from "@/components/characterCreationComponents/ClassSelection"
 import AbilityScoresSelection from "@/components/characterCreationComponents/AbilityScoresSelection"
 import SummaryCreation from "@/components/characterCreationComponents/SummaryCreation"
-import { useCharacterCreationStore } from '@/stores/useCharacterCreationStore'
 
+import {  useState } from "react"
 
+export default function CharacterCreation() {
 
-import { useUserContext } from "@/context/context"
-import { useEffect, useState } from "react"
-
-export default function characterCreation() {
-
-
-    const draft = useCharacterCreationStore(state => state.draft);
 
 
     

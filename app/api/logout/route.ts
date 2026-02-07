@@ -15,10 +15,10 @@ export async function DELETE(
         const token:any = cookie.get("session")?.value;
         if (!token) return NextResponse.json({error: 'No sessions detected. Please login.'});
 
-        const query = `DELETE FROM sessions WHERE token = $1`;
-        await sql.unsafe(query, [token]); 
+        await sql`DELETE FROM sessions WHERE token = ${token}`;
 
         cookie.delete('session');
+        cookie.delete('csrf');
         return NextResponse.json({success: true});
 
     } catch (err) {

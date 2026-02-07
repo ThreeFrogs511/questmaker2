@@ -40,7 +40,7 @@ export default function SummaryCreation(
 
     const classes = presets.classes;
     async function handleCharacterCreation2() {
-        if (draft.race && draft.user_class && draft.username && draft.email && draft.id && draft.gender) {
+        if (draft.race && draft.user_class && draft.username && draft.id && draft.gender) {
             const player = new Character({...draft}, updateDraft);
             const feedback = await player.completeProfile(draft, classes);
             if (feedback.success) {

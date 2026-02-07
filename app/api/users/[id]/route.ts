@@ -1,21 +1,19 @@
-import { NextRequest, NextResponse } from 'next/server';
-import { sql } from '@/server/connexion';
-import bcrypt from "bcrypt";
+import { NextResponse } from "next/server";
+import { sql } from "@/server/connexion";
 import { cookies } from "next/headers";
 import crypto from "crypto";
 
 
 
 //updating the user's stats, after a campaign done for example
-
 export async function PUT(
   request: Request,
-  {params} : {params: Promise<{id: string }> }  
+  { params }: { params: Promise<{ id: string }> },
 ) {
-  const {id} = await params;
+  const { id } = await params;
   const data = await request.json();
 
-  if (!id) return NextResponse.json({error: "User id not found"});
+  if (!id) return NextResponse.json({ error: "User id not found" });
 
   // the 'sql' template tag protects the database from sql injection
   const result = await sql`
@@ -40,26 +38,21 @@ export async function PUT(
     ac = ${data.ac ?? 10}
   WHERE id = ${id}`;
 
-
   // if no user found, error
-  if (result.count === 0) return NextResponse.json({error: "no user found"});
+  if (result.count === 0) return NextResponse.json({ error: "no user found" });
 
-  return NextResponse.json({success: true});
-
-
-
+  return NextResponse.json({ success: true });
 }
-// completing the profile at the end of character creation
+// when the user finish their profile after signing up
 export async function PATCH(
   request: Request,
-  { params }: { params: Promise<{ id: string }> }
+  { params }: { params: Promise<{ id: string }> },
 ) {
-
   try {
     const { id } = await params;
     const data = await request.json();
 
-    if (!id) return NextResponse.json({error: "User id not found"});
+    if (!id) return NextResponse.json({ error: "User id not found" });
 
     const result = await sql`
     UPDATE users SET
@@ -83,18 +76,17 @@ export async function PATCH(
       ac = ${data.ac}
     WHERE id = ${id}
     `;
-    
-    // when the users finish their account, we log them and
+
     // save their session with a token
     const token = crypto.randomBytes(32).toString("hex");
-    
+
     // we insert a new session in the database
     // identified by the unique token
     await sql`
         INSERT INTO sessions (token, user_id, expires_at)
         VALUES (${token}, ${id}, NOW() + INTERVAL '7 days')
     `;
-    
+
     // we create a cookie that'll save the session
     // and that'll be able to be found thanks to the token
     (await cookies()).set({
@@ -104,12 +96,11 @@ export async function PATCH(
       secure: true,
       sameSite: "lax",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7 
+      maxAge: 60 * 60 * 24 * 7,
     });
 
     return NextResponse.json({ success: true, data: result });
-
   } catch (err) {
-    return NextResponse.json({error: String(err)});
+    return NextResponse.json({ error: String(err) });
   }
 }
