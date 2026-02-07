@@ -1,6 +1,5 @@
 import postgres from 'postgres';
-// import dotenv from 'dotenv';
-// dotenv.config();
+
 
 
 export const sql = postgres({
@@ -12,10 +11,4 @@ export const sql = postgres({
 });
 
 
-// export const sql = postgres({
-//   host: 'localhost',
-//   user: 'postgres',
-//   password: 'clara1403',
-//   database: 'questmaker',
-//   port: 5432
-// });
+
