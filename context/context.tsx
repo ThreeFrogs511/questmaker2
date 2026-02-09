@@ -24,6 +24,8 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
     fetch("/api/me")
       .then((r) => r.json())
       .then((data) => {
+
+        //if the user is authenticated
         if (data.authenticated) {
           // handling existing but incomplete profile
           if (data.user.profile_completed === false) {
@@ -36,10 +38,12 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
               router.push("/journal");
 
             }         
+            //debugging
             console.log(data.user);
           }
         }
 
+        //not authenticated
         if (data.err) {
           if (pathname === "/signup") {
             router.push("/signup");

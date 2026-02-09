@@ -57,7 +57,7 @@ async function checkTokenCSRF(request: Request) {
     throw new Error("You are not allowed to do this action");
   if (headerToken !== cookieToken)
     throw new Error("You are not allowed to do this action");
-}
+};
 
 // editing the profil
 export async function PATCH(

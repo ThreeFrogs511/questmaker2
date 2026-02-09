@@ -20,11 +20,6 @@ export default function ProfileSettings() {
   const flag = useRef(false);
 
 
-  useEffect(() => {
-    console.log(currentPassword)
-  }, [currentPassword])
-
-
   //loading the email
   useEffect(() => {
     if (!currentUser || !currentUser.id || flag.current === true) return;
