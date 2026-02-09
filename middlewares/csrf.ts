@@ -4,11 +4,6 @@ import { NextResponse } from "next/server";
 
 export async function generateCsrfToken() {
 
-  const cookieStore = await cookies();
-  const token = cookieStore.get("csrf")?.value;
-
-  // checking if the csrf token exists
-  if (!token) {
     const newToken = crypto.randomBytes(32).toString("hex");
 
     (await cookies()).set({
@@ -18,8 +13,8 @@ export async function generateCsrfToken() {
       secure: true,
       sameSite: "strict",
       path: "/",
-      maxAge: 60 * 60 * 24 * 7,
+      maxAge: 60 * 30,
     });
-  }
+  
   
 }

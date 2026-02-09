@@ -54,7 +54,6 @@ export default function ProfileSettings() {
     .find((row) => row.startsWith("csrf="))
     ?.split("=")[1];
 
-    console.log ('currentpass:', currentPassword , 'et newpass:' , newPassword)
 
     fetch(`/api/profileSettings/${currentUser.id}`, {
       method: "PATCH",
@@ -73,7 +72,6 @@ export default function ProfileSettings() {
         if (data.success) {
           setEmail(data.newEmail);
           setValid("Profile edited successfully");
-          console.log("modification succesful");
         } else {
           setError(data.err);
         }

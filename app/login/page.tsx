@@ -11,7 +11,7 @@ const PressStartFont = Press_Start_2P({
   weight: "400",
 });
 
-export default function AuthPage() {
+export default function LoginPage() {
   const router = useRouter();
   const { isFetchingDone } = useUserContext();
   const login = useUserStore((state) => state.login);
@@ -40,11 +40,10 @@ export default function AuthPage() {
     }
   }, [isFetchingDone, isTyping]);
 
-  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+  async function submitHandler(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const email = (document.getElementById("email") as HTMLInputElement).value;
-    const password = (document.getElementById("password") as HTMLInputElement)
-      .value;
+    const password = (document.getElementById("password") as HTMLInputElement).value;
 
     const response = await fetch(`/api/login`, {
       method: "POST",

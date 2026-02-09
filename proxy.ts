@@ -1,8 +1,8 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import { cookies } from "next/headers";
-import { generateCsrfToken } from "./middleware/csrf";
-import { checkIfUserAuth } from "./middleware/session";
+import { generateCsrfToken } from "./middlewares/csrf";
+import { checkIfUserAuth } from "./middlewares/session";
 
 
 export async function proxy(request: NextRequest) {
@@ -17,8 +17,11 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL("/journal", request.url));
       case "/titleScreen":
         return NextResponse.redirect(new URL("/journal", request.url));
-      default:
+      case  "/profileSettings":
         await generateCsrfToken();
+        return NextResponse.next();
+      default:
+
         return NextResponse.next();
     }
   } catch {
