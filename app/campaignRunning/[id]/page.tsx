@@ -6,7 +6,7 @@ import Loading from "@/app/loading";
 import { useNarrationStore } from "@/stores/useNarrationStore";
 
 
-export default function campaignRunning({params} : {params: Promise<{ id: string }>}) {
+export default function CampaignRunning({params} : {params: Promise<{ id: string }>}) {
 
 
     async function startNewCampaign() {
@@ -38,8 +38,8 @@ export default function campaignRunning({params} : {params: Promise<{ id: string
         return values;
         })
         .then(values => { 
-            // updateNode(values.first);
-            updateNode("remembering_how_to_fight")
+            updateNode(values.first);
+            // updateNode("remembering_how_to_fight")
             setCampaignTitle(values.title);
             })
         .catch(err => console.log(err));
