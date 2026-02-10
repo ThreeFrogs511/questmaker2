@@ -6,7 +6,6 @@ import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { useUserStore } from "@/stores/useUserStore";
 
-
 export default function ProfileSettings() {
   const templateMail = "nicolas@lavarde.fr";
   const router = useRouter();
@@ -19,6 +18,26 @@ export default function ProfileSettings() {
   const [valid, setValid] = useState("");
   const flag = useRef(false);
 
+  useEffect(() => {
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("csrf="))
+      ?.split("=")[1];
+
+    if (token) return;
+    fetch("/api/csrf", {
+      method: "GET",
+      credentials: "include",
+      cache: "no-store",
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        if (data.success) {
+          console.log("cookie créé");
+        }
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
   //loading the email
   useEffect(() => {
@@ -41,20 +60,20 @@ export default function ProfileSettings() {
   }, [currentUser, currentUser.id]);
 
   async function submitProfileChanges() {
+    if (flag.current === true) return;
     setError("");
     setValid("");
 
-    const token = document.cookie   
-    .split("; ")
-    .find((row) => row.startsWith("csrf="))
-    ?.split("=")[1];
-
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("csrf="))
+      ?.split("=")[1];
 
     fetch(`/api/profileSettings/${currentUser.id}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",
-        "X-CSRF-Token": token ?? '',
+        "X-CSRF-Token": token ?? "",
       },
       body: JSON.stringify({
         email: email,
@@ -72,7 +91,6 @@ export default function ProfileSettings() {
         }
       });
   }
-
 
   return (
     <>
@@ -170,5 +188,3 @@ export default function ProfileSettings() {
     </>
   );
 }
-
-

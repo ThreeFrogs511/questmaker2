@@ -5,7 +5,7 @@ import crypto from "crypto";
 export async function GET(request: Request) {
   try {
     const token = crypto.randomBytes(32).toString("hex");
-
+    console.log("activation route api get csrf");
     (await cookies()).set({
       name: "csrf",
       value: token,

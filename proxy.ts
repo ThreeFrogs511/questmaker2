@@ -16,20 +16,11 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL("/journal", request.url));
       case "/titleScreen":
         return NextResponse.redirect(new URL("/journal", request.url));
-      case "/profileSettings":
-        const res = NextResponse.next();
-        res.cookies.set({
-          name: "csrf",
-          value: crypto.randomUUID(),
-          httpOnly: false,
-          secure: true,
-          sameSite: "lax",
-          path: "/",
-          maxAge: 60 * 30,
-        });
-        return res;
-      // await generateCsrfToken(request, res);
-      // return res;
+      // case "/profileSettings":
+      //   console.log("profile settings ciblé")
+      //   await fetch('/api/csrf')
+      //   .then(() => NextResponse.next())
+      // // return res;
       default:
         return NextResponse.next();
     }
