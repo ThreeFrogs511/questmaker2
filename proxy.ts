@@ -4,7 +4,6 @@ import { cookies } from "next/headers";
 import { generateCsrfToken } from "./middlewares/csrf";
 import { checkIfUserAuth } from "./middlewares/session";
 
-
 export async function proxy(request: NextRequest) {
   try {
     const token = request.cookies.get("session")?.value;
@@ -17,12 +16,21 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL("/journal", request.url));
       case "/titleScreen":
         return NextResponse.redirect(new URL("/journal", request.url));
-      case  "/profileSettings":
+      case "/profileSettings":
         const res = NextResponse.next();
-        await generateCsrfToken(request, res);
+        res.cookies.set({
+          name: "csrf",
+          value: crypto.randomUUID(),
+          httpOnly: false,
+          secure: true,
+          sameSite: "lax",
+          path: "/",
+          maxAge: 60 * 30,
+        });
         return res;
+      // await generateCsrfToken(request, res);
+      // return res;
       default:
-
         return NextResponse.next();
     }
   } catch {
