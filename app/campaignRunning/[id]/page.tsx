@@ -38,8 +38,8 @@ export default function CampaignRunning({params} : {params: Promise<{ id: string
         return values;
         })
         .then(values => { 
-            updateNode(values.first);
-            // updateNode("remembering_how_to_fight")
+            // updateNode(values.first);
+            updateNode("remembering_how_to_fight")
             setCampaignTitle(values.title);
             })
         .catch(err => console.log(err));
