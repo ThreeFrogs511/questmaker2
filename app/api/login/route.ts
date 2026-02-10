@@ -11,8 +11,7 @@ function validateLoginInput(email: string, password: string) {
 
   if (!email || !password) throw new Error("All fields required");
   if (!emailRegex.test(email)) throw new Error("Invalid email");
-};
-
+}
 
 //login the user
 export async function POST(request: Request) {
@@ -39,7 +38,10 @@ export async function POST(request: Request) {
     // we create the session with a unique token
     const token = crypto.randomBytes(32).toString("hex");
 
-    // token and session insert
+    // first, we make sure expired sessions are deleted
+    await sql`DELETE FROM sessions WHERE expires_at <= now();`;
+
+    // then we create the new session with the token as a primary key
     await sql`
         INSERT INTO sessions (token, user_id, expires_at)
         VALUES (${token}, ${currentUser.id}, NOW() + INTERVAL '7 days')`;

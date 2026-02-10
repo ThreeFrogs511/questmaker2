@@ -4,23 +4,27 @@ services:
     ports:
       - "3000:3000"
     env_file:
-      - .env.local
+      - .env.docker
     depends_on:
       - db
       - mongo
 
   db:
     image: postgres:18
-    env_file:
-      - .env.local
+    environment:
+        POSTGRES_USER: docker
+        POSTGRES_PASSWORD: docker
+        POSTGRES_DB: questmaker
+        DATABASE_URL: postgresql://docker:docker@db:5432/questmaker
+
     volumes:
       - db_data:/var/lib/postgresql
-      - ./questmaker.sql:/docker-entrypoint-initdb.d/001_dump.sql:ro
+      - ./db.sql:/docker-entrypoint-initdb.d/001_dump.sql:ro
 
   mongo:
     image: mongo:7
     env_file:
-      - .env.local
+      - .env.docker
 
 volumes:
   db_data:

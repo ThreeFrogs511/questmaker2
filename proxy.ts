@@ -18,8 +18,9 @@ export async function proxy(request: NextRequest) {
       case "/titleScreen":
         return NextResponse.redirect(new URL("/journal", request.url));
       case  "/profileSettings":
-        await generateCsrfToken();
-        return NextResponse.next();
+        const res = NextResponse.next();
+        await generateCsrfToken(request, res);
+        return res;
       default:
 
         return NextResponse.next();

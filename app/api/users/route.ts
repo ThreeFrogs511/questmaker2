@@ -55,6 +55,9 @@ export async function POST(request: Request) {
     // we create the session with a unique token
     const token = crypto.randomBytes(32).toString("hex");
 
+      // first, we make sure expired sessions are deleted
+    await sql`DELETE FROM sessions WHERE expires_at <= now();`;
+
     // token and session insert
     await sql`
             INSERT INTO sessions (token, user_id, expires_at)
