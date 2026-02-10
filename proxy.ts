@@ -1,8 +1,6 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
-import { cookies } from "next/headers";
-import { generateCsrfToken } from "./middlewares/csrf";
-import { checkIfUserAuth } from "./middlewares/session";
+
 
 export async function proxy(request: NextRequest) {
   try {
@@ -16,11 +14,6 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL("/journal", request.url));
       case "/titleScreen":
         return NextResponse.redirect(new URL("/journal", request.url));
-      // case "/profileSettings":
-      //   console.log("profile settings ciblé")
-      //   await fetch('/api/csrf')
-      //   .then(() => NextResponse.next())
-      // // return res;
       default:
         return NextResponse.next();
     }
