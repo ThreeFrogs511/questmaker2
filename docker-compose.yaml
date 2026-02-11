@@ -19,7 +19,7 @@ services:
     ports:
     - "5433:5432"
     volumes:
-      - db_data:/var/lib/postgresql
+      - db_data:/var/lib/postgresql/data
       - ./db.sql:/docker-entrypoint-initdb.d/001_dump.sql:ro
 
   mongo:
