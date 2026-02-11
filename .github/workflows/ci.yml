@@ -40,11 +40,15 @@ jobs:
 
       - run: npm ci
 
-      # Démarre Postgres via ton docker-compose + charge db.sql (docker-entrypoint-initdb.d)
+      - name: Create .env.docker for CI
+        run: |
+          cat > .env.docker <<'EOF'
+          # CI dummy env file (no secrets)
+          EOF
+
       - name: Start DB with docker compose
         run: docker compose up -d db
 
-      # Attends que Postgres soit prêt
       - name: Wait for DB
         run: |
           for i in {1..30}; do
@@ -53,14 +57,12 @@ jobs:
           done
           exit 1
 
-      # Lance tes tests en donnant l'URL de ta DB
       - name: Run integration tests
         env:
           DATABASE_URL: postgresql://docker:docker@localhost:5432/questmaker
         run: |
           bash -lc 'shopt -s globstar nullglob; npx tsx --test test/integration/**/*.test.ts'
 
-      # Nettoyage
       - name: Shutdown
         if: always()
         run: docker compose down -v
