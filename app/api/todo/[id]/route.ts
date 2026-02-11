@@ -9,7 +9,6 @@ export async function GET(
 
   try {
 
-    console.log("chercher les todo basés sur l'id user")
     const { id } = await params;
     if (!id) return NextResponse.json({error:"id null"});
 

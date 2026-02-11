@@ -16,7 +16,8 @@ services:
         POSTGRES_PASSWORD: docker
         POSTGRES_DB: questmaker
         DATABASE_URL: postgresql://docker:docker@db:5432/questmaker
-
+    ports:
+    - "5433:5432"
     volumes:
       - db_data:/var/lib/postgresql
       - ./db.sql:/docker-entrypoint-initdb.d/001_dump.sql:ro

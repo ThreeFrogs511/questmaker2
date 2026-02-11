@@ -50,7 +50,6 @@ test("registration input: password mismatch", () => {
 });
 
 test("registration input: weak password rejected", () => {
-  // 12 chars, but missing uppercase + special etc depending on sample
   throwsMsg(
     () =>
       validateRegistrationInput(

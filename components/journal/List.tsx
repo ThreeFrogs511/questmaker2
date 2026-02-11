@@ -41,8 +41,6 @@ export default function List(
       const completionState = !currentCompleted;
       //new quest class to reach the complete() method
       const quest = new Quest();
-      console.log("task id" +id)
-      console.log("user_id dans task" + user_id)
       const feedback =  await quest.complete(id, completionState, user_id);
 
     if (feedback.error) {
