@@ -46,6 +46,9 @@ jobs:
           # CI dummy env file (no secrets)
           EOF
 
+      - name: Reset compose volumes
+        run: docker compose down -v
+
       - name: Start DB with docker compose
         run: |
           docker compose up -d db
