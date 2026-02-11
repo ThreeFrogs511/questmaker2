@@ -9,9 +9,9 @@
     "start": "next start",
     "lint": "eslint",
     "lint:fix": "eslint --fix",
-  "test": "node --test --import tsx test/unit",
-  "test:integration": "node --test --import tsx test/integration",
-  "test:all": "npm run test && npm run test:integration"
+    "test": "tsx --test test/unit/**/*.test.ts",
+    "test:integration": "tsx --test test/integration/**/*.test.ts",
+    "test:all": "npm run test && npm run test:integration"
   },
   "dependencies": {
     "@neondatabase/serverless": "^1.0.2",
