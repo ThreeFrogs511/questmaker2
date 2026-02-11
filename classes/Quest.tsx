@@ -13,8 +13,8 @@ export default class Quest {
 
       const feedback = await response.json();
       return feedback;
-    } catch (err: any) {
-      return {success: false, error: err.message}
+    } catch  {
+      return {success: false, error: "server error"}
     }
   }
 

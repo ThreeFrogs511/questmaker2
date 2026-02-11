@@ -1,7 +1,7 @@
 import test from "node:test";
 import assert from "node:assert/strict";
 import postgres from "postgres";
-import { POST } from "../../app/api/todo/route"; // adapte le chemin exact
+import { POST } from "../../app/api/todo/route";
 
 function makeReq(payload: any) {
   return new Request("http://localhost/api/todo", {
@@ -54,12 +54,17 @@ test("POST /api/todo inserts row when input is valid", async () => {
   assert.equal(res.status, 200);
 
   const json = await res.json();
+
+  // diagnostic propre si ton handler a catch une erreur interne
+  if (json.error) throw new Error(`API error: ${json.error}`);
+
   assert.equal(json.success, true);
   assert.equal(json.quest.body, "test value");
   assert.equal(json.quest.completed, false);
   assert.equal(json.quest.user_id, 1);
 
-  const rows = await db`SELECT id, body, completed, user_id FROM todo WHERE id = ${json.quest.id}`;
+  const rows =
+    await db`SELECT id, body, completed, user_id FROM todo WHERE id = ${json.quest.id}`;
   assert.equal(rows.length, 1);
   assert.equal(rows[0].body, "test value");
   assert.equal(rows[0].completed, false);

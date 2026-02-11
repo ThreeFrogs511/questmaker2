@@ -2,61 +2,53 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import validateRegistrationInput from "@/middlewares/validateRegistrationInput";
 
-
-function throwsMsg(fn: () => unknown, msg: string) {
-  assert.throws(fn, (e: unknown) => e instanceof Error && e.message === msg);
+function expectInvalid(result: any, msg: string) {
+  assert.equal(result.inputValid, false);
+  assert.equal(result.err, msg);
 }
 
-
 test("registration input: valid passes", () => {
-  assert.doesNotThrow(() => {
-    validateRegistrationInput(
-      "nicolas@example.com",
-      "StrongPassword!2",
-      "StrongPassword!2",
-    );
-  });
+  const result = validateRegistrationInput(
+    "nicolas@example.com",
+    "StrongPassword!2",
+    "StrongPassword!2",
+  );
+
+  assert.equal(result.inputValid, true);
+  assert.ok(!("err" in result));
 });
 
 test("registration input: missing fields", () => {
-  throwsMsg(
-    () => validateRegistrationInput("", "StrongPassword!2", "StrongPassword!2"),
-    "All fields required",
-  );
+  const result = validateRegistrationInput("", "StrongPassword!2", "StrongPassword!2");
+  expectInvalid(result, "All fields required");
 });
 
 test("registration input: invalid email", () => {
-  throwsMsg(
-    () =>
-      validateRegistrationInput(
-        "not-an-email",
-        "StrongPassword!2",
-        "StrongPassword!2",
-      ),
-    "Invalid email",
+  const result = validateRegistrationInput(
+    "not-an-email",
+    "StrongPassword!2",
+    "StrongPassword!2",
   );
+  expectInvalid(result, "Invalid email");
 });
 
 test("registration input: password mismatch", () => {
-  throwsMsg(
-    () =>
-      validateRegistrationInput(
-        "nicolas@example.com",
-        "StrongPassword!2",
-        "StrongPassword!3",
-      ),
-    "Password mismatch",
+  const result = validateRegistrationInput(
+    "nicolas@example.com",
+    "StrongPassword!2",
+    "StrongPassword!3",
   );
+  expectInvalid(result, "Password mismatch");
 });
 
 test("registration input: weak password rejected", () => {
-  throwsMsg(
-    () =>
-      validateRegistrationInput(
-        "nicolas@example.com",
-        "passwordpassword",
-        "passwordpassword",
-      ),
+  const result = validateRegistrationInput(
+    "nicolas@example.com",
+    "passwordpassword",
+    "passwordpassword",
+  );
+  expectInvalid(
+    result,
     "Invalid password: at least 12+ chars, 1 uppercase, 1 lowercase, 1 digit, 1 special character.",
   );
 });
