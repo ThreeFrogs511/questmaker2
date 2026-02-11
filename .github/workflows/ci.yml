@@ -30,6 +30,21 @@ jobs:
     runs-on: ubuntu-latest
     needs: unit
 
+    services:
+      db:
+        image: postgres:18
+        env:
+          POSTGRES_USER: docker
+          POSTGRES_PASSWORD: docker
+          POSTGRES_DB: questmaker
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U docker -d questmaker"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 20
+
     steps:
       - uses: actions/checkout@v4
 
@@ -40,48 +55,8 @@ jobs:
 
       - run: npm ci
 
-      - name: Create .env.docker for CI
-        run: |
-          cat > .env.docker <<'EOF'
-          # CI dummy env file (no secrets)
-          EOF
-
-      - name: Reset compose volumes
-        run: docker compose down -v
-
-      - name: Start DB with docker compose
-        run: |
-          docker compose up -d db
-          docker compose ps
-
-      - name: Debug DB container (always show)
-        if: always()
-        run: |
-          docker compose ps
-          docker compose logs db || true
-
-      - name: Wait for DB
-        run: |
-          for i in {1..30}; do
-            if ! docker compose ps --status running | grep -q "db"; then
-              echo "db is not running"
-              docker compose ps
-              docker compose logs db || true
-              exit 1
-            fi
-            docker compose exec -T db pg_isready -U docker -d questmaker && exit 0
-            sleep 2
-          done
-          echo "db did not become ready"
-          docker compose logs db || true
-          exit 1
-
       - name: Run integration tests
         env:
           DATABASE_URL: postgresql://docker:docker@localhost:5432/questmaker
         run: |
           bash -lc 'shopt -s globstar nullglob; npx tsx --test test/integration/**/*.test.ts'
-
-      - name: Shutdown
-        if: always()
-        run: docker compose down -v
