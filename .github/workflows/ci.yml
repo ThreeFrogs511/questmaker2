@@ -23,7 +23,8 @@ jobs:
       - run: npm ci
 
       - name: Run unit tests
-        run: npx tsx --test test/unit/**/*.test.ts
+        run: |
+          bash -lc 'shopt -s globstar nullglob; npx tsx --test test/unit/**/*.test.ts'
 
   integration:
     runs-on: ubuntu-latest
@@ -57,4 +58,5 @@ jobs:
       - name: Run integration tests
         env:
           DATABASE_URL: postgresql://docker:docker@localhost:5432/questmaker
-        run: npx tsx --test test/integration/**/*.test.ts
+        run: |
+          bash -lc 'shopt -s globstar nullglob; npx tsx --test test/integration/**/*.test.ts'
