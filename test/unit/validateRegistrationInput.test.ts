@@ -2,11 +2,14 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import validateRegistrationInput from "@/middlewares/validateRegistrationInput";
 
+
+//fonction réutilisable pour les cas d'erreurs
 function expectInvalid(result: any, msg: string) {
   assert.equal(result.inputValid, false);
   assert.equal(result.err, msg);
 }
 
+//on teste les cas de succès
 test("registration input: valid passes", () => {
   const result = validateRegistrationInput(
     "nicolas@example.com",
@@ -18,6 +21,7 @@ test("registration input: valid passes", () => {
   assert.ok(!("err" in result));
 });
 
+//on teste les cas d'erreurs ci-dessous 
 test("registration input: missing fields", () => {
   const result = validateRegistrationInput("", "StrongPassword!2", "StrongPassword!2");
   expectInvalid(result, "All fields required");

@@ -30,21 +30,6 @@ jobs:
     runs-on: ubuntu-latest
     needs: unit
 
-    services:
-      db:
-        image: postgres:18
-        env:
-          POSTGRES_USER: docker
-          POSTGRES_PASSWORD: docker
-          POSTGRES_DB: questmaker
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U docker -d questmaker"
-          --health-interval 5s
-          --health-timeout 5s
-          --health-retries 20
-
     steps:
       - uses: actions/checkout@v4
 
@@ -55,8 +40,27 @@ jobs:
 
       - run: npm ci
 
+      # Démarre Postgres via ton docker-compose + charge db.sql (docker-entrypoint-initdb.d)
+      - name: Start DB with docker compose
+        run: docker compose up -d db
+
+      # Attends que Postgres soit prêt
+      - name: Wait for DB
+        run: |
+          for i in {1..30}; do
+            docker compose exec -T db pg_isready -U docker -d questmaker && exit 0
+            sleep 2
+          done
+          exit 1
+
+      # Lance tes tests en donnant l'URL de ta DB
       - name: Run integration tests
         env:
           DATABASE_URL: postgresql://docker:docker@localhost:5432/questmaker
         run: |
           bash -lc 'shopt -s globstar nullglob; npx tsx --test test/integration/**/*.test.ts'
+
+      # Nettoyage
+      - name: Shutdown
+        if: always()
+        run: docker compose down -v
