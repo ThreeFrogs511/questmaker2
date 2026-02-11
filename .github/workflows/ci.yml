@@ -47,14 +47,30 @@ jobs:
           EOF
 
       - name: Start DB with docker compose
-        run: docker compose up -d db
+        run: |
+          docker compose up -d db
+          docker compose ps
+
+      - name: Debug DB container (always show)
+        if: always()
+        run: |
+          docker compose ps
+          docker compose logs db || true
 
       - name: Wait for DB
         run: |
           for i in {1..30}; do
+            if ! docker compose ps --status running | grep -q "db"; then
+              echo "db is not running"
+              docker compose ps
+              docker compose logs db || true
+              exit 1
+            fi
             docker compose exec -T db pg_isready -U docker -d questmaker && exit 0
             sleep 2
           done
+          echo "db did not become ready"
+          docker compose logs db || true
           exit 1
 
       - name: Run integration tests
