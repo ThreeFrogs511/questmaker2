@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import { useEffect, useState } from "react";
 import { useUserContext } from "@/context/context";
 import List from "@/components/journal/List";
@@ -39,16 +39,22 @@ export default function Journal() {
   async function fetchingTodos() {
     if (currentUser) {
       const id = currentUser.id;
+      if (!id) return;
+
       const response = await fetch(`/api/todo/${id}`);
       const originalList = await response.json();
-      !originalList.error && setAllQuests(originalList);
 
-      // displaying only current quests as default display
+      // displaying current quests as default
       if (!originalList.error) {
+        setAllQuests(originalList);
+
         const currentQuests = originalList.filter(
           (n: { completed: boolean }) => n.completed === false,
         );
+
         setDisplayedQuests(currentQuests);
+      } else {
+        console.log("error : ", originalList.error);
       }
       // quests fetching is done
       setAreQuestsLoaded(true);
@@ -60,7 +66,7 @@ export default function Journal() {
   useEffect(() => {
     resetDraft({});
     console.log(currentUser);
-  }, []);
+  });
 
   // fetching data at rendering
   useEffect(() => {

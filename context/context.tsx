@@ -66,7 +66,6 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
     <>
       <UserDataContext.Provider value={{ isFetchingDone }}>
         {isFetchingDone && children}
-        {/* {children} */}
       </UserDataContext.Provider>
     </>
   );

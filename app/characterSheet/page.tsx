@@ -9,6 +9,8 @@ import Header from "@/components/global/Header";
 import { useUserStore } from "@/stores/useUserStore";
 
 export default function CharacterSheet() {
+  
+  
   const currentUser = useUserStore((state) => state.currentUser);
 
   return (
@@ -30,6 +32,8 @@ export default function CharacterSheet() {
         >
           <div className="flex flex-col">
             {/* main stats */}
+
+            
             <Card
               bg="black"
               textColor="white"

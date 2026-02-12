@@ -4,14 +4,17 @@ import CampaignHandler from "@/components/campaign/Global/CampaignHandler";
 import Loading from "@/app/loading";
 // main types
 import { useNarrationStore } from "@/stores/useNarrationStore";
+import { useRouter } from 'next/navigation';
 
 
 export default function CampaignRunning({params} : {params: Promise<{ id: string }>}) {
 
+    const router = useRouter();
 
     async function startNewCampaign() {
         const {id} = await params;
-        if (!id) throw new Error('No campaign id selected');
+
+        if (!id) router.back();
 
         const response = await fetch(`/api/campaigns/${id}`);
         const result = await response.json();
