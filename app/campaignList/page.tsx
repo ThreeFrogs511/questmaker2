@@ -25,7 +25,7 @@ export default function CampaignList() {
         .then(r => r.json())
         .then(data => setCampaignList(data))
         .then(() => setIsListFetched(true))
-        .catch((err) => console.log(err));
+        .catch((err) => console.log(err)); 
     }, [])
 
 
