@@ -4,9 +4,13 @@ import { NextRequest } from "next/server";
 
 export async function proxy(request: NextRequest) {
   try {
+
+    //getting the cookie
     const token = request.cookies.get("session")?.value;
     const pathname = request.nextUrl.pathname;
+
     if (!token) throw new Error();
+    
     switch (pathname) {
       case "/signup":
         return NextResponse.redirect(new URL("/journal", request.url));

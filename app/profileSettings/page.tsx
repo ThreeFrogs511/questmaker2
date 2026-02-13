@@ -39,6 +39,7 @@ export default function ProfileSettings() {
       .catch((err) => console.log(err));
   }, []);
 
+  
   //loading the email
   useEffect(() => {
     if (!currentUser || !currentUser.id || flag.current === true) return;

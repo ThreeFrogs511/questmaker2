@@ -23,17 +23,17 @@ export async function POST(request: Request) {
     const row = await sql`SELECT * FROM users WHERE email = ${data.email}`;
 
     //if no email found
-    if (row.length === 0) throw new Error("user not found");
+    if (row.length === 0) return NextResponse.json({err:"user not found"});
 
     const currentUser = row[0];
 
-    // de-hashing and checking if there's a match between the password input and the hashed password
+    // checking if there's a match between the password input and the hashed password
     const match = await bcrypt.compare(
       data.user_password,
       currentUser.user_password,
     );
 
-    if (!match) throw new Error("Wrong email or password");
+    if (!match) return NextResponse.json({err:"Wrong email or password"});
 
     // we create the session with a unique token
     const token = crypto.randomBytes(32).toString("hex");
@@ -62,6 +62,6 @@ export async function POST(request: Request) {
 
     return NextResponse.json({ userData: safeUser, success: true });
   } catch (err) {
-    return NextResponse.json({ err: String(err) });
+    return NextResponse.json({ err: (err as Error).message});
   }
 }

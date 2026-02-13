@@ -23,6 +23,9 @@ export async function POST(request: Request) {
     if (!r?.inputValid) {
       return NextResponse.json({ err: r?.err });
     } else {
+
+
+      
       // hashing
       const hash = await bcrypt.hash(data.password, 10);
 

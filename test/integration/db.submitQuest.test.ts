@@ -4,9 +4,15 @@ import postgres from "postgres";
 import { POST } from "../../app/api/todo/route";
 import { sql } from "@/server/connexion";
 
+type Payload = {
+  body: string;
+  completed?: boolean;
+  user_id?: number;
+
+}
 // Fabrique une requête HTTP POST JSON, réutilisable par tous les tests.
 // Objectif : simuler un appel client vers l’endpoint /api/todo avec un payload donné.
-function makeReq(payload: any) {
+function makeReq(payload: Payload ) {
   return new Request("http://localhost/api/todo", {
     method: "POST",
     headers: { "content-type": "application/json" },

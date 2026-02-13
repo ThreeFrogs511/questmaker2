@@ -19,12 +19,10 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const updateDraft = useCharacterCreationStore((state) => state.updateDraft);
   const [isFetchingDone, setIsFetchingDone] = useState(false);
 
-
   useEffect(() => {
     fetch("/api/me")
       .then((r) => r.json())
       .then((data) => {
-
         //if the user is authenticated
         if (data.authenticated) {
           // handling existing but incomplete profile
@@ -33,11 +31,10 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
             router.push("/characterCreation");
           } else {
             login({ ...data.user });
-            if (pathname === '/' || pathname === '/characterCreation') {
-              console.log("profil complété")
+            if (pathname === "/" || pathname === "/characterCreation") {
+              console.log("profil complété");
               router.push("/journal");
-
-            }         
+            }
             //debugging
             console.log(data.user);
           }
@@ -52,7 +49,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
           } else {
             router.push("/titleScreen");
           }
-        };
+        }
       })
       .catch(() => {
         router.push("/titleScreen");

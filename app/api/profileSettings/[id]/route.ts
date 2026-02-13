@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/server/connexion";
 import { cookies } from "next/headers";
-import crypto from "crypto";
 import bcrypt from "bcrypt";
 
 // checking if edit input are valid
@@ -67,12 +66,10 @@ export async function PATCH(
   try {
     const { id } = await params;
     const data = await request.json();
-    if (!id) throw new Error("no user id found");
+    if (!id) return NextResponse.json({err:"no user id found"});
 
     const email = data.email.trim();
-    const currentPassword = data.currentPassword
-      ? data.currentPassword.trim()
-      : null;
+    const currentPassword = data.currentPassword ? data.currentPassword.trim() : null;
     const newPassword = data.newPassword ? data.newPassword.trim() : null;
 
     //middlewares
@@ -84,16 +81,18 @@ export async function PATCH(
       r =
         await sql`UPDATE users SET email = ${data.email} WHERE id = ${id} RETURNING id`;
     } else {
+
+      // hashing the new password
       const hash = await bcrypt.hash(data.newPassword, 10);
       r =
         await sql`UPDATE users SET email = ${data.email}, user_password = ${hash}  WHERE id = ${id} RETURNING id`;
     }
 
-    if (r[0].rowCount <= 0) throw new Error("internal error");
+    if (r[0].rowCount <= 0) return NextResponse.json({err:"internal error"});
 
     return NextResponse.json({ newEmail: data.email, success: true });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, err: err.message });
+  } catch (err ) {
+    return NextResponse.json({ success: false, err: (err as Error).message });
   }
 }
 
@@ -104,13 +103,13 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    if (!id) throw new Error("no user id found");
+    if (!id) return NextResponse.json({err:"no user id found"});
 
     const r = await sql`SELECT email FROM users WHERE id = ${id}`;
-    if (!r[0].email) throw new Error("no email found");
+    if (!r[0].email) return NextResponse.json({err:"no email found"});
 
     return NextResponse.json({ success: true, email: r[0].email });
-  } catch (err: any) {
-    return NextResponse.json({ success: false, err: err.message });
+  } catch (err) {
+    return NextResponse.json({ success: false, err: (err as Error).message });
   }
 }

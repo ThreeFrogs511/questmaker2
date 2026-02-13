@@ -9,7 +9,7 @@ export async function GET() {
     const token = cookieStore.get("session")?.value;
 
     // checking if the token exists
-    if (!token) throw new Error("pas de cookie ");
+    if (!token) return NextResponse.json({err:"pas de cookie "});
 
     // fetching the session and handling errors
     const sessionRows = await sql`
@@ -19,7 +19,7 @@ export async function GET() {
         AND expires_at > NOW();`;
 
     const userId = sessionRows?.[0]?.user_id;
-    if (!userId) throw new Error("pas de user id");
+    if (!userId) return NextResponse.json({err:"pas de user id"});
 
     // fetching user's data and handling errors
     const userRows = await sql`
@@ -28,9 +28,8 @@ export async function GET() {
         FROM users
         WHERE id = ${userId}`;
 
-    if (!userRows || userRows.length === 0) {
-      throw new Error("pas d'user existant");
-    }
+    if (!userRows || userRows.length === 0) return NextResponse.json({err:"pas d'user existant"});
+    
 
     // returning the successful response with the user object
     return NextResponse.json({
@@ -41,3 +40,5 @@ export async function GET() {
     return NextResponse.json({ err: (err as Error).message }, { status: 401 });
   }
 }
+
+
