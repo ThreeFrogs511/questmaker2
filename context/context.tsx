@@ -17,6 +17,8 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const login = useUserStore((state) => state.login);
   const updateDraft = useCharacterCreationStore((state) => state.updateDraft);
+  const isMenuOpen = useUserStore((state) => state.isMenuOpen);
+  const setIsMenuOpen = useUserStore((state) => state.setIsMenuOpen);
   const [isFetchingDone, setIsFetchingDone] = useState(false);
 
   useEffect(() => {
@@ -56,6 +58,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       })
       .finally(() => {
         setIsFetchingDone(true);
+        isMenuOpen === true && setIsMenuOpen(false);
       });
   }, [login, pathname, updateDraft, router]);
 

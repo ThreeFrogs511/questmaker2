@@ -11,6 +11,8 @@ type UserStore = {
   addDamage: (delta: number) => void;
   attacks: object;
   fetchSelectedAttacks: (attacks: object) => void;
+  isMenuOpen : boolean;
+  setIsMenuOpen: (b: boolean) => void;
 };
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -112,4 +114,6 @@ export const useUserStore = create<UserStore>((set) => ({
     }),
   attacks: {},
   fetchSelectedAttacks: (object) => set({ attacks: object }),
+  isMenuOpen: false,
+  setIsMenuOpen : (b) => set({isMenuOpen: b})
 }));

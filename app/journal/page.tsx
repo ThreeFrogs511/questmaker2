@@ -21,26 +21,32 @@ export default function Journal() {
   const currentUser = useUserStore((state) => state.currentUser);
   const resetDraft = useCharacterCreationStore((state) => state.resetDraft);
   const journalError = useJournalStore((state) => state.journalError);
+  const whichPage = useJournalStore((state) => state.whichPage);
+  const setWhichPage = useJournalStore((state) => state.setWhichPage);
+  const resetPage = useJournalStore((state) => state.resetPage);
+  const allQuests = useJournalStore((state) => state.allQuests);
+  const setAllQuests = useJournalStore((state) => state.setAllQuests);
+  const displayedQuests = useJournalStore((state) => state.displayedQuests);
+  const setDisplayedQuests = useJournalStore((state) => state.setDisplayedQuests);
 
   // warns us when the quests are all fetched
   const [areQuestsLoaded, setAreQuestsLoaded] = useState(false);
 
   // the complete list of quests, unfiltered
-  const [allQuests, setAllQuests] = useState<Array<ListType> | null>(null);
+  // const [allQuests, setAllQuests] = useState<Array<ListType> | null>(null);
 
-  // the displayed quests list, with filters depending on the journal page
-  const [displayedQuests, setDisplayedQuests] =
-    useState<Array<ListType> | null>(null);
+  // // the displayed quests list, with filters depending on the journal page
+  // const [displayedQuests, setDisplayedQuests] =
+  //   useState<Array<ListType> | null>(null);
 
   // determines the journal page and triggers the quests lists filters
-  const [whichPage, setWhichPage] = useState<number>(0);
+  // const [whichPage, setWhichPage] = useState<number>(0);
   const journal = ["Current quests", "Archived quests", "All quests"];
   // const [changingPageSound] = useSound('/sounds/blipSelect.wav');
 
   async function fetchingTodos() {
-    if (currentUser) {
+    if (!currentUser || !currentUser.id) return; 
       const id = currentUser.id;
-      if (!id) return;
 
       const response = await fetch(`/api/todo/${id}`);
       const originalList = await response.json();
@@ -52,25 +58,20 @@ export default function Journal() {
         const currentQuests = originalList.filter(
           (n: { completed: boolean }) => n.completed === false,
         );
-
         setDisplayedQuests(currentQuests);
+
       } else {
         console.log("error : ", originalList.error);
       }
       // quests fetching is done
       setAreQuestsLoaded(true);
-    } else {
-      console.log("error: no id");
-    }
+
   }
 
   useEffect(() => {
     resetDraft({});
   });
 
-  useEffect(() => {
-    console.log(displayedQuests);
-  }, [displayedQuests]);
 
   // fetching data at rendering
   useEffect(() => {
@@ -97,7 +98,7 @@ export default function Journal() {
           break;
       }
     }
-  }, [whichPage]);
+  }, [whichPage, allQuests]);
 
   return (
     <>
@@ -109,16 +110,14 @@ export default function Journal() {
         >
           <div
             id="journal-navigation"
-            className="flex justify-between items-center mb-3"
+            className="flex justify-between items-center mb-0"
           >
             <svg
               fill="none"
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               className="size-8 cursor-pointer"
-              onClick={() =>
-                setWhichPage((prev) => (prev === 0 ? 2 : prev - 1))
-              }
+              onClick={() => whichPage === 0 ? resetPage(2) : setWhichPage(-1)}
             >
               <path
                 d="M20 11v2H8v2H6v-2H4v-2h2V9h2v2h12zM10 7H8v2h2V7zm0 0h2V5h-2v2zm0 10H8v-2h2v2zm0 0h2v2h-2v-2z"
@@ -126,7 +125,7 @@ export default function Journal() {
               />
             </svg>
             <h2
-              className={`col-span-1 text-center text-xs! lg:text-xl! text-stone-300 ${PressStartFont.className}`}
+              className={`col-span-1 text-center text-xs! lg:text-base! text-stone-300 ${PressStartFont.className}`}
             >
               {journal[whichPage]}
             </h2>
@@ -135,9 +134,7 @@ export default function Journal() {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               className="size-8 cursor-pointer"
-              onClick={() =>
-                setWhichPage((prev) => (prev === 2 ? 0 : prev + 1))
-              }
+              onClick={() =>whichPage === 2 ? resetPage(0) : setWhichPage(1)}
             >
               <path
                 d="M4 11v2h12v2h2v-2h2v-2h-2V9h-2v2H4zm10-4h2v2h-2V7zm0 0h-2V5h2v2zm0 10h2v-2h-2v2zm0 0h-2v2h2v-2z"
@@ -147,13 +144,8 @@ export default function Journal() {
           </div>
 
           {/* toolbar */}
-          <Toolbar
-            setDisplayedQuestsAction={setDisplayedQuests}
-            setAllQuestsAction={setAllQuests}
-            setWhichPageAction={setWhichPage}
-            whichPage={whichPage}
-          />
-          <div className="flex items-center gap-5">
+          <Toolbar/>
+          <div className="flex items-center gap-5 mb-2">
             <span className="font-minecraft">
               coins :{" "}
               <span className="text-amber-300 font-minecraft">
@@ -165,13 +157,7 @@ export default function Journal() {
 
           {/* list of quests */}
           {displayedQuests && displayedQuests.length > 0 ? (
-            <List
-              displayedQuests={displayedQuests}
-              setDisplayedQuestsAction={setDisplayedQuests}
-              allQuests={allQuests}
-              setAllQuestsAction={setAllQuests}
-              whichPage={whichPage}
-            />
+            <List/>
           ) : (
             <div className="w-full h-full flex flex-col justify-center font-minecraft text-base lg:text-xl! ">
               {areQuestsLoaded ? (
@@ -184,7 +170,7 @@ export default function Journal() {
             </div>
           )}
         </section>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </>
   );

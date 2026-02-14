@@ -5,35 +5,21 @@ import { useUserStore } from "@/stores/useUserStore";
 import Quest from "@/classes/Quest";
 import { ListType } from "@/types/types";
 import { useJournalStore } from "@/stores/useJournalStore";
-
-export default function List({
-  displayedQuests,
-  setDisplayedQuestsAction,
-  setAllQuestsAction,
-  allQuests,
-  whichPage,
-}: {
-  displayedQuests: Array<ListType> | null;
-  setDisplayedQuestsAction: React.Dispatch<
-    React.SetStateAction<Array<ListType> | null>
-  >;
-  allQuests: Array<ListType> | null;
-  setAllQuestsAction: React.Dispatch<
-    React.SetStateAction<Array<ListType> | null>
-  >;
-  whichPage: number;
-}) {
+import { Card } from "pixel-retroui";
+export default function List() {
   // current user data
   const currentUser = useUserStore((state) => state.currentUser);
   const updateStats = useUserStore((state) => state.updateStats);
   const setJournalError = useJournalStore((state) => state.setJournalError);
+  const allQuests = useJournalStore((state) => state.allQuests);
+  const setAllQuests = useJournalStore((state) => state.setAllQuests);
+  const displayedQuests = useJournalStore((state) => state.displayedQuests);
+  const setDisplayedQuests = useJournalStore((state) => state.setDisplayedQuests);
 
   // sounds
   const [ticking] = useSound("/sounds/pickupCoin.wav");
   const [unticking] = useSound("/sounds/click.wav");
   const [deleting] = useSound("/sounds/explosion.wav");
-
-  const [error, setError] = useState("");
 
   // prevents double clicking on completion boxes
   const isLocked = useRef(false);
@@ -50,31 +36,33 @@ export default function List({
 
     if (id && currentCompleted !== null) {
       const completionState = !currentCompleted;
-      //new quest class to reach the complete() method
+ 
       const quest = new Quest();
       const feedback = await quest.complete(id, completionState, user_id);
 
       if (feedback.error) {
         console.log(feedback.error);
         if ((feedback.error = "limit")) {
-          setJournalError(
-            "Hourly limit exceeded! Try again in an hour!",
-          );
+          setJournalError("Hourly limit exceeded! Try again in an hour!",);
         } else {
           setJournalError("Server error. Please try again.");
-        }
+        };
+
         isLocked.current = false;
         return;
-      }
+      };
 
       if (feedback.success && displayedQuests && allQuests) {
-        setError("");
+        setJournalError("");
+        
         // updating coins value
         updateStats({ coins: feedback.coins[0].coins });
 
         // playing the sound effect
         completionState ? ticking() : unticking();
-
+        setTimeout(() => {
+          
+        }, 500);
         // updating the allToDos list
         const updatedList = allQuests.map((n) => {
           if (n.id === id) {
@@ -89,68 +77,42 @@ export default function List({
         });
 
         // storing the allQuests list
-        setAllQuestsAction(updatedList);
-
-        // updating the displayedQuests list
-        // to show the update on-screen
-        const tempList = displayedQuests.map((n) => {
-          if (n.id === id) {
-            const object = {
-              ...n,
-              completed: currentCompleted === true ? false : true,
-            };
-            return object;
-          } else {
-            return n;
-          }
-        });
-        setDisplayedQuestsAction(tempList);
-
-        // filtering out the targeted to-do if necessary
-        if (whichPage !== 2) {
-          setTimeout(() => {
-            const filteredList = displayedQuests.filter((n) => n.id !== id);
-            setDisplayedQuestsAction(filteredList);
-            // unlocking the function
-            feedback.success && (isLocked.current = false);
-          }, 500);
-        } else {
-          setDisplayedQuestsAction(updatedList);
-          // unlocking the function
-          feedback.success && (isLocked.current = false);
-        }
+        setAllQuests(updatedList);
+        isLocked.current= false;
       }
     }
   }
 
   async function deletion(id: number | null) {
+    if (!id || !allQuests) return;
+
     const quest = new Quest();
-    const feedback = id && (await quest.delete(id));
+    const feedback = await quest.delete(id);
+
     if (feedback.success) {
       // deletion sound effect
       deleting();
-      // updating the allQuests and displayedQuests lists
-      if (allQuests) {
-        const updatedList: Array<ListType> | null = allQuests.filter(
-          (n) => n.id !== id,
-        );
-        setAllQuestsAction(updatedList);
-        setDisplayedQuestsAction((prev) =>
-          prev ? prev.filter((n) => n.id !== id) : [],
-        );
-      }
+
+      const updatedList: Array<ListType> = allQuests.filter((n) => n.id !== id);
+      setAllQuests(updatedList);
+      const updatedCurrentList: Array<ListType> = updatedList.filter((n) => n.completed === false);
+      setDisplayedQuests(updatedCurrentList);
     }
-  }
+  };
 
   return (
     <>
-      <ul className="h-full!">
+      <div className="h-full! flex flex-col gap-2">
           { displayedQuests?.map((item, index) => (
-            <li
+            <Card
+              bg="black"
+              borderColor="white"
+              shadowColor="transparent"
+              textColor="white"
               data-id={item.id}
               data-completion={item.completed}
               data-user-id={item?.user_id}
-              className="flex justify-between items-center text-2xl py-4 px-2 hover:underline"
+              className="flex justify-between items-center text-xl border-2! py-1"
               key={index}
             >
               <div className="flex items-center gap-3">
@@ -158,8 +120,8 @@ export default function List({
                 <span
                   className={
                     item.completed
-                      ? ` p-3 cursor-pointer bg-green-500 inline-block min-w-5 h-5 border border-white mr-5 `
-                      : ` p-3 cursor-pointer inline-block min-w-5 h-5 border border-white mr-5 `
+                      ? ` p-1 cursor-pointer bg-green-500 inline-block min-w-5 h-5 border border-white mr-5 `
+                      : ` p-1 cursor-pointer inline-block min-w-5 h-5 border border-white mr-5 `
                   }
                   onClick={() =>
                     completion(item.completed, item.id, item?.user_id)
@@ -187,10 +149,10 @@ export default function List({
                   fill="currentColor"
                 />
               </svg>
-            </li>
+            </Card>
           ))}
         
-      </ul>
+      </div>
     </>
   );
 }

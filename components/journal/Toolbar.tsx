@@ -11,25 +11,18 @@ const PressStartFont = Press_Start_2P({
   weight: "400",
 });
 
-export default function Toolbar({
-  setDisplayedQuestsAction,
-  setAllQuestsAction,
-  setWhichPageAction,
-  whichPage,
-}: {
-  setDisplayedQuestsAction: React.Dispatch<
-    React.SetStateAction<Array<ListType> | null>
-  >;
-  setAllQuestsAction: React.Dispatch<
-    React.SetStateAction<Array<ListType> | null>
-  >;
-  setWhichPageAction: React.Dispatch<React.SetStateAction<number>>;
-  whichPage: number;
-}) {
+export default function Toolbar() {
 
   //store imports
   const currentUser = useUserStore((state) => state.currentUser);
+  const whichPage = useJournalStore((state) => state.whichPage);
+  const setWhichPage = useJournalStore((state) => state.setWhichPage);
+  const resetPage = useJournalStore((state) => state.resetPage);
+  const allQuests = useJournalStore((state) => state.allQuests);
+  const setAllQuests = useJournalStore((state) => state.setAllQuests);
+  const setDisplayedQuests = useJournalStore((state) => state.setDisplayedQuests);
 
+  
   async function submitToDoClick() {
     const value = (document.getElementById("todo") as HTMLInputElement).value;
 
@@ -38,13 +31,18 @@ export default function Toolbar({
       const feedback = await quest.insert(value, currentUser.id);
 
       if (feedback.success) {
-        setAllQuestsAction((prev) => [feedback.quest, ...(prev ?? [])]);
+        // setAllQuestsAction((prev) => [feedback.quest, ...(prev ?? [])]);
+        const updatedList = [...allQuests ?? []];
+        updatedList.unshift(feedback.quest);
+        setAllQuests(updatedList);
         (document.getElementById("todo") as HTMLInputElement).value = "";
 
         if (whichPage === 0) {
-          setDisplayedQuestsAction((prev) => [feedback.quest, ...(prev ?? [])]);
+          const updatedCurrentList = updatedList.filter(n => n.completed === false);
+          setDisplayedQuests(updatedCurrentList);
+          // setDisplayedQuestsAction((prev) => [feedback.quest, ...(prev ?? [])]);
         } else {
-          setWhichPageAction(0);
+          resetPage(0);
         }
       } else {
         console.log(feedback.error);
