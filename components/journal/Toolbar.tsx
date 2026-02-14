@@ -4,6 +4,7 @@ import { Button, Input } from "pixel-retroui";
 import { ListType } from "@/types/types";
 import Quest from "@/classes/Quest";
 import { useUserStore } from "@/stores/useUserStore";
+import { useJournalStore } from "@/stores/useJournalStore";
 
 const PressStartFont = Press_Start_2P({
   subsets: ["latin"],
@@ -25,6 +26,8 @@ export default function Toolbar({
   setWhichPageAction: React.Dispatch<React.SetStateAction<number>>;
   whichPage: number;
 }) {
+
+  //store imports
   const currentUser = useUserStore((state) => state.currentUser);
 
   async function submitToDoClick() {

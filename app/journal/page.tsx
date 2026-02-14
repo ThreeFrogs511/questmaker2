@@ -9,6 +9,7 @@ import Header from "@/components/global/Header";
 import { ListType } from "@/types/types";
 import { useUserStore } from "@/stores/useUserStore";
 import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
+import { useJournalStore } from "@/stores/useJournalStore";
 
 const PressStartFont = Press_Start_2P({
   subsets: ["latin"],
@@ -16,9 +17,10 @@ const PressStartFont = Press_Start_2P({
 });
 
 export default function Journal() {
-  const { isFetchingDone } = useUserContext();
+  //store imports
   const currentUser = useUserStore((state) => state.currentUser);
   const resetDraft = useCharacterCreationStore((state) => state.resetDraft);
+  const journalError = useJournalStore((state) => state.journalError);
 
   // warns us when the quests are all fetched
   const [areQuestsLoaded, setAreQuestsLoaded] = useState(false);
@@ -66,14 +68,15 @@ export default function Journal() {
     resetDraft({});
   });
 
-
   useEffect(() => {
-    console.log(displayedQuests)
-  }, [displayedQuests])
+    console.log(displayedQuests);
+  }, [displayedQuests]);
+
   // fetching data at rendering
   useEffect(() => {
-    currentUser && currentUser.id && fetchingTodos();
-  }, [isFetchingDone]);
+    if (!currentUser.id) return;
+    fetchingTodos();
+  }, [currentUser, currentUser.id]);
 
   // sorting list based on the page number
   useEffect(() => {
@@ -100,7 +103,10 @@ export default function Journal() {
     <>
       <div className="wrapper">
         <Header />
-        <section id="todo-list" className="h-full overflow-hidden">
+        <section
+          id="todo-list"
+          className="h-full overflow-hidden flex flex-col"
+        >
           <div
             id="journal-navigation"
             className="flex justify-between items-center mb-3"
@@ -147,14 +153,18 @@ export default function Journal() {
             setWhichPageAction={setWhichPage}
             whichPage={whichPage}
           />
-                <div className="flex gap-5">
-        <span className="">coins : <span className="text-amber-300 font-minecraft">{currentUser?.coins}</span>
-        </span>
-        
-      </div>
+          <div className="flex items-center gap-5">
+            <span className="font-minecraft">
+              coins :{" "}
+              <span className="text-amber-300 font-minecraft">
+                {currentUser?.coins}
+              </span>
+            </span>
+            <span className="text-red-600 text-sm">{journalError}</span>
+          </div>
 
           {/* list of quests */}
-          {displayedQuests && displayedQuests.length>0? (
+          {displayedQuests && displayedQuests.length > 0 ? (
             <List
               displayedQuests={displayedQuests}
               setDisplayedQuestsAction={setDisplayedQuests}
@@ -163,12 +173,14 @@ export default function Journal() {
               whichPage={whichPage}
             />
           ) : (
-            <div className="w-full h-full  max-h-full! flex justify-center mt-50 font-minecraft text-base lg:text-2xl! ">
-              {areQuestsLoaded ? 
-              <div className="flex flex-col items-center">
-                <p>No quests to display.</p> 
-              </div> : 
-              <p>Loading quests...</p>  }
+            <div className="w-full h-full flex flex-col justify-center font-minecraft text-base lg:text-xl! ">
+              {areQuestsLoaded ? (
+                <div className="flex flex-col items-center">
+                  <p>No quests to display.</p>
+                </div>
+              ) : (
+                <p className="text-center w-full">Loading quests...</p>
+              )}
             </div>
           )}
         </section>

@@ -4,6 +4,7 @@ import { useRef, useState } from "react";
 import { useUserStore } from "@/stores/useUserStore";
 import Quest from "@/classes/Quest";
 import { ListType } from "@/types/types";
+import { useJournalStore } from "@/stores/useJournalStore";
 
 export default function List({
   displayedQuests,
@@ -25,6 +26,7 @@ export default function List({
   // current user data
   const currentUser = useUserStore((state) => state.currentUser);
   const updateStats = useUserStore((state) => state.updateStats);
+  const setJournalError = useJournalStore((state) => state.setJournalError);
 
   // sounds
   const [ticking] = useSound("/sounds/pickupCoin.wav");
@@ -55,11 +57,11 @@ export default function List({
       if (feedback.error) {
         console.log(feedback.error);
         if ((feedback.error = "limit")) {
-          setError(
-            "You have exceeded the hourly limit for the quests completion. Try again later.",
+          setJournalError(
+            "Hourly limit exceeded! Try again in an hour!",
           );
         } else {
-          setError("Server error. Please try again.");
+          setJournalError("Server error. Please try again.");
         }
         isLocked.current = false;
         return;
@@ -142,9 +144,6 @@ export default function List({
 
   return (
     <>
-      <div className="flex gap-5">
-        <span className="text-red-600">{error}</span>
-      </div>
       <ul className="h-full!">
           { displayedQuests?.map((item, index) => (
             <li
