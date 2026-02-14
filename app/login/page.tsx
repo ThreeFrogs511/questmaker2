@@ -22,6 +22,8 @@ export default function LoginPage() {
 
   const counter = useRef(-1);
 
+  const inputStyle = "w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!";
+
   // displaying the page title with a typewriter effect
   useEffect(() => {
     if (isFetchingDone) {
@@ -69,7 +71,7 @@ export default function LoginPage() {
   }
 
   return (
-    <div id="authWrapper" className="h-dvh w-full flex flex-col items-center">
+    <div id="loginWrapper" className="h-full! w-full flex flex-col justify-evenly gap-0 md:gap-2 items-center">
       <div className="h-[20%] flex flex-col justify-center my-5">
         <h2
           className={`
@@ -88,19 +90,14 @@ export default function LoginPage() {
 
       <form
         className="
-          flex
-          flex-col
-          gap-8
-          min-h-80
-          justify-center
-          items-center
-          w-[90%]
-          sm:w-[90%]
-          lg:w-[50%]
-          xl:w-[50%]
-          2xl:w-[50%]
-          mx-auto
-          mt-10
+                        flex
+                        flex-col
+                        items-center
+                        gap-8
+                        min-h-80
+                        w-[90%]
+                        sm:w-[90%]
+                        lg:w-[50%]
         "
         onSubmit={submitHandler}
       >
@@ -111,7 +108,7 @@ export default function LoginPage() {
             borderColor="white"
             id="email"
             type="email"
-            className="w-full focus:outline-none p-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
+            className={inputStyle}
             placeholder="Email"
           />
         </div>
@@ -123,19 +120,19 @@ export default function LoginPage() {
             borderColor="white"
             id="password"
             type="password"
-            className="w-full focus:outline-none p-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
+            className={inputStyle}
             placeholder="Password"
           />
         </div>
 
-        <div className="w-[90%] flex flex-col items-center">
+        <div className="w-full flex flex-col items-center">
           <Button
             bg="black"
             textColor="white"
             borderColor="white"
             shadow="white"
             type="submit"
-            className="w-full mt-5! py-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
+            className="w-full p-2! mx-auto!"
           >
             Resume my adventure
           </Button>
@@ -145,7 +142,7 @@ export default function LoginPage() {
         </div>
       </form>
 
-      <p className="font-minecraft mt-5! text-red-600">{error}</p>
+      <p className="font-minecraft text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">{error}</p>
 
       <div className="mt-8 flex flex-col space-y-2 text-sm">
         <a href="/signup" className="font-minecraft mb-5 hover:underline!">

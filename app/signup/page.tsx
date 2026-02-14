@@ -22,7 +22,8 @@ export default function SignupPage() {
   const [isTyping, setIsTyping] = useState(true);
   const counter = useRef(-1);
 
-  const inputStyle = "w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!";
+  const inputStyle =
+    "w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!";
 
   // displaying the page title with a typewriter effect
   useEffect(() => {
@@ -62,21 +63,23 @@ export default function SignupPage() {
     });
     const feedback = await response.json();
 
-
     if (feedback.success) {
       // zustand
       updateDraft({ id: feedback.id, email: email.trim() });
       router.push("/characterCreation");
-    };
+    }
 
     if (feedback.err) {
       setError(feedback.err);
       console.log("voici l'erreur", feedback.err);
-    };
+    }
   }
 
   return (
-    <div id="signupWrapper" className="h-full! w-full flex flex-col justify-evenly items-center">
+    <div
+      id="signupWrapper"
+      className="h-full! w-full flex flex-col justify-evenly gap-0 md:gap-2 items-center"
+    >
       <div className="h-[20%] flex flex-col justify-center my-5">
         <h2
           className={`
@@ -96,17 +99,14 @@ export default function SignupPage() {
                         flex-col
                         gap-8
                         min-h-80
-                        justify-between
+                        items-center
                         w-[90%]
                         sm:w-[90%]
                         lg:w-[50%]
-                        xl:w-[50%]
-                        2xl:w-[50%]
-                        mx-auto
                     "
         onSubmit={submitHandler}
       >
-        <div className="flex flex-col gap-6">
+        {/* <div className="flex flex-col gap-6"> */}
           <div className="w-[90%] mx-auto">
             <Input
               bg="black"
@@ -142,7 +142,7 @@ export default function SignupPage() {
               placeholder="Confirm password"
             />
           </div>
-        </div>
+        {/* </div> */}
 
         <Button
           bg="black"
@@ -150,15 +150,17 @@ export default function SignupPage() {
           borderColor="white"
           shadow="white"
           type="submit"
-          className="w-[90%] mx-auto!"
+          className="w-full p-2! mx-auto!"
         >
           Begin my adventure
         </Button>
       </form>
 
-      <p className="font-minecraft mt-5! text-center text-red-600">{error}</p>
+      <p className="font-minecraft text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">
+        {error}
+      </p>
 
-      <div className="mt-8 flex flex-col space-y-2 text-sm">
+      <div className="flex flex-col space-y-2 text-sm">
         <a href="/login" className="font-minecraft mb-5 hover:underline!">
           Already have an account
         </a>
