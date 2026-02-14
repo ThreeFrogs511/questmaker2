@@ -106,7 +106,7 @@ export default function SignupPage() {
                     "
         onSubmit={submitHandler}
       >
-        <div className="w-full flex flex-col gap-4">
+        <div className="w-full flex flex-col gap-6">
           <div className="w-[90%] mx-auto">
             <Input
               bg="black"
@@ -160,9 +160,9 @@ export default function SignupPage() {
         {error}
       </p>
 
-      <div className="flex flex-col space-y-2 text-sm">
-        <a href="/login" className="font-minecraft mb-5 hover:underline!">
-          Already have an account
+      <div className="mb-5 ">
+        <a href="/login" className="font-minecraft text-sm underline!">
+          Sign in →
         </a>
       </div>
     </div>

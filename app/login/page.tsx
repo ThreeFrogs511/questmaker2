@@ -22,7 +22,8 @@ export default function LoginPage() {
 
   const counter = useRef(-1);
 
-  const inputStyle = "w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!";
+  const inputStyle =
+    "w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!";
 
   // displaying the page title with a typewriter effect
   useEffect(() => {
@@ -45,7 +46,8 @@ export default function LoginPage() {
   async function submitHandler(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     const email = (document.getElementById("email") as HTMLInputElement).value;
-    const password = (document.getElementById("password") as HTMLInputElement).value;
+    const password = (document.getElementById("password") as HTMLInputElement)
+      .value;
 
     const response = await fetch(`/api/login`, {
       method: "POST",
@@ -62,16 +64,19 @@ export default function LoginPage() {
       if (!userData.profile_completed) {
         router.push("/characterCreation");
       } else {
-        login({ ...userData});
+        login({ ...userData });
         router.push("/journal");
       }
-    };
+    }
 
     if (feedback.err) setError(feedback.err);
   }
 
   return (
-    <div id="loginWrapper" className="h-full! w-full flex flex-col justify-evenly gap-0 md:gap-2 items-center">
+    <div
+      id="loginWrapper"
+      className="h-full! w-full flex flex-col justify-evenly gap-0 md:gap-1 items-center"
+    >
       <div className="h-[20%] flex flex-col justify-center my-5">
         <h2
           className={`
@@ -91,7 +96,7 @@ export default function LoginPage() {
                         flex
                         flex-col
                         items-center
-                        gap-10
+                        gap-6
                         min-h-80
                         w-[90%]
                         sm:w-[90%]
@@ -111,7 +116,7 @@ export default function LoginPage() {
           />
         </div>
 
-        <div className="w-[90%] mx-auto">
+        <div className="w-[90%] mx-auto mb-8 flex flex-col">
           <Input
             bg="black"
             textColor="white"
@@ -121,6 +126,12 @@ export default function LoginPage() {
             className={inputStyle}
             placeholder="Password"
           />
+          <a
+            href="/forgot"
+            className="font-minecraft hover:underline! mt-2! text-xs text-center"
+          >
+            Forgot password ?
+          </a>
         </div>
 
         <div className="w-full flex flex-col items-center">
@@ -134,17 +145,16 @@ export default function LoginPage() {
           >
             Resume my adventure
           </Button>
-          <a href="/forgot" className="font-minecraft hover:underline! mt-5! ">
-            Forgot password
-          </a>
         </div>
       </form>
 
-      <p className="font-minecraft text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">{error}</p>
+      <p className="font-minecraft text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">
+        {error}
+      </p>
 
-      <div className="flex flex-col space-y-2 text-sm text-underline">
-        <a href="/signup" className="font-minecraft mb-5 hover:underline!">
-          Create an account
+      <div className="flex flex-col space-y-2 text-sm">
+        <a href="/signup" className="font-minecraft mb-5 underline!">
+          Create an account →
         </a>
       </div>
     </div>
