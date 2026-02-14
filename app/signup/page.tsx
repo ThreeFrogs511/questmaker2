@@ -106,7 +106,7 @@ export default function SignupPage() {
                     "
         onSubmit={submitHandler}
       >
-        {/* <div className="flex flex-col gap-6"> */}
+        <div className="w-full flex flex-col gap-4">
           <div className="w-[90%] mx-auto">
             <Input
               bg="black"
@@ -142,7 +142,7 @@ export default function SignupPage() {
               placeholder="Confirm password"
             />
           </div>
-        {/* </div> */}
+        </div>
 
         <Button
           bg="black"

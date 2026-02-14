@@ -78,8 +78,6 @@ export default function LoginPage() {
             mx-auto text-center 
             text-xl!
             sm:text-2xl!
-            md:text-3xl!
-            lg:text-4xl!
             text-stone-300 
             ${PressStartFont.className}
           `}
@@ -93,7 +91,7 @@ export default function LoginPage() {
                         flex
                         flex-col
                         items-center
-                        gap-8
+                        gap-10
                         min-h-80
                         w-[90%]
                         sm:w-[90%]
@@ -144,7 +142,7 @@ export default function LoginPage() {
 
       <p className="font-minecraft text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">{error}</p>
 
-      <div className="mt-8 flex flex-col space-y-2 text-sm">
+      <div className="flex flex-col space-y-2 text-sm text-underline">
         <a href="/signup" className="font-minecraft mb-5 hover:underline!">
           Create an account
         </a>
