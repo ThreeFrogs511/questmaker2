@@ -22,6 +22,8 @@ export default function SignupPage() {
   const [isTyping, setIsTyping] = useState(true);
   const counter = useRef(-1);
 
+  const inputStyle = "w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!";
+
   // displaying the page title with a typewriter effect
   useEffect(() => {
     if (isFetchingDone) {
@@ -74,16 +76,13 @@ export default function SignupPage() {
   }
 
   return (
-    <div id="signupWrapper" className="h-dvh w-full flex flex-col items-center">
+    <div id="signupWrapper" className="h-full! w-full flex flex-col justify-evenly items-center">
       <div className="h-[20%] flex flex-col justify-center my-5">
         <h2
           className={`
                         mx-auto text-center 
                         text-xl!
                         sm:text-2xl!
-                        md:text-3xl!
-                        lg:text-4xl!
-                        xl:text-4xl!
                         text-stone-300 
                         ${PressStartFont.className}`}
         >
@@ -115,7 +114,7 @@ export default function SignupPage() {
               borderColor="white"
               id="email"
               type="email"
-              className="w-full focus:outline-none p-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl! "
+              className={inputStyle}
               placeholder="Email"
             />
           </div>
@@ -127,7 +126,7 @@ export default function SignupPage() {
               borderColor="white"
               id="password"
               type="password"
-              className="w-full focus:outline-none p-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
+              className={inputStyle}
               placeholder="Password"
             />
           </div>
@@ -139,7 +138,7 @@ export default function SignupPage() {
               borderColor="white"
               id="confirm"
               type="password"
-              className="w-full focus:outline-none p-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
+              className={inputStyle}
               placeholder="Confirm password"
             />
           </div>
@@ -151,13 +150,13 @@ export default function SignupPage() {
           borderColor="white"
           shadow="white"
           type="submit"
-          className="w-[90%] mx-auto! lg:mb-5! xl:mb-15! lg:mt-5! xl:mt-5! 2xl:mt-10! py-2 text-lg! sm:text-lg! md:text-lg! lg:text-xl! xl:text-2xl! 2xl:text-2xl!"
+          className="w-[90%] mx-auto!"
         >
           Begin my adventure
         </Button>
       </form>
 
-      <p className="font-minecraft mt-5! text-red-600">{error}</p>
+      <p className="font-minecraft mt-5! text-center text-red-600">{error}</p>
 
       <div className="mt-8 flex flex-col space-y-2 text-sm">
         <a href="/login" className="font-minecraft mb-5 hover:underline!">

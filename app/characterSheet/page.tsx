@@ -11,6 +11,7 @@ import { useUserStore } from "@/stores/useUserStore";
 export default function CharacterSheet() {
   
   
+  //branchement à mon store
   const currentUser = useUserStore((state) => state.currentUser);
 
   return (

@@ -37,7 +37,7 @@ export async function GET() {
       user: userRows[0],
     });
   } catch (err) {
-    return NextResponse.json({ err: (err as Error).message }, { status: 401 });
+    return NextResponse.json({ err: (err as Error).message });
   }
 }
 

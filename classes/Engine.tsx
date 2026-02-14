@@ -143,8 +143,11 @@ export default class Engine {
       if (feedback.success ) {
         console.log("user mis à jour")
         console.log(currentUser)
+        return {success:true}
+        
       } else {
         console.log("erreur lors de la mise à jour")
+        return {success:false}
       }
     }
 
