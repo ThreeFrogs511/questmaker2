@@ -33,7 +33,6 @@ export default function Journal() {
   // determines the journal page and triggers the quests lists filters
   const [whichPage, setWhichPage] = useState<number>(0);
   const journal = ["Current quests", "Archived quests", "All quests"];
-
   // const [changingPageSound] = useSound('/sounds/blipSelect.wav');
 
   async function fetchingTodos() {
@@ -65,9 +64,12 @@ export default function Journal() {
 
   useEffect(() => {
     resetDraft({});
-    console.log(currentUser);
   });
 
+
+  useEffect(() => {
+    console.log(displayedQuests)
+  }, [displayedQuests])
   // fetching data at rendering
   useEffect(() => {
     currentUser && currentUser.id && fetchingTodos();
@@ -145,9 +147,14 @@ export default function Journal() {
             setWhichPageAction={setWhichPage}
             whichPage={whichPage}
           />
+                <div className="flex gap-5">
+        <span className="">coins : <span className="text-amber-300 font-minecraft">{currentUser?.coins}</span>
+        </span>
+        
+      </div>
 
           {/* list of quests */}
-          {areQuestsLoaded ? (
+          {displayedQuests && displayedQuests.length>0? (
             <List
               displayedQuests={displayedQuests}
               setDisplayedQuestsAction={setDisplayedQuests}
@@ -157,7 +164,11 @@ export default function Journal() {
             />
           ) : (
             <div className="w-full h-full  max-h-full! flex justify-center mt-50 font-minecraft text-base lg:text-2xl! ">
-              Loading quests...
+              {areQuestsLoaded ? 
+              <div className="flex flex-col items-center">
+                <p>No quests to display.</p> 
+              </div> : 
+              <p>Loading quests...</p>  }
             </div>
           )}
         </section>

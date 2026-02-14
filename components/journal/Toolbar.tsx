@@ -51,16 +51,16 @@ export default function Toolbar({
 
   return (
     <>
-      <div className="flex h-10 mb-5 pl-1">
+      <div className="flex mb-1 ">
         <Input
           bg="black"
           textColor="white"
           borderColor="white"
           type="text"
           id="todo"
-          placeholder="Your quest..."
+          placeholder="Your new quest..."
           maxLength={300}
-          className={` grow h-full ${PressStartFont.className} placeholder:${PressStartFont.className}`}
+          className={` grow h-[70%]! text-xs! ${PressStartFont.className} placeholder:${PressStartFont.className}`}
         />
 
         {/* submit button */}
@@ -68,7 +68,7 @@ export default function Toolbar({
           bg="black"
           textColor="white"
           borderColor="white"
-          className="w-1/10 h-full text-lg "
+          className="w-1/10 md:w-1/15 h-[70%]! text-xs! "
           onClick={() => submitToDoClick()}
         >
           +

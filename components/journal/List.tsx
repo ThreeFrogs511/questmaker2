@@ -142,16 +142,11 @@ export default function List({
 
   return (
     <>
-      <div className="flex gap-5 ml-5">
-        <span>
-          {" "}
-          coins : <span className="text-amber-300">{currentUser?.coins}</span>
-        </span>
+      <div className="flex gap-5">
         <span className="text-red-600">{error}</span>
       </div>
       <ul className="h-full!">
-        {displayedQuests && displayedQuests.length > 0 ? (
-          displayedQuests.map((item, index) => (
+          { displayedQuests?.map((item, index) => (
             <li
               data-id={item.id}
               data-completion={item.completed}
@@ -194,12 +189,8 @@ export default function List({
                 />
               </svg>
             </li>
-          ))
-        ) : (
-          <p className="object-center text-center mt-75! font-minecraft text-2xl">
-            You have no tasks yet.
-          </p>
-        )}
+          ))}
+        
       </ul>
     </>
   );

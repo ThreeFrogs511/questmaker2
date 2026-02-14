@@ -24,7 +24,7 @@ export default function Header() {
 
         {/* header */}
         
-        <header className='flex py-5 justify-between items-center'>
+        <header className='flex pb-10 pt-2 justify-between items-center'>
             <h1 className={`text-base! lg:text-xl!  text-stone-300 ${PressStartFont.className}`}>Questmaker</h1>
             <svg 
                 fill="none" 
