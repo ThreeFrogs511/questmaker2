@@ -18,7 +18,7 @@ type UseJournalStore = {
 export const useJournalStore = create<UseJournalStore>((set) => ({
     allQuests: null,
     displayedQuests: null,
-    whichPage:0,
+    whichPage:2,
     setAllQuests : (q) => set({allQuests : q}),
     setDisplayedQuests : (dq) => set({displayedQuests: dq}),
     setWhichPage: (delta) => set((s) => ({whichPage: s.whichPage + delta})),

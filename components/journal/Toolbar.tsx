@@ -37,12 +37,12 @@ export default function Toolbar() {
         setAllQuests(updatedList);
         (document.getElementById("todo") as HTMLInputElement).value = "";
 
-        if (whichPage === 0) {
+        if (whichPage === 0 || whichPage === 2)  {
           const updatedCurrentList = updatedList.filter(n => n.completed === false);
           setDisplayedQuests(updatedCurrentList);
           // setDisplayedQuestsAction((prev) => [feedback.quest, ...(prev ?? [])]);
         } else {
-          resetPage(0);
+          resetPage(2);
         }
       } else {
         console.log(feedback.error);

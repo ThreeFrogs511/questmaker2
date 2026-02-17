@@ -28,10 +28,10 @@ export default function CharacterSheet() {
                         mx-auto
                         grid
                         grid-cols-1
-                        xl:grid-cols-2
-                        gap-8"
+                        lg:grid-cols-2
+                        gap-4"
         >
-          <div className="flex flex-col">
+          <div className="flex flex-col mb-3!">
             {/* main stats */}
 
             
@@ -40,7 +40,7 @@ export default function CharacterSheet() {
               textColor="white"
               borderColor="white"
               shadowColor="white"
-              className="text-center mb-10! lg:mb-4!"
+              className="text-center mb-10! lg:mb-2!"
             >
               <div className="p-2 ">
                 <ul className="ml-1! flex flex-col justify-evenly items-start">
@@ -79,7 +79,7 @@ export default function CharacterSheet() {
               textColor="white"
               borderColor="white"
               shadowColor="white"
-              className="p-2! text-center grow"
+              className="p-2! text-center grow flex flex-col justify-evenly  "
             >
               <div className="mb-5! mt-2! progressBarContainer ">
                 <span className="text-base!  md:text-lg!">Hp</span>
@@ -110,7 +110,7 @@ export default function CharacterSheet() {
             textColor="white"
             borderColor="white"
             shadowColor="white"
-            className="text-center"
+            className="text-center flex flex-col justify-evenly mb-5!"
           >
             <p className="mb-3! text-lg! sm:text-lg! md:text-2xl! pt-2 ">
               User stats
@@ -156,7 +156,6 @@ export default function CharacterSheet() {
             </ul>
           </Card>
         </section>
-        <Footer />
       </div>
     </>
   );

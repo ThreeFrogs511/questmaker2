@@ -29,7 +29,7 @@ export default function Header() {
 
       {/* header */}
 
-      <header className="h-12!">
+      <header className="h-12! relative">
         <svg
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

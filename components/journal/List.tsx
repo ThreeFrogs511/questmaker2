@@ -102,17 +102,17 @@ export default function List() {
 
   return (
     <>
-      <div className="h-full! flex flex-col gap-2">
+      <div className="scrollingContainer h-full! flex flex-col gap-2">
           { displayedQuests?.map((item, index) => (
             <Card
               bg="black"
-              borderColor="white"
+              borderColor="transparent"
               shadowColor="transparent"
               textColor="white"
               data-id={item.id}
               data-completion={item.completed}
               data-user-id={item?.user_id}
-              className="flex justify-between items-center text-xl border-2! py-1"
+              className="flex justify-between  items-center hover:border-white text-xl  py-1"
               key={index}
             >
               <div className="flex items-center gap-3">
@@ -130,7 +130,7 @@ export default function List() {
 
                 {/* quest body */}
                 <p
-                  className={`text-sm! md:text-sm! tracking-widest  wrap-anywhere`}
+                  className={`text-sm! md:text-xs! tracking-widest  wrap-anywhere`}
                 >
                   {item.body}
                 </p>

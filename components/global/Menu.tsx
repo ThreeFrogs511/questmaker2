@@ -1,7 +1,7 @@
 'use client'
-import Link from "next/link";
 import { useRouter } from 'next/navigation';
 import { useUserStore } from "@/stores/useUserStore";
+import { usePathname } from "next/navigation";
 
 
 export default function Menu() {
@@ -9,6 +9,7 @@ export default function Menu() {
    const router = useRouter();
    const style = "font-minecraft text-3xl! sm:text-3xl! md:ml-10!";
    const setIsMenuOpen = useUserStore(state => state.setIsMenuOpen);
+    const pathname = usePathname();
 
     async function logout() {
         setIsMenuOpen(false);
@@ -17,6 +18,14 @@ export default function Menu() {
         });
         const feedback = await response.json();
         feedback.success && router.push('/titleScreen');
+    };
+
+    function navigationHandler(destination:string) {
+        if (pathname === destination) {
+            setIsMenuOpen(false);
+        } else {
+            router.push(destination);
+        }
     };
 
     return(
@@ -28,43 +37,43 @@ export default function Menu() {
             sm:px-1 md:px-5 lg:px-20 xl:px-40 2xl:px-60 max-w-400 mx-auto"
             >
                 {/* journal */}
-                <Link href='/journal'className="w-full flex hover:text-amber-300!"> 
+                <div onPointerDown={() => navigationHandler("/journal")} className=" cursor-pointer w-full flex hover:text-amber-300!"> 
                     {/* <Button  textColor="white" bg="transparent" borderColor="white" shadow="white" className="w-3/4"> */}
                         <p className={style}>Journal</p>
                     {/* </Button>  */}
-                </Link> 
+                </div> 
 
                 {/* Campaigns */}
-                <Link href='/campaignList'className="w-full flex hover:text-amber-300!"> 
+                <div onPointerDown={() => navigationHandler("/campaignList")} className="cursor-pointer w-full flex hover:text-amber-300!"> 
                     {/* <Button  textColor="white" bg="transparent" borderColor="white" shadow="white" className="w-3/4"> */}
                         <p className={style}>Campaigns</p>
                     {/* </Button>  */}
-                </Link> 
+                </div> 
 
                 {/* Character Sheet */}
-                <Link href='/characterSheet'className="w-full flex hover:text-amber-300!"> 
+                <div onPointerDown={() => navigationHandler("/characterSheet")}className="cursor-pointer w-full flex hover:text-amber-300!"> 
                     {/* <Button  textColor="white" bg="transparent" borderColor="white" shadow="white" className="w-3/4"> */}
                         <p className={style}>Character Sheet</p>
                     {/* </Button>  */}
-                </Link> 
+                </div> 
 
                 {/* inventory*/}
-                <Link href='/inventory'className="w-full flex hover:text-amber-300!"> 
+                <div onPointerDown={() => navigationHandler("/inventory")} className="cursor-pointer w-full flex hover:text-amber-300!"> 
                     {/* <Button  textColor="white" bg="transparent" borderColor="white" shadow="white" className="w-3/4"> */}
                         <p className={style}>Inventory</p>
                     {/* </Button>  */}
-                </Link> 
+                </div> 
 
                 {/* Settings */}
-                <Link href='/profileSettings'className="w-full flex hover:text-amber-300!"> 
+                <div onPointerDown={() => navigationHandler("/profileSettings")} className="cursor-pointer w-full flex hover:text-amber-300!"> 
                     {/* <Button  textColor="white" bg="transparent" borderColor="white" shadow="white" className="w-3/4"> */}
                         <p className={style}>Profile Settings</p>
                     {/* </Button>  */}
-                </Link> 
+                </div> 
 
 
                 {/* logout */}
-                <div className="w-full flex cursor-pointer hover:text-amber-300" onClick={logout}> 
+                <div className="w-full flex cursor-pointer hover:text-amber-300" onPointerDown={logout}> 
                     {/* <Button  textColor="white" bg="transparent" borderColor="white" shadow="white" className="w-3/4"> */}
                         <p className={style}>Logout</p>
                     {/* </Button>  */}
