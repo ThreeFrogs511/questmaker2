@@ -32,6 +32,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
             updateDraft({ id: data.user.id, email: data.user.email });
             router.push("/characterCreation");
           } else {
+            console.log("hydratation objet en cours")
             login({ ...data.user });
             if (pathname === "/" || pathname === "/characterCreation") {
               console.log("profil complété");
@@ -60,7 +61,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
         setIsFetchingDone(true);
         setIsMenuOpen(false);
       });
-  }, [login, pathname, updateDraft, router]);
+  }, [login, pathname, updateDraft, router, setIsMenuOpen]);
 
 
   return (
