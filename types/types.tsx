@@ -53,7 +53,7 @@ type Alt = {
 export type User = {
 id: number | null,
 username: string | null,
-email: string | null,
+// email: string | null,
 hp: number | null,
 xp: number | null,
 dopamine: number | null,
@@ -82,7 +82,7 @@ export type Encounter = {
   stats?:{"str": number, "dex":number, "con": number,"int": number, "wis": number, "cha": number},
   hp?:number; 
   dopamine?:number; 
-  movesets?:Object,
+  movesets?:object,
   ac?:number
 }
 

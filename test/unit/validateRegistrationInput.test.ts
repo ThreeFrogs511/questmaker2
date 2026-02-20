@@ -26,6 +26,7 @@ test("registration input: valid passes", () => {
 });
 
 //on teste les cas d'erreurs ci-dessous
+
 test("registration input: missing fields", () => {
   const result = validateRegistrationInput(
     "",

@@ -19,7 +19,6 @@ export const useUserStore = create<UserStore>((set) => ({
   currentUser: {
     id: null,
     username: null,
-    email: null,
     xp: null,
     hp: null,
     dopamine: null,
@@ -47,7 +46,6 @@ export const useUserStore = create<UserStore>((set) => ({
       currentUser: {
         id: null,
         username: null,
-        email: null,
         xp: null,
         hp: null,
         dopamine: null,
