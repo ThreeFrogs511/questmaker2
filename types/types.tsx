@@ -74,7 +74,30 @@ damage_taken: number
 coins: number
 }
    
-
+export type Draft = {
+id: number | null,
+username: string | null,
+email: string | null,
+hp: number | null,
+xp: number | null,
+dopamine: number | null,
+dopamine_consumed:number,
+gender: string | null
+user_class : string | null,
+race: string | null,
+lvl : number | null,
+str : number | null,
+dex : number | null,
+con : number | null,
+int : number | null,
+wis : number | null,
+cha : number | null,
+ac: number | null,
+profile_completed : boolean,
+damage_taken: number
+coins: number
+}
+   
 
 export type Encounter = {
   enemy_id?:string;
@@ -102,4 +125,11 @@ export type ListType = {
     completed:boolean | null,
     list: string | null,
     user_id: number | null
+}
+
+export type Class= {
+  class: string;
+  description: string;
+  abilities: {str:number, dex:number, con:number, wis:number, int:number, cha:number};
+  mainAbility: string;
 }

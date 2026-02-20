@@ -1,6 +1,5 @@
 "use client";
 import { useState, useEffect } from "react";
-import { useUserContext } from "@/context/context";
 import { Button, Card } from "pixel-retroui";
 import Title from './Title'
 import presets from '../../assets/characterPresets.json'

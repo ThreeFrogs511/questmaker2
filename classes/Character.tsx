@@ -1,5 +1,4 @@
-import { User } from "@/types/types";
-
+import { Draft, Class } from "@/types/types";
 
 export default class Character {
     private id : string;
@@ -20,7 +19,7 @@ export default class Character {
 
     private updateDraft;
 
-    constructor({...draft}, updateDraft:(patch: Partial<User>) => void) 
+    constructor({...draft}, updateDraft:(patch: Partial<Draft>) => void) 
     {
 
         // attributes based on draft
@@ -50,9 +49,9 @@ export default class Character {
         this.updateDraft({hp:this.hp});
     }
 
-    calculateDopamine(classes:any, draft:Partial<User>) {
+    calculateDopamine(classes:Array<Class>, draft:Partial<Draft>) {
         // we fetch the presets stats of the chosen class
-        const chosenClassStats = classes.find((n: { class: any; }) => n.class === this.user_class);
+        const chosenClassStats = classes.find((n: { class: string; }) => n.class === this.user_class);
         if(chosenClassStats) {
             // each class has a 'main' ability, we get it
             const mainAbility = chosenClassStats.mainAbility;
@@ -69,14 +68,14 @@ export default class Character {
         }
     }
 
-    calculateAC(draft:Partial<User>) {
+    calculateAC(draft:Partial<Draft>) {
         const dex = draft.dex;
         const dexModifier = dex && Math.floor((dex-10)/2);
         this.ac = dexModifier ? 10+dexModifier : 10;
         this.updateDraft({ac:this.ac});
     }
 
-    buildUserFromDraft(draft:Partial<User>) {
+    buildUserFromDraft(draft:Partial<Draft>) {
 
       const newUser =  {
         id: draft.id ?? null, 
@@ -104,7 +103,7 @@ export default class Character {
     return newUser;
 
     }
-    async completeProfile(draft:Partial<User>, classes:any) {
+    async completeProfile(draft:Partial<Draft>, classes:Array<Class>) {
         this.calculateHitpoints();
         this.calculateDopamine(classes, draft);
         this.calculateAC(draft);
