@@ -21,6 +21,7 @@ export const useUserStore = create<UserStore>((set) => ({
     username: null,
     xp: null,
     hp: null,
+    email:null,
     dopamine: null,
     dopamine_consumed: 0,
     gender: null,
@@ -37,6 +38,7 @@ export const useUserStore = create<UserStore>((set) => ({
     profile_completed: false,
     damage_taken: 0,
     coins: 0,
+    last_campaign_done: null
   },
 
   login: (user) => set({ currentUser: user }),
@@ -46,6 +48,7 @@ export const useUserStore = create<UserStore>((set) => ({
       currentUser: {
         id: null,
         username: null,
+        email:null,
         xp: null,
         hp: null,
         dopamine: null,
@@ -64,6 +67,7 @@ export const useUserStore = create<UserStore>((set) => ({
         profile_completed: false,
         damage_taken: 0,
         coins: 0,
+        last_campaign_done: null
       },
     }),
 

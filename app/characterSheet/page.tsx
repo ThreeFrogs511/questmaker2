@@ -25,7 +25,6 @@ export default function CharacterSheet() {
                         lg:h-[90%]!
                         max-h-full
                         grid
-                        
                         w-full
                         grid-cols-1
                         lg:grid-cols-2
@@ -118,37 +117,74 @@ export default function CharacterSheet() {
               <ul className="flex flex-col justify-evenly h-[80%] max-h-full">
                 <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
                   <span>Strength</span>
-                  <span className="text-yellow-400">
+                  <span
+                    className={
+                      currentUser?.str && currentUser.str >= 10
+                        ? "text-yellow-400"
+                        : "text-red-600"
+                    }
+                  >
                     {currentUser?.str ?? ""}
                   </span>
                 </li>
                 <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
                   <span>Dexterity</span>
-                  <span className="text-yellow-400">
+                  <span
+                    className={
+                      currentUser?.dex && currentUser.dex >= 10
+                        ? "text-yellow-400"
+                        : "text-red-600"
+                    }
+                  >
                     {currentUser?.dex ?? ""}
                   </span>
                 </li>
                 <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
                   <span>Constitution</span>
-                  <span className="text-yellow-400">
+                  <span
+                    className={
+                      currentUser?.con && currentUser.con >= 10
+                        ? "text-yellow-400"
+                        : "text-red-600"
+                    }
+                  >
                     {currentUser?.con ?? ""}
                   </span>
                 </li>
                 <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
-                  <span>Intelligence</span>
-                  <span className="text-yellow-400">
-                    {currentUser?.int ?? ""}
-                  </span>
-                </li>
-                <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
                   <span>Wisdom</span>
-                  <span className="text-yellow-400">
+                  <span
+                    className={
+                      currentUser?.wis && currentUser.wis >= 10
+                        ? "text-yellow-400"
+                        : "text-red-600"
+                    }
+                  >
                     {currentUser?.wis ?? ""}
                   </span>
                 </li>
+                <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
+                  <span>Intelligence</span>
+                  <span
+                    className={
+                      currentUser?.int && currentUser.int >= 10
+                        ? "text-yellow-400"
+                        : "text-red-600"
+                    }
+                  >
+                    {currentUser?.int ?? ""}
+                  </span>
+                </li>
+
                 <li className=" w-[80%] mx-auto mb-5 py-2 flex justify-between text-base!  md:text-lg!">
                   <span>Charisma</span>
-                  <span className="text-yellow-400">
+                  <span
+                    className={
+                      currentUser?.cha && currentUser.cha >= 10
+                        ? "text-yellow-400"
+                        : "text-red-600"
+                    }
+                  >
                     {currentUser?.cha ?? ""}
                   </span>
                 </li>

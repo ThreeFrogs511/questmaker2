@@ -62,7 +62,7 @@ export async function PATCH(
       // variable qui stocke le nombre de quêtes validées durant l'intervalle de temps.
       // Max = 5.
       let currentCount;
-
+      console.log(questLimit)
       
       if (questLimit.length <= 0) {
         //par défaut, window_start débute à l'heure actuelle et count = 0.
@@ -75,10 +75,13 @@ export async function PATCH(
         currentCount = questLimit[0].count;
       };
 
+
+
       // On calcule l'heure actuelle. Puis on détermine via l'intervalle de temps si
       // cela fait au moins 1h depuis la dernière complétion
       const currentTimeMs = Date.now();
       const OneHourPassed = currentTimeMs - windowStartMs >= 3600000;
+
 
       // Si l'user a complété 5 quêtes à la suite, en moins d'une heure,
       // on refuse la nouvelle complétion et on retourne une réponse

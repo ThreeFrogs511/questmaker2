@@ -22,6 +22,7 @@ export async function proxy(request: NextRequest) {
         return NextResponse.next();
     }
   } catch {
+    console.log()
     const pathname = request.nextUrl.pathname;
     switch (pathname) {
       case "/signup":

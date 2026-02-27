@@ -1,17 +1,13 @@
 "use client";
-import { Press_Start_2P } from "next/font/google";
-import { useState } from "react";
 import Menu from "@/components/global/Menu";
+import { useState } from "react";
 import { useUserStore } from "@/stores/useUserStore";
-const PressStartFont = Press_Start_2P({
-  subsets: ["latin"],
-  weight: "400",
-});
+
 
 export default function Header() {
-//   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const isMenuOpen = useUserStore(state => state.isMenuOpen);
-  const setIsMenuOpen = useUserStore(state => state.setIsMenuOpen);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  // const isMenuOpen = useUserStore(state => state.isMenuOpen);
+  // const setIsMenuOpen = useUserStore(state => state.setIsMenuOpen);
 
   return (
     <>
@@ -20,11 +16,11 @@ export default function Header() {
         id="menu"
         className={
           !isMenuOpen
-            ? "z-998 fixed bg-black transition-all! ease-in-out duration-200! w-full -translate-x-full! h-full right-0 left-0 top-0 bottom-0  overflow-hidden "
+            ? "z-998 fixed bg-black w-full -translate-x-full! h-full right-0 left-0 top-0 bottom-0  overflow-hidden "
             : "z-998 fixed  bg-black transition-all! ease-in-out duration-500! right-0 left-0 top-0 bottom-0 w-full h-full overflow-hidden"
         }
       >
-        <Menu />
+        <Menu setIsMenuOpenAction={setIsMenuOpen} />
       </section>
 
       {/* header */}

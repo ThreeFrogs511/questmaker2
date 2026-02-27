@@ -59,10 +59,14 @@ export default function List() {
         updateStats({ coins: feedback.coins[0].coins });
 
         // playing the sound effect
-        completionState ? ticking() : unticking();
-        setTimeout(() => {
+        if (completionState) {
+          ticking();
+        } else {
+          unticking();
+        }
+        // setTimeout(() => {
           
-        }, 500);
+        // }, 500);
         // updating the allToDos list
         const updatedList = allQuests.map((n) => {
           if (n.id === id) {

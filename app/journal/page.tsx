@@ -28,56 +28,15 @@ export default function Journal() {
   const setAllQuests = useJournalStore((state) => state.setAllQuests);
   const displayedQuests = useJournalStore((state) => state.displayedQuests);
   const setDisplayedQuests = useJournalStore((state) => state.setDisplayedQuests);
-
+  const areQuestsLoaded = useJournalStore((state) => state.areQuestsLoaded);
   // warns us when the quests are all fetched
-  const [areQuestsLoaded, setAreQuestsLoaded] = useState(false);
 
-  // the complete list of quests, unfiltered
-  // const [allQuests, setAllQuests] = useState<Array<ListType> | null>(null);
-
-  // // the displayed quests list, with filters depending on the journal page
-  // const [displayedQuests, setDisplayedQuests] =
-  //   useState<Array<ListType> | null>(null);
-
-  // determines the journal page and triggers the quests lists filters
-  // const [whichPage, setWhichPage] = useState<number>(0);
   const journal = ["Current quests", "Archived quests", "All quests"];
-  // const [changingPageSound] = useSound('/sounds/blipSelect.wav');
-
-  async function fetchingTodos() {
-    if (!currentUser || !currentUser.id) return; 
-      const id = currentUser.id;
-
-      const response = await fetch(`/api/todo/${id}`);
-      const originalList = await response.json();
-
-      // displaying current quests as default
-      if (!originalList.error) {
-        setAllQuests(originalList);
-
-        const currentQuests = originalList.filter(
-          (n: { completed: boolean }) => n.completed === false,
-        );
-        setDisplayedQuests(currentQuests);
-
-      } else {
-        console.log("error : ", originalList.error);
-      }
-      // quests fetching is done
-      setAreQuestsLoaded(true);
-
-  }
+ 
 
   useEffect(() => {
     resetDraft({});
   });
-
-
-  // fetching data at rendering
-  useEffect(() => {
-    if (!currentUser.id) return;
-    fetchingTodos();
-  }, [currentUser, currentUser.id]);
 
   // sorting list based on the page number
   useEffect(() => {
