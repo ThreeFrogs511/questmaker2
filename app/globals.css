@@ -31,8 +31,8 @@ body {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
   grid-template-rows: auto 1fr auto;
-  min-height: 100vh !important;
-  height: 100vh !important;
+  min-height: 100dvh !important;
+  height: 100dvh !important;
 }
 
 /* 1) neutralise partout (si nécessaire) */
