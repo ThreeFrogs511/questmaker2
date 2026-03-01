@@ -1,15 +1,14 @@
 "use client";
-import { useEffect, useState } from "react";
-import { useUserContext } from "@/context/context";
+import { useEffect} from "react";
 import List from "@/components/journal/List";
 import Toolbar from "@/components/journal/Toolbar";
 import { Press_Start_2P } from "next/font/google";
-import Footer from "@/components/global/Footer";
 import Header from "@/components/global/Header";
-import { ListType } from "@/types/types";
+import Footer from "@/components/global/Footer";
 import { useUserStore } from "@/stores/useUserStore";
 import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
 import { useJournalStore } from "@/stores/useJournalStore";
+import useSound from "use-sound";
 
 const PressStartFont = Press_Start_2P({
   subsets: ["latin"],
@@ -33,6 +32,7 @@ export default function Journal() {
   // warns us when the quests are all fetched
 
 
+  const [turnPage] = useSound("/sounds/page.mp3");
   const journal = ["Current quests", "Archived quests", "All quests"];
  
 
@@ -63,6 +63,7 @@ export default function Journal() {
           setDisplayedQuests(allQuests);
           break;
       }
+      turnPage();
     }
   }, [whichPage, allQuests]);
 
@@ -136,7 +137,7 @@ export default function Journal() {
             </div>
           )}
         </section>
-        {/* <Footer /> */}
+        <Footer />
       </div>
     </>
   );

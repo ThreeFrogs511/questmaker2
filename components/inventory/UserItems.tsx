@@ -74,7 +74,6 @@ export default function UserItems({userActionOnItems} : {userActionOnItems: (ite
               <div className="flex gap-3">
               <span>-</span>
                 <div className="flex gap-1 justify-center ">
-                  Price:
                   <span className="text-amber-300">{item.price?? " "}</span>g
                 </div>
               </div>}

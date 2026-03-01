@@ -1,7 +1,7 @@
 "use client";
 import { Press_Start_2P } from "next/font/google";
 import { Button, Input } from "pixel-retroui";
-import { ListType } from "@/types/types";
+import useSound from "use-sound";
 import Quest from "@/classes/Quest";
 import { useUserStore } from "@/stores/useUserStore";
 import { useJournalStore } from "@/stores/useJournalStore";
@@ -21,7 +21,7 @@ export default function Toolbar() {
   const setAllQuests = useJournalStore((state) => state.setAllQuests);
   const setDisplayedQuests = useJournalStore((state) => state.setDisplayedQuests);
 
-  
+
   async function submitToDoClick() {
 
     const value = (document.getElementById("todo") as HTMLInputElement).value;
