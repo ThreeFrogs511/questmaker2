@@ -14,10 +14,11 @@ export default function MerchantMenu({
 
   return (
     <>
-      <div className="h-[80%] w-full! lg:w-[70%]! flex flex-col md:flex-row items-center gap-2">
+      <div className="h-[80%]  w-full! lg:w-[70%]! flex flex-col md:flex-row items-center gap-2">
         {vendorChoices.map((item: string, index: number) => (
           <div
             key={index}
+            
             onPointerDown={() => {
               if (item === "Purchase") {
                 setChoosePurchaseAction(true);
@@ -37,14 +38,18 @@ export default function MerchantMenu({
             onMouseLeave={() => setHover("")}
             className="w-[90%] md:w-[50%] h-full cursor-pointer hover:border-amber-300! border border-white! rounded-lg flex flex-col justify-center items-center gap-5"
           >
-            <Image
-              src={icons[index]}
-              width={200}
-              height={200}
-              className="shrink-0"
-              alt="vendor action"
-              loading="eager"
-            />
+            <div className="w-[80%] ">
+              <Image
+                src={icons[index]}
+                width={200}
+                height={200}
+                // fill={true}
+                className="shrink-0 mx-auto"
+                alt="vendor action"
+                loading="eager"
+                preload={true}
+              />
+            </div>
             <p
               className={`font-minecraft text-sm! md:text-xl ${item === hover ? "text-amber-300" : "text-white"}`}
             >
