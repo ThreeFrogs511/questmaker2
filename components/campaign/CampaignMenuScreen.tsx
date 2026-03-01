@@ -14,7 +14,7 @@ export default function CampaignMenuScreen({selectedCampaign, setHasChosenACampa
     return(
         <>
         <section 
-        className={` bg-black h-dvh flex flex-col justify-evenly items-center w-full top-0 left-0 bottom-0 right-0`}>
+        className="bg-black h-dvh flex flex-col justify-evenly items-center w-full top-0 left-0 bottom-0 right-0">
             <div>
                 <h1 className="text-4xl! font-minecraft mb-5! text-amber-400 tracking-widest text-center">{selectedCampaign?.name}</h1>
                 <h2 className="text-xl! font-minecraft tracking-widest">{selectedCampaign?.description}</h2>

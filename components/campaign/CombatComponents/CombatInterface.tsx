@@ -1,5 +1,5 @@
 'use client'
-import Bar from "../../userStats/HitpointsBar"
+import HitpointsBar from "../../userStats/HitpointsBar"
 import { ProgressBar } from "pixel-retroui"
 import { useState} from "react";
 
@@ -103,7 +103,7 @@ export default function CombatInterface({gameplay}: {gameplay:any}) {
                             <span>AC : {currentUser.ac}</span>
                             <span>{Math.floor(currentUser.hp ? (currentUser.hp-currentUser.damage_taken) : 10-currentUser.damage_taken)+'/'+currentUser.hp}</span>
                         </div>
-                        <div className="w-[70%] mx-auto"><Bar /></div>
+                        <div className="w-[70%] mx-auto"><HitpointsBar /></div>
                     </div>
                     <div className="w-[10%] h-full flex items-center justify-center font-minecraft text-xl">VS</div>
                     <div id="enemySide" className="w-[80%] lg:w-[50%]  mx-auto">
@@ -118,8 +118,8 @@ export default function CombatInterface({gameplay}: {gameplay:any}) {
                         </div>
                         <div className="w-[70%] mx-auto">
                             <ProgressBar
-                                size="md"
-                                color="green"
+                                size="sm"
+                                color="red"
                                 borderColor="white"
                                 className="w-full"
                                 progress={(enemyFullHealth && enemyHealth && enemy?.hp) ? (enemy.hp > 0 ? enemyHealth*100 : 0) : 0}

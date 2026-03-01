@@ -1,71 +1,51 @@
 
 'use client'
-import { useUserContext } from "@/context/context"
 import { Card } from "pixel-retroui"
 import Title from './Title'
-import { useCharacterCreationStore } from '@/stores/useCharacterCreationStore'
-import { useEffect } from "react"
+import { Attributes } from "@/types/types"
+import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore"
 
 
-
-
-    type Abilities = {
-        str:number,
-        dex:number,
-        con: number,
-        int: number,
-        wis: number,
-        cha: number
-    }
-
-export default function AbilityScoresSelection({abilityScores, setAbilityScoresAction, indexTitle, setIndexTitleAction, pointsToSpare, setPointsToSpareAction} : {
-    abilityScores: Abilities,
-    setAbilityScoresAction:React.Dispatch<React.SetStateAction<Abilities>>,
+export default function AbilityScoresSelection({ indexTitle, setIndexTitleAction} : {
     indexTitle:number,
     setIndexTitleAction:React.Dispatch<React.SetStateAction<number>>,
-    pointsToSpare:number,
-    setPointsToSpareAction: React.Dispatch<React.SetStateAction<number>>
 }) {
 
-    const abilitiesName = ['Strength', 'Dexterity', 'Constitution', 'Intelligence', 'Wisdom', 'Charisma'];
-    const updateDraft = useCharacterCreationStore(state => state.updateDraft);
-    const draft = useCharacterCreationStore(state => state.draft);
+    const abilitiesName = ['Strength', 'Dexterity', 'Constitution',  'Wisdom', 'Intelligence','Charisma'];
+    const abilityScores = useCharacterCreationStore(state => state.abilityScores);
+    const addPoint = useCharacterCreationStore(state => state.addPoint);
+    const removePoint = useCharacterCreationStore(state => state.removePoint);
+    const pointsToSpare = useCharacterCreationStore(state => state.pointsToSpare);
+    const setPointsToSpare = useCharacterCreationStore(state => state.setPointsToSpare);
+    
+  
 
-    function usingAbilityPoints(e:any) {
-        type targetAbility = keyof Abilities;
-
-        if (e.target.dataset.id === "minus") {
-            const targetAbility:targetAbility = e.target.id;
-            // const abilityFormatted = targetAbility.charAt(0) + targetAbility.charAt(1) + targetAbility.charAt(2);
-
+    function usingAbilityPoints(e:React.PointerEvent<HTMLSpanElement>) {
+        type targetAbility = keyof Attributes;
+        const targetAbility:targetAbility = e.currentTarget.id as keyof Attributes;
+        console.log(targetAbility)
+        if (e.currentTarget.dataset.id === "minus") {
+            console.log(targetAbility)
             // we reduce the target ability score, but we stop at 7
             if (abilityScores[targetAbility] > 7) {
-                setAbilityScoresAction(prev => ({
-                    ...prev, 
-                    [targetAbility]: prev[targetAbility] - 1
-                }));
-
-                setPointsToSpareAction(prev => prev + 1);
+                removePoint(targetAbility);
+                setPointsToSpare(1);
             } else {
                 return;
-            }
+            };
 
         } else {
             if (pointsToSpare===0) return;
-            const targetAbility:targetAbility = e.target.id;
 
             // we increase the selected ability score, but we stop at 17
             if (abilityScores[targetAbility] < 17) {
-                setAbilityScoresAction(prev => ({
-                    ...prev, 
-                    [targetAbility]: prev[targetAbility] + 1
-                }));
-                setPointsToSpareAction(prev => prev - 1);
+                addPoint(targetAbility);
+                setPointsToSpare(-1);
             } else {
                 return;
-            }
+            };
         }
-    }
+    };
 
 
 

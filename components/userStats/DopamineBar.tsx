@@ -4,7 +4,7 @@ import { ProgressBar } from 'pixel-retroui';
 import { useEffect, useState} from 'react';
 import { useUserStore } from '@/stores/useUserStore';
 
-export default function Bar() {
+export default function DopamineBar() {
 
     const currentUser = useUserStore(state => state.currentUser);
     const [dopamineInPercentage, setDopamineInPercentage] = useState(0);
@@ -20,7 +20,7 @@ export default function Bar() {
         <>
         <div className='dopamineContainer'>
             <ProgressBar
-                size="md"
+                size="sm"
                 color="blue"
                 borderColor="white"
                 className="w-full"

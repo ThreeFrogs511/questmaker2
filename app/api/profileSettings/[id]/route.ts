@@ -29,13 +29,13 @@ async function validateProfileEditInput(
   const r = await sql`SELECT user_password FROM users WHERE id = ${id}`;
 
   if (currentPassword) {
-      if (r[0].rowCount === 0) throw new Error("Erreur id");
-  const match = await bcrypt.compare(currentPassword ?? "", r[0].user_password);
-  if (!match) throw new Error("Wrong password");
-
+    if (r[0].rowCount === 0) throw new Error("Erreur id");
+    const match = await bcrypt.compare(
+      currentPassword ?? "",
+      r[0].user_password,
+    );
+    if (!match) throw new Error("Wrong password");
   }
-
-
 
   if (newPassword && !passwordRegex.test(newPassword))
     throw new Error(
@@ -53,10 +53,10 @@ async function checkTokenCSRF(request: Request) {
   const headerToken = request.headers.get("X-CSRF-Token");
 
   if (!cookieToken || !headerToken)
-    throw new Error("You are not allowed to do this action");
+    throw new Error("You are not allowed to do this action!!!");
   if (headerToken !== cookieToken)
     throw new Error("You are not allowed to do this action");
-};
+}
 
 // editing the profil
 export async function PATCH(
@@ -66,32 +66,38 @@ export async function PATCH(
   try {
     const { id } = await params;
     const data = await request.json();
-    if (!id) return NextResponse.json({err:"no user id found"});
+    if (!id) return NextResponse.json({ err: "no user id found" });
 
     const email = data.email.trim();
-    const currentPassword = data.currentPassword ? data.currentPassword.trim() : null;
+    const currentPassword = data.currentPassword
+      ? data.currentPassword.trim()
+      : null;
     const newPassword = data.newPassword ? data.newPassword.trim() : null;
 
     //middlewares
     await checkTokenCSRF(request);
-    await validateProfileEditInput(email, data.currentPassword, data.newPassword, id);
+    await validateProfileEditInput(
+      email,
+      data.currentPassword,
+      data.newPassword,
+      id,
+    );
 
     let r;
     if (!currentPassword && !newPassword) {
       r =
         await sql`UPDATE users SET email = ${data.email} WHERE id = ${id} RETURNING id`;
     } else {
-
       // hashing the new password
       const hash = await bcrypt.hash(data.newPassword, 10);
       r =
         await sql`UPDATE users SET email = ${data.email}, user_password = ${hash}  WHERE id = ${id} RETURNING id`;
     }
 
-    if (r[0].rowCount <= 0) return NextResponse.json({err:"internal error"});
+    if (r[0].rowCount <= 0) return NextResponse.json({ err: "internal error" });
 
     return NextResponse.json({ newEmail: data.email, success: true });
-  } catch (err ) {
+  } catch (err) {
     return NextResponse.json({ success: false, err: (err as Error).message });
   }
 }
@@ -103,13 +109,43 @@ export async function GET(
 ) {
   try {
     const { id } = await params;
-    if (!id) return NextResponse.json({err:"no user id found"});
+    if (!id) return NextResponse.json({ err: "no user id found" });
 
     const r = await sql`SELECT email FROM users WHERE id = ${id}`;
-    if (!r[0].email) return NextResponse.json({err:"no email found"});
+    if (!r[0].email) return NextResponse.json({ err: "no email found" });
 
     return NextResponse.json({ success: true, email: r[0].email });
   } catch (err) {
     return NextResponse.json({ success: false, err: (err as Error).message });
+  }
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const { id } = await params;
+    if (!id) return NextResponse.json({ error: "Undefined user id" });
+
+    await sql`
+      DELETE FROM users
+      WHERE id = ${id}`;
+
+    const cookie = await cookies();
+    const token: string | undefined = cookie.get("session")?.value;
+    if (!token)
+      return NextResponse.json({
+        error: "No sessions detected. Please login.",
+      });
+
+    await sql`DELETE FROM sessions WHERE token = ${token}`;
+
+    cookie.delete("session");
+    cookie.delete("csrf");
+
+    return NextResponse.json({ success: true });
+  } catch (error) {
+    return NextResponse.json({ error: String(error) });
   }
 }

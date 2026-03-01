@@ -1,43 +1,92 @@
 [
-    
-    {
-        "name": "small health potion",
-        "type": "consumable",
-        "target": "damage_taken",
-        "value": 5
-    },
-    {
-        "name": "small dopamine potion",
-        "type": "consumable",
-        "target": "dopamine_consumed",
-        "value": 5
-    },
-    {
-        "name": "kitchen knife",
-        "type": "weapon",
-        "baseDmg": 10,
-        "typeDmg": "physical"
-    },
-    {
-        "name": "rusty sword",
-        "type": "weapon",
-        "baseDmg":12,
-        "typeDmg": "physical",
-        "attribute": ["str"]
-    },
-    {
-        "name": "small wand",
-        "type": "weapon",
-        "baseDmg": 12,
-        "typeDmg": "magical",
-        "attribute": ["int", "wis", "cha"]
-    },
-    {
-        "name": "hunter's bow",
-        "type": "weapon",
-        "baseDmg": 10,
-        "typeDmg": "physical",
-        "attribute": ["dex"]
-    }
-
+  {
+    "slug": "minor-health-potion",
+    "name": "Minor Health Potion",
+    "description": "Reduces a small amount of accumulated damage.",
+    "type": "consumable",
+    "family": "health_potion",
+    "tier": 1,
+    "effectTarget": "damage_taken",
+    "effectType": "reduce",
+    "effectValue": 15,
+    "price": 1,
+    "stackable": true,
+    "imageUrl": "/icons/items/health-potion.svg",
+    "active": true
+  },
+  {
+    "slug": "health-potion",
+    "name": "Health Potion",
+    "description": "Reduces accumulated damage.",
+    "type": "consumable",
+    "family": "health_potion",
+    "tier": 2,
+    "effectTarget": "damage_taken",
+    "effectType": "reduce",
+    "effectValue": 30,
+    "price": 1,
+    "stackable": true,
+    "imageUrl": "/icons/items/health-potion.svg",
+    "active": true
+  },
+  {
+    "slug": "greater-health-potion",
+    "name": "Greater Health Potion",
+    "description": "Reduces a large amount of accumulated damage.",
+    "type": "consumable",
+    "family": "health_potion",
+    "tier": 3,
+    "effectTarget": "damage_taken",
+    "effectType": "reduce",
+    "effectValue": 60,
+    "price": 1,
+    "stackable": true,
+    "imageUrl": "/icons/items/health-potion.svg",
+    "active": true
+  },
+  {
+    "slug": "minor-dopamine-potion",
+    "name": "Minor Dopamine Potion",
+    "description": "Reduces a small amount of dopamine consumption.",
+    "type": "consumable",
+    "family": "dopamine_potion",
+    "tier": 1,
+    "effectTarget": "dopamine_consumed",
+    "effectType": "reduce",
+    "effectValue": 12,
+    "price": 1,
+    "stackable": true,
+    "imageUrl": "/icons/items/dopamine-potion.svg",
+    "active": true
+  },
+  {
+    "slug": "dopamine-potion",
+    "name": "Dopamine Potion",
+    "description": "Reduces dopamine consumption.",
+    "type": "consumable",
+    "family": "dopamine_potion",
+    "tier": 2,
+    "effectTarget": "dopamine_consumed",
+    "effectType": "reduce",
+    "effectValue": 24,
+    "price": 10,
+    "stackable": true,
+    "imageUrl": "/icons/items/dopamine-potion.svg",
+    "active": true
+  },
+  {
+    "slug": "greater-dopamine-potion",
+    "name": "Greater Dopamine Potion",
+    "description": "Reduces a large amount of dopamine consumption.",
+    "type": "consumable",
+    "family": "dopamine_potion",
+    "tier": 3,
+    "effectTarget": "dopamine_consumed",
+    "effectType": "reduce",
+    "effectValue": 50,
+    "price": 1,
+    "stackable": true,
+    "imageUrl": "/icons/items/dopamine-potion.svg",
+    "active": true
+  }
 ]

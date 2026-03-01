@@ -1,62 +1,31 @@
-'use client'
-import Header from "@/components/global/Header"
-import Footer from "@/components/global/Footer"
-import { useUserStore } from "@/stores/useUserStore"
-import { useEffect, useState } from "react"
+"use client";
+import UserItems from "@/components/inventory/UserItems";
+import Header from "@/components/global/Header";
+import Footer from "@/components/global/Footer";
+import HitpointsBar from "@/components/userStats/HitpointsBar";
+import DopamineBar from "@/components/userStats/DopamineBar";
+import Item from "@/classes/Item";
 
 export default function Inventory() {
 
-    const currentUser = useUserStore(state => state.currentUser);
-    const [currentInventory, setCurrentInventory] = useState<any>()
-    const [inventoryRendered, setInventoryRendered] = useState(false);
+  
+  return (
+    <>
+      <div className="wrapper overflow-hidden">
+        <Header />
 
-    useEffect(() => {
-        if (!currentUser.id) return;
-
-        fetch(`/api/inventory/${currentUser.id}`)
-        .then(r => r.json())
-        .then(data => {
-            if (data.length<=0) {
-                const array = [];
-                for (let i = 0; i<30; i++) {
-                    array.push({name:""})
-                }
-                setCurrentInventory([...array])
-              
-            } else {
-                setCurrentInventory([...data])
-            }
-        })
-        .then(() => setInventoryRendered(true))
-
-    }, [currentUser.id])
-
-
-       return(
-        <>
-        <div className="wrapper">
-            <Header />
-                <section className=" flex flex-col justify-center items-center">
-                    <div className="mb-5">
-                        <h2 className="text-2xl font-minecraft leading-relaxed">Inventory</h2>
-                    </div>
-                    <div className="h-[90%] w-[50%]  overflow-hidden rounded-lg! p-5">
-
-                        <div id="itemsList" className="flex flex-wrap gap-1 justify-center">
-                            {inventoryRendered && currentInventory.map((item:any, key:string) => (
-                                <figure 
-                                key={key} 
-                                className="w-20! min-w-20! hover:border-3! text-center border-2! cursor-pointer! min-h-full! max-h-full! aspect-square overflow-hidden rounded-lg"
-                                >
-                                    {item.name}
-                                </figure>
-                            ))}
-                        </div>
-
-                    </div>
-                </section>
-            <Footer />
+        <div>
+          <h1 className="font-minecraft text-2xl text-center text-amber-300 mb-5">
+            Inventory
+          </h1>
+          <div className="grid grid-cols-2  max-w-[70%] mx-auto mb-2">
+            <HitpointsBar />
+            <DopamineBar />
+          </div>
+          <UserItems userActionOnItems={new Item().useConsumable} />
         </div>
-        </>
-    )
+        <Footer />
+      </div>
+    </>
+  );
 }

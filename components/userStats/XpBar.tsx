@@ -11,7 +11,7 @@ export default function Bar() {
         <>
         <div className="xpBar">
             <ProgressBar
-            size="md"
+            size="sm"
             color="green"
             borderColor="white"
             className="w-full transition-width! duration-700! ease-in-out!"

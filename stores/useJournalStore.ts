@@ -12,6 +12,8 @@ type UseJournalStore = {
     journalError: string;
     setJournalError : (err:string) => void;
     addNewQuest : (nq : ListType) => void;
+    areQuestsLoaded: boolean;
+    setAreQuestsLoaded: (b: boolean) => void;
 }
 
 
@@ -30,6 +32,8 @@ export const useJournalStore = create<UseJournalStore>((set) => ({
         return {
             allQuests: s.allQuests
         };
-    })
+    }),
+    areQuestsLoaded: false,
+    setAreQuestsLoaded: (b) => set({areQuestsLoaded: b}),
 
 }))

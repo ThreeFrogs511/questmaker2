@@ -3,7 +3,7 @@
 import { useCombatStore } from "@/stores/useCombatStore";
 import { useEffect, useRef, useState } from "react";
 
-export default function combatChoices({gameplay, setSoundEffectAction} : {gameplay:any, setSoundEffectAction:any}) {
+export default function CombatChoices({gameplay, setSoundEffectAction} : {gameplay:any, setSoundEffectAction:any}) {
 
     const userAttacks = [
         {text:"inventory", userDmg:null},

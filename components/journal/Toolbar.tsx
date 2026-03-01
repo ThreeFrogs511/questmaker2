@@ -16,7 +16,6 @@ export default function Toolbar() {
   //store imports
   const currentUser = useUserStore((state) => state.currentUser);
   const whichPage = useJournalStore((state) => state.whichPage);
-  const setWhichPage = useJournalStore((state) => state.setWhichPage);
   const resetPage = useJournalStore((state) => state.resetPage);
   const allQuests = useJournalStore((state) => state.allQuests);
   const setAllQuests = useJournalStore((state) => state.setAllQuests);
@@ -24,8 +23,8 @@ export default function Toolbar() {
 
   
   async function submitToDoClick() {
-    const value = (document.getElementById("todo") as HTMLInputElement).value;
 
+    const value = (document.getElementById("todo") as HTMLInputElement).value;
     if (value && currentUser.id) {
       const quest = new Quest();
       const feedback = await quest.insert(value, currentUser.id);

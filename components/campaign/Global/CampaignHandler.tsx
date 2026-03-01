@@ -207,7 +207,7 @@ export default function CampaignHandler() {
         </div>
 
         {/* content wrapper */}
-        <div className="text-sm! h-[80%] max-h-[80%] lg:text-xl! lg:mt-5 tracking-wide overflow-auto lg:overflow-hidden text-gray-200 lg:leading-relaxed">
+        <div className="text-sm! h-[80%] max-h-[80%] lg:text-base! lg:mt-5 tracking-wide overflow-auto lg:overflow-hidden text-gray-200 lg:leading-relaxed">
           <div className="text-justify mt-2!">
             {/* narration */}
             <div>
@@ -223,7 +223,7 @@ export default function CampaignHandler() {
       </div>
 
       {/* Choices Container */}
-      <div className="  h-[40dvh] max-h[40dvh] lg:h-[50dvh] lg:max-h-[50dvh] overflow-y-auto! p-2 lg:p-8 lg:mt-5  ">
+      <div className="  h-[40dvh] max-h[40dvh] lg:h-[50dvh] lg:max-h-[50dvh] overflow-y-auto! p-2 lg:p-8 lg:mt-5 scrollingContainer ">
         <div className=" grid grid-cols-1">
           {allChoicesAvailable &&
             allChoicesAvailable.map((item, key) => {
@@ -250,7 +250,7 @@ export default function CampaignHandler() {
                       {key + 1}.
                     </span>
                     <div>
-                      <h3 className="text-white font-semibold mb-1 text-sm! lg:text-xl!">
+                      <h3 className="text-white font-semibold mb-1 text-xs! md:text-base!">
                         {parse(item.text)}
                       </h3>
                     </div>

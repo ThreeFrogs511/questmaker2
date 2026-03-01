@@ -9,21 +9,11 @@ import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
 import { useEffect } from "react";
 import { User } from "@/types/types";
 
-type Abilities = {
-  str: number;
-  dex: number;
-  con: number;
-  int: number;
-  wis: number;
-  cha: number;
-};
 
 export default function SummaryCreation({
-  abilityScores,
   indexTitle,
   setIndexTitleAction,
 }: {
-  abilityScores: Abilities;
   indexTitle: number;
   setIndexTitleAction: React.Dispatch<React.SetStateAction<number>>;
 }) {
@@ -42,6 +32,7 @@ export default function SummaryCreation({
   const login = useUserStore((state) => state.login);
   const draft = useCharacterCreationStore((state) => state.draft);
   const updateDraft = useCharacterCreationStore((state) => state.updateDraft);
+  const abilityScores = useCharacterCreationStore((state) => state.abilityScores)
 
   const classes = presets.classes;
   async function handleCharacterCreation2() {
@@ -52,12 +43,11 @@ export default function SummaryCreation({
       draft.id &&
       draft.gender
     ) {
-      const player = new Character({ ...draft }, updateDraft);
+      const player = new Character({ ...draft });
       const feedback = await player.completeProfile(draft, classes);
       if (feedback.success) {
         const newUser: User = player.buildUserFromDraft(draft);
         login(newUser);
-        // resetDraft({});
         router.push("/journal");
       }
     } else {
