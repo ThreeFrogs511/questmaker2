@@ -73,7 +73,7 @@ export default function Menu({setIsMenuOpenAction} : {setIsMenuOpenAction: React
 
           {/* store */}
           <div
-            onPointerDown={() => navigationHandler("/store")}
+            onPointerDown={() => navigationHandler("/vendor")}
             className="cursor-pointer w-full flex hover:text-amber-300!"
           >
             <p className={style}>Store</p>
