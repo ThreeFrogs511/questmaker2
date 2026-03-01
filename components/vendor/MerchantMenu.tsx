@@ -14,7 +14,7 @@ export default function MerchantMenu({
 
   return (
     <>
-      <div className="h-[80%]  w-full! lg:w-[70%]! flex flex-col md:flex-row items-center gap-2">
+      <div className="h-[70%] lg:h-full! w-full! lg:w-[70%]! flex flex-col md:flex-row items-center gap-2">
         {vendorChoices.map((item: string, index: number) => (
           <div
             key={index}
@@ -38,7 +38,7 @@ export default function MerchantMenu({
             onMouseLeave={() => setHover("")}
             className="w-[90%] md:w-[50%] h-full cursor-pointer hover:border-amber-300! border border-white! rounded-lg flex flex-col justify-center items-center gap-5"
           >
-            <div className="w-[80%] ">
+            <div className="w-[50%] md:w-[80%] ">
               <Image
                 src={icons[index]}
                 width={200}
