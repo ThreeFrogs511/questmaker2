@@ -70,7 +70,7 @@ export async function POST(request: Request) {
       const code = err["code"];
       const constraint = err["constraint"] ?? err["constraint_name"];
 
-      if (code === "23505" && constraint === "users_email_unique") {
+      if (code === "23505" && constraint === "unique_email") {
         return NextResponse.json({ err: "Email already in use" });
       }
     }
