@@ -59,7 +59,17 @@ body {
   .ProgressBar-module__pixelProgressbar___naQch {
   transition: width 1s ease !important;
   will-change: width !important;
+
+
 }
+
+.ProgressBar-module__pixelProgressbarContainer___eQrfa {
+  border-width: 2px !important;
+  border-color: white !important;    
+  border-radius: 100% !important;  
+}
+
+
 
 .Input-module__pixelContainer___q-uvd {
   border-width: 0.2rem !important;

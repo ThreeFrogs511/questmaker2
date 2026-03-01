@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 
 export default function Menu({setIsMenuOpenAction} : {setIsMenuOpenAction: React.Dispatch<React.SetStateAction<boolean>>}) {
   const router = useRouter();
-  const style = "font-minecraft text-3xl! sm:text-3xl! md:ml-10!";
+  const style = "font-minecraft text-xl! sm:text-2xl! md:ml-10!";
   const pathname = usePathname();
 
 
@@ -32,12 +32,12 @@ export default function Menu({setIsMenuOpenAction} : {setIsMenuOpenAction: React
   return (
     <>
       <div
-        className=" relative h-full w-full px-4 sm:px-6 md:px-10 lg:px-20 xl:px-40 2xl:px-60 
-        max-w-400 mx-auto flex items-end"
+        className=" relative h-full w-full px-4 sm:px-6 md:px-10 lg:px-20 
+        max-w-400 mx-auto flex items-center"
       >
         <nav
-          className="h-[95%] max-h-full! flex flex-col gap-15 md-gap-5! justify-center! md:justify-center! items-center w-full px-4
-            sm:px-1 md:px-5 lg:px-20 xl:px-40 2xl:px-60 max-w-400 mx-auto"
+          className="h-[70%] shrink flex flex-col justify-evenly! items-center w-full px-4
+            sm:px-1 md:px-5 lg:px-20 max-w-400 mx-auto "
         >
           {/* journal */}
           <div
@@ -61,6 +61,14 @@ export default function Menu({setIsMenuOpenAction} : {setIsMenuOpenAction: React
             className="cursor-pointer w-full flex hover:text-amber-300!"
           >
             <p className={style}>Character Sheet</p>
+          </div>
+
+          {/* Inventory */}
+          <div
+            onPointerDown={() => navigationHandler("/inventory")}
+            className="cursor-pointer w-full flex hover:text-amber-300!"
+          >
+            <p className={style}>Inventory</p>
           </div>
 
           {/* store */}

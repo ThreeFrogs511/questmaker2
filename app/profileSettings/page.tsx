@@ -39,25 +39,7 @@ export default function ProfileSettings() {
       .catch((err) => console.log(err));
   }, []);
 
-  //loading the email
-  // useEffect(() => {
-  //   if (!currentUser || !currentUser.id || flag.current === true) return;
-  //   flag.current = true;
-  //   console.log(currentUser.id);
-
-  //   fetch(`/api/profileSettings/${currentUser.id}`)
-  //     .then((r) => r.json())
-  //     .then((data) => {
-  //       if (data.success) {
-  //         setEmail(data.email);
-  //         console.log(data.email);
-  //       } else {
-  //         console.log("Error:", data.err);
-  //       }
-  //     })
-  //     .catch((data) => console.log("Error:", data.err))
-  //     .finally(() => (flag.current = false));
-  // }, [currentUser, currentUser.id]);
+ 
 
   async function submitProfileChanges() {
     if (flag.current === true) return;
@@ -128,9 +110,9 @@ export default function ProfileSettings() {
             bg="#000000"
             textColor="#ffffff"
             borderColor="#ffffff"
-            className="lg:w-[70%]! w-[90%]! h-[90%] bg-black flex flex-col justify-around gap-5"
+            className="lg:w-[70%]! w-[90%]! h-[90%] bg-black flex flex-col justify-around gap-5 p-3"
           >
-            <h1 className=" text-2xl! font-bold mt-2! mb-3 lg:mb-5! text-center font-minecraft">
+            <h1 className=" text-xl! font-bold mt-2! mb-3 lg:mb-5! text-center font-minecraft">
               Profile
             </h1>
 
@@ -143,7 +125,7 @@ export default function ProfileSettings() {
                   textColor="#ffffff"
                   borderColor="#ffffff"
                   defaultValue={currentUser?.email ?? "" }
-                  className="w-[80%] lg:w-[50%]"
+                  className="w-[80%] lg:w-[50%] text-xs!"
                   onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
@@ -155,7 +137,8 @@ export default function ProfileSettings() {
                   bg="#000000"
                   textColor="#ffffff"
                   borderColor="#ffffff"
-                  className="w-[80%] lg:w-[50%]"
+                  placeholder="Enter your current password"
+                  className="w-[80%] lg:w-[50%] text-xs!"
                   onChange={(e) => setCurrentPassword(e.target.value)}
                 />
               </div>
@@ -166,18 +149,19 @@ export default function ProfileSettings() {
                   bg="#000000"
                   textColor="#ffffff"
                   borderColor="#ffffff"
-                  className="w-[80%] lg:w-[50%]"
+                  placeholder="Leave empty to not change it"
+                  className="w-[80%] lg:w-[50%] text-xs!"
                   onChange={(e) => setNewPassword(e.target.value)}
                 />
               </div>
             </div>
 
-            <div className="flex flex-col items-center gap-1">
+            <div className="flex flex-col lg:flex-row! justify-center items-center gap-1">
               <Button
                 bg="#000000"
                 textColor="#ffffff"
                 borderColor="#ffffff"
-                className="w-[80%] lg:w-[50%]"
+                className="w-[80%] lg:w-[30%]"
                 onPointerDown={submitProfileChanges}
               >
                 Edit
@@ -186,7 +170,7 @@ export default function ProfileSettings() {
                 bg="#000000"
                 textColor="red"
                 borderColor="red"
-                className="w-[80%] lg:w-[50%]"
+                className="w-[80%] lg:w-[30%]"
                 onPointerDown={() => openModal(true)}
               >
                 Delete account

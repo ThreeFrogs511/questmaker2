@@ -167,4 +167,12 @@ export type Store = {
   stackable: boolean | null;
   tier: number | null;
   type: string | null;
+  quantity?: number | null;
 };
+
+export type Item = {
+  inventory_id: number | null;
+  slug: string | null;
+  user_id: number | null;
+  quantity: number | null
+}

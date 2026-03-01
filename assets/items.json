@@ -9,7 +9,7 @@
     "effectTarget": "damage_taken",
     "effectType": "reduce",
     "effectValue": 15,
-    "price": 60,
+    "price": 1,
     "stackable": true,
     "imageUrl": "/icons/items/health-potion.svg",
     "active": true
@@ -24,7 +24,7 @@
     "effectTarget": "damage_taken",
     "effectType": "reduce",
     "effectValue": 30,
-    "price": 120,
+    "price": 1,
     "stackable": true,
     "imageUrl": "/icons/items/health-potion.svg",
     "active": true
@@ -39,7 +39,7 @@
     "effectTarget": "damage_taken",
     "effectType": "reduce",
     "effectValue": 60,
-    "price": 260,
+    "price": 1,
     "stackable": true,
     "imageUrl": "/icons/items/health-potion.svg",
     "active": true
@@ -54,7 +54,7 @@
     "effectTarget": "dopamine_consumed",
     "effectType": "reduce",
     "effectValue": 12,
-    "price": 70,
+    "price": 1,
     "stackable": true,
     "imageUrl": "/icons/items/dopamine-potion.svg",
     "active": true
@@ -69,7 +69,7 @@
     "effectTarget": "dopamine_consumed",
     "effectType": "reduce",
     "effectValue": 24,
-    "price": 140,
+    "price": 10,
     "stackable": true,
     "imageUrl": "/icons/items/dopamine-potion.svg",
     "active": true
@@ -84,7 +84,7 @@
     "effectTarget": "dopamine_consumed",
     "effectType": "reduce",
     "effectValue": 50,
-    "price": 300,
+    "price": 1,
     "stackable": true,
     "imageUrl": "/icons/items/dopamine-potion.svg",
     "active": true

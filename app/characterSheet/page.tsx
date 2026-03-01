@@ -16,21 +16,21 @@ export default function CharacterSheet() {
     <>
       <div className="wrapper">
         <Header />
-
-        <section id="profile" className="w-full h-full flex items-center">
+      
+        <section id="profile" className="w-full h-full flex">
           <div
             className="sm:w-4/5!
                         md:w-3/4!
+                        w-full!
                         mx-auto
-                        lg:h-[90%]!
-                        max-h-full
+                        h-full
                         grid
-                        w-full
                         grid-cols-1
-                        lg:grid-cols-2
-                        gap-4"
+                        xl:grid-cols-2
+                        gap-4
+                        "
           >
-            <div className="flex flex-col mb-3!">
+            <div className="flex flex-col gap-4! xl:gap-0! h-full! ">
               {/* main stats */}
 
               <Card
@@ -38,14 +38,14 @@ export default function CharacterSheet() {
                 textColor="white"
                 borderColor="white"
                 shadowColor="white"
-                className="text-center mb-10! lg:mb-2!"
+                className="text-center "
               >
-                <div className="p-2 ">
+                <div className="p-2 lg:p-0!">
                   <ul className="ml-1! flex flex-col justify-evenly items-start">
                     <li className="text-base! w-full md:text-lg! grid grid-cols-2">
                       <div>Username:</div>
                       <div className="text-amber-300">
-                        {currentUser?.username}
+                        {currentUser?.username ?? "Loading"}
                       </div>
                     </li>
                     <li className="text-base! w-full md:text-lg! grid grid-cols-2">
@@ -77,25 +77,25 @@ export default function CharacterSheet() {
                 textColor="white"
                 borderColor="white"
                 shadowColor="white"
-                className="p-2! text-center grow flex flex-col justify-evenly  "
+                className="p-2! lg:p-0! text-center flex flex-col justify-evenly grow "
               >
                 <div className="mb-5! mt-2! progressBarContainer ">
                   <span className="text-base!  md:text-lg!">Hp</span>
-                  <div className="w-[95%] mx-auto my-3">
+                  <div className="w-[95%] mx-auto mb-3">
                     <Hitpoints />
                   </div>
                 </div>
 
                 <div className="mb-5! progressBarContainer ">
                   <span className="text-base!  md:text-lg!">Dopamine</span>
-                  <div className="w-[95%] mx-auto my-3">
+                  <div className="w-[95%] mx-auto mb-3">
                     <DopamineBar />
                   </div>
                 </div>
 
                 <div className="mb-5!">
                   <span className="text-base!  md:text-lg!">Xp</span>
-                  <div className="w-[95%] mx-auto my-3">
+                  <div className="w-[95%] mx-auto mb-3">
                     <Progress />
                   </div>
                 </div>
@@ -108,7 +108,7 @@ export default function CharacterSheet() {
               textColor="white"
               borderColor="white"
               shadowColor="white"
-              className="text-center flex flex-col justify-evenly mb-5!"
+              className="text-center flex flex-col justify-evenly"
             >
               <p className="mb-3! text-lg! sm:text-lg! md:text-2xl! pt-2 ">
                 User stats

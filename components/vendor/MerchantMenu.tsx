@@ -43,6 +43,7 @@ export default function MerchantMenu({
               height={200}
               className="shrink-0"
               alt="vendor action"
+              loading="eager"
             />
             <p
               className={`font-minecraft text-sm! md:text-xl ${item === hover ? "text-amber-300" : "text-white"}`}

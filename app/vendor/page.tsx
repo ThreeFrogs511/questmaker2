@@ -6,8 +6,10 @@ import { merchantGreetings } from "@/assets/merchantGreetings";
 import MerchantBuy from "@/components/vendor/MerchantBuy";
 import MerchantMenu from "@/components/vendor/MerchantMenu";
 import MerchantSell from "@/components/vendor/MerchantSell";
+import VendorToolbar from "@/components/vendor/VendorToolbar";
 
-export default function Store() {
+
+export default function Vendor() {
 
   const title = "Guilbert's Store";
   const [isTyping, setIsTyping] = useState(true);
@@ -39,7 +41,7 @@ export default function Store() {
     <>
       <div className="wrapper">
         <Header />
-        <section className=" w-full h-full! max-h-full overflow-hidden flex flex-col items-center">
+        <section className=" w-full  h-full! max-h-full overflow-hidden flex flex-col mx-auto items-center">
           <div className="mb-5 flex flex-col items-center">
             <h2 className="text-xl! lg:text-2xl! font-minecraft leading-relaxed text-amber-300">
               {title}
@@ -48,6 +50,7 @@ export default function Store() {
               {greetings}
             </h3>
           </div>
+          {(choosePurchase || chooseSell) && <VendorToolbar setChooseAction={choosePurchase ? setChoosePurchase : setChooseSell}/>}
           {(!choosePurchase && !chooseSell) && <MerchantMenu setChoosePurchaseAction={setChoosePurchase} setChooseSellAction={setChooseSell}/>}
           {(choosePurchase && !chooseSell) && <MerchantBuy setChoosePurchaseAction={setChoosePurchase}/>}
           {(!choosePurchase && chooseSell) && <MerchantSell setChooseSellAction={setChooseSell}/>}

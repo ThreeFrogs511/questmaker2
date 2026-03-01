@@ -21,6 +21,7 @@ export default function Journal() {
   const currentUser = useUserStore((state) => state.currentUser);
   const resetDraft = useCharacterCreationStore((state) => state.resetDraft);
   const journalError = useJournalStore((state) => state.journalError);
+  const setJournalError = useJournalStore((state) => state.setJournalError);
   const whichPage = useJournalStore((state) => state.whichPage);
   const setWhichPage = useJournalStore((state) => state.setWhichPage);
   const resetPage = useJournalStore((state) => state.resetPage);
@@ -31,12 +32,18 @@ export default function Journal() {
   const areQuestsLoaded = useJournalStore((state) => state.areQuestsLoaded);
   // warns us when the quests are all fetched
 
+
   const journal = ["Current quests", "Archived quests", "All quests"];
  
 
   useEffect(() => {
     resetDraft({});
+    
   });
+
+  useEffect(() => {
+    setJournalError("");
+  }, [])
 
   // sorting list based on the page number
   useEffect(() => {
