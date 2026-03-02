@@ -178,7 +178,7 @@ export default function ProfileSettings() {
                 Delete account
               </Button>
             </div>
-             <p
+             <p 
                 className={
                   error.trim()
                     ? `h-10 text-red-600 text-xs text-center`
