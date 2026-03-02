@@ -100,6 +100,7 @@ export default class Engine {
             return n.text;
           };
         });
+        this.accumulatedXp = this.accumulatedXp + 10;
         this.updateNode(currentChoice.next);
 
       //normal nodes
@@ -141,12 +142,10 @@ export default class Engine {
       });
       const feedback = await response.json();
       if (feedback.success ) {
-        console.log("user mis à jour")
-        console.log(currentUser)
         return {success:true}
         
       } else {
-        console.log("erreur lors de la mise à jour")
+
         return {success:false}
       }
     }

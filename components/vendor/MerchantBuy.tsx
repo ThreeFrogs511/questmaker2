@@ -9,9 +9,9 @@ import { useInventoryStore } from "@/stores/useInventoryStore";
 
 
 export default function MerchantBuy({
-  setChoosePurchaseAction,
+  setNotEnoughMoneyAction,
 }: {
-  setChoosePurchaseAction: React.Dispatch<React.SetStateAction<boolean>>;
+  setNotEnoughMoneyAction: React.Dispatch<React.SetStateAction<boolean>>;
 }) {
   const currentUser = useUserStore((state) => state.currentUser);
   const updateStats = useUserStore((state) => state.updateStats)
@@ -33,7 +33,7 @@ export default function MerchantBuy({
     });
     const feedback = await r.json();
     if (feedback?.success) {
-      console.log(feedback.items)
+      setNotEnoughMoneyAction(false);
       updateInventory(feedback.items);
       updateStats({coins:feedback.coins});
       play();
@@ -43,7 +43,7 @@ export default function MerchantBuy({
     }
 
     if (feedback?.broke) {
-      
+      setNotEnoughMoneyAction(true);
     }
     isBuying.current = false;
   };
@@ -51,7 +51,6 @@ export default function MerchantBuy({
   
   return (
     <div className=" lg:w-[70%]! h-full! flex flex-col w-full overflow-hidden grow">
-      {/* <VendorToolbar setChooseAction={setChoosePurchaseAction} /> */}
       <div className="scrollingContainer h-full! flex flex-col gap-5 md:gap-2 ">
         {items?.map((item: Store, index: number) => (
           <figure

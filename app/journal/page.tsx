@@ -63,9 +63,13 @@ export default function Journal() {
           setDisplayedQuests(allQuests);
           break;
       }
-      turnPage();
+   
     }
   }, [whichPage, allQuests]);
+
+  useEffect(() => {
+       turnPage();
+  }, [whichPage])
 
   return (
     <>

@@ -6,7 +6,10 @@ import HitpointsBar from "@/components/userStats/HitpointsBar";
 import DopamineBar from "@/components/userStats/DopamineBar";
 import Item from "@/classes/Item";
 
+
+
 export default function Inventory() {
+
 
   
   return (

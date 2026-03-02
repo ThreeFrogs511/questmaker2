@@ -90,3 +90,42 @@ body {
 .modalDeletion {
   background-color: rgba(0, 0, 0, 0.7);
 }
+
+
+/* Animation très subtile : léger va-et-vient + flash jaune -> rouge */
+@keyframes subtleErrorNudge {
+  0% {
+    transform: translateX(0);
+    color: #ffd400; /* jaune */
+  }
+  15% {
+    transform: translateX(2px);
+    color: #ff3b30; /* rouge (flash bref) */
+  }
+  30% {
+    transform: translateX(-2px);
+    color: #ff3b30;
+  }
+  45% {
+    transform: translateX(2px);
+    color: #ff3b30;
+  }
+  60% {
+    transform: translateX(-1px);
+    color: #ffd400;
+  }
+  100% {
+    transform: translateX(0);
+    color: #ffd400;
+  }
+}
+
+/* Classe à appliquer au moment de l’erreur */
+.error-animate {
+  animation: subtleErrorNudge 420ms ease-in-out 1;
+}
+
+/* Optionnel: évite que ça bouge la mise en page si l’élément est inline */
+.error-animate {
+  display: inline-block;
+}   

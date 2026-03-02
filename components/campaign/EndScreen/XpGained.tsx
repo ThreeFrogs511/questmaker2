@@ -36,10 +36,6 @@ export default function XpGained(
             .then(() => console.log("valeur de accXp = " + accXp))
     }, [accXp, hasXpBeenUpdated, currentUser])
 
-    // useEffect(() => {
-    //     if (!currentUser.xp) return;
-    //      console.log("xp après la promise : " + currentUser.xp)
-    // },[currentUser.xp])
 
     return(
         <>

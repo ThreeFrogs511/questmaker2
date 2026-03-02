@@ -17,6 +17,7 @@ export default function Vendor() {
   const [greetings, setGreetings] = useState("");
   const [choosePurchase, setChoosePurchase] = useState(false);
   const [chooseSell, setChooseSell] = useState(false);
+  const [notEnoughMoney, setNotEnoughMoney] = useState(false);
 
 
   useEffect(() => {
@@ -50,9 +51,9 @@ export default function Vendor() {
               {greetings}
             </h3>
           </div>
-          {(choosePurchase || chooseSell) && <VendorToolbar setChooseAction={choosePurchase ? setChoosePurchase : setChooseSell}/>}
+          {(choosePurchase || chooseSell) && <VendorToolbar setChooseAction={choosePurchase ? setChoosePurchase : setChooseSell} notEnoughMoney={notEnoughMoney} setNotEnoughMoneyAction={setNotEnoughMoney}/>}
           {(!choosePurchase && !chooseSell) && <MerchantMenu setChoosePurchaseAction={setChoosePurchase} setChooseSellAction={setChooseSell}/>}
-          {(choosePurchase && !chooseSell) && <MerchantBuy setChoosePurchaseAction={setChoosePurchase}/>}
+          {(choosePurchase && !chooseSell) && <MerchantBuy setNotEnoughMoneyAction={setNotEnoughMoney}/>}
           {(!choosePurchase && chooseSell) && <MerchantSell setChooseSellAction={setChooseSell}/>}
         </section>
         <Footer />

@@ -4,10 +4,9 @@ import Image from "next/image";
 import { Store } from "@/types/types";
 import items from "@/assets/items.json";
 import { useEffect } from "react";
-import { useState, useRef } from "react";
+import { useState} from "react";
 import { usePathname } from "next/navigation";
-import { useUserStore } from "@/stores/useUserStore";
-import HitpointsBar from "../userStats/HitpointsBar";
+
 
 export default function UserItems({userActionOnItems} : {userActionOnItems: (item:Store, id?:number) => void}) {
 

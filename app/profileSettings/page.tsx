@@ -10,7 +10,7 @@ export default function ProfileSettings() {
   const router = useRouter();
   const currentUser = useUserStore((state) => state.currentUser);
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(currentUser?.email);
   const [modal, openModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState<string | null>(null);
   const [newPassword, setNewPassword] = useState<string | null>(null);
@@ -45,6 +45,8 @@ export default function ProfileSettings() {
     if (flag.current === true) return;
     setError("");
     setValid("");
+
+    console.log(email)
 
     const token = document.cookie
       .split("; ")
@@ -124,7 +126,7 @@ export default function ProfileSettings() {
                   bg="#000000"
                   textColor="#ffffff"
                   borderColor="#ffffff"
-                  defaultValue={currentUser?.email ?? "" }
+                  defaultValue={email ?? " " }
                   className="w-[80%] lg:w-[50%] text-xs!"
                   onChange={(e) => setEmail(e.target.value)}
                 />
@@ -175,16 +177,16 @@ export default function ProfileSettings() {
               >
                 Delete account
               </Button>
-              <p
+            </div>
+             <p
                 className={
                   error.trim()
-                    ? `h-3 text-red-600 my-2`
-                    : `h-3 text-green-400 my-2`
+                    ? `h-10 text-red-600 text-xs text-center`
+                    : `h-10 text-green-400 text-xs text-center`
                 }
               >
                 {error.trim() === "" ? valid : error}
               </p>
-            </div>
           </Card>
         </div>
         <Footer />

@@ -2,6 +2,7 @@ import { Store, User } from "@/types/types";
 import { useUserStore } from "@/stores/useUserStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
 
+
 export default class Item  {
 
 
@@ -29,6 +30,7 @@ export default class Item  {
             if (feedback.success) {
                 updateStats({[effectTarget]: Number(effectValue)});
                 updateInventory(feedback.inventory);
+            
             } 
             console.log(feedback)
         }
