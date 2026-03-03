@@ -9,7 +9,7 @@ import { useUserStore } from "@/stores/useUserStore";
 import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
 import { useJournalStore } from "@/stores/useJournalStore";
 import useSound from "use-sound";
-
+import Loading from "../loading";
 const PressStartFont = Press_Start_2P({
   subsets: ["latin"],
   weight: "400",
@@ -136,7 +136,7 @@ export default function Journal() {
                   <p>No quests to display.</p>
                 </div>
               ) : (
-                <p className="text-center w-full">Loading quests...</p>
+                <Loading />
               )}
             </div>
           )}

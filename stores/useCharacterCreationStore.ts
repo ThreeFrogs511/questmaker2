@@ -119,7 +119,7 @@ export const useCharacterCreationStore = create<CharacterCreationStore>(
       set((state) => {
         return { pointsToSpare: state.pointsToSpare + delta };
       }),
-    resetPointsToSpare: (points) => set({ pointsToSpare: points }),
+    resetPointsToSpare: (points) => set({ pointsToSpare: points })
 
   }),
 );

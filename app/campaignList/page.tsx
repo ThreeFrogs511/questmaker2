@@ -5,6 +5,7 @@ import Header from "@/components/global/Header";
 import Footer from "@/components/global/Footer";
 import { useUserStore } from "@/stores/useUserStore";
 import { useRouter } from "next/navigation";
+import Loading from "../loading";
 
 export default function CampaignList() {
   type List = {
@@ -41,6 +42,7 @@ export default function CampaignList() {
               : "Resume your adventure"}
           </h1>
 
+
           <Card
             bg="black"
             textColor="white"
@@ -72,7 +74,7 @@ export default function CampaignList() {
           </Card>
         </div>
       ) : (
-        <div className="h-full w-full"></div>
+        <Loading />
       )}
 
       <Footer />

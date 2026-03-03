@@ -10,13 +10,15 @@ export default function ProfileSettings() {
   const router = useRouter();
   const currentUser = useUserStore((state) => state.currentUser);
 
-  const [email, setEmail] = useState(currentUser?.email);
   const [modal, openModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState<string | null>(null);
   const [newPassword, setNewPassword] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [valid, setValid] = useState("");
   const flag = useRef(false);
+  const defaultEmail = currentUser?.email ?? "";
+
+
 
   useEffect(() => {
     const token = document.cookie
@@ -45,8 +47,7 @@ export default function ProfileSettings() {
     if (flag.current === true) return;
     setError("");
     setValid("");
-
-    console.log(email)
+    const chosenEmail = (document.getElementById("mail") as HTMLInputElement).value;
 
     const token = document.cookie
       .split("; ")
@@ -60,7 +61,7 @@ export default function ProfileSettings() {
         "X-CSRF-Token": token ?? "",
       },
       body: JSON.stringify({
-        email: email,
+        email: chosenEmail,
         currentPassword: currentPassword,
         newPassword: newPassword,
       }),
@@ -68,13 +69,15 @@ export default function ProfileSettings() {
       .then((r) => r.json())
       .then((data) => {
         if (data.success) {
-          setEmail(data.newEmail);
+          // setEmail(data.newEmail);
           setValid("Profile edited successfully");
         } else {
           setError(data.err);
         }
       });
   }
+
+
 
   async function deleteAccount() {
     if (flag.current === true) return;
@@ -124,11 +127,11 @@ export default function ProfileSettings() {
                 <Input
                   type="email"
                   bg="#000000"
+                  id="mail"
                   textColor="#ffffff"
-                  borderColor="#ffffff"
-                  defaultValue={email ?? " " }
+                  borderColor="#ffffff"  
+                  defaultValue={defaultEmail}
                   className="w-[80%] lg:w-[50%] text-xs!"
-                  onChange={(e) => setEmail(e.target.value)}
                 />
               </div>
 

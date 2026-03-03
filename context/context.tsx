@@ -41,6 +41,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
             updateDraft({ id: data.user.id, email: data.user.email });
             router.push("/characterCreation");
           } else {
+            console.log('data:', data.user)
             login({ ...data.user });
 
             // handling quests and journal
@@ -84,7 +85,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
         setIsFetchingDone(true);
         // setIsMenuOpen(false);
       });
-  }, [pathname, router, login, updateDraft, setIsMenuOpen, setAreQuestsLoaded]);
+  }, [pathname, router, login, updateDraft, setIsMenuOpen, setAreQuestsLoaded, updateInventory]);
 
   return (
     <>
