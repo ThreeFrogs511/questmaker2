@@ -11,6 +11,8 @@ import { useInventoryStore } from "@/stores/useInventoryStore";
 
 type userContextType = {
   isFetchingDone: boolean;
+  isProfileCompleted: boolean;
+  isAuthenticated: boolean;
 };
 
 const UserDataContext = createContext<userContextType | null>(null);
@@ -23,7 +25,11 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const setIsMenuOpen = useUserStore((state) => state.setIsMenuOpen);
   const setAreQuestsLoaded = useJournalStore((state) => state.setAreQuestsLoaded);
   const updateInventory = useInventoryStore((state)=> state.updateInventory);
+
+  // states for user data and fetching status
   const [isFetchingDone, setIsFetchingDone] = useState(false);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [isProfileCompleted, setIsProfileCompleted] = useState(false);
 
   useEffect(() => {
     fetch("/api/me", {
@@ -33,15 +39,17 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
     })
       .then((r) => r.json())
       .then((data) => {
-        // console.log(data);
+    
         //if the user is authenticated
         if (data.authenticated) {
           // handling existing but incomplete profile
           if (data.user.profile_completed === false) {
+            setIsProfileCompleted(false);
             updateDraft({ id: data.user.id, email: data.user.email });
             router.push("/characterCreation");
           } else {
             console.log('data:', data.user)
+            setIsProfileCompleted(true);
             login({ ...data.user });
 
             // handling quests and journal
@@ -63,6 +71,8 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
             }
 
           }
+          setIsAuthenticated(true);
+          
         }
 
         //not authenticated
@@ -89,7 +99,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <UserDataContext.Provider value={{ isFetchingDone }}>
+      <UserDataContext.Provider value={{ isFetchingDone, isAuthenticated, isProfileCompleted }}>
         {isFetchingDone && children }
       </UserDataContext.Provider>
     </>

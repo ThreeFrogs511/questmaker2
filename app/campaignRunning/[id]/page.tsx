@@ -1,60 +1,65 @@
-'use client'
-import { useEffect,  useState} from "react";
+"use client";
+import { useEffect, useState } from "react";
 import CampaignHandler from "@/components/campaign/Global/CampaignHandler";
 import Loading from "@/app/loading";
 // main types
 import { useNarrationStore } from "@/stores/useNarrationStore";
-import { useRouter } from 'next/navigation';
+import { useRouter } from "next/navigation";
+import { useUserContext } from "@/context/context";
 
+export default function CampaignRunning({params,}: {
+  params: Promise<{ id: string }>;
+}) {
+  const router = useRouter();
 
-export default function CampaignRunning({params} : {params: Promise<{ id: string }>}) {
+  const {isAuthenticated, isProfileCompleted} = useUserContext();
 
-    const router = useRouter();
+  if (!isAuthenticated || !isProfileCompleted) {
+    return <Loading />;
+  }
 
-    async function startNewCampaign() {
-        const {id} = await params;
+  async function startNewCampaign() {
+    const { id } = await params;
 
-        if (!id) router.back();
+    if (!id) router.back();
 
-        const response = await fetch(`/api/campaigns/${id}`);
-        const result = await response.json();
+    const response = await fetch(`/api/campaigns/${id}`);
+    const result = await response.json();
 
-        return result;
-    }
+    return result;
+  }
 
-    // narration store
-    const currentCampaign = useNarrationStore(state => state.currentCampaign);
-    const setCurrentCampaign = useNarrationStore(state => state.setCurrentCampaign);
-    const setCampaignTitle = useNarrationStore(state => state.setCampaignTitle);
-    const currentNode = useNarrationStore(state => state.currentNode);
-    const updateNode = useNarrationStore(state => state.updateNode);
+  // narration store
+  const currentCampaign = useNarrationStore((state) => state.currentCampaign);
+  const setCurrentCampaign = useNarrationStore(
+    (state) => state.setCurrentCampaign,
+  );
+  const setCampaignTitle = useNarrationStore((state) => state.setCampaignTitle);
+  const currentNode = useNarrationStore((state) => state.currentNode);
+  const updateNode = useNarrationStore((state) => state.updateNode);
 
-    const [hasCampaignLaunched, setHasCampaignLaunched] = useState(false);
+  const [hasCampaignLaunched, setHasCampaignLaunched] = useState(false);
 
-    useEffect(() => {
-        startNewCampaign()
-        .then(data => { 
+  useEffect(() => {
+    startNewCampaign()
+      .then((data) => {
         setCurrentCampaign(data.nodes);
         const first = Object.keys(data.nodes)[0];
         const title = data.meta.title;
-        const values = {first:first, title:title};
+        const values = { first: first, title: title };
         return values;
-        })
-        .then(values => { 
-            updateNode(values.first);
-            // updateNode("remembering_how_to_fight")
-            setCampaignTitle(values.title);
-            })
-        .catch(err => console.log(err));
-    }, []);
+      })
+      .then((values) => {
+        updateNode(values.first);
+        // updateNode("remembering_how_to_fight")
+        setCampaignTitle(values.title);
+      })
+      .catch((err) => console.log(err));
+  }, []);
 
-    useEffect(() => {
-        if (currentCampaign && currentNode) setHasCampaignLaunched(true);
-    }, [currentCampaign, currentNode])
+  useEffect(() => {
+    if (currentCampaign && currentNode) setHasCampaignLaunched(true);
+  }, [currentCampaign, currentNode]);
 
-    return (
-        <>
-            {hasCampaignLaunched ? <CampaignHandler /> : <Loading />}
-        </>
-    )
+  return <>{hasCampaignLaunched ? <CampaignHandler /> : <Loading />}</>;
 }

@@ -5,11 +5,18 @@ import Footer from "@/components/global/Footer";
 import HitpointsBar from "@/components/userStats/HitpointsBar";
 import DopamineBar from "@/components/userStats/DopamineBar";
 import Item from "@/classes/Item";
+import Loading from "../loading";
+import { useUserContext } from "@/context/context";
 
 
 
 export default function Inventory() {
 
+  const {isAuthenticated, isProfileCompleted} = useUserContext();
+
+  if (!isAuthenticated || !isProfileCompleted) {
+    return <Loading />;
+  }
 
   
   return (

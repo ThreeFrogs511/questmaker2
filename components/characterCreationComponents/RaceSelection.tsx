@@ -48,8 +48,8 @@ export default function RaceSelection({
                 setRaceDescription(c.description);
               }}
               className={` px-4 max-h-full py-1! lg:py-5! xl:py-5! 2xl:py-5! 
-                        text-center cursor-pointer text-sm! sm:text-base! md:text-lg! lg:text-xl! 
-                        xl:text-xl! 2xl:text-2xl! text-wrap `}
+                        text-center cursor-pointer text-sm! sm:text-base! md:text-lg! lg:text-base! 
+                        2xl:text-xl! text-wrap `}
             >
               {c.race}
             </Button>

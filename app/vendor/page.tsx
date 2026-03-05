@@ -7,6 +7,8 @@ import MerchantBuy from "@/components/vendor/MerchantBuy";
 import MerchantMenu from "@/components/vendor/MerchantMenu";
 import MerchantSell from "@/components/vendor/MerchantSell";
 import VendorToolbar from "@/components/vendor/VendorToolbar";
+import Loading from "../loading";
+import { useUserContext } from "@/context/context";
 
 
 export default function Vendor() {
@@ -19,6 +21,11 @@ export default function Vendor() {
   const [chooseSell, setChooseSell] = useState(false);
   const [notEnoughMoney, setNotEnoughMoney] = useState(false);
 
+    const {isAuthenticated, isProfileCompleted} = useUserContext();
+  
+    if (!isAuthenticated || !isProfileCompleted) {
+      return <Loading />;
+    }
 
   useEffect(() => {
     const selectedGreetings =

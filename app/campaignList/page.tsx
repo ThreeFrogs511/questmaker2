@@ -6,6 +6,7 @@ import Footer from "@/components/global/Footer";
 import { useUserStore } from "@/stores/useUserStore";
 import { useRouter } from "next/navigation";
 import Loading from "../loading";
+import { useUserContext } from "@/context/context";
 
 export default function CampaignList() {
   type List = {
@@ -21,6 +22,13 @@ export default function CampaignList() {
   const currentUser = useUserStore((state) => state.currentUser);
   const router = useRouter();
 
+  const {isAuthenticated, isProfileCompleted} = useUserContext();
+
+  if (!isAuthenticated || !isProfileCompleted) {
+    return <Loading />;
+  }
+
+  //fetching campaign
   useEffect(() => {
     if (!currentUser?.id) return;
 

@@ -5,12 +5,19 @@ import DopamineBar from "@/components/userStats/DopamineBar";
 import Progress from "@/components/userStats/XpBar";
 import Footer from "@/components/global/Footer";
 import Header from "@/components/global/Header";
+import { useUserContext } from "@/context/context";
+import Loading from "../loading";
 
 import { useUserStore } from "@/stores/useUserStore";
 
 export default function CharacterSheet() {
   //branchement à mon store
   const currentUser = useUserStore((state) => state.currentUser);
+  const {isAuthenticated, isProfileCompleted} = useUserContext();
+
+  if (!isAuthenticated || !isProfileCompleted) {
+    return <Loading />;
+  }
 
   return (
     <>

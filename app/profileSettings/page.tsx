@@ -5,6 +5,8 @@ import Footer from "@/components/global/Footer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { useUserStore } from "@/stores/useUserStore";
+import Loading from "../loading";
+import { useUserContext } from "@/context/context";
 
 export default function ProfileSettings() {
   const router = useRouter();
@@ -17,7 +19,13 @@ export default function ProfileSettings() {
   const [valid, setValid] = useState("");
   const flag = useRef(false);
   const defaultEmail = currentUser?.email ?? "";
+  const [deleting, setDeleting] = useState(false);
 
+    const {isAuthenticated, isProfileCompleted} = useUserContext();
+  
+    if (!isAuthenticated || !isProfileCompleted) {
+      return <Loading />;
+    }
 
 
   useEffect(() => {
@@ -202,7 +210,9 @@ export default function ProfileSettings() {
         className={
           !modal
             ? "hidden"
-            : "fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center z-50 modalDeletion"
+            : ( deleting ? "fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center z-50 modalDeletion pointer-events-none" :
+              "fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center z-50 modalDeletion"
+            )
         }
       >
         <div className="flex flex-col bg-black gap-3 justify-center mt-5 border border-white p-15 rounded-lg ">
@@ -215,7 +225,10 @@ export default function ProfileSettings() {
             bg="#000000"
             textColor="red"
             borderColor="red"
-            onPointerDown={deleteAccount}
+            onPointerDown={() => {
+              setDeleting(true);
+              deleteAccount()
+            }}
           >
             Yes, delete my account
           </Button>

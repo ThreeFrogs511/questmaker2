@@ -139,7 +139,8 @@ export async function DELETE(
         error: "No sessions detected. Please login.",
       });
 
-    await sql`DELETE FROM sessions WHERE token = ${token}`;
+    const d = await sql`DELETE FROM sessions WHERE token = ${token}`;
+    console.log(d);
 
     cookie.delete("session");
     cookie.delete("csrf");
