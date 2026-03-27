@@ -32,15 +32,10 @@ export default function Journal() {
   const areQuestsLoaded = useJournalStore((state) => state.areQuestsLoaded);
   // warns us when the quests are all fetched
 
-    const {isAuthenticated, isProfileCompleted} = useUserContext();
-  
-    if (!isAuthenticated || !isProfileCompleted) {
-      return <Loading />;
-    }
+  const {isAuthenticated, isProfileCompleted} = useUserContext();
 
   const [turnPage] = useSound("/sounds/page.mp3");
   const journal = ["Current quests", "Archived quests", "All quests"];
- 
 
   useEffect(() => {
     resetDraft({});
@@ -68,13 +63,17 @@ export default function Journal() {
           setDisplayedQuests(allQuests);
           break;
       }
-   
+
     }
   }, [whichPage, allQuests]);
 
   useEffect(() => {
        turnPage();
   }, [whichPage])
+
+  if (!isAuthenticated || !isProfileCompleted) {
+    return <Loading />;
+  }
 
   return (
     <>
