@@ -82,6 +82,8 @@ export default class Character {
     this.calculateDopamine(classes, draft);
     this.calculateAC(draft);
     try {
+      if (this.id === null || this.id === undefined) console.log('no id found');
+      
       const response = await fetch(`/api/users/${this.id}`, {
         method: "PATCH",
         headers: { "content-type": "application/JSON" },

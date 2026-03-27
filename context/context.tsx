@@ -88,7 +88,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
         }
       })
       .catch((err) => {
-        console.log(err)
+        console.log("error:", err);
         router.push("/titleScreen");
       })
       .finally(() => {

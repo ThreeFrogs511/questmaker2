@@ -30,61 +30,43 @@ export default function List() {
     user_id: number | null,
   ) {
     if (isLocked.current) return;
+    if (!id || currentCompleted === null || !allQuests || !displayedQuests) return;
 
-    // locking the function to avoid duplicates
     isLocked.current = true;
+    const completionState = !currentCompleted;
 
-    if (id && currentCompleted !== null) {
-      const completionState = !currentCompleted;
- 
-      const quest = new Quest();
-      const feedback = await quest.complete(id, completionState, user_id);
-
-      if (feedback.error) {
-        console.log(feedback.error);
-        if ((feedback.error = "limit")) {
-          setJournalError("Hourly limit exceeded! Try again in an hour!",);
-        } else {
-          setJournalError("Server error. Please try again.");
-        };
-
-        isLocked.current = false;
-        return;
-      };
-
-      if (feedback.success && displayedQuests && allQuests) {
-        setJournalError("");
-        
-        // updating coins value
-        updateStats({ coins: feedback.coins[0].coins });
-
-        // playing the sound effect
-        if (completionState) {
-          ticking();
-        } else {
-          unticking();
-        }
-        // setTimeout(() => {
-          
-        // }, 500);
-        // updating the allToDos list
-        const updatedList = allQuests.map((n) => {
-          if (n.id === id) {
-            const object = {
-              ...n,
-              completed: currentCompleted === true ? false : true,
-            };
-            return object;
-          } else {
-            return n;
-          }
-        });
-
-        // storing the allQuests list
-        setAllQuests(updatedList);
-        isLocked.current= false;
-      }
+    // optimistic update: update UI and play sound immediately
+    if (completionState) {
+      ticking();
+    } else {
+      unticking();
     }
+    const optimisticList = allQuests.map((n) =>
+      n.id === id ? { ...n, completed: completionState } : n
+    );
+    setAllQuests(optimisticList);
+
+    const quest = new Quest();
+    const feedback = await quest.complete(id, completionState, user_id);
+
+    if (feedback.error) {
+      // revert optimistic update on error
+      setAllQuests(allQuests);
+      if (feedback.error === "limit") {
+        setJournalError("Hourly limit exceeded! Try again in an hour!");
+      } else {
+        setJournalError("Server error. Please try again.");
+      }
+      isLocked.current = false;
+      return;
+    }
+
+    if (feedback.success) {
+      setJournalError("");
+      updateStats({ coins: feedback.coins[0].coins });
+    }
+
+    isLocked.current = false;
   }
 
   async function deletion(id: number | null) {
