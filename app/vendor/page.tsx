@@ -21,11 +21,7 @@ export default function Vendor() {
   const [chooseSell, setChooseSell] = useState(false);
   const [notEnoughMoney, setNotEnoughMoney] = useState(false);
 
-    const {isAuthenticated, isProfileCompleted} = useUserContext();
-  
-    if (!isAuthenticated || !isProfileCompleted) {
-      return <Loading />;
-    }
+  const {isAuthenticated, isProfileCompleted} = useUserContext();
 
   useEffect(() => {
     const selectedGreetings =
@@ -44,6 +40,10 @@ export default function Vendor() {
     }, 30);
     return () => clearInterval(intervalId);
   }, [isTyping]);
+
+  if (!isAuthenticated || !isProfileCompleted) {
+    return <Loading />;
+  }
 
   return (
     <>

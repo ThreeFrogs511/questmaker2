@@ -14,9 +14,7 @@ export default function CampaignRunning({params,}: {
 
   const {isAuthenticated, isProfileCompleted} = useUserContext();
 
-  if (!isAuthenticated || !isProfileCompleted) {
-    return <Loading />;
-  }
+
 
   async function startNewCampaign() {
     const { id } = await params;
@@ -40,6 +38,8 @@ export default function CampaignRunning({params,}: {
 
   const [hasCampaignLaunched, setHasCampaignLaunched] = useState(false);
 
+  
+
   useEffect(() => {
     startNewCampaign()
       .then((data) => {
@@ -50,8 +50,8 @@ export default function CampaignRunning({params,}: {
         return values;
       })
       .then((values) => {
-        updateNode(values.first);
-        // updateNode("remembering_how_to_fight")
+        // updateNode(values.first);
+        updateNode("remembering_how_to_fight")
         setCampaignTitle(values.title);
       })
       .catch((err) => console.log(err));
@@ -61,5 +61,8 @@ export default function CampaignRunning({params,}: {
     if (currentCampaign && currentNode) setHasCampaignLaunched(true);
   }, [currentCampaign, currentNode]);
 
+    if (!isAuthenticated || !isProfileCompleted) {
+    return <Loading />;
+  }
   return <>{hasCampaignLaunched ? <CampaignHandler /> : <Loading />}</>;
 }

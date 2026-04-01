@@ -10,6 +10,7 @@ import Combat from "./CombatSystem/Combat";
 import ChoicesOptions from "./Choices";
 
 import { useNarrationStore } from '@/stores/useNarrationStore';
+import { useInventoryStore } from '@/stores/useInventoryStore';
 
 export default class Engine {
 
@@ -121,7 +122,7 @@ export default class Engine {
             return;
           };
 
-          // if the user choose an attack
+          // if the user choose an attack or use a consumable item
           if (!this.combatLockOn) {
             this.combatLockOn=true;
             await this.combat.system(item, this.node, setSoundEffect)
@@ -129,7 +130,7 @@ export default class Engine {
         }
     }
 
-    // THE DISPLAYED CHOICES MUST BE FILTERED, FORMATTED, PREPARED. WE HANDLE IT HERE.
+    // CLEANING THE RAW CHOICES TO DETERMINE WHICH ONES WE SHOULD DISPLAY TO THE USER BASED ON HIS PAST DECISIONS
     prepareChoicesForPlayer(setAllAvailableChoices: Dispatch<SetStateAction<Choice[] | undefined>>, choices: Choice[], userPastChoices: string[]) {
       this.choicesOptions.handler(setAllAvailableChoices, choices, userPastChoices);
     }
@@ -143,11 +144,18 @@ export default class Engine {
         body: JSON.stringify(currentUser)
       });
       const feedback = await response.json();
-      if (feedback.success ) {
-        return {success:true}
-        
-      } else {
+      if (!feedback.success) return {success:false};
 
+      const inventory = useInventoryStore.getState().inventory;
+      const inventoryResponse = await fetch(`/api/inventory/${currentUser.id}`, {
+        method: 'PUT',
+        headers: {'content-type': 'application/json'},
+        body: JSON.stringify({ inventory })
+      });
+      const inventoryFeedback = await inventoryResponse.json();
+      if (inventoryFeedback.success) {
+        return {success:true}
+      } else {
         return {success:false}
       }
     }

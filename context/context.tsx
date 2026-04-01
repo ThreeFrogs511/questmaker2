@@ -63,6 +63,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
 
             if (data.inventory) {
               updateInventory(data.inventory ?? []);
+              console.log("inventory data:", data.inventory);
             }
 
             // redirecting to journal if on title screen or character creation

@@ -1,4 +1,3 @@
-import { MongoClient, ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
 import { sql } from "@/server/connexion";
 
@@ -70,6 +69,39 @@ export async function POST(
             coins: q[0].coins
         });
     };
+  } catch (err) {
+    return NextResponse.json({ error: (err as Error).message });
+  }
+}
+
+export async function PUT(
+  request: Request,
+  { params }: { params: Promise<{ id: string }> },
+) {
+  try {
+    const { id } = await params;
+    if (!id) return NextResponse.json({ error: "no user id found" });
+
+    const { inventory } = await request.json();
+
+    if (!Array.isArray(inventory)) {
+      return NextResponse.json({ error: "invalid inventory payload" });
+    }
+
+    // Update quantities for all remaining items
+    for (const item of inventory) {
+      await sql`UPDATE inventory SET quantity = ${item.quantity} WHERE slug = ${item.slug} AND user_id = ${id}`;
+    }
+
+    // Delete items that were fully consumed (no longer in the inventory)
+    if (inventory.length > 0) {
+      const slugs = inventory.map((i: { slug: string }) => i.slug);
+      await sql`DELETE FROM inventory WHERE user_id = ${id} AND slug != ALL(${slugs})`;
+    } else {
+      await sql`DELETE FROM inventory WHERE user_id = ${id}`;
+    }
+
+    return NextResponse.json({ success: true });
   } catch (err) {
     return NextResponse.json({ error: (err as Error).message });
   }

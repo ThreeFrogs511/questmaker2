@@ -21,12 +21,7 @@ export default function ProfileSettings() {
   const defaultEmail = currentUser?.email ?? "";
   const [deleting, setDeleting] = useState(false);
 
-    const {isAuthenticated, isProfileCompleted} = useUserContext();
-  
-    if (!isAuthenticated || !isProfileCompleted) {
-      return <Loading />;
-    }
-
+  const {isAuthenticated, isProfileCompleted} = useUserContext();
 
   useEffect(() => {
     const token = document.cookie
@@ -48,6 +43,10 @@ export default function ProfileSettings() {
       })
       .catch((err) => console.log(err));
   }, []);
+
+  if (!isAuthenticated || !isProfileCompleted) {
+    return <Loading />;
+  }
 
  
 

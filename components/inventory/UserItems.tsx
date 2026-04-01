@@ -8,7 +8,7 @@ import { useState} from "react";
 import { usePathname } from "next/navigation";
 
 
-export default function UserItems({userActionOnItems} : {userActionOnItems: (item:Store, id?:number) => void}) {
+export default function UserItems({userActionOnItems, mode} : {userActionOnItems: (item:Store, id?:number) => void, mode?: "combat"}) {
 
   const pathname = usePathname();
   const inventory = useInventoryStore((state) => state.inventory);
@@ -17,25 +17,25 @@ export default function UserItems({userActionOnItems} : {userActionOnItems: (ite
 
   useEffect(() => {
     if (!inventory) return;
-    let tempInv: Array<Store> = [];
+    const tempInv: Array<Store> = [];
 
     for (let i = 0; i < inventory?.length; i++) {
-      let matchingItem: Store | undefined = items.find(
+      const matchingItem: Store | undefined = items.find(
         (n) => n.slug === inventory[i].slug,
       );
 
       if (!matchingItem) {
         continue;
       } else {
-        let userItem: Store = {
+        const userItem: Store = {
           ...matchingItem,
           quantity: inventory[i].quantity,
         };
         tempInv.push(userItem);
       }
     }
-    setDisplayedInventory(tempInv ?? []);
-  }, [inventory]);
+    setDisplayedInventory(mode === "combat" ? tempInv.filter(i => i.type === "consumable") : tempInv ?? []);
+  }, [inventory, mode]);
 
 
   return (
@@ -78,14 +78,16 @@ export default function UserItems({userActionOnItems} : {userActionOnItems: (ite
               </div>}
 
             </div>
+
+            {/* CTA depending on the page : selling, equip or use item */}
             <div className="underline cursor-pointer hover:text-amber-300" onPointerDown={() => userActionOnItems(item)}>
               {pathname === "/vendor" && "Sell"}
               {pathname === "/inventory" && item.type === "consumable" && "Use"}
               {pathname === "/inventory" && item.type !== "consumable" && "Equip"}
+              {mode === "combat" && "Use"}
             </div>
           </figure>
         ))}
-        {/* {!inventoryLoaded && <p>Loading</p>} */}
         {displayedInventory.length <= 0 && <div className="h-full w-full flex justify-center items-center font-minecraft"><p>No items yet.</p></div>}
       </section>
     </>

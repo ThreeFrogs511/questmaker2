@@ -4,7 +4,7 @@ import { ProgressBar } from "pixel-retroui"
 import { useState} from "react";
 
 import CombatChoices from "./combatChoices";
-import Inventory from "./Inventory";
+import InventoryCombatModal from "./InventoryCombatModal";
 
 // used to interpret HTML in JSON
 import parse from "html-react-parser";
@@ -133,7 +133,7 @@ export default function CombatInterface({gameplay}: {gameplay: Engine}) {
                 </div>
             </div>
             <CombatChoices gameplay={gameplay} setSoundEffectAction={setSoundEffect}/>
-            {isInventoryOpened && <Inventory gameplay={gameplay} setSoundEffectAction={setSoundEffect}/>}        
+            {isInventoryOpened && <InventoryCombatModal gameplay={gameplay} setSoundEffectAction={setSoundEffect}/>}
             </section>
         
         </>

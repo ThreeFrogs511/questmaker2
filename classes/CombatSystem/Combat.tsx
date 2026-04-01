@@ -68,8 +68,7 @@ export default class Combat {
     const userDex = this.currentUser.dex;
     const userModifier = userDex && Math.floor((userDex - 10) / 2);
     this.userModifier = userModifier ?? 0;
-    let initiativeRollUser =
-      userModifier && Math.floor(Math.random() * 20) + 1 + userModifier;
+    const initiativeRollUser = userModifier && Math.floor(Math.random() * 20) + 1 + userModifier;
 
     // enemy initiative
     let initiativeRollEnemy = 10;
@@ -94,7 +93,7 @@ export default class Combat {
   }
 
   handleAttackRolls(AC: number, modifier: number) {
-    let attackRoll = Math.floor(Math.random() * 20) + 1 + modifier + (AC - 10);
+    const attackRoll = Math.floor(Math.random() * 20) + 1 + modifier + (AC - 10);
     const hit = AC > attackRoll ? false : true;
     return { hit: hit, roll: attackRoll };
   }
@@ -307,51 +306,11 @@ export default class Combat {
 
   inventoryHandler() {
     const inventoryStatus = useCombatStore.getState().isInventoryOpened;
-    !inventoryStatus ? this.openInventory(true) : this.openInventory(false);
+    // !inventoryStatus ? this.openInventory(true) : this.openInventory(false);
+    this.openInventory(!inventoryStatus ? true : false);
   }
 
-  // if the player choose an attack
-  // userAttack(item:any, resolve:() => void, setSoundEffect:any) {
-  //       // the attack chosen by the user
-  //       const attack = item.text;
-  //       const dmgMax = item.userDmg;
-  //       let finalDmg;
-  //       if (dmgMax) {finalDmg = Math.floor(Math.random() * dmgMax)+1;}
-
-  //       // the user remove x% of the enemy HP.
-  //       if (finalDmg && this.encounter && this.encounter.hp) {
-
-  //         const attackRoll = this.handleAttackRolls(this.encounter.ac ?? 10, this.userModifier);
-  //         if (!attackRoll.hit) {
-  //           setSoundEffect('user_miss')
-  //           const log = `
-  //           <div className="lg:text-xl text-xs mb-1">
-  //             You missed! (Roll: ${attackRoll.roll <= 0 ? 1 : attackRoll.roll})
-  //           </div>`;
-  //           this.setCombatLog(log);
-  //           resolve();
-  //         } else {
-  //           setSoundEffect(attack);
-  //           const log = `
-  //           <div className="lg:text-xl text-xs mb-1">
-  //             You use <span style="color:yellow">${attack}</span> for <span style="color:yellow">${finalDmg}</span> damage!
-  //           </div>`;
-  //           this.setCombatLog(log);
-
-  //           // AFTER THE USER'S MOVE, WE NEED TO UPDATE THE NEW ENEMY HP VALUE
-  //           // AND THEIR HP BAR SEPARATELY
-
-  //           //1) updating the enemy hp value
-  //           this.encounter.hp = Math.floor(this.encounter.hp-finalDmg);
-
-  //           //2) updating the hitpoints bar outside this class
-  //           if (this.encounter && this.encounter.hp!==undefined) {
-  //             this.updateEnemy({hp:this.encounter.hp})
-  //           }
-  //         }
-  //   }
-  // }
-
+  
   useItem(item: CombatConsumableItem, resolve: () => void, setSoundEffect: (effect: string) => void) {
     const userAction = new useConsumableAction(
       item,
