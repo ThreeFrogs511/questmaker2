@@ -25,26 +25,68 @@ export default function MerchantBuy({
   });
 
   async function handlePurchase(item:Store) {
-    if (!inventory) return;
+    if (!inventory || isBuying.current) return;
+    isBuying.current = true;
+
+    // Local broke check — no sound, instant feedback
+    if ((currentUser?.coins ?? 0) < (item.price ?? 0)) {
+      setNotEnoughMoneyAction(true);
+      isBuying.current = false;
+      return;
+    }
+
+    // Snapshots for rollback
+    const previousInventory = [...inventory];
+    const previousCoins = currentUser?.coins ?? 0;
+
+    // Optimistic update: play sound and update UI immediately
+    play();
+    const optimisticInventory = [...inventory];
+    const existingIdx = optimisticInventory.findIndex((i) => i.slug === item.slug);
+    if (existingIdx >= 0) {
+      optimisticInventory[existingIdx] = {
+        ...optimisticInventory[existingIdx],
+        quantity: (optimisticInventory[existingIdx].quantity ?? 0) + 1,
+      };
+    } else {
+      optimisticInventory.push({
+        inventory_id: null,
+        slug: item.slug,
+        user_id: currentUser?.id ?? null,
+        quantity: 1,
+      });
+    }
+    updateInventory(optimisticInventory);
+    updateStats({ coins: previousCoins - (item.price ?? 0) });
+
     const r = await fetch(`api/inventory/${currentUser?.id}`,{
       method: "POST",
       headers:{"content-type":"applicaiton/json"},
       body: JSON.stringify(item)
     });
     const feedback = await r.json();
+
     if (feedback?.success) {
       setNotEnoughMoneyAction(false);
+      // Sync with authoritative server data
       updateInventory(feedback.items);
       updateStats({coins:feedback.coins});
-      play();
-    };
-    if (feedback?.error) {
-      console.log('error:', feedback.error);
     }
 
     if (feedback?.broke) {
+      // Rollback optimistic update
+      updateInventory(previousInventory);
+      updateStats({ coins: previousCoins });
       setNotEnoughMoneyAction(true);
     }
+
+    if (feedback?.error) {
+      // Rollback optimistic update
+      updateInventory(previousInventory);
+      updateStats({ coins: previousCoins });
+      console.log('error:', feedback.error);
+    }
+
     isBuying.current = false;
   };
 
@@ -77,11 +119,7 @@ export default function MerchantBuy({
             </div>
             <div
               className="underline cursor-pointer hover:text-amber-300"
-              onPointerDown={() => {
-                if (isBuying.current) return;
-                isBuying.current = true;
-                handlePurchase(item);
-              }}
+              onPointerDown={() => handlePurchase(item)}
             >
               Buy
             </div>
