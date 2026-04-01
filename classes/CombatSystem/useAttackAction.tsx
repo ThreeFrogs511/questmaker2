@@ -1,13 +1,14 @@
 import { useCombatStore } from "@/stores/useCombatStore";
+import { CombatAttackItem } from "@/types/types";
 
 export default class useAttackAction {
 
-  private setCombatLog:any;
+  private setCombatLog: (log: string) => void;
   private attack;
   private setSoundEffect;
   private enemyAC;
 
-  constructor(item:any, setSoundEffect:any, enemyAC:number) {
+  constructor(item: CombatAttackItem, setSoundEffect: (effect: string) => void, enemyAC: number) {
       this.setCombatLog = useCombatStore.getState().setCombatLog;
       this.attack = item;
       this.setSoundEffect = setSoundEffect;
@@ -47,7 +48,7 @@ export default class useAttackAction {
       this.setCombatLog(log);
       return null;
     } else {
-      this.setSoundEffect(this.attack.text);
+      this.setSoundEffect(this.attack.text ?? '');
       const log = `
       <div className="lg:text-xl text-xs mb-1">
         You use <span style="color:yellow">${this.attack.text}</span> for <span style="color:yellow">${finalDmg}</span> damage!

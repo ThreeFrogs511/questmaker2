@@ -3,8 +3,8 @@ import { useEffect } from "react";
 import useSound from "use-sound";
 import { useNarrationStore } from "@/stores/useNarrationStore";
 
-export default function Voices({isPressed, play, stop,}: 
-    {isPressed:boolean, play:any, stop:any}) {
+export default function Voices({isPressed, play, stop,}:
+    {isPressed:boolean, play:() => void, stop:() => void}) {
 
     const currentNode = useNarrationStore(state => state.currentNode);
 

@@ -14,8 +14,9 @@ import useSound from "use-sound";
 
 import { useUserStore } from "@/stores/useUserStore";
 import { useCombatStore } from "@/stores/useCombatStore";
+import Engine from "@/classes/Engine";
 
-export default function CombatInterface({gameplay}: {gameplay:any}) {
+export default function CombatInterface({gameplay}: {gameplay: Engine}) {
 
 
     // combat store

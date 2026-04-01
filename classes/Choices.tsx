@@ -1,24 +1,25 @@
 
-import { Choice, User } from "@/types/types";
+import type { Dispatch, SetStateAction } from 'react'
+import { Choice } from "@/types/types";
 import { useUserStore } from "@/stores/useUserStore";
 export default class ChoicesOptions {
 
     constructor() {
-    
+
     }
 
-    handler(setAllAvailableChoices:any, choices:Choice[], userPastChoices:any) {
+    handler(setAllAvailableChoices: Dispatch<SetStateAction<Choice[] | undefined>>, choices: Choice[], userPastChoices: string[]) {
         const filteredChoices = this.filterOutExpiredChoices(choices, userPastChoices);
         const dynamicChoices = this.insertDynamicInfo(filteredChoices);
         setAllAvailableChoices(dynamicChoices);
     }
 
-    filterOutExpiredChoices(choices:Choice[], userPastChoices:any) {
+    filterOutExpiredChoices(choices:Choice[], userPastChoices: string[]) {
         // global choices like ['CONTINUE'], ['START COMBAT'] or user's movesets cannot be removed
         const lockedChoices = ['[CONTINUE]', '[START COMBAT]', '[Punch]', '[Fireball]', '[RESTART]'];
 
         // we remove choices that were already made to avoid unwanted loops
-        const filteredChoices = choices.filter((n: any) => {
+        const filteredChoices = choices.filter((n: Choice) => {
             if (!userPastChoices.includes(n.text)) {
                 return n;
             } else if (userPastChoices.includes(n.text) && lockedChoices.includes(n.text)) {

@@ -3,14 +3,15 @@
 import { useEffect, useRef} from 'react'
 import XpBar from '../../userStats/XpBar'
 import { useUserStore } from '@/stores/useUserStore'
+import Engine from '@/classes/Engine'
 
 export default function XpGained(
-    {setIsSkippingAllowedAction, hasXpBeenUpdated, setHasXpBeenUpdatedAction, gameplay} : 
+    {setIsSkippingAllowedAction, hasXpBeenUpdated, setHasXpBeenUpdatedAction, gameplay} :
     {
         setIsSkippingAllowedAction:React.Dispatch<React.SetStateAction<boolean>>,
         hasXpBeenUpdated:boolean,
         setHasXpBeenUpdatedAction: React.Dispatch<React.SetStateAction<boolean>>,
-        gameplay:any
+        gameplay: Engine
 
     }) {
 

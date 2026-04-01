@@ -1,9 +1,9 @@
 'use client'
 
 import { useCombatStore } from "@/stores/useCombatStore";
+import Engine from "@/classes/Engine";
 
-
-export default function CombatMainOptions({gameplay}:{gameplay:any}) {
+export default function CombatMainOptions({gameplay}:{gameplay: Engine}) {
 
     const menuNavigation = useCombatStore(state => state.menuNavigation);
 

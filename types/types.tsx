@@ -176,3 +176,19 @@ export type Item = {
   user_id: number | null;
   quantity: number | null
 }
+
+// Combat item types
+export type CombatAttackItem = {
+  text?: string;
+  userDmg?: number | null;
+  type?: undefined;
+};
+
+export type CombatConsumableItem = {
+  type: "item";
+  name: string;
+  target: string;
+  value: number;
+};
+
+export type CombatItem = CombatAttackItem | CombatConsumableItem;

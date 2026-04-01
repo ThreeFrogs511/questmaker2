@@ -1,5 +1,5 @@
 import { useUserStore } from "@/stores/useUserStore";
-import {Choice} from '@/types/types'
+import { Choice, Nodes } from '@/types/types'
 
 export default class ExclusivePaths {
 
@@ -7,7 +7,7 @@ export default class ExclusivePaths {
     constructor() {
     }
 
-    handler(currentChoice:Choice, setCurrentNode:any) {
+    handler(currentChoice:Choice, setCurrentNode: (node: keyof Nodes | undefined) => void) {
 
         // setting up
         const currentUser = useUserStore.getState().currentUser;
@@ -52,14 +52,14 @@ export default class ExclusivePaths {
     
     }
 
-    handlingRacePaths(value:string, setCurrentNode:any, race:string, currentChoice:Choice) {
+    handlingRacePaths(value:string, setCurrentNode: (node: keyof Nodes | undefined) => void, race:string, currentChoice:Choice) {
         const nextNode = currentChoice.next;
         if (value === race.toLowerCase()) {
             const nextNodeAlt = `${nextNode}_${value}`;
             return nextNodeAlt;
         }
     };
-    handlingGenderPaths(value:string, setCurrentNode:any, gender:string, currentChoice:Choice) {
+    handlingGenderPaths(value:string, setCurrentNode: (node: keyof Nodes | undefined) => void, gender:string, currentChoice:Choice) {
         const nextNode = currentChoice.next;
         if (value === gender.toLowerCase()) {
             const nextNodeAlt = `${nextNode}_${value}`;    
@@ -67,7 +67,7 @@ export default class ExclusivePaths {
         }
     };
 
-    handlingClassPaths(value:string, setCurrentNode:any, userClass:string, currentChoice:Choice) {
+    handlingClassPaths(value:string, setCurrentNode: (node: keyof Nodes | undefined) => void, userClass:string, currentChoice:Choice) {
         const nextNode = currentChoice.next;
         if (value === userClass.toLowerCase()) {
             const nextNodeAlt = `${nextNode}_${value}`; 
@@ -75,7 +75,7 @@ export default class ExclusivePaths {
         }
     };
 
-    handlingChoicesPaths(currentChoice:Choice, userPastNodes:any) {
+    handlingChoicesPaths(currentChoice:Choice, userPastNodes: string[]) {
         const nextNode = currentChoice.next;
         let relevantStoryPaths:string | null = null;
         if (currentChoice.nodeRef) {

@@ -1,4 +1,4 @@
-import { Nodes, User, Encounter, Choice } from "@/types/types";
+import { Nodes, User, Encounter, Choice, CombatItem, CombatConsumableItem } from "@/types/types";
 import Enemy from "./Enemy";
 import useAttackAction from "./useAttackAction";
 import useConsumableAction from "./useConsumableAction";
@@ -13,7 +13,7 @@ export default class Combat {
   private tempUserStats: User | undefined;
   private userModifier: number;
   private userFirstToAttack: boolean;
-  private useAttack: any;
+  private useAttack: useAttackAction | undefined;
 
   // log attributes
   private clearCombatLog;
@@ -109,7 +109,7 @@ export default class Combat {
     this.updateEnemy({ ac: ac });
   }
 
-  preparingCombat(currentChoice: Choice, resetNbOfTurn: any) {
+  preparingCombat(currentChoice: Choice, resetNbOfTurn: (n: number) => void) {
     //resetting nb of turn if needed
     resetNbOfTurn(1);
 
@@ -129,7 +129,7 @@ export default class Combat {
     this.calculatingAC();
   }
 
-  async system(item: any, node: keyof Nodes | undefined, setSoundEffect: any) {
+  async system(item: CombatItem, node: keyof Nodes | undefined, setSoundEffect: (effect: string) => void) {
     // the main system is here
     // either the user or the enemy attack first based on the initiative
     // then we wait 1sec to add a realistic delay between the attacks
@@ -174,9 +174,9 @@ export default class Combat {
   }
 
   async handleUserTurn(
-    item: any,
+    item: CombatItem,
     node: keyof Nodes | undefined,
-    setSoundEffect: any,
+    setSoundEffect: (effect: string) => void,
   ) {
     return new Promise<void>(async (resolve) => {
       this.fight_over &&= false;
@@ -192,7 +192,7 @@ export default class Combat {
         );
         const damageDoneByUser = this.useAttack.resolver();
         !damageDoneByUser && resolve();
-        this.encounter.hp = Math.floor(this.encounter.hp - damageDoneByUser);
+        this.encounter.hp = Math.floor(this.encounter.hp - (damageDoneByUser ?? 0));
         this.updateEnemy({ hp: this.encounter.hp });
       }
 
@@ -222,7 +222,7 @@ export default class Combat {
     });
   }
 
-  async handleEnemyTurn(setSoundEffect: any, node: keyof Nodes | undefined) {
+  async handleEnemyTurn(setSoundEffect: (effect: string) => void, node: keyof Nodes | undefined) {
     return new Promise<void>(async (resolve) => {
       // We extract all the attacks that can be used by the enemy
       if (!this.encounter) return;
@@ -352,7 +352,7 @@ export default class Combat {
   //   }
   // }
 
-  useItem(item: any, resolve: () => void, setSoundEffect: any) {
+  useItem(item: CombatConsumableItem, resolve: () => void, setSoundEffect: (effect: string) => void) {
     const userAction = new useConsumableAction(
       item,
       setSoundEffect,

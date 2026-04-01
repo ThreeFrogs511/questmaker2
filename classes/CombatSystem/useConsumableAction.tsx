@@ -1,13 +1,13 @@
 import { useCombatStore } from "@/stores/useCombatStore";
-import { User } from "@/types/types";
+import { User, CombatConsumableItem } from "@/types/types";
 export default class useConsumableAction {
 
-    private setCombatLog:any;
+    private setCombatLog: (log: string) => void;
     private item;
     private setSoundEffect;
     private currentUser;
 
-    constructor(item:any, setSoundEffect:any, currentUser:User) {
+    constructor(item: CombatConsumableItem, setSoundEffect: (effect: string) => void, currentUser: User) {
         this.setCombatLog = useCombatStore.getState().setCombatLog;
         this.item= item;
         this.setSoundEffect = setSoundEffect;

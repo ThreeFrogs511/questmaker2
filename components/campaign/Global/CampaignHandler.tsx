@@ -1,6 +1,5 @@
 "use client";
 import { useEffect, useRef, useState } from "react";
-import { useUserStore } from "@/stores/useUserStore";
 import { useNarrationStore } from "@/stores/useNarrationStore";
 import Engine from "@/classes/Engine";
 import PreloadAudio from "../Audio/PreloadAudio";
@@ -24,8 +23,7 @@ export default function CampaignHandler() {
   //preloading the audio
   const { voice, battleMusic } = PreloadAudio();
 
-  // user store
-  const currentUser = useUserStore((state) => state.currentUser);
+
 
   // narration store
   const currentCampaign = useNarrationStore((state) => state.currentCampaign);
@@ -33,8 +31,6 @@ export default function CampaignHandler() {
   const currentNode = useNarrationStore((state) => state.currentNode);
 
   // combat store
-  const setCombatLog = useCombatStore((state) => state.setCombatLog);
-  const clearCombatLog = useCombatStore((state) => state.clearCombatLog);
   const resetNbOfTurn = useCombatStore((state) => state.resetNbOfTurn);
 
   // store the currently available choices
@@ -81,21 +77,19 @@ export default function CampaignHandler() {
       //cleaning and preparing the choices displayed to the player
       gameplay.current.prepareChoicesForPlayer(
         setAllChoicesAvailable,
-        currentCampaign[currentNode].choices,
+        currentCampaign[currentNode].choices ?? [],
         userPastChoices,
       );
 
       // storing the nodes history, the story path
-      userPastNodes.length > 0
-        ? setUserPastNodes((prev) => [...prev, currentNode])
-        : setUserPastNodes([currentNode]);
+      setUserPastNodes((prev) => prev.length > 0 ? [...prev, currentNode] : [currentNode]);
 
       // activating the combat interface when combat is on
       if (currentCampaign[currentNode].choices) {
         const combatOn = currentCampaign[currentNode].choices.find((n) => {
           if (n.combat_on) return n;
         });
-        combatOn ? setIsCombatOn(true) : setIsCombatOn(false);
+        setIsCombatOn(combatOn ? true : false);
       }
 
       // activating the end screen when the campaign is over
@@ -111,11 +105,11 @@ export default function CampaignHandler() {
         resolve();
       }, 500);
     }).then(() => (isLocked.current = false));
-  }, [currentCampaign, currentNode]);
+  }, [currentCampaign, currentNode, userPastChoices]);
 
   // handle the navigation by keyboard
   useEffect(() => {
-    function handleKeyboardSelection(e: any) {
+    function handleKeyboardSelection(e: KeyboardEvent) {
       if (keyboardPressed || isLocked.current) return;
 
       setKeyboardPressed(true);

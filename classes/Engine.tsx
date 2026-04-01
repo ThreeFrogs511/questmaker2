@@ -1,7 +1,8 @@
 'use client'
 // describe the 'nodes' global object
 
-import {Nodes, User} from '@/types/types'
+import type { Dispatch, SetStateAction } from 'react'
+import { Nodes, User, Choice, Data, CombatItem } from '@/types/types'
 import AbilityChecks from "./AbilityChecks";
 import Penalties from "./Penalties";
 import ExclusivePaths from "./ExclusivePaths";
@@ -17,14 +18,14 @@ export default class Engine {
     private updateNode;
 
     // campaign attribute
-    private relevantChoices:Array<string>;
+    private relevantChoices: Array<{ node: string; text: string }>;
     private accumulatedXp: number;
 
     // class workers
     private abilityChecks;
     private penalties;
     private exclusivePaths;
-    private combat:any;
+    private combat: Combat | undefined;
     private choicesOptions;
 
     // combat
@@ -49,13 +50,13 @@ export default class Engine {
 
         //stores the important decisions made during the campaign
         this.relevantChoices = [];
-        
+
     }    
 
 
     // THIS METHOD DETERMINES THE NEXT NODE BASED ON THE USER'S CHOICE.
     // IF THE NODE IS UNIQUE (PENALTY, ABILITY CHECKS, COMBAT), WE HANDLE IT HERE
-    async determineNextNode(currentChoice:any, setData:any, userPastNodes:any, clearNbOfTurn:any) {
+    async determineNextNode(currentChoice: Choice, setData: Dispatch<SetStateAction<Data>>, userPastNodes: string[], clearNbOfTurn: (n: number) => void) {
       
       // ability checks
       if (currentChoice.check) {
@@ -63,11 +64,11 @@ export default class Engine {
         if (check === null || check === undefined) return;
         if (check.result === false) {
           currentChoice.fail && this.updateNode(currentChoice.fail);
-          setData((prev: any) => ({...prev, type:'ability', success:false, value:check.value, status:true}));
+          setData((prev: Data) => ({...prev, type:'ability', success:false, value:check.value, status:true}));
         } else {
           this.updateNode(currentChoice.next);
-          setData((prev: any) => ({...prev, type:'ability', success:true, value:check.value, status:true}));
-          this.accumulatedXp = this.accumulatedXp + currentChoice.xp;
+          setData((prev: Data) => ({...prev, type:'ability', success:true, value:check.value, status:true}));
+          this.accumulatedXp = this.accumulatedXp + (currentChoice.xp ?? 0);
         };
 
       //penalties
@@ -79,7 +80,7 @@ export default class Engine {
       } else if (currentChoice.alt) {
         const nextNode = this.exclusivePaths.handler(currentChoice, this.updateNode);
         this.updateNode(nextNode);
-        setData((prev: any) => ({...prev, success:null, value:null, status:false}));
+        setData((prev: Data) => ({...prev, success:null, value:null, status:false}));
       
       // launching combat
       } else if (currentChoice.combat_started) {
@@ -91,11 +92,11 @@ export default class Engine {
       } else if (currentChoice.nodeRef) {
         const nextNode = this.exclusivePaths.handlingChoicesPaths(currentChoice, userPastNodes);
         this.updateNode(nextNode);
-        setData((prev: any) => ({...prev, success:null, value:null, status:false}));
+        setData((prev: Data) => ({...prev, success:null, value:null, status:false}));
 
       //launching the end screen, displaying the relevant decisions made by the user
       } else if (currentChoice.campaignEnd) {
-        this.relevantChoices = currentChoice.relevantNodes.filter((n: any) => {
+        this.relevantChoices = (currentChoice.relevantNodes ?? []).filter((n: { node: string; text: string }) => {
           if (userPastNodes.includes(n.node)) {
             return n.text;
           };
@@ -106,15 +107,16 @@ export default class Engine {
       //normal nodes
       } else {
         this.updateNode(currentChoice.next);
-        setData((prev: any) => ({...prev, success:null, value:null, status:false}));
+        setData((prev: Data) => ({...prev, success:null, value:null, status:false}));
       }
     }
 
     //FOR COMBAT ONLY : IF THE PLAYER MAKES A MOVE, WE CALL THIS METHOD
-    async handlePlayerCombatChoices(item:any, setSoundEffect:any) {
+    async handlePlayerCombatChoices(item: CombatItem, setSoundEffect: (effect: string) => void) {
+        if (!this.combat) return;
 
         // if the user open their inventory
-          if (item.text ==="inventory") {
+          if ('text' in item && item.text ==="inventory") {
             this.combat.inventoryHandler();
             return;
           };
@@ -128,7 +130,7 @@ export default class Engine {
     }
 
     // THE DISPLAYED CHOICES MUST BE FILTERED, FORMATTED, PREPARED. WE HANDLE IT HERE.
-    prepareChoicesForPlayer(setAllAvailableChoices:any, choices:any, userPastChoices:any) {
+    prepareChoicesForPlayer(setAllAvailableChoices: Dispatch<SetStateAction<Choice[] | undefined>>, choices: Choice[], userPastChoices: string[]) {
       this.choicesOptions.handler(setAllAvailableChoices, choices, userPastChoices);
     }
 

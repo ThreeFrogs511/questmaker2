@@ -1,8 +1,9 @@
 'use client'
 
 import { useEffect, useState } from "react";
+import Engine from "@/classes/Engine";
 
-export default function pathChosen({gameplay} : {gameplay:any}) {
+export default function pathChosen({gameplay} : {gameplay: Engine}) {
 
     const relevantChoices = gameplay.getRelevantChoices();
     const [displayedChoices, setDisplayedChoices] = useState<Array<{node:string, text:string}>>([]);

@@ -8,8 +8,9 @@ import XpGained from "./XpGained";
 import { useUserStore } from "@/stores/useUserStore";
 
 import { useRouter } from "next/navigation";
+import Engine from "@/classes/Engine";
 
-export default function EndScreenInterface({ gameplay }: { gameplay: any }) {
+export default function EndScreenInterface({ gameplay }: { gameplay: Engine }) {
   const [isSkippingAllowed, setIsSkippingAllowed] = useState(true);
   const [btnText, setBtnText] = useState("Next");
   const [page, setPage] = useState(1);
@@ -51,7 +52,7 @@ export default function EndScreenInterface({ gameplay }: { gameplay: any }) {
               if (!isSkippingAllowed) return;
               if (page === 2) {
                 const r = await gameplay.savingUserData(currentUser);
-                r.success && router.push("/journal");
+                r?.success && router.push("/journal");
               } else {
                 setPage((prev) => prev + 1);
               }

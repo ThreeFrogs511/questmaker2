@@ -8,8 +8,9 @@ export async function proxy(request: NextRequest) {
     //getting the cookie
     const token = request.cookies.get("session")?.value;
     const pathname = request.nextUrl.pathname;
-
+ 
     if (!token) throw new Error();
+
     
     switch (pathname) {
       case "/signup":

@@ -1,8 +1,9 @@
 'use client'
 import { useCombatStore } from "@/stores/useCombatStore"
+import Engine from "@/classes/Engine";
+import { CombatConsumableItem } from "@/types/types";
 
-
-export default function Inventory({gameplay, setSoundEffectAction} : {gameplay:any, setSoundEffectAction:any}) {
+export default function Inventory({gameplay, setSoundEffectAction} : {gameplay: Engine, setSoundEffectAction: (effect: string | null) => void}) {
 
     // combat store
     const openInventory = useCombatStore(state => state.openInventory);
@@ -11,19 +12,19 @@ export default function Inventory({gameplay, setSoundEffectAction} : {gameplay:a
     const updateRoundStatus = useCombatStore(state => state.updateRoundStatus);
 
 
-    const itemsPlaceholder:Array<{type:string, name:string, target:string, value:string}> = 
+    const itemsPlaceholder: CombatConsumableItem[] =
     [
-        {type:"item", name:"Health Potion", target:"damage_taken", value:"5"},
-        {type:"item",name:"Dopamine Potion", target:"dopamine_consumed", value:"5"},
-        {type:"item",name:"", target:"", value:""},
-        {type:"item",name:"", target:"", value:""},
-        {type:"item",name:"", target:"", value:""},
-        {type:"item",name:"", target:"", value:""},
-        {type:"item",name:"", target:"", value:""},
-        {type:"item",name:"", target:"", value:""},
-        {type:"item",name:"", target:"", value:""},
-        {type:"item",name:"", target:"", value:""},
-        {type:"item",name:"", target:"", value:""}
+        {type:"item", name:"Health Potion", target:"damage_taken", value:5},
+        {type:"item",name:"Dopamine Potion", target:"dopamine_consumed", value:5},
+        {type:"item",name:"", target:"", value:0},
+        {type:"item",name:"", target:"", value:0},
+        {type:"item",name:"", target:"", value:0},
+        {type:"item",name:"", target:"", value:0},
+        {type:"item",name:"", target:"", value:0},
+        {type:"item",name:"", target:"", value:0},
+        {type:"item",name:"", target:"", value:0},
+        {type:"item",name:"", target:"", value:0},
+        {type:"item",name:"", target:"", value:0}
     ]
 
  
