@@ -27,10 +27,9 @@ export default function CombatInterface({gameplay}: {gameplay: Engine}) {
     const isInventoryOpened = useCombatStore(state => state.isInventoryOpened);
 
     // local states
-    const [enemyFullHealth, setEnemyFullHealth] = useState<number|undefined>();
-    const [enemyHealth, setEnemyHealth] = useState<number | undefined>();
-    const [userHealthInPercentage, setUserHealthInPercentage] = useState<number>(100)
-    const [loader, setLoaoder] = useState(false);
+    const [loader, setLoader] = useState(false);
+    const [enemyFullHealth] = useState<number | undefined>(enemy?.hp);
+    const enemyHealth = (enemy?.hp && enemyFullHealth) ? enemy.hp / enemyFullHealth : undefined;
 
     // player store
     const currentUser = useUserStore(state => state.currentUser);
@@ -38,36 +37,10 @@ export default function CombatInterface({gameplay}: {gameplay: Engine}) {
     //loader
     useEffect(() => {
         setTimeout(() => {
-            setLoaoder(true);
+            setLoader(true);
         }, 50);
 
     },[])
-
-
-    // calculating based enemy Hp to determine the 100% value of the progress bar value
-    useEffect(() => {
-        if (enemy && enemy.hp) {
-            const hp = enemy.hp;
-            setEnemyFullHealth(hp);
-        };
-    }, [])
-
-    // calculating the reduction of enemy heath each times they take a hit
-    useEffect(() => {
-        if (enemy && enemy.hp && enemyFullHealth) {
-            setEnemyHealth(enemy.hp/enemyFullHealth);
-        }
-    }, [enemy?.hp, enemyFullHealth])
-
-
-
-    // converting user hp and damage_taken to % of hp
-      useEffect(() => {
-        if (currentUser && currentUser.hp) {
-            const percentage = ((currentUser.hp-currentUser.damage_taken)/currentUser.hp)*100;
-            setUserHealthInPercentage(percentage<0 ? 0 : percentage);
-        }
-    }, [currentUser.damage_taken])
 
     const [soundEffect, setSoundEffect] = useState<string | null>(null)
         
@@ -84,7 +57,7 @@ export default function CombatInterface({gameplay}: {gameplay: Engine}) {
         stop()
     };
 
-    }, [play, stop])
+    }, [play, stop, soundEffect])
 
 
         
@@ -98,7 +71,9 @@ export default function CombatInterface({gameplay}: {gameplay: Engine}) {
             <h2 id="turn" className=" lg:text-4xl! font-bold font-minecraft text-center  h-[5dvh] mt-5!">Turn <span className="text-amber-400">{nbOfTurn}</span></h2>
             { !hasRoundStarted ? <h3 className=" mt-1! lg:text-2xl! font-bold font-minecraft text-center  max-h-[5dvh] h-[5dvh]">Make a move !</h3> : <div className=" mt-1! min-h-[5dvh]"></div>}
             <div id="arena" className=" h-[80dvh]">
+
                 <div id="healthBars" className="flex items-center h-[70%] ">
+
                     <div id="userSide" className="w-[80%] lg:w-[50%] mx-auto">
                         <div className="text-center flex flex-col">{currentUser.username ?? 'You'} 
                             <span>AC : {currentUser.ac}</span>
@@ -106,7 +81,9 @@ export default function CombatInterface({gameplay}: {gameplay: Engine}) {
                         </div>
                         <div className="w-[70%] mx-auto"><HitpointsBar /></div>
                     </div>
+
                     <div className="w-[10%] h-full flex items-center justify-center font-minecraft text-xl">VS</div>
+                    
                     <div id="enemySide" className="w-[80%] lg:w-[50%]  mx-auto">
                         <div className="text-center flex flex-col justify-between">{enemy?.name} 
                             <span>AC : {enemy?.ac ?? 10}</span> 

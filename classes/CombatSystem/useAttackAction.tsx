@@ -20,7 +20,7 @@ export default class useAttackAction {
   };
 
   calculateAttackRolls(AC:number) {
-    let attackRoll = Math.floor(Math.random() * 20)+1+(AC-10);
+    const attackRoll = Math.floor(Math.random() * 20)+1+(AC-10);
     const hit = AC>attackRoll ? false : true;
     return {hit:hit, roll:attackRoll};
   };

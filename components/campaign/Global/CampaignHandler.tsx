@@ -23,8 +23,6 @@ export default function CampaignHandler() {
   //preloading the audio
   const { voice, battleMusic } = PreloadAudio();
 
-
-
   // narration store
   const currentCampaign = useNarrationStore((state) => state.currentCampaign);
   const campaignTitle = useNarrationStore((state) => state.campaignTitle);
@@ -66,6 +64,7 @@ export default function CampaignHandler() {
   // lock the choices option to allow a small delay between each node for loading purposes
   const isLocked = useRef(false);
 
+
   // RUNNING THE MAIN ENGINE
   const gameplay = useRef<Engine>(new Engine(currentNode));
 
@@ -82,7 +81,9 @@ export default function CampaignHandler() {
       );
 
       // storing the nodes history, the story path
-      setUserPastNodes((prev) => prev.length > 0 ? [...prev, currentNode] : [currentNode]);
+      setUserPastNodes((prev) =>
+        prev.length > 0 ? [...prev, currentNode] : [currentNode],
+      );
 
       // activating the combat interface when combat is on
       if (currentCampaign[currentNode].choices) {
@@ -115,27 +116,23 @@ export default function CampaignHandler() {
       setKeyboardPressed(true);
       if (allChoicesAvailable && (e.key === "1" || e.key === "&")) {
         if (!allChoicesAvailable[0]) return;
-        userPastChoices.length > 0
-          ? setUserPastChoices((prev) => [
-              ...prev,
-              allChoicesAvailable[0]?.text,
-            ])
-          : setUserPastChoices([allChoicesAvailable[0]?.text]);
+        //memorizing the user's choice for the narration and the gameplay consequences
+        setUserPastChoices((prev) => [...prev, allChoicesAvailable[0]?.text]);
+
+        //updating the engine  
         gameplay.current.determineNextNode(
           allChoicesAvailable[0],
           setData,
           userPastNodes,
           resetNbOfTurn,
         );
+
         setKeyboardPressed(false);
       } else if (allChoicesAvailable && (e.key === "2" || e.key === "é")) {
         if (!allChoicesAvailable[1]) return;
-        userPastChoices.length > 0
-          ? setUserPastChoices((prev) => [
-              ...prev,
-              allChoicesAvailable[1]?.text,
-            ])
-          : setUserPastChoices([allChoicesAvailable[1]?.text]);
+
+        setUserPastChoices((prev) => [...prev, allChoicesAvailable[1]?.text]);
+
         gameplay.current.determineNextNode(
           allChoicesAvailable[1],
           setData,
@@ -145,12 +142,8 @@ export default function CampaignHandler() {
         setKeyboardPressed(false);
       } else if (allChoicesAvailable && (e.key === "3" || e.key === '"')) {
         if (!allChoicesAvailable[2]) return;
-        userPastChoices.length > 0
-          ? setUserPastChoices((prev) => [
-              ...prev,
-              allChoicesAvailable[2]?.text,
-            ])
-          : setUserPastChoices([allChoicesAvailable[2]?.text]);
+        setUserPastChoices((prev) => [...prev, allChoicesAvailable[2]?.text]);
+
         gameplay.current.determineNextNode(
           allChoicesAvailable[2],
           setData,
@@ -166,7 +159,7 @@ export default function CampaignHandler() {
     document.addEventListener("keydown", handleKeyboardSelection);
     return () =>
       document.removeEventListener("keydown", handleKeyboardSelection);
-  }, [allChoicesAvailable]);
+  }, [allChoicesAvailable, userPastNodes, resetNbOfTurn, keyboardPressed]);
 
   return (
     <section className=" w-full h-dvh max-h-full gap-10! lg:p-10">
@@ -177,6 +170,7 @@ export default function CampaignHandler() {
       {isCombatOn && (
         <BattleMusic play={battleMusic.play} stop={battleMusic.stop} />
       )}
+
       {isCombatOn && <CombatInterface gameplay={gameplay.current} />}
 
       {/* end screen component */}
@@ -226,16 +220,16 @@ export default function CampaignHandler() {
                   key={key}
                   onPointerDown={() => {
                     if (isLocked.current) return;
-                    userPastChoices.length > 0
-                      ? setUserPastChoices((prev) => [...prev, item.text])
-                      : setUserPastChoices([item.text]);
-                    gameplay.current &&
+                    setUserPastChoices((prev) => [...prev, item.text])
+               
+                    if (gameplay.current) {
                       gameplay.current.determineNextNode(
                         item,
                         setData,
                         userPastNodes,
                         resetNbOfTurn,
                       );
+                    };
                   }}
                   className="hover:outline-2! border-2! my-1! border-white lg:border-0! outline-white! rounded-lg p-4! text-left"
                 >

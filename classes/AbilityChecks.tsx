@@ -2,56 +2,29 @@ import { useUserStore } from "@/stores/useUserStore";
 import { Choice, Nodes } from "@/types/types";
 export default class AbilityChecks {
 
-    handler(currentChoice: Choice, node: keyof Nodes | string | undefined) {
-      if (currentChoice && node) {
+  handler(currentChoice: Choice, node: keyof Nodes | string | undefined) {
+    if (currentChoice && node) {
 
-          const dc = currentChoice.dc;
-          if (dc) {
-            const currentUser = useUserStore.getState().currentUser;
-            const statKey = currentChoice.check;
-            const userStat = statKey
-              ? Object.entries(currentUser).find(([key]) => key === statKey)
-              : undefined;
-            const modifier = Math.floor(((userStat?.[1] as number ?? 10) - 10) / 2);
-            let abilityScore = Math.floor(Math.random() * 20)+1+modifier;
-            abilityScore<= 0 && (abilityScore=1);
+      const dc = currentChoice.dc;
+      if (dc) {
+        const currentUser = useUserStore.getState().currentUser;
+        const statKey = currentChoice.check;
+        const userStat = statKey
+          ? Object.entries(currentUser).find(([key]) => key === statKey)
+          : undefined;
+        const modifier = Math.floor(((userStat?.[1] as number ?? 10) - 10) / 2);
+        let abilityScore = Math.floor(Math.random() * 20) + 1 + modifier;
+        abilityScore <= 0 && (abilityScore = 1);
 
-            if (abilityScore<dc) {
-              return {result:false, value:abilityScore};
-            } else {
-              return {result:true, value:abilityScore};
-            }              
-                
-            // if (abilityScore<dc) {
-            //   currentChoice.fail && setCurrentNode(currentChoice.fail);
-            //   setAbilityCheckData((prev: any) => ({...prev, type:'ability', success:false, value:abilityScore, status:true}));
-            // } else {
-            //   setCurrentNode(currentChoice.next);
-            //   setAbilityCheckData((prev: any) => ({...prev, type:'ability', success:true, value:abilityScore, status:true}));
-            // }              
-          }
-    }}
+        if (abilityScore < dc) {
+          return { result: false, value: abilityScore };
+        } else {
+          return { result: true, value: abilityScore };
+        }
+
+      }
     }
+  }
+}
 
 
-
-    // old version
-      // handleAbilityChecks(currentChoice:any, setCurrentNode:any, setAbilityCheckData:any) {
-    //   if (currentChoice && this.node) {
-    
-    //       const dc = currentChoice.dc;
-    //       if (dc) {
-    //         const userStat: any = Object.entries(this.currentUser).find(n => n.includes(currentChoice.check));
-    //         const modifier = Math.floor((userStat[1]-10)/2);
-    //         let abilityScore = Math.floor(Math.random() * 20)+1+modifier;
-    //         abilityScore<= 0 && (abilityScore=1);
-                
-    //         if (abilityScore<dc) {
-    //           currentChoice.fail && setCurrentNode(currentChoice.fail);
-    //           setAbilityCheckData((prev: any) => ({...prev, success:false, value:abilityScore, status:true}));
-    //         } else {
-    //           setCurrentNode(currentChoice.next);
-    //           setAbilityCheckData((prev: any) => ({...prev, success:true, value:abilityScore, status:true}));
-    //         }              
-    //       }
-    // }}

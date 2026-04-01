@@ -45,12 +45,12 @@ export default class Combat {
     this.clearCombatLog = useCombatStore.getState().clearCombatLog;
 
     this.userFirstToAttack = true;
-    this.useAttack;
-    this.tempUserStats;
+    this.useAttack=undefined;
+    this.tempUserStats=undefined;
 
     this.createEnemy = new Enemy();
     this.updateEnemy = useCombatStore.getState().updateEnemy;
-    this.encounter;
+    this.encounter=undefined;
     this.enemyModifier = 0;
 
     this.openInventory = useCombatStore.getState().openInventory;
@@ -112,7 +112,7 @@ export default class Combat {
     //resetting nb of turn if needed
     resetNbOfTurn(1);
 
-    // creating a virtual object containing the user's main stats before starting the fight
+    // creating a snapshot containing the user's main stats before starting the fight
     // used to reset their stats in case of a game over
     this.tempUserStats = { ...this.currentUser };
 
@@ -120,7 +120,9 @@ export default class Combat {
     this.encounter = {
       ...this.createEnemy.fetchEnemyData(currentChoice.enemy_id),
     };
+
     if (!this.encounter) return;
+    
     this.updateEnemy({ ...this.encounter });
 
     //setting up the pre-requisite of the fight
@@ -190,7 +192,11 @@ export default class Combat {
           this.encounter.ac ?? 10,
         );
         const damageDoneByUser = this.useAttack.resolver();
-        !damageDoneByUser && resolve();
+        if (!damageDoneByUser) {
+          resolve();
+          return;
+        };
+        
         this.encounter.hp = Math.floor(this.encounter.hp - (damageDoneByUser ?? 0));
         this.updateEnemy({ hp: this.encounter.hp });
       }

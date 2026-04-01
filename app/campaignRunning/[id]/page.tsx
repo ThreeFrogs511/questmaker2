@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useState } from "react";
+import { useEffect} from "react";
 import CampaignHandler from "@/components/campaign/Global/CampaignHandler";
 import Loading from "@/app/loading";
 // main types
@@ -7,14 +7,14 @@ import { useNarrationStore } from "@/stores/useNarrationStore";
 import { useRouter } from "next/navigation";
 import { useUserContext } from "@/context/context";
 
-export default function CampaignRunning({params,}: {
+export default function CampaignRunning({
+  params,
+}: {
   params: Promise<{ id: string }>;
 }) {
   const router = useRouter();
 
-  const {isAuthenticated, isProfileCompleted} = useUserContext();
-
-
+  const { isAuthenticated, isProfileCompleted } = useUserContext();
 
   async function startNewCampaign() {
     const { id } = await params;
@@ -36,32 +36,27 @@ export default function CampaignRunning({params,}: {
   const currentNode = useNarrationStore((state) => state.currentNode);
   const updateNode = useNarrationStore((state) => state.updateNode);
 
-  const [hasCampaignLaunched, setHasCampaignLaunched] = useState(false);
-
-  
+  const hasCampaignLaunched = currentCampaign && currentNode ? true : false;
 
   useEffect(() => {
+    if (hasCampaignLaunched) return;
     startNewCampaign()
       .then((data) => {
         setCurrentCampaign(data.nodes);
-        const first = Object.keys(data.nodes)[0];
+        const firstNode = Object.keys(data.nodes)[0];
         const title = data.meta.title;
-        const values = { first: first, title: title };
+        const values = { firstNode: firstNode, title: title };
         return values;
       })
       .then((values) => {
-        updateNode(values.first);
-        // updateNode("remembering_how_to_fight")
+        // updateNode(values.firstNode);
+        updateNode("remembering_how_to_fight")
         setCampaignTitle(values.title);
       })
       .catch((err) => console.log(err));
-  }, []);
+  });
 
-  useEffect(() => {
-    if (currentCampaign && currentNode) setHasCampaignLaunched(true);
-  }, [currentCampaign, currentNode]);
-
-    if (!isAuthenticated || !isProfileCompleted) {
+  if (!isAuthenticated || !isProfileCompleted) {
     return <Loading />;
   }
   return <>{hasCampaignLaunched ? <CampaignHandler /> : <Loading />}</>;
