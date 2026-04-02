@@ -1,7 +1,6 @@
 "use client";
 import { Card, Input, Button } from "pixel-retroui";
 import Header from "@/components/global/Header";
-import Footer from "@/components/global/Footer";
 import { useRouter } from "next/navigation";
 import { useState, useEffect, useRef } from "react";
 import { useUserStore } from "@/stores/useUserStore";
@@ -199,7 +198,6 @@ export default function ProfileSettings() {
               </p>
           </Card>
         </div>
-        <Footer />
       </div>
 
       {/* modal */}

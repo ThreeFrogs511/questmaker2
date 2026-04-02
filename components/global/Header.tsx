@@ -6,8 +6,7 @@ import { useUserStore } from "@/stores/useUserStore";
 
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  // const isMenuOpen = useUserStore(state => state.isMenuOpen);
-  // const setIsMenuOpen = useUserStore(state => state.setIsMenuOpen);
+  
 
   return (
     <>
@@ -25,7 +24,7 @@ export default function Header() {
 
       {/* header */}
 
-      <header className="h-12! relative">
+      <header className="h-12! relative w-full!">
         <svg
           fill="none"
           xmlns="http://www.w3.org/2000/svg"

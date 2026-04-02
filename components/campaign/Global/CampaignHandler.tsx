@@ -5,6 +5,7 @@ import Engine from "@/classes/Engine";
 import PreloadAudio from "../Audio/PreloadAudio";
 // used to interpret HTML in JSON
 import parse from "html-react-parser";
+import Link from "next/link";
 
 // main types
 
@@ -183,15 +184,25 @@ export default function CampaignHandler() {
           id="titleWrapper"
           className=" h-[20%] flex items-center overflow-hidden"
         >
-          <h1 className="text-lg! lg:text-2xl! font-bold font-minecraft text-amber-400">
+          <h1 className="text-sm! lg:text-2xl! font-bold font-minecraft text-amber-400">
             {campaignTitle ? campaignTitle : "Campaign"}
           </h1>
 
-          {/* icon to mute or play the voices */}
-          <PressPlayIcon
-            isPressed={isPressed}
-            setIsPressedAction={setIsPressed}
-          />
+          <div className="flex items-center h-full ml-10! gap-6!">
+            {/* icon to mute or play the voices */}
+            <PressPlayIcon
+              isPressed={isPressed}
+              setIsPressedAction={setIsPressed}
+            />
+
+            {/* leave campaign link */}
+            <Link
+              href="/campaignList"
+              className="flex items-center h-[50%] lg:h-[70%] text-xs! lg:text-sm! text-gray-400 hover:text-white border-2! border-gray-600 hover:border-white rounded px-2! transition-colors"
+            >
+              Leave
+            </Link>
+          </div>
         </div>
 
         {/* content wrapper */}

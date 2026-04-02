@@ -1,7 +1,6 @@
 "use client";
 import UserItems from "@/components/inventory/UserItems";
 import Header from "@/components/global/Header";
-import Footer from "@/components/global/Footer";
 import HitpointsBar from "@/components/userStats/HitpointsBar";
 import DopamineBar from "@/components/userStats/DopamineBar";
 import Item from "@/classes/Item";
@@ -34,7 +33,6 @@ export default function Inventory() {
           </div>
           <UserItems userActionOnItems={new Item().useConsumable} />
         </div>
-        <Footer />
       </div>
     </>
   );

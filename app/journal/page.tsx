@@ -4,7 +4,6 @@ import List from "@/components/journal/List";
 import Toolbar from "@/components/journal/Toolbar";
 import { Press_Start_2P } from "next/font/google";
 import Header from "@/components/global/Header";
-import Footer from "@/components/global/Footer";
 import { useUserStore } from "@/stores/useUserStore";
 import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
 import { useJournalStore } from "@/stores/useJournalStore";
@@ -145,7 +144,6 @@ export default function Journal() {
             </div>
           )}
         </section>
-        <Footer />
       </div>
     </>
   );

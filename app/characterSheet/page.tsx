@@ -3,7 +3,6 @@ import { Card } from "pixel-retroui";
 import Hitpoints from "@/components/userStats/HitpointsBar";
 import DopamineBar from "@/components/userStats/DopamineBar";
 import Progress from "@/components/userStats/XpBar";
-import Footer from "@/components/global/Footer";
 import Header from "@/components/global/Header";
 import { useUserContext } from "@/context/context";
 import Loading from "../loading";
@@ -13,7 +12,7 @@ import { useUserStore } from "@/stores/useUserStore";
 export default function CharacterSheet() {
   //branchement à mon store
   const currentUser = useUserStore((state) => state.currentUser);
-  const {isAuthenticated, isProfileCompleted} = useUserContext();
+  const { isAuthenticated, isProfileCompleted } = useUserContext();
 
   if (!isAuthenticated || !isProfileCompleted) {
     return <Loading />;
@@ -21,10 +20,10 @@ export default function CharacterSheet() {
 
   return (
     <>
-      <div className="wrapper">
+      <div className="h-full grid grid-rows-[auto_1fr]">
         <Header />
-      
-        <section id="profile" className="w-full h-full flex">
+
+        <section id="profile" className="w-full h-full flex py-5">
           <div
             className="sm:w-4/5!
                         md:w-3/4!
@@ -199,7 +198,7 @@ export default function CharacterSheet() {
             </Card>
           </div>
         </section>
-        <Footer />
+        {/* <Footer /> */}
       </div>
     </>
   );

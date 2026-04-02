@@ -94,7 +94,6 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       })
       .finally(() => {
         setIsFetchingDone(true);
-        // setIsMenuOpen(false);
       });
   }, [pathname, router, login, updateDraft, setIsMenuOpen, setAreQuestsLoaded, updateInventory]);
 

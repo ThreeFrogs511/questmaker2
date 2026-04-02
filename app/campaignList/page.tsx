@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import { Card, Button } from "pixel-retroui";
 import Header from "@/components/global/Header";
-import Footer from "@/components/global/Footer";
 import { useUserStore } from "@/stores/useUserStore";
 import { useRouter } from "next/navigation";
 import Loading from "../loading";
@@ -85,7 +84,6 @@ export default function CampaignList() {
         <Loading />
       )}
 
-      <Footer />
     </div>
   );
 }

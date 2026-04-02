@@ -30,7 +30,7 @@ body {
 .wrapper {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-rows: auto 1fr auto;
+  grid-template-rows: auto 1fr;
   min-height: 100dvh !important;
   height: 100dvh !important;
 }

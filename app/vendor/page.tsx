@@ -1,6 +1,5 @@
 "use client";
 import Header from "@/components/global/Header";
-import Footer from "@/components/global/Footer";
 import { useState, useEffect, useRef } from "react";
 import { merchantGreetings } from "@/assets/merchantGreetings";
 import MerchantBuy from "@/components/vendor/MerchantBuy";
@@ -49,7 +48,7 @@ export default function Vendor() {
     <>
       <div className="wrapper">
         <Header />
-        <section className=" w-full  h-full! max-h-full overflow-hidden flex flex-col mx-auto items-center">
+        <section className=" w-full  h-full! max-h-full overflow-hidden flex flex-col mx-auto gap-5 items-center lg:pb-5">
           <div className="mb-5 flex flex-col items-center">
             <h2 className="text-xl! lg:text-2xl! font-minecraft leading-relaxed text-amber-300">
               {title}
@@ -63,7 +62,6 @@ export default function Vendor() {
           {(choosePurchase && !chooseSell) && <MerchantBuy setNotEnoughMoneyAction={setNotEnoughMoney}/>}
           {(!choosePurchase && chooseSell) && <MerchantSell setChooseSellAction={setChooseSell}/>}
         </section>
-        <Footer />
       </div>
     </>
   );
