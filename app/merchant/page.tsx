@@ -1,17 +1,11 @@
 import { redirect } from "next/navigation";
 import Image from "next/image";
-import Loading from "../loading";
-import { useUserContext } from "@/context/context";
 
 
 export default function Merchant() {
   const vendorChoices = ["Purchase", "Sell"];
   const icons = ["/icons/items/buy.svg", "/icons/items/sell.svg"];
-  const {isAuthenticated, isProfileCompleted} = useUserContext();
 
-  if (!isAuthenticated || !isProfileCompleted) {
-    return <Loading />;
-  }
   // const [hover, setHover] = useState("");
 
   return (
