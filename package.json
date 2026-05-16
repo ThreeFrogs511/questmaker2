@@ -32,6 +32,9 @@
     "use-sound": "^5.0.0",
     "zustand": "^5.0.9"
   },
+  "overrides": {
+    "postcss": ">=8.5.10"
+  },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.16",
     "@types/bcrypt": "^6.0.0",
