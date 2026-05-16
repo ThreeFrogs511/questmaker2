@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { User } from "@/types/types";
 
-type UserStore = {
+interface UserStore {
   currentUser: User;
   login: (user: User) => void;
   logout: () => void;

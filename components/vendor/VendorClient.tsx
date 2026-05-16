@@ -6,11 +6,11 @@ import MerchantBuy from "@/components/vendor/MerchantBuy";
 import MerchantMenu from "@/components/vendor/MerchantMenu";
 import MerchantSell from "@/components/vendor/MerchantSell";
 import VendorToolbar from "@/components/vendor/VendorToolbar";
-import Loading from "../loading";
+import Loading from "@/app/loading"
 import { useUserContext } from "@/context/context";
 
 
-export default function Vendor() {
+export default function VendorClient() {
 
   const title = "Guilbert's Store";
   const [isTyping, setIsTyping] = useState(true);
