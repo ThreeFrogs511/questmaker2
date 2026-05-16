@@ -1,5 +1,3 @@
-"use client";
-// import { useState } from "react";
 import { redirect } from "next/navigation";
 import Image from "next/image";
 import Loading from "../loading";
