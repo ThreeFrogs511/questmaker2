@@ -12,7 +12,7 @@ export default function MerchantHeader() {
   
 
   const { isAuthenticated, isProfileCompleted } = useUserContext();
-
+ 
   
   useEffect(() => {
     const selectedGreetings =

@@ -91,9 +91,10 @@ export async function POST(request: Request) {
         inventory: inventory,
       });
     } else if (pathname.includes("/campaignRunning")) {
+      console.log("fetching data for campaignRunning page");
       r = await sql`
-        SELECT u.id, u.username, u.xp, u.hp, u.user_class, u.lvl, u.race, u.gender,
-        u.str, u.dex, u.con, u.int, u.wis, u.cha, u.ac, u.damage_taken, u.dopamine, 
+        SELECT u.id, u.username, u.xp, u.user_class, u.hp, u.user_class, u.lvl, u.race, u.gender,
+        u.str, u.dex, u.con, u.int, u.wis, u.cha, u.ac, u.damage_taken, u.dopamine, u.xp, u.lvl, u.coins,
         u.dopamine_consumed, u.profile_completed, u.coins, u.last_campaign_done,
         i.inventory_id, i.slug, 
         i.user_id as inventory_user_id, i.quantity::int4 AS quantity
@@ -115,8 +116,13 @@ export async function POST(request: Request) {
         authenticated: true,
         user: {
           username: r[0].username,
-          id: r[0].global_user_id,
+          id: r[0].id,
+          user_class: r[0].user_class,
+          xp: r[0].xp,
+          lvl: r[0].lvl,
           coins: r[0].coins,
+          race: r[0].race,
+          gender: r[0].gender,
           dopamine_consumed: r[0].dopamine_consumed,
           damage_taken: r[0].damage_taken,
           hp: r[0].hp,
