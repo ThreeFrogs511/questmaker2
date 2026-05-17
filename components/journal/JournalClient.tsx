@@ -35,9 +35,9 @@ export default function JournalClient() {
   const [turnPage] = useSound("/sounds/page.mp3");
   const journal = ["Current quests", "Archived quests", "All quests"];
 
-  useEffect(() => {
-    resetDraft({});
-  });
+  // useEffect(() => {
+  //   resetDraft({});
+  // });
 
   useEffect(() => {
     setJournalError("");
@@ -67,9 +67,6 @@ export default function JournalClient() {
     turnPage();
   }, [whichPage]);
 
-  if (!isAuthenticated || !isProfileCompleted) {
-    return <Loading />;
-  }
 
   return (
     <>

@@ -48,7 +48,7 @@ export default function LoginForm() {
     const password = (document.getElementById("password") as HTMLInputElement)
       .value;
 
-    const response = await fetch(`/api/login`, {
+    const response = await fetch(`/api/auth/login`, {
       method: "POST",
       headers: { "content-type": "application/JSON" },
       body: JSON.stringify({

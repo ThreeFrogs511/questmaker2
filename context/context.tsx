@@ -1,18 +1,19 @@
 "use client";
-import { createContext, useContext, useState, useEffect } from "react";
+import { createContext, useContext, useState, useEffect, use } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useUserStore } from "@/stores/useUserStore";
 import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
-import fetchingQuests from "@/middlewares/fetchingQuests";
+import prepareQuests from "@/lib/prepareQuests";
 import { useJournalStore } from "@/stores/useJournalStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
 
 
-type userContextType = {
+interface userContextType {
   isFetchingDone: boolean;
   isProfileCompleted: boolean;
   isAuthenticated: boolean;
+  isDataLoaded: boolean;
 };
 
 const UserDataContext = createContext<userContextType | null>(null);
@@ -22,14 +23,17 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const login = useUserStore((state) => state.login);
   const updateDraft = useCharacterCreationStore((state) => state.updateDraft);
+  const userDraft = useCharacterCreationStore((state) => state.draft);
   const setIsMenuOpen = useUserStore((state) => state.setIsMenuOpen);
   const setAreQuestsLoaded = useJournalStore((state) => state.setAreQuestsLoaded);
   const updateInventory = useInventoryStore((state)=> state.updateInventory);
 
   // states for user data and fetching status
   const [isFetchingDone, setIsFetchingDone] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isProfileCompleted, setIsProfileCompleted] = useState(false);
+  
 
   useEffect(() => {
     fetch("/api/me", {
@@ -44,9 +48,10 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
         if (data.authenticated) {
           // handling existing but incomplete profile
           if (data.user.profile_completed === false) {
-            setIsProfileCompleted(false);
-            updateDraft({ id: data.user.id, email: data.user.email });
-            router.push("/characterCreation");
+            // setIsProfileCompleted(false);
+            // updateDraft({ id: data.user.id, email: data.user.email });
+            // console.log("draft", userDraft)
+            // router.push("/characterCreation");
           } else {
             console.log('data:', data.user)
             setIsProfileCompleted(true);
@@ -57,7 +62,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
               const listOrdered = data.todos.sort(
                 (a: { id: number }, b: { id: number }) => b.id - a.id,
               );
-              fetchingQuests(!listOrdered[0].body ? [] : listOrdered);
+              prepareQuests(!listOrdered[0].body ? [] : listOrdered);
               setAreQuestsLoaded(true);
             };
 
@@ -99,7 +104,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <>
-      <UserDataContext.Provider value={{ isFetchingDone, isAuthenticated, isProfileCompleted }}>
+      <UserDataContext.Provider value={{ isFetchingDone, isAuthenticated, isProfileCompleted, isDataLoaded }}>
         {isFetchingDone && children }
       </UserDataContext.Provider>
     </>

@@ -51,7 +51,7 @@ export default function SignupForm() {
     const confirm = (document.getElementById("confirm") as HTMLInputElement)
       .value;
 
-    const response = await fetch(`/api/users`, {
+    const response = await fetch(`/api/auth/signup`, {
       method: "POST",
       headers: { "content-type": "application/JSON" },
       body: JSON.stringify({

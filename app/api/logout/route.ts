@@ -11,13 +11,10 @@ export async function DELETE(
 
     try {
         const cookie = await cookies();
-        const token:string | undefined = cookie.get("session")?.value;
-        if (!token) return NextResponse.json({error: 'No sessions detected. Please login.'});
-
-        await sql`DELETE FROM sessions WHERE token = ${token}`;
 
         cookie.delete('session');
         cookie.delete('csrf');
+        cookie.delete('auth');
         return NextResponse.json({success: true});
 
     } catch (err) {
