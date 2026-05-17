@@ -12,10 +12,7 @@ interface PayloadType {
   isCompleted: boolean;
 }
 // when the user finish their profile after signing up
-export async function PATCH(
-  request: Request,
-  { params }: { params: Promise<{ id: string }> },
-) {
+export async function PATCH(request: Request) {
   try {
     const cookieStore = await cookies();
     // const token = cookieStore.get("session")?.value;
