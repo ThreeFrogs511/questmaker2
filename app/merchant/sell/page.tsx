@@ -22,16 +22,24 @@ export default function MerchantSell() {
     preload: true,
   });
 
+
+  //Using optmistic UI to avoid long loading times
   async function sellingItems(item: Store) {
+
+    //prevents double-clicking
     if (pathname !== "/merchant/sell" || isSelling.current) return;
     isSelling.current = true;
 
-    // Snapshots for rollback
+    // Saving old inventory state for rollback
     const previousInventory = inventory ? [...inventory] : null;
     const previousCoins = currentUser?.coins ?? 0;
 
-    // Optimistic update: play sound and update UI immediately
     play();
+
+    //Updating the state before the database for the optimistic UI
+    //we store in a temp inventory the current inventory and the item sold
+    //with -1 in quantity
+    //If the item quantity < 0, we don't return
     if (item.slug) {
       const optimisticInventory = (inventory ?? [])
         .map((i) =>
@@ -39,22 +47,32 @@ export default function MerchantSell() {
         )
         .filter((i) => (i.quantity ?? 0) > 0);
       updateInventory(optimisticInventory);
-    }
+    };
+
+    //Optimistic UI : we also update the coins before the database
     updateStats({ coins: previousCoins + (item.price ?? 0) });
 
-    const r = await fetch(`../api/inventory/${currentUser?.id}`, {
-      method: "PATCH",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(item),
-    });
-    const feedback = await r.json();
+    //we finally update the database
+    //we rollback when an error occurs
+    try {
+      const r = await fetch(`../api/inventory/${currentUser?.id}`, {
+        method: "PATCH",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(item),
+      });
+      const feedback = await r.json();
 
-    if (feedback.success) {
-      // Sync with authoritative server data
-      updateInventory(feedback.list);
-      updateStats({ coins: feedback.coins });
-    } else {
-      // Rollback optimistic update
+      if (feedback.success) {
+        // Sync with authoritative server data
+        updateInventory(feedback.list);
+        updateStats({ coins: feedback.coins });
+      } else {
+        // Rollback optimistic update
+        if (previousInventory !== null) updateInventory(previousInventory);
+        updateStats({ coins: previousCoins });
+      }
+    } catch (e) {
+      //in case of server error 
       if (previousInventory !== null) updateInventory(previousInventory);
       updateStats({ coins: previousCoins });
     }

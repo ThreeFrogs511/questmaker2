@@ -21,7 +21,9 @@ export default function MerchantPurchase() {
     preload: true,
   });
 
+  //Using optmistic UI to avoid long loading times
   async function handlePurchase(item: Store) {
+    //prevents double-clicking
     if (!inventory || isBuying.current) return;
     isBuying.current = true;
 
@@ -29,18 +31,22 @@ export default function MerchantPurchase() {
       setNotEnoughMoney(true);
       isBuying.current = false;
       return;
-    }
+    };
 
-    // rollback
+    // Saving old inventory state for rollback
     const previousInventory = [...inventory];
     const previousCoins = currentUser?.coins ?? 0;
 
-    // Optimistic update: play sound and update UI immediately
     play();
+
+    //Updating the state before the database for the optimistic UI
     const optimisticInventory = [...inventory];
+    //We check if the item already exists in the user's inventory
     const existingIdx = optimisticInventory.findIndex(
       (i) => i.slug === item.slug,
     );
+
+    //We add the item if it doesn't exist, else we just increment the quantity
     if (existingIdx >= 0) {
       optimisticInventory[existingIdx] = {
         ...optimisticInventory[existingIdx],
@@ -56,36 +62,43 @@ export default function MerchantPurchase() {
     }
     updateInventory(optimisticInventory);
     updateStats({ coins: previousCoins - (item.price ?? 0) });
-    
-    
-    const r = await fetch(`../api/inventory/${currentUser?.id}`, {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify(item),
-    });
-    const feedback = await r.json();
-    console.log("feedback:", feedback);
-    if (feedback?.success) {
-      setNotEnoughMoney(false);
-      // Sync with authoritative server data
-      updateInventory(feedback.items);
-      updateStats({ coins: feedback.coins });
-    }
 
-    if (feedback?.broke) {
-      // Rollback optimistic update
+    //we finally update the database
+    //we rollback when an error occurs
+    try {
+      const r = await fetch(`../api/inventory/${currentUser?.id}`, {
+        method: "POST",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify(item),
+      });
+      const feedback = await r.json();
+
+      if (feedback?.success) {
+        setNotEnoughMoney(false);
+        // Sync with authoritative server data
+        updateInventory(feedback.items);
+        updateStats({ coins: feedback.coins });
+      }
+
+      if (feedback?.broke) {
+        // Rollback optimistic update
+        updateInventory(previousInventory);
+        updateStats({ coins: previousCoins });
+        setNotEnoughMoney(true);
+      }
+
+      if (feedback?.error) {
+        // Rollback optimistic update
+        updateInventory(previousInventory);
+        updateStats({ coins: previousCoins });
+        console.log("error:", feedback.error);
+      }
+    } catch (e) {
       updateInventory(previousInventory);
       updateStats({ coins: previousCoins });
-      setNotEnoughMoney(true);
-    }
-
-    if (feedback?.error) {
-      // Rollback optimistic update
-      updateInventory(previousInventory);
-      updateStats({ coins: previousCoins });
-      console.log("error:", feedback.error);
-    }
-
+      console.log("error:", (e as Error).message);
+    };
+    
     isBuying.current = false;
   }
 
