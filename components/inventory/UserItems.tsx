@@ -42,7 +42,7 @@ export default function UserItems({userActionOnItems, mode} : {userActionOnItems
     <>
       <section
         id="inventoryContainer"
-        className="lg:w-[70%]! mx-auto h-full flex flex-col scrollingContainer grow! gap-5 md:gap-2 "
+        className="w-full h-full flex flex-col scrollingContainer grow! gap-5 md:gap-2 px-0!"
       >
  
         {displayedInventory.map((item: Store, key: number) => (
@@ -81,7 +81,7 @@ export default function UserItems({userActionOnItems, mode} : {userActionOnItems
 
             {/* CTA depending on the page : selling, equip or use item */}
             <div className="underline cursor-pointer hover:text-amber-300" onPointerDown={() => userActionOnItems(item)}>
-              {pathname === "/vendor" && "Sell"}
+              {pathname === "/merchant/sell" && "Sell"}
               {pathname === "/inventory" && item.type === "consumable" && "Use"}
               {pathname === "/inventory" && item.type !== "consumable" && "Equip"}
               {mode === "combat" && "Use"}

@@ -1,18 +1,19 @@
 "use client";
 import { useRef } from "react";
 import { useUserStore } from "@/stores/useUserStore";
+import UserItems from "../inventory/UserItems";
 import { usePathname } from "next/navigation";
 import { Store } from "@/types/types";
 import { useInventoryStore } from "@/stores/useInventoryStore";
 import useSound from "use-sound";
 import { useRouter } from "next/navigation";
-import UserItems from "@/components/inventory/UserItems";
-import MerchantToolbar from "@/components/Merchant/MerchantToolBar";
+import MerchantToolbar from "./MerchantToolBar";
 
 export default function MerchantSell() {
   const currentUser = useUserStore((state) => state.currentUser);
   const updateStats = useUserStore((state) => state.updateStats);
   const pathname = usePathname();
+  const router = useRouter();
   const updateInventory = useInventoryStore((state) => state.updateInventory);
   const inventory = useInventoryStore((state) => state.inventory);
   const isSelling = useRef(false);
@@ -23,7 +24,7 @@ export default function MerchantSell() {
   });
 
   async function sellingItems(item: Store) {
-    if (pathname !== "/merchant/sell" || isSelling.current) return;
+    if (pathname !== "/vendor" || isSelling.current) return;
     isSelling.current = true;
 
     // Snapshots for rollback
@@ -42,7 +43,7 @@ export default function MerchantSell() {
     }
     updateStats({ coins: previousCoins + (item.price ?? 0) });
 
-    const r = await fetch(`../api/inventory/${currentUser?.id}`, {
+    const r = await fetch(`/api/inventory/${currentUser?.id}`, {
       method: "PATCH",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(item),

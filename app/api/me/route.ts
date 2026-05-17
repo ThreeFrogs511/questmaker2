@@ -61,7 +61,7 @@ export async function POST(request: Request) {
         authenticated: true,
         user: r[0],
       });
-    } else if (pathname === "/vendor" || pathname === "/inventory") {
+    } else if (pathname === "/merchant" || pathname === "/inventory" || pathname === "/merchant/sell") {
       r =
         await sql`SELECT u.id as global_user_id, u.profile_completed, u.coins, u.dopamine_consumed, u.damage_taken, u.hp, u.dopamine, i.inventory_id, i.slug, 
         i.user_id as inventory_user_id, i.quantity::int4 AS quantity FROM users u LEFT JOIN inventory i ON u.id = i.user_id WHERE u.id = ${userId}`;
