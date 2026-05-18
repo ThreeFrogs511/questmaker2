@@ -29,7 +29,7 @@ export async function proxy(request: NextRequest) {
 
     if (pathname !== "/characterCreation" && payload.isCompleted === false) {
       return NextResponse.redirect(new URL("/characterCreation", request.url));
-    }
+    };
 
     switch (pathname) {
       case "/signup":

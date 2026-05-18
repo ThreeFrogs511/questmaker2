@@ -18,5 +18,7 @@ class CheckIfJournalDataFullyLoaded extends CheckIfDataFullyLoaded {
     };
 
     
+
+    
     
 }

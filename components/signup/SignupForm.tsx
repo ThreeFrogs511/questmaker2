@@ -41,7 +41,7 @@ export default function SignupForm() {
     }
   }, [isFetchingDone, isTyping]);
 
-  async function submitHandler(e: React.FormEvent<HTMLFormElement>) {
+  async function submitHandler(e: React.SubmitEvent<HTMLFormElement>) {
     e.preventDefault();
     setError("");
 

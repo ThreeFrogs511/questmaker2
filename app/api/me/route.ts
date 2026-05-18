@@ -26,8 +26,9 @@ export async function POST(request: Request) {
     const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
     const { payload } : { payload: PayloadType } = await jose.jwtVerify(jwt, secretKey)
     const userId:number = payload.userId;
+    const email:string = payload.email;
 
-    if (!userId) return NextResponse.json({ err: "No user id attached" });
+    if (!userId || !email) return NextResponse.json({ err: "No user id attached" });
 
     const { pathname } = await request.json();
 
@@ -35,15 +36,16 @@ export async function POST(request: Request) {
     // fetching user's data and handling errors
     let r;
 
+
     switch (pathname) {
 
       case "/journal":
         r = await fetchQuests(sql, userId);
         return r;
 
-      case "/profileSettings":
-        r = await fetchProfileData(sql, userId);
-        return r;
+      // case "/profileSettings":
+      //   return NextResponse.json({user:{id:userId, email:email}, authenticated:true});
+
 
       case "/merchant":
         r = await fetchInventoryData(sql, userId);
@@ -53,7 +55,7 @@ export async function POST(request: Request) {
         r = await fetchInventoryData(sql, userId);
         return r;
 
-      case "merchant/sell":
+      case "/merchant/sell":
         r = await fetchInventoryData(sql, userId);
         return r;
 
@@ -63,7 +65,7 @@ export async function POST(request: Request) {
 
       default:
         r = await sql`
-        SELECT id, username, xp, hp, user_class, lvl, race, gender,
+        SELECT id, email, username, xp, hp, user_class, lvl, race, gender,
         str, dex, con, int, wis, cha, ac, damage_taken, dopamine, dopamine_consumed, profile_completed, coins, last_campaign_done
         FROM users
         WHERE id = ${userId}`;

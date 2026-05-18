@@ -3,8 +3,8 @@ import { NextResponse } from "next/server";
 
 export async function fetchPlayerCampaignData(sql: postgres.Sql<{}>, userId: number) {
      const r = await sql`
-        SELECT u.id, u.username, u.xp, u.user_class, u.hp, u.user_class, u.lvl, u.race, u.gender,
-        u.str, u.dex, u.con, u.int, u.wis, u.cha, u.ac, u.damage_taken, u.dopamine, u.xp, u.lvl, u.coins,
+        SELECT u.id, u.email, u.username, u.xp, u.hp, u.user_class, u.lvl, u.race, u.gender,
+        u.str, u.dex, u.con, u.int, u.wis, u.cha, u.ac, u.damage_taken, u.dopamine,
         u.dopamine_consumed, u.profile_completed, u.coins, u.last_campaign_done,
         i.inventory_id, i.slug, 
         i.user_id as inventory_user_id, i.quantity::int4 AS quantity
@@ -25,8 +25,9 @@ export async function fetchPlayerCampaignData(sql: postgres.Sql<{}>, userId: num
       return NextResponse.json({
         authenticated: true,
         user: {
-          username: r[0].username,
           id: r[0].id,
+          email: r[0].email,
+          username: r[0].username,
           user_class: r[0].user_class,
           xp: r[0].xp,
           lvl: r[0].lvl,

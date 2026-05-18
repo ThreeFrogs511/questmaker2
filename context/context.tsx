@@ -8,13 +8,17 @@ import prepareQuests from "@/lib/prepareQuests";
 import { useJournalStore } from "@/stores/useJournalStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
 
+interface isDataLoadedType {
+  isPlayerDataLoaded: boolean;
+  isInventoryDataLoaded: boolean;
+}
 
 interface userContextType {
   isFetchingDone: boolean;
   isProfileCompleted: boolean;
   isAuthenticated: boolean;
-  isDataLoaded: boolean;
-};
+  isDataLoaded: isDataLoadedType;
+}
 
 const UserDataContext = createContext<userContextType | null>(null);
 
@@ -23,19 +27,52 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const login = useUserStore((state) => state.login);
   const updateDraft = useCharacterCreationStore((state) => state.updateDraft);
-  const userDraft = useCharacterCreationStore((state) => state.draft);
   const setIsMenuOpen = useUserStore((state) => state.setIsMenuOpen);
-  const setAreQuestsLoaded = useJournalStore((state) => state.setAreQuestsLoaded);
-  const updateInventory = useInventoryStore((state)=> state.updateInventory);
+  const setAreQuestsLoaded = useJournalStore(
+    (state) => state.setAreQuestsLoaded,
+  );
+  const questsAreLoaded = useJournalStore((state) => state.areQuestsLoaded);
+  const updateInventory = useInventoryStore((state) => state.updateInventory);
 
   // states for user data and fetching status
   const [isFetchingDone, setIsFetchingDone] = useState(false);
-  const [isDataLoaded, setIsDataLoaded] = useState(false);
+  const [isDataLoaded, setIsDataLoaded] = useState<isDataLoadedType>({
+    isPlayerDataLoaded: false,
+    isInventoryDataLoaded: false,
+  });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isProfileCompleted, setIsProfileCompleted] = useState(false);
-  
+
+  function isDatabaseQueryNecessary(pathname: string) {
+    if (
+      pathname === "/journal" &&
+      questsAreLoaded &&
+      isDataLoaded.isPlayerDataLoaded
+    )
+      return false;
+    if ((pathname === "/characterSheet" || pathname==="/profileSettings") && isDataLoaded.isPlayerDataLoaded)
+      return false;
+    if (
+      (pathname === "/inventory" || pathname.includes("/merchant")) &&
+      isDataLoaded.isPlayerDataLoaded &&
+      isDataLoaded.isInventoryDataLoaded
+    ) {
+      return false;
+    }
+    if (
+      (pathname === "/campaignList" || pathname.includes("/campaignRunning")) &&
+      isDataLoaded.isPlayerDataLoaded &&
+      isDataLoaded.isInventoryDataLoaded
+    ) {
+      return false;
+    }
+
+  }
 
   useEffect(() => {
+    const needQuery = isDatabaseQueryNecessary(pathname);
+    if (needQuery === false) return; 
+
     fetch("/api/me", {
       method: "POST",
       headers: { "content-type": "application/json" },
@@ -43,47 +80,48 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
     })
       .then((r) => r.json())
       .then((data) => {
-    
         //if the user is authenticated
         if (data.authenticated) {
           // handling existing but incomplete profile
-          if (data.user.profile_completed === false) {
-            // setIsProfileCompleted(false);
-            // updateDraft({ id: data.user.id, email: data.user.email });
-            // console.log("draft", userDraft)
-            // router.push("/characterCreation");
-          } else {
-            console.log('data:', data.user)
-            setIsProfileCompleted(true);
-            login({ ...data.user });
 
-            // handling quests and journal
-            if (data.todos) {
-              const listOrdered = data.todos.sort(
-                (a: { id: number }, b: { id: number }) => b.id - a.id,
-              );
-              prepareQuests(!listOrdered[0].body ? [] : listOrdered);
-              setAreQuestsLoaded(true);
-            };
+          console.log("data:", data.user);
+          setIsProfileCompleted(true);
+          login({ ...data.user });
+          setIsDataLoaded((prev) => ({
+            ...prev,
+            isPlayerDataLoaded: true,
+          }));
 
-            if (data.inventory) {
-              updateInventory(data.inventory ?? []);
-              console.log("inventory data:", data.inventory);
-            }
-
-            // redirecting to journal if on title screen or character creation
-            if (pathname === "/" || pathname === "/characterCreation") {
-              router.push("/journal");
-            }
-
+          // storing quests
+          if (data.todos) {
+            const listOrdered = data.todos.sort(
+              (a: { id: number }, b: { id: number }) => b.id - a.id,
+            );
+            prepareQuests(!listOrdered[0].body ? [] : listOrdered);
+            setAreQuestsLoaded(true);
           }
+
+          //storing inventory
+          if (data.inventory) {
+            updateInventory(data.inventory ?? []);
+            console.log("inventory data:", data.inventory);
+            setIsDataLoaded((prev) => ({
+              ...prev,
+              isInventoryDataLoaded: true,
+            }));
+          }
+
+          // // redirecting to journal if on title screen or character creation
+          // if (pathname === "/" || pathname === "/characterCreation") {
+          //   router.push("/journal");
+          // }
+
           setIsAuthenticated(true);
-          
         }
 
         //not authenticated
         if (data.err) {
-          console.log("error:", data.err)
+          console.log("error:", data.err);
           if (pathname === "/signup") {
             router.push("/signup");
           } else if (pathname === "/login") {
@@ -100,12 +138,27 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       .finally(() => {
         setIsFetchingDone(true);
       });
-  }, [pathname, router, login, updateDraft, setIsMenuOpen, setAreQuestsLoaded, updateInventory]);
+  }, [
+    pathname,
+    router,
+    login,
+    updateDraft,
+    setIsMenuOpen,
+    setAreQuestsLoaded,
+    updateInventory,
+  ]);
 
   return (
     <>
-      <UserDataContext.Provider value={{ isFetchingDone, isAuthenticated, isProfileCompleted, isDataLoaded }}>
-        {isFetchingDone && children }
+      <UserDataContext.Provider
+        value={{
+          isFetchingDone,
+          isAuthenticated,
+          isProfileCompleted,
+          isDataLoaded,
+        }}
+      >
+        {isFetchingDone && children}
       </UserDataContext.Provider>
     </>
   );

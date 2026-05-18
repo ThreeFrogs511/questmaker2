@@ -10,17 +10,20 @@ import { useUserContext } from "@/context/context";
 export default function ProfileSettings() {
   const router = useRouter();
   const currentUser = useUserStore((state) => state.currentUser);
-
+  const updateProfile = useUserStore((state) => state.updateProfile);
   const [modal, openModal] = useState(false);
   const [currentPassword, setCurrentPassword] = useState<string | null>(null);
   const [newPassword, setNewPassword] = useState<string | null>(null);
   const [error, setError] = useState("");
   const [valid, setValid] = useState("");
   const flag = useRef(false);
-  const defaultEmail = currentUser?.email ?? "";
+  // const email = currentUser.email ?? "No email found"
   const [deleting, setDeleting] = useState(false);
 
-  const {isAuthenticated, isProfileCompleted} = useUserContext();
+  const { isAuthenticated, isProfileCompleted } = useUserContext();
+  useEffect(()=> {
+    console.log("user email:", currentUser.email)
+  }, [currentUser.email])
 
   useEffect(() => {
     const token = document.cookie
@@ -47,13 +50,12 @@ export default function ProfileSettings() {
     return <Loading />;
   }
 
- 
-
   async function submitProfileChanges() {
     if (flag.current === true) return;
     setError("");
     setValid("");
-    const chosenEmail = (document.getElementById("mail") as HTMLInputElement).value;
+    const chosenEmail = (document.getElementById("mail") as HTMLInputElement)
+      .value;
 
     const token = document.cookie
       .split("; ")
@@ -75,15 +77,13 @@ export default function ProfileSettings() {
       .then((r) => r.json())
       .then((data) => {
         if (data.success) {
-          // setEmail(data.newEmail);
+          updateProfile({email:data.newEmail})
           setValid("Profile edited successfully");
         } else {
           setError(data.err);
         }
       });
   }
-
-
 
   async function deleteAccount() {
     if (flag.current === true) return;
@@ -135,8 +135,8 @@ export default function ProfileSettings() {
                   bg="#000000"
                   id="mail"
                   textColor="#ffffff"
-                  borderColor="#ffffff"  
-                  defaultValue={defaultEmail}
+                  borderColor="#ffffff"
+                  defaultValue={currentUser.email ?? ""}
                   className="w-[80%] lg:w-[50%] text-xs!"
                 />
               </div>
@@ -187,15 +187,15 @@ export default function ProfileSettings() {
                 Delete account
               </Button>
             </div>
-             <p
-                className={
-                  error.trim()
-                    ? `h-10 text-red-600 text-xs text-center`
-                    : `h-10 text-green-400 text-xs text-center`
-                }
-              >
-                {error.trim() === "" ? valid : error}
-              </p>
+            <p
+              className={
+                error.trim()
+                  ? `h-10 text-red-600 text-xs text-center`
+                  : `h-10 text-green-400 text-xs text-center`
+              }
+            >
+              {error.trim() === "" ? valid : error}
+            </p>
           </Card>
         </div>
       </div>
@@ -207,9 +207,9 @@ export default function ProfileSettings() {
         className={
           !modal
             ? "hidden"
-            : ( deleting ? "fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center z-50 modalDeletion pointer-events-none" :
-              "fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center z-50 modalDeletion"
-            )
+            : deleting
+              ? "fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center z-50 modalDeletion pointer-events-none"
+              : "fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center z-50 modalDeletion"
         }
       >
         <div className="flex flex-col bg-black gap-3 justify-center mt-5 border border-white p-15 rounded-lg ">
@@ -224,7 +224,7 @@ export default function ProfileSettings() {
             borderColor="red"
             onPointerDown={() => {
               setDeleting(true);
-              deleteAccount()
+              deleteAccount();
             }}
           >
             Yes, delete my account

@@ -9,6 +9,7 @@ export async function fetchProfileData(sql: postgres.Sql<{}>, userId: number) {
   if (!r || r.length === 0)
     return NextResponse.json({ err: "pas d'user existant" });
 
+
   // returning the successful response with the user object
   return NextResponse.json({
     authenticated: true,
