@@ -1,7 +1,9 @@
 import { Draft, Class } from "@/types/types";
 import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
+
+
 export default class Character {
-  private id: string;
+  private id: undefined | number;
   private username: string;
   private gender: string;
   private race: string;
@@ -21,7 +23,6 @@ export default class Character {
 
   constructor({ ...draft }) {
     // attributes based on draft
-    this.id = draft.id;
     this.username = draft.username;
     this.gender = draft.gender;
     this.race = draft.race;
@@ -82,9 +83,8 @@ export default class Character {
     this.calculateDopamine(classes, draft);
     this.calculateAC(draft);
     try {
-      if (this.id === null || this.id === undefined) console.log('no id found');
       
-      const response = await fetch(`/api/users/${this.id}`, {
+      const response = await fetch(`/api/users/`, {
         method: "PATCH",
         headers: { "content-type": "application/JSON" },
         body: JSON.stringify({
@@ -104,6 +104,7 @@ export default class Character {
         }),
       });
       const feedback = await response.json();
+      this.id = feedback.id;
       return feedback;
     } catch (err) {
       return err;
@@ -112,7 +113,7 @@ export default class Character {
 
   buildUserFromDraft(draft: Draft) {
     const newUser = {
-      id: draft.id ?? null,
+      id: this.id ?? null,
       username: draft.username ?? null,
       email: draft.email ?? null,
       xp: 0,

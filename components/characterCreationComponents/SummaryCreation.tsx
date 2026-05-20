@@ -40,7 +40,6 @@ export default function SummaryCreation({
       draft.race &&
       draft.user_class &&
       draft.username &&
-      draft.id &&
       draft.gender
     ) {
       const player = new Character({ ...draft });

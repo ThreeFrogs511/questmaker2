@@ -140,6 +140,7 @@ export default class Engine {
   // we use this method to save the new user's data in the database at the end of the campaign
   async savingUserData(currentUser: User) {
     if (!currentUser) return;
+    if (!currentUser.id) console.log("no user id found for saving data");
     const response = await fetch(`/api/users/${currentUser.id}`, {
       method: 'PUT',
       headers: { 'content-type': 'application/JSON' },

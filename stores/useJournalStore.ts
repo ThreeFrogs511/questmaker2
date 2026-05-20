@@ -1,7 +1,7 @@
 import { create } from 'zustand'
 import { ListType } from "@/types/types";
 
-type UseJournalStore = {
+interface UseJournalStore {
     allQuests: Array<ListType> | null;
     setAllQuests: (q: Array<ListType>) => void;
     displayedQuests : Array<ListType> | null;
@@ -14,6 +14,8 @@ type UseJournalStore = {
     addNewQuest : (nq : ListType) => void;
     areQuestsLoaded: boolean;
     setAreQuestsLoaded: (b: boolean) => void;
+    errorAnim:boolean;
+    setErrorAnim: (errorAnim:boolean) => void;
 }
 
 
@@ -35,5 +37,7 @@ export const useJournalStore = create<UseJournalStore>((set) => ({
     }),
     areQuestsLoaded: false,
     setAreQuestsLoaded: (b) => set({areQuestsLoaded: b}),
+    errorAnim:false,
+    setErrorAnim: (b) => set({errorAnim:b})
 
 }))

@@ -1,6 +1,6 @@
 import test from "node:test";
 import assert from "node:assert/strict";
-import validateLoginInput from "@/middlewares/validateLoginInput";
+import validateLoginInput from "@/lib/validateLoginInput";
 
 // cas de succès : email et mot de passe valides → ne doit pas lever d'erreur
 test("login input: valid credentials pass", () => {

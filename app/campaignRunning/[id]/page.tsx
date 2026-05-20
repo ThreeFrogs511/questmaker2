@@ -17,21 +17,21 @@ export default function CampaignRunning({
   const { isAuthenticated, isProfileCompleted } = useUserContext();
 
   async function startNewCampaign() {
-    const { id } = await params;
+    // const { id } = await params;
 
-    if (!id) router.back();
+    // if (!id) router.back();
 
-    const response = await fetch(`/api/campaigns/${id}`);
+    // const response = await fetch(`/api/campaigns/${id}`);
+    // const result = await response.json();
+
+    const response = await fetch(`/a_terrible_hangover_BACKUP.json`);
     const result = await response.json();
-
     return result;
   }
 
   // narration store
   const currentCampaign = useNarrationStore((state) => state.currentCampaign);
-  const setCurrentCampaign = useNarrationStore(
-    (state) => state.setCurrentCampaign,
-  );
+  const setCurrentCampaign = useNarrationStore((state) => state.setCurrentCampaign);
   const setCampaignTitle = useNarrationStore((state) => state.setCampaignTitle);
   const currentNode = useNarrationStore((state) => state.currentNode);
   const updateNode = useNarrationStore((state) => state.updateNode);
@@ -49,8 +49,8 @@ export default function CampaignRunning({
         return values;
       })
       .then((values) => {
-        // updateNode(values.firstNode);
-        updateNode("remembering_how_to_fight")
+        updateNode(values.firstNode);
+        // updateNode("remembering_how_to_fight")
         setCampaignTitle(values.title);
       })
       .catch((err) => console.log(err));

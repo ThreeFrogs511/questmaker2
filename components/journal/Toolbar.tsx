@@ -30,7 +30,6 @@ export default function Toolbar() {
       const feedback = await quest.insert(value, currentUser.id);
 
       if (feedback.success) {
-        // setAllQuestsAction((prev) => [feedback.quest, ...(prev ?? [])]);
         const updatedList = [...allQuests ?? []];
         updatedList.unshift(feedback.quest);
         setAllQuests(updatedList);
@@ -39,7 +38,6 @@ export default function Toolbar() {
         if (whichPage === 0 || whichPage === 2)  {
           const updatedCurrentList = updatedList.filter(n => n.completed === false);
           setDisplayedQuests(updatedCurrentList);
-          // setDisplayedQuestsAction((prev) => [feedback.quest, ...(prev ?? [])]);
         } else {
           resetPage(2);
         }

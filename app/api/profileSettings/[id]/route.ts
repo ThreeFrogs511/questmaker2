@@ -2,6 +2,9 @@ import { NextResponse } from "next/server";
 import { sql } from "@/server/connexion";
 import { cookies } from "next/headers";
 import bcrypt from "bcrypt";
+import * as jose from "jose";
+
+
 
 // checking if edit input are valid
 async function validateProfileEditInput(
@@ -53,10 +56,11 @@ async function checkTokenCSRF(request: Request) {
   const headerToken = request.headers.get("X-CSRF-Token");
 
   if (!cookieToken || !headerToken)
-    throw new Error("You are not allowed to do this action!!!");
+    throw new Error("You are not allowed to do this action");
   if (headerToken !== cookieToken)
     throw new Error("You are not allowed to do this action");
 }
+
 
 // editing the profil
 export async function PATCH(
@@ -96,13 +100,40 @@ export async function PATCH(
 
     if (r[0].rowCount <= 0) return NextResponse.json({ err: "internal error" });
 
+    //storing the new email in the jwt token
+    const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+    const alg = "HS256";
+
+    const payload = {
+      userId: id,
+      email: data.email,
+      isCompleted: true,
+    };
+
+    const jwt = await new jose.SignJWT(payload)
+      .setProtectedHeader({ alg })
+      .setIssuedAt()
+      .setExpirationTime("7d")
+      .sign(secret);
+
+    // cookie creation
+    (await cookies()).set({
+      name: "auth",
+      value: jwt,
+      httpOnly: true,
+      secure: true,
+      sameSite: "lax",
+      path: "/",
+      maxAge: 60 * 60 * 24 * 7,
+    });
+
     return NextResponse.json({ newEmail: data.email, success: true });
   } catch (err) {
     return NextResponse.json({ success: false, err: (err as Error).message });
   }
 }
 
-//fetching email
+//fetching email 
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
@@ -113,6 +144,8 @@ export async function GET(
 
     const r = await sql`SELECT email FROM users WHERE id = ${id}`;
     if (!r[0].email) return NextResponse.json({ err: "no email found" });
+
+
 
     return NextResponse.json({ success: true, email: r[0].email });
   } catch (err) {

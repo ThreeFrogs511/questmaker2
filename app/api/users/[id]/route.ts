@@ -12,7 +12,7 @@ export async function PUT(
 ) {
   const { id } = await params;
   const data = await request.json();
-
+  console.log(data)
   if (!id) return NextResponse.json({ error: "User id not found" });
 
   // the 'sql' template tag protects the database from sql injection
