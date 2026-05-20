@@ -32,7 +32,7 @@ export async function PATCH(
     const { id } = await params;
     if (!id) return NextResponse.json({ error: "id null" });
 
-    const data = await request.json();
+    const data = await request.json();   
 
     if (data.completed === undefined)
       return NextResponse.json({ error: "Missing field: completed" });
