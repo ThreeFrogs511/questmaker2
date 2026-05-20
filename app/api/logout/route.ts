@@ -12,7 +12,6 @@ export async function DELETE(
     try {
         const cookie = await cookies();
 
-        cookie.delete('session');
         cookie.delete('csrf');
         cookie.delete('auth');
         return NextResponse.json({success: true});

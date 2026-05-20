@@ -4,17 +4,11 @@ import Hitpoints from "@/components/userStats/HitpointsBar";
 import DopamineBar from "@/components/userStats/DopamineBar";
 import Progress from "@/components/userStats/XpBar";
 import Header from "@/components/global/Header";
-import { useUserContext } from "@/context/context";
-import Loading from "@/app/loading";
 import { useUserStore } from "@/stores/useUserStore";
 
 export default function CharacterSheetClient() {
   const currentUser = useUserStore((state) => state.currentUser);
-  const { isAuthenticated, isProfileCompleted } = useUserContext();
 
-  if (!isAuthenticated || !isProfileCompleted) {
-    return <Loading />;
-  }
 
   return (
     <>

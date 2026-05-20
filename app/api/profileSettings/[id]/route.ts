@@ -2,14 +2,9 @@ import { NextResponse } from "next/server";
 import { sql } from "@/server/connexion";
 import { cookies } from "next/headers";
 import bcrypt from "bcrypt";
-import crypto from "crypto";
 import * as jose from "jose";
 
-interface PayloadType {
-  userId: number;
-  email: string;
-  isCompleted: boolean;
-}
+
 
 // checking if edit input are valid
 async function validateProfileEditInput(
@@ -61,7 +56,7 @@ async function checkTokenCSRF(request: Request) {
   const headerToken = request.headers.get("X-CSRF-Token");
 
   if (!cookieToken || !headerToken)
-    throw new Error("You are not allowed to do this action!!!");
+    throw new Error("You are not allowed to do this action");
   if (headerToken !== cookieToken)
     throw new Error("You are not allowed to do this action");
 }

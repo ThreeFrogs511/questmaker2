@@ -22,7 +22,6 @@ export async function proxy(request: NextRequest) {
       jwt,
       secretKey,
     );
-    console.log(payload);
 
     //continuer ici l'implémentation du jwt
     const pathname = request.nextUrl.pathname;
@@ -38,6 +37,8 @@ export async function proxy(request: NextRequest) {
         return NextResponse.redirect(new URL("/journal", request.url));
       case "/titleScreen":
         return NextResponse.redirect(new URL("/journal", request.url));
+      case "/":
+        return NextResponse.redirect(new URL("/journal", request.url))
       default:
         return NextResponse.next();
     }

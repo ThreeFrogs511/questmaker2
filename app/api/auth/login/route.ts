@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { sql } from "@/server/connexion";
 import bcrypt from "bcrypt";
 import { cookies } from "next/headers";
-import crypto from "crypto";
 import validateLoginInput from "@/lib/validateLoginInput";
 import * as jose from "jose";
 

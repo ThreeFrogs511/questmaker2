@@ -1,5 +1,5 @@
 "use client";
-import { createContext, useContext, useState, useEffect, use } from "react";
+import { createContext, useContext, useState, useEffect} from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useUserStore } from "@/stores/useUserStore";
@@ -99,6 +99,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
             );
             prepareQuests(!listOrdered[0].body ? [] : listOrdered);
             setAreQuestsLoaded(true);
+            console.log(data.todos)
           }
 
           //storing inventory
@@ -111,10 +112,6 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
             }));
           }
 
-          // // redirecting to journal if on title screen or character creation
-          // if (pathname === "/" || pathname === "/characterCreation") {
-          //   router.push("/journal");
-          // }
 
           setIsAuthenticated(true);
         }

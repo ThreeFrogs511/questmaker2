@@ -43,10 +43,6 @@ export async function POST(request: Request) {
         r = await fetchQuests(sql, userId);
         return r;
 
-      // case "/profileSettings":
-      //   return NextResponse.json({user:{id:userId, email:email}, authenticated:true});
-
-
       case "/merchant":
         r = await fetchInventoryData(sql, userId);
         return r;
