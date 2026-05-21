@@ -13,6 +13,10 @@ interface UserStore {
   fetchSelectedAttacks: (attacks: object) => void;
   isMenuOpen : boolean;
   setIsMenuOpen: (b: boolean) => void;
+  signUpError: string;
+  setSignUpError:(s:string) => void;
+  loginError:string;
+  setLoginError:(s:string) => void;
 };
 
 export const useUserStore = create<UserStore>((set) => ({
@@ -117,5 +121,9 @@ export const useUserStore = create<UserStore>((set) => ({
   attacks: {},
   fetchSelectedAttacks: (object) => set({ attacks: object }),
   isMenuOpen: false,
-  setIsMenuOpen : (b) => set({isMenuOpen: b})
+  setIsMenuOpen : (b) => set({isMenuOpen: b}),
+  signUpError:"",
+  loginError:"",
+  setLoginError: (s) => set({loginError:s}),
+  setSignUpError: (s) => set({loginError:s})
 }));
