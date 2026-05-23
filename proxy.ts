@@ -23,12 +23,15 @@ export async function proxy(request: NextRequest) {
       secretKey,
     );
 
-    //continuer ici l'implémentation du jwt
     const pathname = request.nextUrl.pathname;
 
     if (pathname !== "/characterCreation" && payload.isCompleted === false) {
       return NextResponse.redirect(new URL("/characterCreation", request.url));
     };
+
+    if (!payload || !payload.email || !payload.userId) {
+      throw new Error("Authentification error")
+    }
 
     switch (pathname) {
       case "/signup":

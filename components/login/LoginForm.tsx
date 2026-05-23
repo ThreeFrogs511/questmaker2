@@ -1,108 +1,63 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
-import { Card, Button, Input } from "pixel-retroui";
-import { Press_Start_2P } from "next/font/google";
-import { useUserContext } from "@/context/context";
+import { Button, Input } from "pixel-retroui";
+import { useState } from "react";
+import { loginUser } from "@/lib/auth/login";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/useUserStore";
+import { User } from "@/types/types";
 
-const PressStartFont = Press_Start_2P({
-  subsets: ["latin"],
-  weight: "400",
-});
+type FeedbackType = {
+  success?: boolean;
+  userData?: User;
+  err?: string;
+};
 
 export default function LoginForm() {
-  const router = useRouter();
-  const { isFetchingDone } = useUserContext();
-  const login = useUserStore((state) => state.login);
-
-  const [title, setTitle] = useState<string | undefined>("");
-  const [error, setError] = useState<string | undefined>();
-  const [isTyping, setIsTyping] = useState(true);
-
-  const counter = useRef(-1);
-
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [error, setError] = useState("");
   const inputStyle =
     "w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!";
+  const router = useRouter();
+  const login = useUserStore((state) => state.login);
 
-  useEffect(() => {
-    if (isFetchingDone) {
-      const authTitle: string = "Continue your journey";
-
-      const intervalId = setInterval(() => {
-        if (isTyping) {
-          if (!isTyping) return;
-          setIsTyping((prev) => !prev);
-          setTitle((prev) => prev + authTitle.charAt(counter.current));
-          counter.current++;
-          setIsTyping((prev) => !prev);
-        }
-      }, 50);
-      return () => clearInterval(intervalId);
-    }
-  }, [isFetchingDone, isTyping]);
-
-  async function submitHandler(e: React.SubmitEvent<HTMLFormElement>) {
+  async function submitHandler(e: React.SyntheticEvent) {
     e.preventDefault();
-    const email = (document.getElementById("email") as HTMLInputElement).value;
-    const password = (document.getElementById("password") as HTMLInputElement)
-      .value;
+    setError("");
+    const inputEmail = email.trim();
+    const inputPassword = password.trim();
 
-    const response = await fetch(`/api/auth/login`, {
-      method: "POST",
-      headers: { "content-type": "application/JSON" },
-      body: JSON.stringify({
-        email: email.trim(),
-        user_password: password.trim(),
-      }),
-    });
-    const feedback = await response.json();
+    const feedback: FeedbackType = await loginUser(inputEmail, inputPassword);
 
-    if (feedback.success) {
-      const userData = feedback.userData;
-      if (!userData.profile_completed) {
+    if (feedback.success && feedback.userData) {
+      if (!feedback.userData.profile_completed) {
         router.push("/characterCreation");
       } else {
-        login({ ...userData });
+        login({ ...feedback.userData });
         router.push("/journal");
       }
     }
 
-    if (feedback.err) setError(feedback.err);
+    if (feedback.err) {
+      setError(feedback.err);
+    }
   }
 
   return (
-    <div
-      id="loginWrapper"
-      className="h-full! w-full flex flex-col justify-evenly gap-0 md:gap-1 items-center"
-    >
-      <div className="h-[20%] flex flex-col justify-center my-5">
-        <h2
-          className={`
-            mx-auto text-center
-            text-xl!
-            sm:text-2xl!
-            text-stone-300
-            ${PressStartFont.className}
-          `}
-        >
-          {title}
-        </h2>
-      </div>
-
-      <form
-        className="
+    <form
+      className="
                         flex
                         flex-col
-                        items-center
-                        gap-6
+                        gap-8
                         min-h-80
+                        items-center
                         w-[90%]
                         sm:w-[90%]
                         lg:w-[50%]
-        "
-        onSubmit={submitHandler}
-      >
+                    "
+      onSubmit={submitHandler}
+    >
+      <div className="w-full flex flex-col gap-6">
         <div className="w-[90%] mx-auto">
           <Input
             bg="black"
@@ -112,10 +67,11 @@ export default function LoginForm() {
             type="email"
             className={inputStyle}
             placeholder="Email"
+            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
-        <div className="w-[90%] mx-auto mb-8 flex flex-col">
+        <div className="w-[90%] mx-auto flex flex-col">
           <Input
             bg="black"
             textColor="white"
@@ -124,6 +80,7 @@ export default function LoginForm() {
             type="password"
             className={inputStyle}
             placeholder="Password"
+            onChange={(e) => setPassword(e.target.value)}
           />
           <a
             href="/forgot"
@@ -132,30 +89,23 @@ export default function LoginForm() {
             Forgot password ?
           </a>
         </div>
-
-        <div className="w-full flex flex-col items-center">
-          <Button
-            bg="black"
-            textColor="white"
-            borderColor="white"
-            shadow="white"
-            type="submit"
-            className="w-full p-2! mx-auto!"
-          >
-            Resume my adventure
-          </Button>
-        </div>
-      </form>
-
-      <p className="font-minecraft text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">
-        {error}
-      </p>
-
-      <div className="flex flex-col space-y-2 text-sm">
-        <a href="/signup" className="font-minecraft mb-5 underline!">
-          Create an account →
-        </a>
       </div>
-    </div>
+
+      <Button
+        formNoValidate
+        bg="black"
+        textColor="white"
+        borderColor="white"
+        shadow="white"
+        type="submit"
+        className="w-full p-2! mx-auto!"
+      >
+        Resume my adventure
+      </Button>
+
+      <div className="font-minecraft text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">
+        {error}
+      </div>
+    </form>
   );
 }

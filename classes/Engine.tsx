@@ -79,7 +79,7 @@ export default class Engine {
       this.penalties.handler(currentChoice, setData);
       this.updateNode(currentChoice.next);
 
-      //exclusive dialog, choice options
+      //exclusive dialog/choice options based on race/class/gender
     } else if (currentChoice.alt) {
       const nextNode = this.exclusivePaths.handler(currentChoice, this.updateNode);
       this.updateNode(nextNode);
@@ -91,7 +91,7 @@ export default class Engine {
       this.combat.preparingCombat(currentChoice, clearNbOfTurn);
       this.updateNode(currentChoice.next);
 
-      //exclusive dialog, choices based on the user's past decisions
+      //exclusive dialog, choices based on the user's past decisions in this chapter
     } else if (currentChoice.nodeRef) {
       const nextNode = this.exclusivePaths.handlingChoicesPaths(currentChoice, userPastNodes);
       this.updateNode(nextNode);
