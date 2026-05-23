@@ -1,4 +1,4 @@
-import fetchCampaign from "@/lib/fetchCampaign";
+import fetchCampaign from "@/lib/campaign/fetchCampaign";
 import { Card, Button } from "pixel-retroui";
 import { redirect } from "next/navigation";
 

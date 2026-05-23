@@ -9,7 +9,7 @@ import Link from "next/link";
 
 // main types
 
-import { Choice, Data } from "@/types/types";
+import { Choice, ChoiceResult } from "@/types/types";
 
 // components and custom hooks
 import DataVisualizer from "./DataVisualizer";
@@ -36,7 +36,7 @@ export default function CampaignHandler() {
   const [allChoicesAvailable, setAllChoicesAvailable] = useState<Choice[]>();
 
   // state that displays the ability check results, penalties and other data onscreen
-  const [data, setData] = useState<Data>({
+  const [choiceResult, setChoiceResult] = useState<ChoiceResult>({
     type: null,
     status: false,
     value: null,
@@ -123,7 +123,7 @@ export default function CampaignHandler() {
         //updating the engine  
         gameplay.current.determineNextNode(
           allChoicesAvailable[0],
-          setData,
+          setChoiceResult,
           userPastNodes,
           resetNbOfTurn,
         );
@@ -136,7 +136,7 @@ export default function CampaignHandler() {
 
         gameplay.current.determineNextNode(
           allChoicesAvailable[1],
-          setData,
+          setChoiceResult,
           userPastNodes,
           resetNbOfTurn,
         );
@@ -147,7 +147,7 @@ export default function CampaignHandler() {
 
         gameplay.current.determineNextNode(
           allChoicesAvailable[2],
-          setData,
+          setChoiceResult,
           userPastNodes,
           resetNbOfTurn,
         );
@@ -163,7 +163,7 @@ export default function CampaignHandler() {
   }, [allChoicesAvailable, userPastNodes, resetNbOfTurn, keyboardPressed]);
 
   return (
-    <section className=" w-full h-dvh max-h-full gap-10! lg:p-10">
+    <>
       {/* handles the story audio */}
       <Voices play={voice.play} stop={voice.stop} isPressed={isPressed} />
 
@@ -217,7 +217,7 @@ export default function CampaignHandler() {
           </div>
 
           {/* displaying rolls or penalties value here */}
-          <DataVisualizer data={data} />
+          <DataVisualizer choiceResult={choiceResult} />
         </div>
       </div>
 
@@ -236,7 +236,7 @@ export default function CampaignHandler() {
                     if (gameplay.current) {
                       gameplay.current.determineNextNode(
                         item,
-                        setData,
+                        setChoiceResult,
                         userPastNodes,
                         resetNbOfTurn,
                       );
@@ -259,6 +259,6 @@ export default function CampaignHandler() {
             })}
         </div>
       </div>
-    </section>
+    </>
   );
 }

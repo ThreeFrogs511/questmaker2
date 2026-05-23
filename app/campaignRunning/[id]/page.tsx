@@ -13,7 +13,7 @@ export default function CampaignRunning({
 }) {
 
   async function startNewCampaign() {
-    const response = await fetch(`/a_terrible_hangover_BACKUP.json`);
+    const response = await fetch(`/campaigns/a_terrible_hangover.json`);
     const result = await response.json();
     return result;
   };

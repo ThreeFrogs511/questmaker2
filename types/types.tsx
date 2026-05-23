@@ -114,7 +114,7 @@ export type Encounter = {
   ac?: number;
 };
 
-export type Data = {
+export type ChoiceResult = {
   type: string | null;
   status: boolean;
   value: number | null;

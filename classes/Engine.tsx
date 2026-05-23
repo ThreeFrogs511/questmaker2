@@ -2,7 +2,7 @@
 // describe the 'nodes' global object
 
 import type { Dispatch, SetStateAction } from 'react'
-import { Nodes, User, Choice, Data, CombatItem } from '@/types/types'
+import { Nodes, User, Choice, ChoiceResult, CombatItem } from '@/types/types'
 import AbilityChecks from "./AbilityChecks";
 import Penalties from "./Penalties";
 import ExclusivePaths from "./ExclusivePaths";
@@ -57,7 +57,7 @@ export default class Engine {
 
   // THIS METHOD DETERMINES THE NEXT NODE BASED ON THE USER'S CHOICE.
   // IF THE NODE IS UNIQUE (PENALTY, ABILITY CHECKS, COMBAT), WE HANDLE IT HERE
-  async determineNextNode(currentChoice: Choice, setData: Dispatch<SetStateAction<Data>>, userPastNodes: string[], clearNbOfTurn: (n: number) => void) {
+  async determineNextNode(currentChoice: Choice, setChoiceResult: Dispatch<SetStateAction<ChoiceResult>>, userPastNodes: string[], clearNbOfTurn: (n: number) => void) {
 
     // ability checks
     if (currentChoice.check) {
@@ -67,23 +67,23 @@ export default class Engine {
         if (currentChoice.fail) {
           this.updateNode(currentChoice.fail);
         }
-        setData((prev: Data) => ({ ...prev, type: 'ability', success: false, value: check.value, status: true }));
+        setChoiceResult((prev: ChoiceResult) => ({ ...prev, type: 'ability', success: false, value: check.value, status: true }));
       } else {
         this.updateNode(currentChoice.next);
-        setData((prev: Data) => ({ ...prev, type: 'ability', success: true, value: check.value, status: true }));
+        setChoiceResult((prev: ChoiceResult) => ({ ...prev, type: 'ability', success: true, value: check.value, status: true }));
         this.accumulatedXp = this.accumulatedXp + (currentChoice.xp ?? 0);
       };
 
       //penalties
     } else if (currentChoice.penalty) {
-      this.penalties.handler(currentChoice, setData);
+      this.penalties.handler(currentChoice, setChoiceResult);
       this.updateNode(currentChoice.next);
 
       //exclusive dialog/choice options based on race/class/gender
     } else if (currentChoice.alt) {
       const nextNode = this.exclusivePaths.handler(currentChoice, this.updateNode);
       this.updateNode(nextNode);
-      setData((prev: Data) => ({ ...prev, success: null, value: null, status: false }));
+      setChoiceResult((prev: ChoiceResult) => ({ ...prev, success: null, value: null, status: false }));
 
       // launching combat
     } else if (currentChoice.combat_started) {
@@ -95,7 +95,7 @@ export default class Engine {
     } else if (currentChoice.nodeRef) {
       const nextNode = this.exclusivePaths.handlingChoicesPaths(currentChoice, userPastNodes);
       this.updateNode(nextNode);
-      setData((prev: Data) => ({ ...prev, success: null, value: null, status: false }));
+      setChoiceResult((prev: ChoiceResult) => ({ ...prev, success: null, value: null, status: false }));
 
       //launching the end screen, displaying the relevant decisions made by the user
     } else if (currentChoice.campaignEnd) {
@@ -110,7 +110,7 @@ export default class Engine {
       //normal nodes
     } else {
       this.updateNode(currentChoice.next);
-      setData((prev: Data) => ({ ...prev, success: null, value: null, status: false }));
+      setChoiceResult((prev: ChoiceResult) => ({ ...prev, success: null, value: null, status: false }));
     }
   }
 
