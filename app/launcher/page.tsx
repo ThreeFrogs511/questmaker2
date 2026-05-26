@@ -1,7 +1,7 @@
 import { Card, Button } from "pixel-retroui";
 import { redirect } from "next/navigation";
 import { Launcher } from "@/classes/Launcher";
-
+import Form from 'next/form';
 
 
 export default async function LauncherPage() {
@@ -42,19 +42,22 @@ export default async function LauncherPage() {
             {description}
           </p>
         </div>
-        <Button
-          bg="black"
-          textColor="white"
-          borderColor="white"
-          shadow="white"
-          className=" w-[70%] py-2"
-          onPointerDown={async () => {
-            "use server";
-            await startCampaign();
-          }}
-        >
-          Start →
-        </Button>
+        <Form action={`/campaignRunning/${pathname}`} className="w-full flex justify-center">
+          <Button
+            bg="black"
+            type="submit"
+            textColor="white"
+            borderColor="white"
+            shadow="white"
+            className=" w-[70%] py-2"
+            // onPointerDown={async () => {
+            //   "use server";
+            //   await startCampaign();
+            // }}
+          >
+            Start →
+          </Button>
+        </Form>
       </Card>
     </div>
   );

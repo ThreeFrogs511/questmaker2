@@ -12,6 +12,7 @@ import ChoicesOptions from "./Choices";
 import { useNarrationStore } from "@/stores/useNarrationStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
 import { useCombatStore } from "@/stores/useCombatStore";
+import AudioManager from "./AudioManager";
 
 export default class Engine {
   // main attributes
@@ -22,13 +23,19 @@ export default class Engine {
   private relevantChoices: Array<{ node: string; text: string }>;
   private accumulatedXp: number;
 
+  //audio
+  private audioManager: AudioManager = new AudioManager();
+  private currentMusic: string = "";
+  private currentSfx: string = "";
+  private playSoundEffect: (soundPath: string) => void;
+
   // class workers
   private abilityChecks;
   private penalties;
   private exclusivePaths;
   private combat: Combat | undefined;
   private choicesOptions;
-  private playSoundEffect: (soundPath:string) => void;
+
   // combat
   combatLockOn: boolean;
 
@@ -49,7 +56,21 @@ export default class Engine {
 
     //stores the important decisions made during the campaign
     this.relevantChoices = [];
+
+    //audio
     this.playSoundEffect = useCombatStore.getState().playSoundEffect;
+  }
+
+  playMusic(music: string = "backgroundMusic") {
+    this.currentMusic !== "" && this.audioManager.stopMusic(this.currentMusic);
+    this.audioManager.playMusic(music);
+    this.currentMusic = music;
+  }
+
+  playSfx(soundName: string) {
+    // this.currentSfx !== "" && this.audioManager.stopSFX(this.currentSfx);
+    this.audioManager.playSfx(soundName);
+    this.currentSfx = soundName;
   }
 
   // THIS METHOD DETERMINES THE NEXT NODE BASED ON THE USER'S CHOICE.
@@ -64,7 +85,7 @@ export default class Engine {
     if (currentChoice.check) {
       const check = this.abilityChecks.handler(currentChoice, this.node);
       if (check === null || check === undefined) return;
-      this.playSoundEffect("die_roll");
+      this.playSfx("diceRollSound");
 
       if (check.result === false) {
         if (currentChoice.fail) {
@@ -110,9 +131,12 @@ export default class Engine {
 
       // launching combat
     } else if (currentChoice.combat_started) {
-      this.combat = new Combat();
+      // using bind() to pass the playSfx method from the AudioManager class 
+      // to the Combat class then to the useAttackAction without losing the context of 'this'
+      this.combat = new Combat(this.playSfx.bind(this));
       this.combat.preparingCombat(currentChoice, clearNbOfTurn);
       this.updateNode(currentChoice.next);
+      this.playMusic("battleMusic");
 
       //exclusive dialog, choices based on the user's past decisions in this chapter
     } else if (currentChoice.nodeRef) {

@@ -20,6 +20,7 @@ import Music from "../Audio/Music";
 import EndScreenInterface from "../EndScreen/EndScreenInterface";
 import { useCombatStore } from "@/stores/useCombatStore";
 import { useSound } from "use-sound";
+import TypeWriter from "typewriter-effect";
 
 export default function CampaignHandler() {
   //preloading the audio
@@ -34,29 +35,28 @@ export default function CampaignHandler() {
   const resetNbOfTurn = useCombatStore((state) => state.resetNbOfTurn);
   const soundEffect = useCombatStore((state) => state.soundEffect);
   const playSoundEffect = useCombatStore((state) => state.playSoundEffect);
-//  const [play, { stop }] = useSound(
-//     `/sounds/${soundEffect ? soundEffect : "blank"}.m4a`,
-//     {
-//       volume: 0.25,
-//       interrupt: false,
-//       preload: true,
-//       html5: true,
-//       // onend: () => {  
-//       //   playSoundEffect("");    
-//       //   console.log("sound effect ended!");   
-        
-//       // }
-//     },
-//   );
+  const [play, { stop }] = useSound(
+    `/sounds/${soundEffect ? soundEffect : "blank"}.m4a`,
+    {
+      volume: 0.25,
+      interrupt: false,
+      preload: true,
+      html5: true,
+      onend: () => {
+        console.log("sound effect ended!");
+      },
+    },
+  );
 
-//   useEffect(() => {
-//     if (!soundEffect) return;
-//     console.log(soundEffect)
-//     play();
-//     return () => {
-//       stop();
-//     };
-//   }, [play, stop, soundEffect]);
+  useEffect(() => {
+    if (!soundEffect) return;
+    console.log(soundEffect);
+    play();
+
+    return () => {
+      stop();
+    };
+  }, [play, stop, soundEffect]);
 
   // store the currently available choices
   const [allChoicesAvailable, setAllChoicesAvailable] = useState<Choice[]>();
@@ -95,6 +95,11 @@ export default function CampaignHandler() {
   const gameplay = useRef<Engine>(new Engine(currentNode));
 
   useEffect(() => {
+    // launching background music at the start of the campaign
+    gameplay.current.playMusic("backgroundMusic");
+  }, []);
+
+  useEffect(() => {
     if (currentCampaign && currentNode) {
       // manually updating the engine node
       gameplay.current.setNodeInsideEngine(currentNode);
@@ -117,6 +122,7 @@ export default function CampaignHandler() {
           if (n.combat_on) return n;
         });
         setIsCombatOn(combatOn ? true : false);
+        
       }
 
       // activating the end screen when the campaign is over

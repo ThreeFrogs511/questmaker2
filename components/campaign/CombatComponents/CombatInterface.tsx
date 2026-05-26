@@ -45,25 +45,25 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
 
 //   const [soundEffect, setSoundEffect] = useState<string | null>(null);
 
-  const [play, { stop }] = useSound(
-    `/sounds/${soundEffect ? soundEffect : "blank"}.m4a`,
-    {
-      volume: 0.25,
-      interrupt: true,
-      preload: true,
-    },
-  );
+  // const [play, { stop }] = useSound(
+  //   `/sounds/${soundEffect ? soundEffect : "blank"}.m4a`,
+  //   {
+  //     volume: 0.25,
+  //     interrupt: true,
+  //     preload: true,
+  //   },
+  // );
 
 
 
-  useEffect(() => {
-    if (!soundEffect) return;
-    console.log(soundEffect)
-    play();
-    return () => {
-      stop();
-    };
-  }, [play, stop, soundEffect]);
+  // useEffect(() => {
+  //   if (!soundEffect) return;
+  //   console.log(soundEffect)
+  //   play();
+  //   return () => {
+  //     stop();
+  //   };
+  // }, [play, stop, soundEffect]);
 
   return (
     <>

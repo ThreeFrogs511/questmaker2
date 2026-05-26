@@ -36,8 +36,6 @@ export default function CampaignRunning({
   const hasCampaignLaunched = currentCampaign && currentNode ? true : false;
 
 
-
-
   useEffect(() => {
     if (hasCampaignLaunched) return;
     startNewCampaign()

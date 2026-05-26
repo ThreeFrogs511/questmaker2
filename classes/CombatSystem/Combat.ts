@@ -43,11 +43,15 @@ export default class Combat {
   //global combat attributes
   private openInventory;
   private fight_over: boolean;
+  private playSfx;
   private playSoundEffect: (soundPath: string) => void;
 
   private updateRoundStatus: (boolean: boolean) => void;
 
-  constructor() {
+  constructor(playSfx:(sfx:string)=>void) {
+
+    this.playSfx = playSfx;
+
     this.currentUser = useUserStore.getState().currentUser;
     this.updateStats = useUserStore.getState().updateStats;
     this.userModifier = 0;
@@ -102,7 +106,8 @@ export default class Combat {
       // blocking clicks to let the die rolling sound play 
       // and avoid overlapping with future sound effects
       this.updateRoundStatus(true);
-      this.playSoundEffect("die_roll");
+      // this.playSoundEffect("die_roll");
+      this.playSfx("diceRollSound")
 
       if (initiativeRollUser > initiativeRollEnemy) {
         this.userFirstToAttack = true;
@@ -113,10 +118,9 @@ export default class Combat {
 
           // resetting the sound effect to avoid overlapping with future sound effects
           setTimeout(() => {
-            this.playSoundEffect("");
             this.updateRoundStatus(false);
             resolve();
-          }, 2000);
+          }, 1000);
         });
         return;
       } else if (initiativeRollEnemy > initiativeRollUser) {
@@ -128,10 +132,9 @@ export default class Combat {
 
           // resetting the sound effect to avoid overlapping with future sound effects
           setTimeout(() => {
-            this.playSoundEffect("");
             this.updateRoundStatus(false);
             resolve();
-          }, 2000);
+          }, 1000);
         });
         return;
       } else if (initiativeRollEnemy === initiativeRollUser) {
@@ -235,7 +238,7 @@ export default class Combat {
       if (item.type === "item") {
         this.useItem(item, resolve);
       } else {
-        this.useAttack = new useAttackAction(item, this.encounter.ac ?? 10);
+        this.useAttack = new useAttackAction(item, this.encounter.ac ?? 10, this.playSfx);
         const damageDoneByUser = this.useAttack.resolver();
         if (!damageDoneByUser) {
           resolve();
@@ -298,14 +301,28 @@ export default class Combat {
         );
 
         if (!attackRoll.hit) {
-          this.playSoundEffect("enemy_miss");
+          // this.playSoundEffect("enemy_miss");
+          this.playSfx("missSound")
+          // new Promise<void>((resolve) => setTimeout(() => resolve(), 1000)).then(() => {
+          //   this.playSoundEffect("");    
+          // } );
           const log = `<div className="lg:text-xl text-xs mb-1">
               The enemy missed! (Roll: ${attackRoll.roll <= 0 ? 1 : attackRoll.roll})<br>
               </div>`;
           this.setCombatLog(log);
+          setTimeout(() => {
+            // this.playSoundEffect("");
+            this.updateRoundStatus(false);
+            resolve();
+          }, 1000);
           resolve();
         } else {
-          this.playSoundEffect(enemyAttack);
+          const soundName = enemyAttack + "Sound";
+          this.playSfx(soundName);
+          // this.playSoundEffect(enemyAttack);
+          // new Promise<void>((resolve) => setTimeout(() => resolve(), 1000)).then(() => {
+          //   this.playSoundEffect("");    
+          // });
           const log = `<div className="lg:text-xl text-xs mb-1">
             The enemy uses <span style="color:yellow">${enemyAttack}</span> for <span style="color:yellow">${enemyFinalDmg}</span> damage!
             </div>`;
@@ -334,6 +351,7 @@ export default class Combat {
             // adding a small delay
             await new Promise<void>((resolve) => {
               setTimeout(() => {
+                // this.playSoundEffect("");
                 resolve();
               }, 1000);
             });

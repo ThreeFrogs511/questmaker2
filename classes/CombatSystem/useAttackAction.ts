@@ -7,8 +7,10 @@ export default class useAttackAction {
   private attack;
   private playSoundEffect;
   private enemyAC;
+  private playSfx;
 
-  constructor(item: CombatAttackItem, enemyAC: number) {
+  constructor(item: CombatAttackItem, enemyAC: number, playSfx:(sound:string)=>void) {
+      this.playSfx=playSfx;
       this.setCombatLog = useCombatStore.getState().setCombatLog;
       this.attack = item;
       this.playSoundEffect = useCombatStore.getState().playSoundEffect;
@@ -40,7 +42,11 @@ export default class useAttackAction {
     const attackRoll = this.calculateAttackRolls(this.enemyAC ?? 10);
 
     if (!attackRoll.hit) {
-      this.playSoundEffect('user_miss')
+      this.playSfx("missSound")
+      // this.playSoundEffect('user_miss')
+      // new Promise<void>((resolve) => setTimeout(() => resolve(), 1000)).then(() => {
+      //   this.playSoundEffect("");    
+      // });
       const log = `
       <div className="lg:text-xl text-xs mb-1">
         You missed! (Roll: ${attackRoll.roll <= 0 ? 1 : attackRoll.roll})
@@ -49,7 +55,7 @@ export default class useAttackAction {
       return null;
     } else {
       const sound = this.attack.text ?? ""
-      this.playSoundEffect(sound);
+      this.playSfx(sound+"Sound");
       const log = `
       <div className="lg:text-xl text-xs mb-1">
         You use <span style="color:yellow">${this.attack.text}</span> for <span style="color:yellow">${finalDmg}</span> damage!
