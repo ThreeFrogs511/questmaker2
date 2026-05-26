@@ -1,10 +1,18 @@
-import { Nodes, User, Encounter, Choice, CombatItem, CombatConsumableItem } from "@/types/types";
+import {
+  Nodes,
+  User,
+  Encounter,
+  Choice,
+  CombatItem,
+  CombatConsumableItem,
+} from "@/types/types";
 import Enemy from "./Enemy";
 import useAttackAction from "./useAttackAction";
 import useConsumableAction from "./useConsumableAction";
 import { useUserStore } from "@/stores/useUserStore";
 import { useCombatStore } from "@/stores/useCombatStore";
 import { useNarrationStore } from "@/stores/useNarrationStore";
+import Die from "./Die";
 
 export default class Combat {
   //user's attributes
@@ -35,6 +43,9 @@ export default class Combat {
   //global combat attributes
   private openInventory;
   private fight_over: boolean;
+  private playSoundEffect: (soundPath: string) => void;
+
+  private updateRoundStatus: (boolean: boolean) => void;
 
   constructor() {
     this.currentUser = useUserStore.getState().currentUser;
@@ -45,12 +56,12 @@ export default class Combat {
     this.clearCombatLog = useCombatStore.getState().clearCombatLog;
 
     this.userFirstToAttack = true;
-    this.useAttack=undefined;
-    this.tempUserStats=undefined;
+    this.useAttack = undefined;
+    this.tempUserStats = undefined;
 
     this.createEnemy = new Enemy();
     this.updateEnemy = useCombatStore.getState().updateEnemy;
-    this.encounter=undefined;
+    this.encounter = undefined;
     this.enemyModifier = 0;
 
     this.openInventory = useCombatStore.getState().openInventory;
@@ -61,6 +72,9 @@ export default class Combat {
     this.resetNbOfTurn = useCombatStore.getState().resetNbOfTurn;
 
     this.updateNode = useNarrationStore.getState().updateNode;
+
+    this.playSoundEffect = useCombatStore.getState().playSoundEffect;
+    this.updateRoundStatus = useCombatStore.getState().updateRoundStatus;
   }
 
   handleIniative() {
@@ -68,7 +82,9 @@ export default class Combat {
     const userDex = this.currentUser.dex;
     const userModifier = userDex && Math.floor((userDex - 10) / 2);
     this.userModifier = userModifier ?? 0;
-    const initiativeRollUser = userModifier && Math.floor(Math.random() * 20) + 1 + userModifier;
+    const die = new Die(20);
+    const roll = die.roll();
+    const initiativeRollUser = (roll ?? 0) + this.userModifier;
 
     // enemy initiative
     let initiativeRollEnemy = 10;
@@ -76,15 +92,47 @@ export default class Combat {
       const enemyDex = this.encounter.stats.dex;
       const enemyModifier = Math.floor((enemyDex - 10) / 2);
       this.enemyModifier = enemyModifier ?? 0;
-      initiativeRollEnemy = Math.floor(Math.random() * 20) + 1 + enemyModifier;
+      const die = new Die(20);
+      const roll = die.roll();
+      initiativeRollEnemy = (roll ?? 0) + enemyModifier;
     }
 
     if (initiativeRollUser && initiativeRollEnemy) {
+
+      // blocking clicks to let the die rolling sound play 
+      // and avoid overlapping with future sound effects
+      this.updateRoundStatus(true);
+      this.playSoundEffect("die_roll");
+
       if (initiativeRollUser > initiativeRollEnemy) {
         this.userFirstToAttack = true;
+        new Promise<void>((resolve, reject) => {
+          this.setCombatLog(
+            "<div className='lg:text-xl text-xs mb-1'>D20 rolled! You move first!</div>",
+          );
+
+          // resetting the sound effect to avoid overlapping with future sound effects
+          setTimeout(() => {
+            this.playSoundEffect("");
+            this.updateRoundStatus(false);
+            resolve();
+          }, 2000);
+        });
         return;
       } else if (initiativeRollEnemy > initiativeRollUser) {
         this.userFirstToAttack = false;
+        new Promise<void>((resolve, reject) => {
+          this.setCombatLog(
+            "<div className='lg:text-xl text-xs mb-1'>D20 rolled! The enemy will move first!</div>",
+          );
+
+          // resetting the sound effect to avoid overlapping with future sound effects
+          setTimeout(() => {
+            this.playSoundEffect("");
+            this.updateRoundStatus(false);
+            resolve();
+          }, 2000);
+        });
         return;
       } else if (initiativeRollEnemy === initiativeRollUser) {
         this.handleIniative();
@@ -93,7 +141,8 @@ export default class Combat {
   }
 
   handleAttackRolls(AC: number, modifier: number) {
-    const attackRoll = Math.floor(Math.random() * 20) + 1 + modifier + (AC - 10);
+    const attackRoll =
+      Math.floor(Math.random() * 20) + 1 + modifier + (AC - 10);
     const hit = AC > attackRoll ? false : true;
     return { hit: hit, roll: attackRoll };
   }
@@ -122,7 +171,7 @@ export default class Combat {
     };
 
     if (!this.encounter) return;
-    
+
     this.updateEnemy({ ...this.encounter });
 
     //setting up the pre-requisite of the fight
@@ -130,7 +179,11 @@ export default class Combat {
     this.calculatingAC();
   }
 
-  async system(item: CombatItem, node: keyof Nodes | undefined, setSoundEffect: (effect: string) => void) {
+  async system(
+    item: CombatItem,
+    node: keyof Nodes | undefined,
+    // setSoundEffect: (effect: string) => void,
+  ) {
     // the main system is here
     // either the user or the enemy attack first based on the initiative
     // then we wait 1sec to add a realistic delay between the attacks
@@ -139,7 +192,7 @@ export default class Combat {
 
     if (this.userFirstToAttack) {
       this.clearCombatLog("");
-      await this.handleUserTurn(item, node, setSoundEffect);
+      await this.handleUserTurn(item, node);
 
       // if user win, we kill the running process
       if (this.fight_over) return;
@@ -147,7 +200,7 @@ export default class Combat {
       await new Promise<void>((resolve) => {
         setTimeout(() => resolve(), 1000);
       });
-      await this.handleEnemyTurn(setSoundEffect, node);
+      await this.handleEnemyTurn(node);
       await new Promise<void>((resolve) => {
         setTimeout(() => {
           resolve();
@@ -156,7 +209,7 @@ export default class Combat {
       if (!this.fight_over) this.setNbOfTurn(1);
     } else {
       this.clearCombatLog("");
-      await this.handleEnemyTurn(setSoundEffect, node);
+      await this.handleEnemyTurn(node);
 
       // if the user lose, we kill the running process
       if (this.fight_over) return;
@@ -164,7 +217,7 @@ export default class Combat {
       await new Promise<void>((resolve) => {
         setTimeout(() => resolve(), 1000);
       });
-      await this.handleUserTurn(item, node, setSoundEffect);
+      await this.handleUserTurn(item, node);
       await new Promise<void>((resolve) => {
         setTimeout(() => {
           resolve();
@@ -174,30 +227,24 @@ export default class Combat {
     }
   }
 
-  async handleUserTurn(
-    item: CombatItem,
-    node: keyof Nodes | undefined,
-    setSoundEffect: (effect: string) => void,
-  ) {
+  async handleUserTurn(item: CombatItem, node: keyof Nodes | undefined) {
     return new Promise<void>(async (resolve) => {
       this.fight_over &&= false;
       if (!this.encounter || !this.encounter.hp) return;
 
       if (item.type === "item") {
-        this.useItem(item, resolve, setSoundEffect);
+        this.useItem(item, resolve);
       } else {
-        this.useAttack = new useAttackAction(
-          item,
-          setSoundEffect,
-          this.encounter.ac ?? 10,
-        );
+        this.useAttack = new useAttackAction(item, this.encounter.ac ?? 10);
         const damageDoneByUser = this.useAttack.resolver();
         if (!damageDoneByUser) {
           resolve();
           return;
-        };
-        
-        this.encounter.hp = Math.floor(this.encounter.hp - (damageDoneByUser ?? 0));
+        }
+
+        this.encounter.hp = Math.floor(
+          this.encounter.hp - (damageDoneByUser ?? 0),
+        );
         this.updateEnemy({ hp: this.encounter.hp });
       }
 
@@ -227,7 +274,7 @@ export default class Combat {
     });
   }
 
-  async handleEnemyTurn(setSoundEffect: (effect: string) => void, node: keyof Nodes | undefined) {
+  async handleEnemyTurn(node: keyof Nodes | undefined) {
     return new Promise<void>(async (resolve) => {
       // We extract all the attacks that can be used by the enemy
       if (!this.encounter) return;
@@ -251,14 +298,14 @@ export default class Combat {
         );
 
         if (!attackRoll.hit) {
-          setSoundEffect("enemy_miss");
+          this.playSoundEffect("enemy_miss");
           const log = `<div className="lg:text-xl text-xs mb-1">
               The enemy missed! (Roll: ${attackRoll.roll <= 0 ? 1 : attackRoll.roll})<br>
               </div>`;
           this.setCombatLog(log);
           resolve();
         } else {
-          setSoundEffect(enemyAttack);
+          this.playSoundEffect(enemyAttack);
           const log = `<div className="lg:text-xl text-xs mb-1">
             The enemy uses <span style="color:yellow">${enemyAttack}</span> for <span style="color:yellow">${enemyFinalDmg}</span> damage!
             </div>`;
@@ -316,13 +363,8 @@ export default class Combat {
     this.openInventory(!inventoryStatus ? true : false);
   }
 
-  
-  useItem(item: CombatConsumableItem, resolve: () => void, setSoundEffect: (effect: string) => void) {
-    const userAction = new useConsumableAction(
-      item,
-      setSoundEffect,
-      this.currentUser,
-    );
+  useItem(item: CombatConsumableItem, resolve: () => void) {
+    const userAction = new useConsumableAction(item, this.currentUser);
     const itemTarget = item.target;
     switch (itemTarget) {
       case "damage_taken":

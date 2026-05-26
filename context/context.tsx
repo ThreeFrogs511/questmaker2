@@ -84,7 +84,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
         if (data.authenticated) {
           // handling existing but incomplete profile
 
-          console.log("data:", data.user);
+          // console.log("data:", data.user);
           setIsProfileCompleted(true);
           login({ ...data.user });
           setIsDataLoaded((prev) => ({
@@ -99,13 +99,11 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
             );
             prepareQuests(!listOrdered[0].body ? [] : listOrdered);
             setAreQuestsLoaded(true);
-            console.log(data.todos)
           }
 
           //storing inventory
           if (data.inventory) {
             updateInventory(data.inventory ?? []);
-            console.log("inventory data:", data.inventory);
             setIsDataLoaded((prev) => ({
               ...prev,
               isInventoryDataLoaded: true,

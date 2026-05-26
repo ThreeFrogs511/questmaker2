@@ -1,3 +1,5 @@
+import Music from "@/components/campaign/Audio/Music";
+
 
 export default function CampaignLayout({
   children,
@@ -6,6 +8,7 @@ export default function CampaignLayout({
 }) {
   return (
     <section className=" w-full h-dvh max-h-full gap-10! lg:p-10">
+      <Music />
       {children}
     </section>
   );

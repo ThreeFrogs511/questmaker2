@@ -5,13 +5,13 @@ export default class useAttackAction {
 
   private setCombatLog: (log: string) => void;
   private attack;
-  private setSoundEffect;
+  private playSoundEffect;
   private enemyAC;
 
-  constructor(item: CombatAttackItem, setSoundEffect: (effect: string) => void, enemyAC: number) {
+  constructor(item: CombatAttackItem, enemyAC: number) {
       this.setCombatLog = useCombatStore.getState().setCombatLog;
       this.attack = item;
-      this.setSoundEffect = setSoundEffect;
+      this.playSoundEffect = useCombatStore.getState().playSoundEffect;
       this.enemyAC=enemyAC;
   };
 
@@ -40,7 +40,7 @@ export default class useAttackAction {
     const attackRoll = this.calculateAttackRolls(this.enemyAC ?? 10);
 
     if (!attackRoll.hit) {
-      this.setSoundEffect('user_miss')
+      this.playSoundEffect('user_miss')
       const log = `
       <div className="lg:text-xl text-xs mb-1">
         You missed! (Roll: ${attackRoll.roll <= 0 ? 1 : attackRoll.roll})
@@ -48,7 +48,8 @@ export default class useAttackAction {
       this.setCombatLog(log);
       return null;
     } else {
-      this.setSoundEffect(this.attack.text ?? '');
+      const sound = this.attack.text ?? ""
+      this.playSoundEffect(sound);
       const log = `
       <div className="lg:text-xl text-xs mb-1">
         You use <span style="color:yellow">${this.attack.text}</span> for <span style="color:yellow">${finalDmg}</span> damage!

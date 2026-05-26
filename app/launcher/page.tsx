@@ -1,31 +1,23 @@
-import fetchCampaign from "@/lib/campaign/fetchCampaign";
 import { Card, Button } from "pixel-retroui";
 import { redirect } from "next/navigation";
-
-type campaignType = {
-  id?: number;
-  name?: string;
-  description?: string;
-  mongo_id?: string;
-  chapter?: number;
-  err?: string;
-};
+import { Launcher } from "@/classes/Launcher";
 
 
-export default async function CampaignList() {
-  
-  const campaign: campaignType = await fetchCampaign();
+
+export default async function LauncherPage() {
+
+  const launcher = new Launcher();
+  const { name, description, chapter } = await launcher.returnCampaignData();
+  if (!name) return null;
+
+  const pathname = name ? await launcher.formattingCampaignNameForUrl() : null;
   const title =
-    campaign?.chapter === 1 ? "Begin your adventure" : "Resume your adventure";
-  const name = campaign?.name ?? "";
-  const description = campaign?.description ?? "";
-  const chapter = campaign?.chapter ?? "";
-  const quest_id = campaign?.mongo_id ?? null;
+    chapter === 1 ? "Begin your adventure" : "Resume your adventure";
 
-  async function debutingCampaign() {
+  async function startCampaign() {
     "use server";
-    if (!quest_id) return;
-    redirect(`/campaignRunning/${quest_id}`);
+    if (!pathname) return;
+    redirect(`/campaignRunning/${pathname}`);
   };
 
   return (
@@ -44,7 +36,7 @@ export default async function CampaignList() {
         <div className="flex flex-col items-center">
           <h2 className="text-center text-lg! md:text-xl! lg:text-2xl! mb-3">{`CHAPTER ${chapter}`}</h2>
           <h2 className="w-[90%] text-center text-base! md:text-xl! lg:text-2xl! text-amber-400 mb-5">
-            {name.toUpperCase()}
+            {name?.toUpperCase()}
           </h2>
           <p className="text-center tracking-widest md:text-sm! text-xs!">
             {description}
@@ -58,7 +50,7 @@ export default async function CampaignList() {
           className=" w-[70%] py-2"
           onPointerDown={async () => {
             "use server";
-            await debutingCampaign();
+            await startCampaign();
           }}
         >
           Start →

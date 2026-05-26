@@ -8,9 +8,7 @@ export default function MerchantLayout({
   return (
     <div className="wrapper">
       <Header />
-        {/* <section className="w-full max-h-full flex flex-col justify-center items-center"> */}
         {children}
-      {/* </section> */}
     </div>
   );
 }

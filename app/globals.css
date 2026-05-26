@@ -339,3 +339,8 @@ body {
   0%   { transform: rotate(0deg)   translateX(var(--r)) rotate(0deg); }
   100% { transform: rotate(360deg) translateX(var(--r)) rotate(-360deg); }
 }
+
+
+.Typewriter__cursor {
+  display: none !important;
+}  

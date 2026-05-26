@@ -1,5 +1,5 @@
 "use client";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef, useState, useCallback } from "react";
 import { useNarrationStore } from "@/stores/useNarrationStore";
 import Engine from "@/classes/Engine";
 import PreloadAudio from "../Audio/PreloadAudio";
@@ -16,13 +16,14 @@ import DataVisualizer from "./DataVisualizer";
 import PressPlayIcon from "../Audio/PressPlayIcon";
 import Voices from "../Audio/Voices";
 import CombatInterface from "../CombatComponents/CombatInterface";
-import BattleMusic from "../Audio/BattleMusic";
+import Music from "../Audio/Music";
 import EndScreenInterface from "../EndScreen/EndScreenInterface";
 import { useCombatStore } from "@/stores/useCombatStore";
+import { useSound } from "use-sound";
 
 export default function CampaignHandler() {
   //preloading the audio
-  const { voice, battleMusic } = PreloadAudio();
+  // const { voice, battleMusic } = PreloadAudio();
 
   // narration store
   const currentCampaign = useNarrationStore((state) => state.currentCampaign);
@@ -31,6 +32,31 @@ export default function CampaignHandler() {
 
   // combat store
   const resetNbOfTurn = useCombatStore((state) => state.resetNbOfTurn);
+  const soundEffect = useCombatStore((state) => state.soundEffect);
+  const playSoundEffect = useCombatStore((state) => state.playSoundEffect);
+//  const [play, { stop }] = useSound(
+//     `/sounds/${soundEffect ? soundEffect : "blank"}.m4a`,
+//     {
+//       volume: 0.25,
+//       interrupt: false,
+//       preload: true,
+//       html5: true,
+//       // onend: () => {  
+//       //   playSoundEffect("");    
+//       //   console.log("sound effect ended!");   
+        
+//       // }
+//     },
+//   );
+
+//   useEffect(() => {
+//     if (!soundEffect) return;
+//     console.log(soundEffect)
+//     play();
+//     return () => {
+//       stop();
+//     };
+//   }, [play, stop, soundEffect]);
 
   // store the currently available choices
   const [allChoicesAvailable, setAllChoicesAvailable] = useState<Choice[]>();
@@ -64,7 +90,6 @@ export default function CampaignHandler() {
 
   // lock the choices option to allow a small delay between each node for loading purposes
   const isLocked = useRef(false);
-
 
   // RUNNING THE MAIN ENGINE
   const gameplay = useRef<Engine>(new Engine(currentNode));
@@ -100,7 +125,8 @@ export default function CampaignHandler() {
       }
     }
 
-    // locking choices for a few seconds when they appear to avoid bugs due to button/click spamming
+    // locking choices for a few seconds when they appear
+    // to avoid bugs due to button/click spamming
     isLocked.current = true;
     new Promise<void>((resolve) => {
       setTimeout(() => {
@@ -120,7 +146,7 @@ export default function CampaignHandler() {
         //memorizing the user's choice for the narration and the gameplay consequences
         setUserPastChoices((prev) => [...prev, allChoicesAvailable[0]?.text]);
 
-        //updating the engine  
+        //updating the engine
         gameplay.current.determineNextNode(
           allChoicesAvailable[0],
           setChoiceResult,
@@ -165,12 +191,11 @@ export default function CampaignHandler() {
   return (
     <>
       {/* handles the story audio */}
-      <Voices play={voice.play} stop={voice.stop} isPressed={isPressed} />
+      {/* <Voices play={voice.play} stop={voice.stop} isPressed={isPressed} /> */}
 
       {/* combat interface and music */}
-      {isCombatOn && (
-        <BattleMusic play={battleMusic.play} stop={battleMusic.stop} />
-      )}
+
+      {/* <Music play={play} stop={stop} /> */}
 
       {isCombatOn && <CombatInterface gameplay={gameplay.current} />}
 
@@ -190,14 +215,14 @@ export default function CampaignHandler() {
 
           <div className="flex items-center h-full ml-10! gap-6!">
             {/* icon to mute or play the voices */}
-            <PressPlayIcon
+            {/* <PressPlayIcon
               isPressed={isPressed}
               setIsPressedAction={setIsPressed}
-            />
+            /> */}
 
             {/* leave campaign link */}
             <Link
-              href="/campaignList"
+              href="/launcher"
               className="flex items-center h-[50%] lg:h-[70%] text-xs! lg:text-sm! text-gray-400 hover:text-white border-2! border-gray-600 hover:border-white rounded px-2! transition-colors"
             >
               Leave
@@ -231,8 +256,8 @@ export default function CampaignHandler() {
                   key={key}
                   onPointerDown={() => {
                     if (isLocked.current) return;
-                    setUserPastChoices((prev) => [...prev, item.text])
-               
+                    setUserPastChoices((prev) => [...prev, item.text]);
+
                     if (gameplay.current) {
                       gameplay.current.determineNextNode(
                         item,
@@ -240,7 +265,7 @@ export default function CampaignHandler() {
                         userPastNodes,
                         resetNbOfTurn,
                       );
-                    };
+                    }
                   }}
                   className="hover:outline-2! border-2! my-1! border-white lg:border-0! outline-white! rounded-lg p-4! text-left"
                 >

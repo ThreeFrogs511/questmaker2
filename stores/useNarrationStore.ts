@@ -8,6 +8,7 @@ type useNarrationStore = {
     setCampaignTitle: (campaignTitle: string) => void
     currentNode: keyof Nodes | undefined
     updateNode: (currentNode: keyof Nodes | undefined) => void
+    ost: (() => void) | null,
 
 }
 
@@ -19,4 +20,5 @@ export const useNarrationStore = create<useNarrationStore>((set) => ({
     setCampaignTitle: (title) => set(({campaignTitle:title})),
     currentNode:undefined,
     updateNode: (node) => set(({ currentNode : node})),   
+    ost: null
 }))

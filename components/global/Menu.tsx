@@ -49,7 +49,7 @@ export default function Menu({setIsMenuOpenAction} : {setIsMenuOpenAction: React
 
           {/* Campaigns */}
           <div
-            onPointerDown={() => navigationHandler("/campaignList")}
+            onPointerDown={() => navigationHandler("/launcher")}
             className="cursor-pointer w-full flex hover:text-amber-300!"
           >
             <p className={style}>Campaigns</p>
@@ -76,7 +76,7 @@ export default function Menu({setIsMenuOpenAction} : {setIsMenuOpenAction: React
             onPointerDown={() => navigationHandler("/merchant")}  
             className="cursor-pointer w-full flex hover:text-amber-300!"
           >
-            <p className={style}>Store</p>
+            <p className={style}>Merchant</p>
           </div>
 
           {/* Settings */}

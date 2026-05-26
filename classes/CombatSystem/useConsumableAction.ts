@@ -6,7 +6,7 @@ export default class useConsumableAction {
     private item;
     private currentUser;
 
-    constructor(item: CombatConsumableItem, setSoundEffect: (effect: string) => void, currentUser: User) {
+    constructor(item: CombatConsumableItem, currentUser: User) {
         this.setCombatLog = useCombatStore.getState().setCombatLog;
         this.item= item;
         this.currentUser = currentUser;
