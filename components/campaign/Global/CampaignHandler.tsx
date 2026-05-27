@@ -16,7 +16,6 @@ import DataVisualizer from "./DataVisualizer";
 import PressPlayIcon from "../Audio/PressPlayIcon";
 import Voices from "../Audio/Voices";
 import CombatInterface from "../CombatComponents/CombatInterface";
-import Music from "../Audio/Music";
 import EndScreenInterface from "../EndScreen/EndScreenInterface";
 import { useCombatStore } from "@/stores/useCombatStore";
 import { useSound } from "use-sound";
