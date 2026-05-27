@@ -46,7 +46,8 @@ export default function CampaignRunning({
         setCurrentCampaign(data.nodes);
         const firstNode = Object.keys(data.nodes)[0];
         const title = data.meta.title;
-        return { firstNode, title };
+        const ost = data.meta.ost;
+        return { firstNode, title, ost };
       })
       .then((values) => {
         if (!values) return;

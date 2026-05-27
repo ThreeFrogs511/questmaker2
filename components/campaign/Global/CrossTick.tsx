@@ -35,7 +35,7 @@ export default function PixelCross({ color = '#dc2626', delay = 400, trigger = t
     }, delay)
 
     return () => clearTimeout(timeout)
-  }, [trigger, color, delay])
+  })
 
   return (
     <canvas

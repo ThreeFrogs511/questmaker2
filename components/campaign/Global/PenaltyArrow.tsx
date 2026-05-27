@@ -72,7 +72,7 @@ export default function PixelArrowDrop({ color = '#dc2626', delay = 400, trigger
     }, delay)
 
     return () => clearTimeout(timeout)
-  }, [trigger, color, delay])
+  })
 
   return (
     <canvas

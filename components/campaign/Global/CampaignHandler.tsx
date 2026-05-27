@@ -69,25 +69,25 @@ export default function CampaignHandler() {
   const isLocked = useRef(false);
 
   // RUNNING THE MAIN ENGINE
-  const gameplay = useRef<Engine>(new Engine(currentNode));
+  const gameplay = useRef<Engine | undefined>(undefined);
+  if (!gameplay.current) {
+    gameplay.current = new Engine(currentNode);
+  };
 
   useEffect(() => {
+    if (!gameplay.current) return;
     // launching background music at the start of the campaign
     gameplay.current.playMusic("backgroundMusic");
 
     //stopping all music when leaving the campaign
     return () => {
-      gameplay.current.stopAllMusic();
+      gameplay.current?.stopAllMusic();
     }
   }, []);
 
-  useEffect(() => {
-    console.log(userPastNodes)
-  }, [userPastNodes])
-
 
   useEffect(() => {
-    if (currentCampaign && currentNode) {
+    if (currentCampaign && currentNode && gameplay.current) {
       // manually updating the engine node
 
       gameplay.current.setNodeInsideEngine(currentNode);
@@ -132,7 +132,7 @@ export default function CampaignHandler() {
   // handle the navigation by keyboard
   useEffect(() => {
     function handleKeyboardSelection(e: KeyboardEvent) {
-      if (keyboardPressed || isLocked.current) return;
+      if (keyboardPressed || isLocked.current || !gameplay.current) return;
 
       setKeyboardPressed(true);
       if (allChoicesAvailable && (e.key === "1" || e.key === "&")) {
