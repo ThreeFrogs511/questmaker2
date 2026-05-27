@@ -2,7 +2,7 @@ import { Card, Button } from "pixel-retroui";
 import { redirect } from "next/navigation";
 import { Launcher } from "@/classes/Launcher";
 import Form from 'next/form';
-
+import ResetStates from "@/components/campaign/Global/ResetStates";
 
 export default async function LauncherPage() {
 
@@ -14,14 +14,13 @@ export default async function LauncherPage() {
   const title =
     chapter === 1 ? "Begin your adventure" : "Resume your adventure";
 
-  async function startCampaign() {
-    "use server";
-    if (!pathname) return;
-    redirect(`/campaignRunning/${pathname}`);
-  };
+    
 
   return (
     <div className=" flex flex-col items-center lg:px-6 lg:py-10 py-3">
+
+      {/* crucial for resetting states and avoiding cache issues */}
+      <ResetStates />
       <h1 className="text-center text-2xl! md:text-3xl! tracking-wide mb-10! font-minecraft">
         {title}
       </h1>
@@ -50,10 +49,6 @@ export default async function LauncherPage() {
             borderColor="white"
             shadow="white"
             className=" w-[70%] py-2"
-            // onPointerDown={async () => {
-            //   "use server";
-            //   await startCampaign();
-            // }}
           >
             Start →
           </Button>

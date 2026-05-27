@@ -65,6 +65,12 @@ middlewares/  # Input validation helpers
 
 ---
 
+## Credits
+
+Copyright-free music from alkakrab.itch.io
+
+---
+
 ## License
 
 MIT

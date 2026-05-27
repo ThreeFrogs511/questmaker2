@@ -4,14 +4,15 @@ import CampaignHandler from "@/components/campaign/Global/CampaignHandler";
 import Loading from "@/app/loading";
 // main types
 import { useNarrationStore } from "@/stores/useNarrationStore";
-
+import { useCombatStore } from "@/stores/useCombatStore";
+import { Howler } from "howler";
+import { useRouter } from "next/navigation";
 
 export default function CampaignRunning({
   params,
 }: {
   params: Promise<{ name: string }>;
 }) {
-
   const flag = useRef(false);
 
   async function startNewCampaign() {
@@ -38,6 +39,7 @@ export default function CampaignRunning({
 
   useEffect(() => {
     if (hasCampaignLaunched) return;
+  
     startNewCampaign()
       .then((data) => {
         if (!data) return null;
@@ -54,9 +56,8 @@ export default function CampaignRunning({
         // play()
       })
       .catch((err) => console.log(err));
-  }, []);
 
-  
+  }, []);
 
   return <>{hasCampaignLaunched ? <CampaignHandler /> : <Loading />}</>;
 }

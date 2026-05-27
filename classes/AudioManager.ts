@@ -17,11 +17,18 @@ export default class AudioManager {
     src: ["/music/ost2.mp3"],
     loop: true,
     html5: true,
-    volume: 0.8,
+    volume: 0.9,
   });
   private battleMusic: Howl = new Howl({
     src: ["/music/battle2.mp3"],
     loop: true,
+    html5: true,
+    volume: 0.1,
+  });
+
+  private victoryMusic: Howl = new Howl({
+    src: ["/music/victory.mp3"],
+    loop: false,
     html5: true,
     volume: 0.1,
   });

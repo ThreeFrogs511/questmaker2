@@ -33,29 +33,7 @@ export default function CampaignHandler() {
   // combat store
   const resetNbOfTurn = useCombatStore((state) => state.resetNbOfTurn);
   const soundEffect = useCombatStore((state) => state.soundEffect);
-  const playSoundEffect = useCombatStore((state) => state.playSoundEffect);
-  const [play, { stop }] = useSound(
-    `/sounds/${soundEffect ? soundEffect : "blank"}.m4a`,
-    {
-      volume: 0.25,
-      interrupt: false,
-      preload: true,
-      html5: true,
-      onend: () => {
-        console.log("sound effect ended!");
-      },
-    },
-  );
 
-  useEffect(() => {
-    if (!soundEffect) return;
-    console.log(soundEffect);
-    play();
-
-    return () => {
-      stop();
-    };
-  }, [play, stop, soundEffect]);
 
   // store the currently available choices
   const [allChoicesAvailable, setAllChoicesAvailable] = useState<Choice[]>();
@@ -96,11 +74,22 @@ export default function CampaignHandler() {
   useEffect(() => {
     // launching background music at the start of the campaign
     gameplay.current.playMusic("backgroundMusic");
+
+    //stopping all music when leaving the campaign
+    return () => {
+      gameplay.current.stopAllMusic();
+    }
   }, []);
+
+  useEffect(() => {
+    console.log(userPastNodes)
+  }, [userPastNodes])
+
 
   useEffect(() => {
     if (currentCampaign && currentNode) {
       // manually updating the engine node
+
       gameplay.current.setNodeInsideEngine(currentNode);
 
       //cleaning and preparing the choices displayed to the player
@@ -195,12 +184,6 @@ export default function CampaignHandler() {
 
   return (
     <>
-      {/* handles the story audio */}
-      {/* <Voices play={voice.play} stop={voice.stop} isPressed={isPressed} /> */}
-
-      {/* combat interface and music */}
-
-      {/* <Music play={play} stop={stop} /> */}
 
       {isCombatOn && <CombatInterface gameplay={gameplay.current} />}
 

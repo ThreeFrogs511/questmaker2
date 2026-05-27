@@ -60,12 +60,14 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       return false;
     }
     if (
-      (pathname === "/campaignList" || pathname.includes("/campaignRunning")) &&
+      (pathname === "/launcher" || pathname.includes("/campaignRunning")) &&
       isDataLoaded.isPlayerDataLoaded &&
       isDataLoaded.isInventoryDataLoaded
     ) {
+
       return false;
-    }
+      
+    } 
 
   }
 

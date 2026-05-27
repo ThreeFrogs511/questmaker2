@@ -4,7 +4,8 @@
     },
     "meta": {
         "title": "A terrible hangover",
-        "id_campaign": 1
+        "id_campaign": 1,
+        "ost": "backgroundMusic"
     },
     "nodes": {
         "intro_beach": {
@@ -1353,7 +1354,8 @@
                     "text": "[START COMBAT]",
                     "next": "bar_fight_combat",
                     "combat_started": true,
-                    "enemy_id": "abc123"
+                    "enemy_id": "abc123",
+                    "ost": "bar_fight_music"
                 }
             ]
         },
@@ -1818,7 +1820,8 @@
             "choices": [
                 {
                     "text": "[CONTINUE]",
-                    "next": "assassin_lunges_at_you"
+                    "next": "assassin_lunges_at_you",
+                    "ost": "backgroundMusic"
                 }
             ]
         },

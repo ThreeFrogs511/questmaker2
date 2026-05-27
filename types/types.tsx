@@ -39,6 +39,7 @@ export type Choice = {
   campaignEnd?: boolean;
   relevantNodes?: Array<{ node: string; text: string }>;
   xp?: number;
+  ost?: string;
 };
 
 type Alt = {

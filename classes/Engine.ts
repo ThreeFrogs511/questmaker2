@@ -73,6 +73,10 @@ export default class Engine {
     this.currentSfx = soundName;
   }
 
+  stopAllMusic() {
+    this.audioManager.resetAllAudio();
+  }
+
   // THIS METHOD DETERMINES THE NEXT NODE BASED ON THE USER'S CHOICE.
   // IF THE NODE IS UNIQUE (PENALTY, ABILITY CHECKS, COMBAT), WE HANDLE IT HERE
   async determineNextNode(
@@ -90,7 +94,7 @@ export default class Engine {
       if (check.result === false) {
         if (currentChoice.fail) {
           this.updateNode(currentChoice.fail);
-        }
+        };
         setChoiceResult((prev: ChoiceResult) => ({
           ...prev,
           type: "ability",
@@ -133,7 +137,7 @@ export default class Engine {
     } else if (currentChoice.combat_started) {
       // using bind() to pass the playSfx method from the AudioManager class 
       // to the Combat class then to the useAttackAction without losing the context of 'this'
-      this.combat = new Combat(this.playSfx.bind(this));
+      this.combat = new Combat(this.playSfx.bind(this), this.playMusic.bind(this));
       this.combat.preparingCombat(currentChoice, clearNbOfTurn);
       this.updateNode(currentChoice.next);
       this.playMusic("battleMusic");
@@ -165,6 +169,16 @@ export default class Engine {
       this.updateNode(currentChoice.next);
 
       //normal nodes
+    
+    } else if (currentChoice.ost) {
+      this.playMusic(currentChoice.ost);
+      this.updateNode(currentChoice.next);
+      setChoiceResult((prev: ChoiceResult) => ({
+        ...prev,
+        success: null,
+        value: null,
+        status: false,
+      }));
     } else {
       this.updateNode(currentChoice.next);
       setChoiceResult((prev: ChoiceResult) => ({

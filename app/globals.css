@@ -344,3 +344,11 @@ body {
 .Typewriter__cursor {
   display: none !important;
 }  
+
+
+/* display tick animation next to a successful roll */
+.roll-line {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}

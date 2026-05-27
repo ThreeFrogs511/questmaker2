@@ -44,13 +44,15 @@ export default class Combat {
   private openInventory;
   private fight_over: boolean;
   private playSfx;
+  private playMusic;
   private playSoundEffect: (soundPath: string) => void;
 
   private updateRoundStatus: (boolean: boolean) => void;
 
-  constructor(playSfx:(sfx:string)=>void) {
+  constructor(playSfx:(sfx:string)=>void, playMusic:(music:string)=>void) {
 
     this.playSfx = playSfx;
+    this.playMusic = playMusic;
 
     this.currentUser = useUserStore.getState().currentUser;
     this.updateStats = useUserStore.getState().updateStats;
@@ -270,6 +272,7 @@ export default class Combat {
 
         // moving on to the victory node
         this.updateNode(`${node}_victory`);
+        this.playMusic("victoryMusic")
         resolve();
       } else {
         resolve();

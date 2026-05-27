@@ -26,7 +26,8 @@ type useCombatStore = {
   openInventory: (isInventoryOpened: boolean) => void;
   playSoundEffect: (soundPath: string) => void;
   soundEffect: string;
-  // diceRollSound: (void) => void
+
+  resetAll: () => void;
 };
 
 export const useCombatStore = create<useCombatStore>((set) => ({
@@ -59,4 +60,15 @@ export const useCombatStore = create<useCombatStore>((set) => ({
   openInventory: (bool) => set({ isInventoryOpened: bool }),
   soundEffect: "",
   playSoundEffect: (string) => set({ soundEffect: string }),
+
+  resetAll: () => set(({
+    combatLog:"",
+    enemy:undefined,
+    isCombatOn:false,
+    hasRoundStarted:false,
+    nbOfTurn:1,
+    menu:"",
+    isInventoryOpened:false,
+    soundEffect:""
+  }))
 }));
