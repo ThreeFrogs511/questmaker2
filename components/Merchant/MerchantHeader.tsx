@@ -3,6 +3,9 @@ import { useState, useEffect, useRef, useMemo } from "react";
 import { useUserContext } from "@/context/context";
 import { merchantGreetings } from "@/assets/merchantGreetings";
 import Loading from "@/app/loading";
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function MerchantHeader() {
   const title = "Guilbert's Store";
@@ -37,11 +40,11 @@ export default function MerchantHeader() {
   }
 
   return (
-    <div id="header-merchant" className="">
-      <h2 className="text-xl! text-center lg:text-2xl! font-minecraft leading-relaxed text-amber-300">
+    <div id="header-merchant" className={retroGaming.className}>
+      <h2 className="text-xl! text-center lg:text-2xl! leading-relaxed text-amber-300">
         {title}
       </h2>
-      <h3 className="font-minecraft text-center text-xs! lg:text-sm! text-center min-h-5">
+      <h3 className="text-center text-xs! lg:text-sm! min-h-5">
         {greetings}
       </h3>
     </div>

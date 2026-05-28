@@ -52,7 +52,7 @@ export default function CampaignRunning({
       .then((values) => {
         if (!values) return;
         updateNode(values.firstNode);
-        // updateNode("remembering_how_to_fight")
+        updateNode("remembering_how_to_fight")
         setCampaignTitle(values.title);
         // play()
       })

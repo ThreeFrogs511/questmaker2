@@ -4,6 +4,9 @@ import { useEffect, useRef} from 'react'
 import XpBar from '../../userStats/XpBar'
 import { useUserStore } from '@/stores/useUserStore'
 import Engine from '@/classes/Engine'
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../../public/fonts/retro_gaming.ttf' })
 
 export default function XpGained(
     {setIsSkippingAllowedAction, hasXpBeenUpdated, setHasXpBeenUpdatedAction, gameplay} :
@@ -40,8 +43,8 @@ export default function XpGained(
 
     return(
         <>
-            <div className="w-[90%] mx-auto h-[20%] max-h-[20%] flex flex-col justify-center">
-                <h1 className="text-xl! lg:text-4xl! mt-5! font-bold text-center font-minecraft text-amber-400">
+            <div className={`w-[90%] mx-auto h-[20%] max-h-[20%] flex flex-col justify-center ${retroGaming.className}`}>
+                <h1 className="text-xl! lg:text-4xl! mt-5! font-bold text-center text-amber-400">
                     Experience points gained this campaign
                 </h1>
             </div>

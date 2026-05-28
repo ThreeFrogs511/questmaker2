@@ -1,6 +1,8 @@
 import { redirect } from "next/navigation";
 import Image from "next/image";
+import localFont from 'next/font/local'
 
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function Merchant() {
   
@@ -12,7 +14,7 @@ export default function Merchant() {
   return (
     <>
 
-          <div className="h-[70%] lg:h-full! w-full! lg:w-[70%]! flex flex-col md:flex-row items-center gap-2">
+          <div className={`h-[70%] lg:h-full! w-full! lg:w-[70%]! flex flex-col md:flex-row items-center gap-2 ${retroGaming.className}`}>
             {vendorChoices.map((item: string, index: number) => (
               <div
                 key={index}
@@ -38,7 +40,7 @@ export default function Merchant() {
                     preload={true}
                   />
                 </div>
-                <p className={`font-minecraft text-sm! md:text-xl text-white`}>
+                <p className={`text-sm! md:text-xl text-white`}>
                   {item}
                 </p>
               </div>

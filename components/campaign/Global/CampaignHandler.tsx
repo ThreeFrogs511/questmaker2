@@ -2,10 +2,13 @@
 import { useEffect, useRef, useState, useCallback } from "react";
 import { useNarrationStore } from "@/stores/useNarrationStore";
 import Engine from "@/classes/Engine";
-import PreloadAudio from "../Audio/PreloadAudio";
+
 // used to interpret HTML in JSON
 import parse from "html-react-parser";
+
 import Link from "next/link";
+import localFont from 'next/font/local'
+
 
 // main types
 
@@ -13,13 +16,13 @@ import { Choice, ChoiceResult } from "@/types/types";
 
 // components and custom hooks
 import DataVisualizer from "./DataVisualizer";
-import PressPlayIcon from "../Audio/PressPlayIcon";
-import Voices from "../Audio/Voices";
 import CombatInterface from "../CombatComponents/CombatInterface";
 import EndScreenInterface from "../EndScreen/EndScreenInterface";
 import { useCombatStore } from "@/stores/useCombatStore";
-import { useSound } from "use-sound";
-import TypeWriter from "typewriter-effect";
+
+const retroGaming = localFont({
+  src: '../../../public/fonts/retro_gaming.ttf',
+})
 
 export default function CampaignHandler() {
   //preloading the audio
@@ -197,7 +200,7 @@ export default function CampaignHandler() {
           id="titleWrapper"
           className=" h-[20%] flex items-center overflow-hidden"
         >
-          <h1 className="text-sm! lg:text-2xl! font-bold font-minecraft text-amber-400">
+          <h1 className={`text-sm! lg:text-2xl! font-bold text-amber-400 ${retroGaming.className}`}>
             {campaignTitle ? campaignTitle : "Campaign"}
           </h1>
 
@@ -222,7 +225,7 @@ export default function CampaignHandler() {
         <div className="text-sm! h-[80%] max-h-[80%] lg:text-base! lg:mt-5 tracking-wide overflow-auto lg:overflow-hidden text-gray-200 lg:leading-relaxed">
           <div className="text-justify mt-2!">
             {/* narration */}
-            <div>
+            <div className={`${retroGaming.className}`}>
               {currentNode &&
                 currentCampaign &&
                 parse(currentCampaign[currentNode]?.text ?? "")}
@@ -235,7 +238,7 @@ export default function CampaignHandler() {
       </div>
 
       {/* Choices Container */}
-      <div className="  h-[40dvh] max-h[40dvh] lg:h-[50dvh] lg:max-h-[50dvh] overflow-y-auto! p-2 lg:p-8 lg:mt-5 scrollingContainer ">
+      <div className="h-[40dvh] max-h[40dvh] lg:h-[50dvh] lg:max-h-[50dvh] overflow-y-auto! p-2 lg:p-8 lg:mt-5 scrollingContainer ">
         <div className=" grid grid-cols-1">
           {allChoicesAvailable &&
             allChoicesAvailable.map((item, key) => {
@@ -257,7 +260,7 @@ export default function CampaignHandler() {
                   }}
                   className="hover:outline-2! border-2! my-1! border-white lg:border-0! outline-white! rounded-lg p-4! text-left"
                 >
-                  <div className="flex items-center grow">
+                  <div className={`flex items-center grow ${retroGaming.className}`}>
                     <span className="text-amber-400 font-bold mr-3 lg:text-xl text-base">
                       {key + 1}.
                     </span>

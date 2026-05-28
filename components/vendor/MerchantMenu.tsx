@@ -1,6 +1,10 @@
 "use client";
 import { useState } from "react";
 import Image from "next/image";
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
+
 export default function MerchantMenu({
   setChoosePurchaseAction,
   setChooseSellAction,
@@ -14,7 +18,7 @@ export default function MerchantMenu({
 
   return (
     <>
-      <div className="h-[70%] lg:h-full! w-full! lg:w-[70%]! flex flex-col md:flex-row items-center gap-2">
+      <div className={`h-[70%] lg:h-full! w-full! lg:w-[70%]! flex flex-col md:flex-row items-center gap-2 ${retroGaming.className}`}>
         {vendorChoices.map((item: string, index: number) => (
           <div
             key={index}
@@ -51,7 +55,7 @@ export default function MerchantMenu({
               />
             </div>
             <p
-              className={`font-minecraft text-sm! md:text-xl ${item === hover ? "text-amber-300" : "text-white"}`}
+              className={`text-sm! md:text-xl ${item === hover ? "text-amber-300" : "text-white"}`}
             >
               {item}
             </p>

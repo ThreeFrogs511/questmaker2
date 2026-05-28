@@ -5,6 +5,9 @@ import DopamineBar from "@/components/userStats/DopamineBar";
 import Progress from "@/components/userStats/XpBar";
 import Header from "@/components/global/Header";
 import { useUserStore } from "@/stores/useUserStore";
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function CharacterSheetClient() {
   const currentUser = useUserStore((state) => state.currentUser);
@@ -12,7 +15,7 @@ export default function CharacterSheetClient() {
 
   return (
     <>
-      <div className="h-full grid grid-rows-[auto_1fr]">
+      <div className={`h-full grid grid-rows-[auto_1fr] ${retroGaming.className}`}>
         <Header />
 
         <section id="profile" className="w-full h-full flex py-5">

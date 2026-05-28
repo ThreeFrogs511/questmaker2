@@ -50,10 +50,10 @@
 //         <Header />
 //         <section className=" w-full  h-full! max-h-full overflow-hidden flex flex-col mx-auto gap-5 items-center lg:pb-5">
 //           <div className="mb-5 flex flex-col items-center">
-//             <h2 className="text-xl! lg:text-2xl! font-minecraft leading-relaxed text-amber-300">
+//             <h2 className="text-xl! lg:text-2xl! leading-relaxed text-amber-300">
 //               {title}
 //             </h2>
-//             <h3 className="font-minecraft text-xs! lg:text-sm! text-center min-h-5">
+//             <h3 className="text-xs! lg:text-sm! text-center min-h-5">
 //               {greetings}
 //             </h3>
 //           </div>

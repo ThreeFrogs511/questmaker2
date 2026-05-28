@@ -7,6 +7,9 @@ import { ListType } from "@/types/types";
 import { useJournalStore } from "@/stores/useJournalStore";
 import { Card } from "pixel-retroui";
 import Journal from "@/app/journal/page";
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function List() {
   // current user data
@@ -110,7 +113,7 @@ export default function List() {
 
   return (
     <>
-      <div className="scrollingContainer h-full! flex flex-col gap-2">
+      <div className={`scrollingContainer h-full! flex flex-col gap-2 ${retroGaming.className}`}>
         {displayedQuests?.map((item, index) => (
           <Card
             bg="black"

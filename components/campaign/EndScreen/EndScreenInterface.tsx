@@ -9,6 +9,9 @@ import { useUserStore } from "@/stores/useUserStore";
 
 import { useRouter } from "next/navigation";
 import Engine from "@/classes/Engine";
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../../public/fonts/retro_gaming.ttf' })
 
 export default function EndScreenInterface({ gameplay }: { gameplay: Engine }) {
   const [isSkippingAllowed, setIsSkippingAllowed] = useState(true);
@@ -30,7 +33,7 @@ export default function EndScreenInterface({ gameplay }: { gameplay: Engine }) {
 
   return (
     <>
-      <div className="fixed h-dvh top-0 bottom-0 left-0 right-0 w-dvw z-999 bg-black flex flex-col justify-center lg:justify-evenly!">
+      <div className={`fixed h-dvh top-0 bottom-0 left-0 right-0 w-dvw z-999 bg-black flex flex-col justify-center lg:justify-evenly! ${retroGaming.className}`}>
         {page === 1 && <PathChosen gameplay={gameplay} />}
         {page === 2 && (
           <XpGained

@@ -1,8 +1,11 @@
 "use client";
+import localFont from 'next/font/local'
+const retroGaming = localFont({ src: '../public/fonts/retro_gaming.ttf' })
+
 export default function Loading() {
   return (
     <>
-      <div className="w-full h-dvh! right-0! top-0! bg-black fixed! z-999! flex justify-center items-center font-minecraft text-base lg:text-2xl!">
+      <div className={`w-full h-dvh! right-0! top-0! bg-black fixed! z-999! flex justify-center items-center text-base lg:text-2xl! ${retroGaming.className}`}>
         {/* <div className="loader"></div> */}
         <div className="loader-stage">
           <div className="loader-scene">

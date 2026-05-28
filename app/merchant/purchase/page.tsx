@@ -7,6 +7,9 @@ import useSound from "use-sound";
 import { useUserStore } from "@/stores/useUserStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
 import MerchantToolbar from "@/components/Merchant/MerchantToolBar";
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../../public/fonts/retro_gaming.ttf' })
 
 export default function MerchantPurchase() {
   const currentUser = useUserStore((state) => state.currentUser);
@@ -104,7 +107,7 @@ export default function MerchantPurchase() {
 
   return (
     <>
-      <div className=" lg:w-[80%]! lg:mx-auto h-full! flex flex-col w-full overflow-hidden grow">
+      <div className={` lg:w-[80%]! lg:mx-auto h-full! flex flex-col w-full overflow-hidden grow ${retroGaming.className}`}>
         <MerchantToolbar
           notEnoughMoney={notEnoughMoney}
           setNotEnoughMoneyAction={setNotEnoughMoney}

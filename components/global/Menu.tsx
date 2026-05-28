@@ -1,12 +1,13 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
+import localFont from 'next/font/local'
 
-
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function Menu({setIsMenuOpenAction} : {setIsMenuOpenAction: React.Dispatch<React.SetStateAction<boolean>>}) {
   const router = useRouter();
-  const style = "font-minecraft text-xl! sm:text-2xl! md:ml-10!";
+  const style = "text-xl! sm:text-2xl! md:ml-10!";
   const pathname = usePathname();
 
 
@@ -32,8 +33,7 @@ export default function Menu({setIsMenuOpenAction} : {setIsMenuOpenAction: React
   return (
     <>
       <div
-        className=" relative h-full w-full px-4 sm:px-6 md:px-10 lg:px-20 
-        max-w-400 mx-auto flex items-center"
+        className={` relative h-full w-full px-4 sm:px-6 md:px-10 lg:px-20 max-w-400 mx-auto flex items-center ${retroGaming.className}`}
       >
         <nav
           className="h-[70%] shrink flex flex-col justify-evenly! items-center w-full px-4

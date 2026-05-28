@@ -4,6 +4,9 @@ import { Button, Card } from "pixel-retroui";
 import Title from "./Title";
 import presets from "../../assets/characterPresets.json";
 import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function RaceSelection({
   indexTitle,
@@ -26,7 +29,7 @@ export default function RaceSelection({
 
   return (
     <>
-      <section className="w-full lg:w-[70%]! xl:w-[50%]! 2xl:w-[50%]!  h-dvh mx-auto px-4 sm:px-6 md:px-8 py-10 grid grid-rows-[10%_50%_30%] gap-5">
+      <section className={`w-full lg:w-[70%]! xl:w-[50%]! 2xl:w-[50%]! h-dvh mx-auto px-4 sm:px-6 md:px-8 py-10 grid grid-rows-[10%_50%_30%] gap-5 ${retroGaming.className}`}>
         <Title
           indexTitle={indexTitle}
           setIndexTitleAction={setIndexTitleAction}

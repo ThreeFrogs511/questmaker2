@@ -1,4 +1,7 @@
 'use client'
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function Title({indexTitle, setIndexTitleAction} : {
     indexTitle:number,
@@ -8,7 +11,7 @@ export default function Title({indexTitle, setIndexTitleAction} : {
     const title = ["IDENTITY", "RACE", "CLASS", "ABILITIES", "SUMMARY"];
     return(
         <>
-        <div className="flex justify-between items-center row-span-1">
+        <div className={`flex justify-between items-center row-span-1 ${retroGaming.className}`}>
             <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 
             className={`size-10 cursor-pointer shrink-0 ${indexTitle>0 ? 'text-white' : 'text-black pointer-events-none'}`}
             onPointerDown={() => setIndexTitleAction(prev => prev ===0 ? 0 : prev-1)}> 
@@ -18,7 +21,7 @@ export default function Title({indexTitle, setIndexTitleAction} : {
             <h2 
             className="lg:w-1/2 xl:w-1/2 2xl:w-1/2 text-xl! sm:text-xl! md:text-2xl! lg:text-3xl! 
             xl:text-3xl! 2xl:text-4xl! 
-            tracking-widest text-center font-minecraft">
+            tracking-widest text-center">
                 {title[indexTitle]}
             </h2>
             <svg fill="none" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" 

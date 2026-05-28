@@ -2,6 +2,8 @@
 import HitpointsBar from "../../userStats/HitpointsBar";
 import { ProgressBar } from "pixel-retroui";
 import { useState} from "react";
+import localFont from 'next/font/local'
+
 
 import CombatChoices from "./combatChoices";
 import InventoryCombatModal from "./InventoryCombatModal";
@@ -15,6 +17,10 @@ import useSound from "use-sound";
 import { useUserStore } from "@/stores/useUserStore";
 import { useCombatStore } from "@/stores/useCombatStore";
 import Engine from "@/classes/Engine";
+
+const retroGaming = localFont({
+  src: '../../../public/fonts/retro_gaming.ttf',
+})
 
 export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
   // combat store
@@ -55,16 +61,16 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
 
       <section
         id="combatInterface"
-        className="fixed w-dvw h-dvh top-0 bottom-0 right-0 left-0 flex flex-col bg-black"
+        className={`fixed w-dvw h-dvh top-0 bottom-0 right-0 left-0 flex flex-col bg-black ${retroGaming.className}`}
       >
         <h2
           id="turn"
-          className=" lg:text-4xl! font-bold font-minecraft text-center  h-[5dvh] mt-5!"
+          className=" lg:text-4xl! font-bold text-center  h-[5dvh] mt-5!"
         >
           Turn <span className="text-amber-400">{nbOfTurn}</span>
         </h2>
          
-          <h3 className=" mt-1! lg:text-2xl! font-bold font-minecraft text-center  min-h-[5dvh]! max-h-[5dvh]!">
+          <h3 className=" mt-1! lg:text-2xl! font-bold text-center  min-h-[5dvh]! max-h-[5dvh]!">
             {!hasRoundStarted ? "Make a move !" : null}
           </h3>
         
@@ -89,7 +95,7 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
               </div>
             </div>
 
-            <div className="w-[10%] h-full flex items-center justify-center font-minecraft text-xl">
+            <div className="w-[10%] h-full flex items-center justify-center text-xl">
               VS
             </div>
 

@@ -6,6 +6,9 @@ import DopamineBar from "@/components/userStats/DopamineBar";
 import Item from "@/classes/Item";
 import Loading from "@/app/loading";
 import { useUserContext } from "@/context/context";
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function InventoryClient() {
   const { isAuthenticated, isProfileCompleted } = useUserContext();
@@ -16,11 +19,11 @@ export default function InventoryClient() {
 
   return (
     <>
-      <div className="wrapper overflow-hidden">
+      <div className={`wrapper overflow-hidden ${retroGaming.className}`}>
         <Header />
 
         <div>
-          <h1 className="font-minecraft text-2xl text-center text-amber-300 mb-5">
+          <h1 className="text-2xl text-center text-amber-300 mb-5">
             Inventory
           </h1>
           <div className="grid grid-cols-2  max-w-[70%] mx-auto mb-2">

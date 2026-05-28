@@ -2,16 +2,13 @@
 import { useEffect } from "react";
 import List from "@/components/journal/List";
 import Toolbar from "@/components/journal/Toolbar";
-import { Press_Start_2P } from "next/font/google";
 import { useUserStore } from "@/stores/useUserStore";
 import { useJournalStore } from "@/stores/useJournalStore";
 import useSound from "use-sound";
 import Loading from "@/app/loading";
+import localFont from 'next/font/local'
 
-const PressStartFont = Press_Start_2P({
-  subsets: ["latin"],
-  weight: "400",
-});
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function Journal() {
   const currentUser = useUserStore((state) => state.currentUser);
@@ -77,7 +74,7 @@ export default function Journal() {
     <>
       <div
         id="journal-navigation"
-        className="flex justify-between items-center mb-0"
+        className={`flex justify-between items-center mb-0 ${retroGaming.className}`}
       >
         <svg
           fill="none"
@@ -92,7 +89,7 @@ export default function Journal() {
           />
         </svg>
         <h2
-          className={`col-span-1 text-center text-xs! lg:text-base! text-stone-300 ${PressStartFont.className}`}
+          className="col-span-1 text-center text-xs! lg:text-base! text-stone-300"
         >
           {journal[whichPage]}
         </h2>
@@ -112,9 +109,9 @@ export default function Journal() {
 
       <Toolbar />
       <div className="flex items-center gap-5 mb-2">
-        <span className="font-minecraft">
+        <span>
           coins :{" "}
-          <span className="text-amber-300 font-minecraft">
+          <span className="text-amber-300">
             {currentUser?.coins}
           </span>
         </span>
@@ -129,7 +126,7 @@ export default function Journal() {
       {displayedQuests && displayedQuests.length > 0 ? (
         <List />
       ) : (
-        <div className="w-full h-full flex flex-col justify-center font-minecraft text-base lg:text-xl! ">
+        <div className="w-full h-full flex flex-col justify-center text-base lg:text-xl! ">
           {areQuestsLoaded ? (
             <div className="flex flex-col items-center">
               <p>No quests to display.</p>

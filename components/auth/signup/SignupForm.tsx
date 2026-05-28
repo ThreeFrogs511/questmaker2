@@ -3,6 +3,9 @@ import { Button, Input } from "pixel-retroui";
 import { useState } from "react";
 import { signupUser } from "@/lib/auth/signup";
 import { useRouter } from "next/navigation";
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../../public/fonts/retro_gaming.ttf' })
 
 type FeedbackType = {
   success?: boolean;
@@ -44,16 +47,7 @@ export default function SignupForm() {
 
   return (
     <form
-      className="
-                        flex
-                        flex-col
-                        gap-8
-                        min-h-80
-                        items-center
-                        w-[90%]
-                        sm:w-[90%]
-                        lg:w-[50%]
-                    "
+      className={`flex flex-col gap-8 min-h-80 items-center w-[90%] sm:w-[90%] lg:w-[50%] ${retroGaming.className}`}
       onSubmit={submitHandler}
     >
       <div className="w-full flex flex-col gap-6">
@@ -109,7 +103,7 @@ export default function SignupForm() {
         Begin my adventure
       </Button>
 
-      <div className="font-minecraft text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">{error}</div>
+      <div className="text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">{error}</div>
     </form>
   );
 }

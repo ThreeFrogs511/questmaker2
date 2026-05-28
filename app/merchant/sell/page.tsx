@@ -8,6 +8,9 @@ import useSound from "use-sound";
 import { useRouter } from "next/navigation";
 import UserItems from "@/components/inventory/UserItems";
 import MerchantToolbar from "@/components/Merchant/MerchantToolBar";
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../../public/fonts/retro_gaming.ttf' })
 
 export default function MerchantSell() {
   const currentUser = useUserStore((state) => state.currentUser);
@@ -81,7 +84,7 @@ export default function MerchantSell() {
   }
 
   return (
-    <div className=" lg:w-[80%]! lg:mx-auto h-full! flex flex-col w-full overflow-hidden grow">
+    <div className={` lg:w-[80%]! lg:mx-auto h-full! flex flex-col w-full overflow-hidden grow ${retroGaming.className}`}>
       <MerchantToolbar />
       <UserItems userActionOnItems={sellingItems} />
     </div>

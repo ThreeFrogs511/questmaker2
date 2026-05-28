@@ -6,7 +6,9 @@ import { usePathname } from "next/navigation";
 import { Store } from "@/types/types";
 import { useInventoryStore } from "@/stores/useInventoryStore";
 import useSound from "use-sound";
+import localFont from 'next/font/local'
 
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function MerchantSell({
   setChooseSellAction,

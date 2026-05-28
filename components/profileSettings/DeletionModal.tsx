@@ -4,6 +4,9 @@ import { useState, useRef } from "react";
 import { useUserStore } from "@/stores/useUserStore";
 import { useRouter } from "next/navigation";
 import { Dispatch, SetStateAction } from "react";
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 interface DeletionModalType {
   modal:boolean;
@@ -57,7 +60,7 @@ export default function DeletionModal({modal, openModalAction, setErrorAction, s
             : "fixed top-0 left-0 w-full h-full flex flex-col items-center justify-center z-50 modalDeletion"
       }
     >
-      <div className="flex flex-col bg-black gap-3 justify-center mt-5 border border-white p-15 rounded-lg ">
+      <div className={`flex flex-col bg-black gap-3 justify-center mt-5 border border-white p-15 rounded-lg ${retroGaming.className}`}>
         <div>
           Are you sure you want to delete your account ? This action is
           irreversible.

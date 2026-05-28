@@ -5,6 +5,9 @@ import { loginUser } from "@/lib/auth/login";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/useUserStore";
 import { User } from "@/types/types";
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../../public/fonts/retro_gaming.ttf' })
 
 type FeedbackType = {
   success?: boolean;
@@ -45,16 +48,7 @@ export default function LoginForm() {
 
   return (
     <form
-      className="
-                        flex
-                        flex-col
-                        gap-8
-                        min-h-80
-                        items-center
-                        w-[90%]
-                        sm:w-[90%]
-                        lg:w-[50%]
-                    "
+      className={`flex flex-col gap-8 min-h-80 items-center w-[90%] sm:w-[90%] lg:w-[50%] ${retroGaming.className}`}
       onSubmit={submitHandler}
     >
       <div className="w-full flex flex-col gap-6">
@@ -84,7 +78,7 @@ export default function LoginForm() {
           />
           <a
             href="/forgot"
-            className="font-minecraft hover:underline! mt-2! text-xs text-center"
+            className="hover:underline! mt-2! text-xs text-center"
           >
             Forgot password ?
           </a>
@@ -103,7 +97,7 @@ export default function LoginForm() {
         Resume my adventure
       </Button>
 
-      <div className="font-minecraft text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">
+      <div className="text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">
         {error}
       </div>
     </form>

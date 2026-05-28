@@ -4,7 +4,9 @@ import { useState, useRef, useEffect } from "react";
 import { Input, Button } from "pixel-retroui";
 
 import DeletionModal from "./DeletionModal";
+import localFont from 'next/font/local'
 
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function ProfileSettingsInputs() {
   const [currentPassword, setCurrentPassword] = useState<string | null>(null);
@@ -76,7 +78,7 @@ export default function ProfileSettingsInputs() {
 
   return (
     <>
-      <div className="space-y-4 mb-4! flex flex-col items-center">
+      <div className={`space-y-4 mb-4! flex flex-col items-center ${retroGaming.className}`}>
         <div className="w-full flex flex-col items-center">
           <label className="block text-sm mb-1">Email</label>
           <Input

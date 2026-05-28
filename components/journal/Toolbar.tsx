@@ -1,15 +1,12 @@
 "use client";
-import { Press_Start_2P } from "next/font/google";
 import { Button, Input } from "pixel-retroui";
 import useSound from "use-sound";
 import Quest from "@/classes/Quest";
 import { useUserStore } from "@/stores/useUserStore";
 import { useJournalStore } from "@/stores/useJournalStore";
+import localFont from 'next/font/local'
 
-const PressStartFont = Press_Start_2P({
-  subsets: ["latin"],
-  weight: "400",
-});
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function Toolbar() {
 
@@ -49,7 +46,7 @@ export default function Toolbar() {
 
   return (
     <>
-      <div className="flex mb-1 ">
+      <div className={`flex mb-1 ${retroGaming.className}`}>
         <Input
           bg="black"
           textColor="white"
@@ -58,7 +55,7 @@ export default function Toolbar() {
           id="todo"
           placeholder="Your new quest..."
           maxLength={300}
-          className={` grow h-[70%]! text-xs! ${PressStartFont.className} placeholder:${PressStartFont.className}`}
+          className="grow h-[70%]! text-xs!"
         />
 
         {/* submit button */}

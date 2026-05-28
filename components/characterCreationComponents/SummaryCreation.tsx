@@ -8,7 +8,9 @@ import { useUserStore } from "@/stores/useUserStore";
 import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
 import { useEffect } from "react";
 import { User } from "@/types/types";
+import localFont from 'next/font/local'
 
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function SummaryCreation({
   indexTitle,
@@ -65,8 +67,7 @@ export default function SummaryCreation({
     <>
       <section
         id="summaryCharacterCreation"
-        className="w-full lg:w-[70%]! xl:w-[50%]! 2xl:w-[50%]! h-dvh mx-auto px-4 sm:px-6 md:px-8 py-10 
-        grid grid-rows-[10%_auto]"
+        className={`w-full lg:w-[70%]! xl:w-[50%]! 2xl:w-[50%]! h-dvh mx-auto px-4 sm:px-6 md:px-8 py-10 grid grid-rows-[10%_auto] ${retroGaming.className}`}
       >
         <Title
           indexTitle={indexTitle}

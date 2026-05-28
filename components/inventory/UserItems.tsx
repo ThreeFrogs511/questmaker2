@@ -6,7 +6,9 @@ import items from "@/assets/items.json";
 import { useEffect } from "react";
 import { useState} from "react";
 import { usePathname } from "next/navigation";
+import localFont from 'next/font/local'
 
+const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function UserItems({userActionOnItems, mode} : {userActionOnItems: (item:Store, id?:number) => void, mode?: "combat"}) {
 
@@ -42,7 +44,7 @@ export default function UserItems({userActionOnItems, mode} : {userActionOnItems
     <>
       <section
         id="inventoryContainer"
-        className="w-full h-full flex flex-col scrollingContainer grow! gap-5 md:gap-2 px-0!"
+        className={`w-full h-full flex flex-col scrollingContainer grow! gap-5 md:gap-2 px-0! ${retroGaming.className}`}
       >
  
         {displayedInventory.map((item: Store, key: number) => (
@@ -88,7 +90,7 @@ export default function UserItems({userActionOnItems, mode} : {userActionOnItems
             </div>
           </figure>
         ))}
-        {displayedInventory.length <= 0 && <div className="h-full w-full flex justify-center items-center font-minecraft"><p>No items yet.</p></div>}
+        {displayedInventory.length <= 0 && <div className="h-full w-full flex justify-center items-center"><p>No items yet.</p></div>}
       </section>
     </>
   );

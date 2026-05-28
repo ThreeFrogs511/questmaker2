@@ -4,6 +4,9 @@ import Engine from "@/classes/Engine";
 import { Store, CombatConsumableItem } from "@/types/types";
 import UserItems from "@/components/inventory/UserItems";
 import { useInventoryStore } from "@/stores/useInventoryStore";
+import localFont from 'next/font/local'
+
+const retroGaming = localFont({ src: '../../../public/fonts/retro_gaming.ttf' })
 
 export default function InventoryCombatModal({
   gameplay,
@@ -38,7 +41,7 @@ export default function InventoryCombatModal({
 
   return (
     <>
-      <div className="fixed h-dvh top-0 bottom-0 left-0 right-0 w-dvw z-998 flex justify-center items-center">
+      <div className={`fixed h-dvh top-0 bottom-0 left-0 right-0 w-dvw z-998 flex justify-center items-center ${retroGaming.className}`}>
         <div className="h-[90%] w-[90%] bg-black overflow-hidden border-4! border-white! rounded-lg! p-5">
           <div
             className="cursor-pointer"
