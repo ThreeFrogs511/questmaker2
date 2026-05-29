@@ -21,6 +21,7 @@ export default function DataVisualizer({
     return null;
   }
 
+
   return (
     <>
       <p

@@ -1,10 +1,8 @@
 import { Card, Button } from "pixel-retroui";
-import { redirect } from "next/navigation";
 import { Launcher } from "@/classes/Launcher";
 import Form from 'next/form';
 import ResetStates from "@/components/campaign/Global/ResetStates";
 import localFont from 'next/font/local'
-
 
 const retroGaming = localFont({
   src: '../../public/fonts/retro_gaming.ttf',
@@ -20,8 +18,8 @@ export default async function LauncherPage() {
   const title =
     chapter === 1 ? "Begin your adventure" : "Resume your adventure";
 
-    
 
+  
   return (
     <div className={`flex flex-col items-center lg:px-6 lg:py-10 py-3 ${retroGaming.className}`}>
 

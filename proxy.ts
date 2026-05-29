@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import * as jose from "jose";
 
+
 interface PayloadType {
   userId: number;
   email: string;
@@ -43,6 +44,7 @@ export async function proxy(request: NextRequest) {
       case "/":
         return NextResponse.redirect(new URL("/journal", request.url))
       default:
+
         return NextResponse.next();
     }
   } catch {

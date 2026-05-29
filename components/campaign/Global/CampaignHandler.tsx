@@ -7,8 +7,7 @@ import Engine from "@/classes/Engine";
 import parse from "html-react-parser";
 
 import Link from "next/link";
-import localFont from 'next/font/local'
-
+import localFont from "next/font/local";
 
 // main types
 
@@ -19,14 +18,14 @@ import DataVisualizer from "./DataVisualizer";
 import CombatInterface from "../CombatComponents/CombatInterface";
 import EndScreenInterface from "../EndScreen/EndScreenInterface";
 import { useCombatStore } from "@/stores/useCombatStore";
+import PressPlayIcon from "../Audio/PressPlayIcon";
 
 const retroGaming = localFont({
-  src: '../../../public/fonts/retro_gaming.ttf',
-})
+  src: "../../../public/fonts/retro_gaming.ttf",
+});
 
 export default function CampaignHandler() {
   //preloading the audio
-  // const { voice, battleMusic } = PreloadAudio();
 
   // narration store
   const currentCampaign = useNarrationStore((state) => state.currentCampaign);
@@ -35,8 +34,6 @@ export default function CampaignHandler() {
 
   // combat store
   const resetNbOfTurn = useCombatStore((state) => state.resetNbOfTurn);
-  const soundEffect = useCombatStore((state) => state.soundEffect);
-
 
   // store the currently available choices
   const [allChoicesAvailable, setAllChoicesAvailable] = useState<Choice[]>();
@@ -50,14 +47,8 @@ export default function CampaignHandler() {
     success: null,
   });
 
-  // stores the user's past decisions
-  const [userPastChoices, setUserPastChoices] = useState<Array<string>>([]);
-
   // stores the nodes' history
   const [userPastNodes, setUserPastNodes] = useState<Array<string>>([]);
-
-  // handles the on/off option for the voice over
-  const [isPressed, setIsPressed] = useState(true);
 
   // prevents double clicking on keyboard and errors
   const [keyboardPressed, setKeyboardPressed] = useState(false);
@@ -75,19 +66,15 @@ export default function CampaignHandler() {
   const gameplay = useRef<Engine | undefined>(undefined);
   if (!gameplay.current) {
     gameplay.current = new Engine(currentNode);
-  };
+  }
 
   useEffect(() => {
-    if (!gameplay.current) return;
-    // launching background music at the start of the campaign
-    gameplay.current.playMusic("backgroundMusic");
+    gameplay.current?.playMusic("backgroundMusic");
 
-    //stopping all music when leaving the campaign
     return () => {
       gameplay.current?.stopAllMusic();
-    }
+    };
   }, []);
-
 
   useEffect(() => {
     if (currentCampaign && currentNode && gameplay.current) {
@@ -98,13 +85,7 @@ export default function CampaignHandler() {
       //cleaning and preparing the choices displayed to the player
       gameplay.current.prepareChoicesForPlayer(
         setAllChoicesAvailable,
-        currentCampaign[currentNode].choices ?? [],
-        userPastChoices,
-      );
-
-      // storing the nodes history, the story path
-      setUserPastNodes((prev) =>
-        prev.length > 0 ? [...prev, currentNode] : [currentNode],
+        currentCampaign[currentNode].choices ?? []
       );
 
       // activating the combat interface when combat is on
@@ -113,7 +94,6 @@ export default function CampaignHandler() {
           if (n.combat_on) return n;
         });
         setIsCombatOn(combatOn ? true : false);
-        
       }
 
       // activating the end screen when the campaign is over
@@ -130,7 +110,7 @@ export default function CampaignHandler() {
         resolve();
       }, 500);
     }).then(() => (isLocked.current = false));
-  }, [currentCampaign, currentNode, userPastChoices]);
+  }, [currentCampaign, currentNode]);
 
   // handle the navigation by keyboard
   useEffect(() => {
@@ -141,13 +121,11 @@ export default function CampaignHandler() {
       if (allChoicesAvailable && (e.key === "1" || e.key === "&")) {
         if (!allChoicesAvailable[0]) return;
         //memorizing the user's choice for the narration and the gameplay consequences
-        setUserPastChoices((prev) => [...prev, allChoicesAvailable[0]?.text]);
 
         //updating the engine
         gameplay.current.determineNextNode(
           allChoicesAvailable[0],
           setChoiceResult,
-          userPastNodes,
           resetNbOfTurn,
         );
 
@@ -155,23 +133,19 @@ export default function CampaignHandler() {
       } else if (allChoicesAvailable && (e.key === "2" || e.key === "é")) {
         if (!allChoicesAvailable[1]) return;
 
-        setUserPastChoices((prev) => [...prev, allChoicesAvailable[1]?.text]);
 
         gameplay.current.determineNextNode(
           allChoicesAvailable[1],
           setChoiceResult,
-          userPastNodes,
           resetNbOfTurn,
         );
         setKeyboardPressed(false);
       } else if (allChoicesAvailable && (e.key === "3" || e.key === '"')) {
         if (!allChoicesAvailable[2]) return;
-        setUserPastChoices((prev) => [...prev, allChoicesAvailable[2]?.text]);
 
         gameplay.current.determineNextNode(
           allChoicesAvailable[2],
           setChoiceResult,
-          userPastNodes,
           resetNbOfTurn,
         );
         setKeyboardPressed(false);
@@ -183,11 +157,10 @@ export default function CampaignHandler() {
     document.addEventListener("keydown", handleKeyboardSelection);
     return () =>
       document.removeEventListener("keydown", handleKeyboardSelection);
-  }, [allChoicesAvailable, userPastNodes, resetNbOfTurn, keyboardPressed]);
+  }, [allChoicesAvailable, resetNbOfTurn, keyboardPressed]);
 
   return (
     <>
-
       {isCombatOn && <CombatInterface gameplay={gameplay.current} />}
 
       {/* end screen component */}
@@ -200,16 +173,15 @@ export default function CampaignHandler() {
           id="titleWrapper"
           className=" h-[20%] flex items-center overflow-hidden"
         >
-          <h1 className={`text-sm! lg:text-2xl! font-bold text-amber-400 ${retroGaming.className}`}>
+          <h1
+            className={`text-sm! lg:text-2xl! font-bold text-amber-400 ${retroGaming.className}`}
+          >
             {campaignTitle ? campaignTitle : "Campaign"}
           </h1>
 
           <div className="flex items-center h-full ml-10! gap-6!">
             {/* icon to mute or play the voices */}
-            {/* <PressPlayIcon
-              isPressed={isPressed}
-              setIsPressedAction={setIsPressed}
-            /> */}
+            <PressPlayIcon gameplay={gameplay.current} />
 
             {/* leave campaign link */}
             <Link
@@ -247,20 +219,20 @@ export default function CampaignHandler() {
                   key={key}
                   onPointerDown={() => {
                     if (isLocked.current) return;
-                    setUserPastChoices((prev) => [...prev, item.text]);
 
                     if (gameplay.current) {
                       gameplay.current.determineNextNode(
                         item,
                         setChoiceResult,
-                        userPastNodes,
-                        resetNbOfTurn,
+                        resetNbOfTurn
                       );
                     }
                   }}
                   className="hover:outline-2! border-2! my-1! border-white lg:border-0! outline-white! rounded-lg p-4! text-left"
                 >
-                  <div className={`flex items-center grow ${retroGaming.className}`}>
+                  <div
+                    className={`flex items-center grow ${retroGaming.className}`}
+                  >
                     <span className="text-amber-400 font-bold mr-3 lg:text-xl text-base">
                       {key + 1}.
                     </span>

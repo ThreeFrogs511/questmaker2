@@ -45,7 +45,6 @@ export default class Combat {
   private fight_over: boolean;
   private playSfx;
   private playMusic;
-  private playSoundEffect: (soundPath: string) => void;
 
   private updateRoundStatus: (boolean: boolean) => void;
 
@@ -79,7 +78,6 @@ export default class Combat {
 
     this.updateNode = useNarrationStore.getState().updateNode;
 
-    this.playSoundEffect = useCombatStore.getState().playSoundEffect;
     this.updateRoundStatus = useCombatStore.getState().updateRoundStatus;
   }
 
@@ -115,7 +113,7 @@ export default class Combat {
         this.userFirstToAttack = true;
         new Promise<void>((resolve, reject) => {
           this.setCombatLog(
-            "<div className='lg:text-xl text-xs mb-1'>D20 rolled! You move first!</div>",
+            "<div className='lg:text-xl text-xs mb-1'><span style='color:#fbbf24'>D20 rolled!</span> You move first!</div>",
           );
 
           // resetting the sound effect to avoid overlapping with future sound effects
@@ -129,7 +127,7 @@ export default class Combat {
         this.userFirstToAttack = false;
         new Promise<void>((resolve, reject) => {
           this.setCombatLog(
-            "<div className='lg:text-xl text-xs mb-1'>D20 rolled! The enemy will move first!</div>",
+            "<div className='lg:text-xl text-xs mb-1'><span style='color:#fbbf24'>D20 rolled!</span> The enemy will move first!</div>",
           );
 
           // resetting the sound effect to avoid overlapping with future sound effects
@@ -167,7 +165,7 @@ export default class Combat {
     resetNbOfTurn(1);
 
     // creating a snapshot containing the user's main stats before starting the fight
-    // used to reset their stats in case of a game over
+    // used to reset their stats in case of a game over or if the player leave
     this.tempUserStats = { ...this.currentUser };
 
     // fetching current enemy data
@@ -212,6 +210,7 @@ export default class Combat {
         }, 1000);
       });
       if (!this.fight_over) this.setNbOfTurn(1);
+
     } else {
       this.clearCombatLog("");
       await this.handleEnemyTurn(node);
@@ -241,7 +240,7 @@ export default class Combat {
         this.useItem(item, resolve);
       } else {
         this.useAttack = new useAttackAction(item, this.encounter.ac ?? 10, this.playSfx);
-        const damageDoneByUser = this.useAttack.resolver();
+        const damageDoneByUser = await this.useAttack.resolver();
         if (!damageDoneByUser) {
           resolve();
           return;
@@ -291,7 +290,7 @@ export default class Combat {
 
       if (moves && this.currentUser.hp) {
         // we pick an attack at random : the name and the dmg done
-        const [enemyAttack, enemyDmg] =
+        let [enemyAttack, enemyDmg] =
           moves[Math.floor(Math.random() * moves.length)];
 
         // we calculate the amount of dmg inflicted at random (dice roll)
@@ -306,15 +305,11 @@ export default class Combat {
         if (!attackRoll.hit) {
           // this.playSoundEffect("enemy_miss");
           this.playSfx("missSound")
-          // new Promise<void>((resolve) => setTimeout(() => resolve(), 1000)).then(() => {
-          //   this.playSoundEffect("");    
-          // } );
           const log = `<div className="lg:text-xl text-xs mb-1">
               The enemy missed! (Roll: ${attackRoll.roll <= 0 ? 1 : attackRoll.roll})<br>
               </div>`;
           this.setCombatLog(log);
           setTimeout(() => {
-            // this.playSoundEffect("");
             this.updateRoundStatus(false);
             resolve();
           }, 1000);
@@ -322,12 +317,9 @@ export default class Combat {
         } else {
           const soundName = enemyAttack + "Sound";
           this.playSfx(soundName);
-          // this.playSoundEffect(enemyAttack);
-          // new Promise<void>((resolve) => setTimeout(() => resolve(), 1000)).then(() => {
-          //   this.playSoundEffect("");    
-          // });
+          enemyAttack = enemyAttack.charAt(0).toLocaleUpperCase() + enemyAttack.slice(1)
           const log = `<div className="lg:text-xl text-xs mb-1">
-            The enemy uses <span style="color:yellow">${enemyAttack}</span> for <span style="color:yellow">${enemyFinalDmg}</span> damage!
+            The enemy uses <span style="color:#fbbf24">${enemyAttack}</span> for <span style="color:#fbbf24">${enemyFinalDmg}</span> damage!
             </div>`;
           this.setCombatLog(log);
 
@@ -354,7 +346,6 @@ export default class Combat {
             // adding a small delay
             await new Promise<void>((resolve) => {
               setTimeout(() => {
-                // this.playSoundEffect("");
                 resolve();
               }, 1000);
             });
@@ -365,7 +356,7 @@ export default class Combat {
             this.updateNode(`${node}_game_over`);
             this.resetNbOfTurn(1);
             // resetting the user stats and enemy
-            // updateStats({damage_taken: this.tempUserStats?.damage_taken});
+         
             this.updateStats({
               damage_taken: this.tempUserStats?.damage_taken,
             });

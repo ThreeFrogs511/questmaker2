@@ -34,7 +34,7 @@ export default function PixelTick({ color = '#4ade80', delay = 400, trigger = tr
         i++
       }, 30)
     }, delay)
-
+    
     return () => clearTimeout(timeout)
   })
 

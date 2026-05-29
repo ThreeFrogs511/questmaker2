@@ -8,6 +8,7 @@ export default class useAttackAction {
   private playSoundEffect;
   private enemyAC;
   private playSfx;
+  private updateRoundStatus: (boolean: boolean) => void;
 
   constructor(item: CombatAttackItem, enemyAC: number, playSfx:(sound:string)=>void) {
       this.playSfx=playSfx;
@@ -15,6 +16,8 @@ export default class useAttackAction {
       this.attack = item;
       this.playSoundEffect = useCombatStore.getState().playSoundEffect;
       this.enemyAC=enemyAC;
+      this.updateRoundStatus = useCombatStore.getState().updateRoundStatus;
+
   };
 
   calculateAttackModifier() {
@@ -36,17 +39,13 @@ export default class useAttackAction {
       }
   };
 
-  resolver() {
+  async resolver() {
     const finalDmg = this.calculateDmg();
     if (!finalDmg) return;
     const attackRoll = this.calculateAttackRolls(this.enemyAC ?? 10);
 
     if (!attackRoll.hit) {
       this.playSfx("missSound")
-      // this.playSoundEffect('user_miss')
-      // new Promise<void>((resolve) => setTimeout(() => resolve(), 1000)).then(() => {
-      //   this.playSoundEffect("");    
-      // });
       const log = `
       <div className="lg:text-xl text-xs mb-1">
         You missed! (Roll: ${attackRoll.roll <= 0 ? 1 : attackRoll.roll})
@@ -54,13 +53,19 @@ export default class useAttackAction {
       this.setCombatLog(log);
       return null;
     } else {
-      const sound = this.attack.text ?? ""
+      const sound = this.attack.text ?? "";
+      let formattedAttackName="";
+      if (this.attack.text !== "" && this.attack.text) {
+      formattedAttackName = this.attack.text?.charAt(0).toLocaleUpperCase() + this.attack.text.slice(1)
+      }
+      console.log(formattedAttackName)
       this.playSfx(sound+"Sound");
       const log = `
       <div className="lg:text-xl text-xs mb-1">
-        You use <span style="color:yellow">${this.attack.text}</span> for <span style="color:yellow">${finalDmg}</span> damage!
+        You use <span style="color:#fbbf24">${formattedAttackName}</span> for <span style="color:#fbbf24">${finalDmg}</span> damage!
       </div>`;
       this.setCombatLog(log);
+   
       return finalDmg;
     }
   }

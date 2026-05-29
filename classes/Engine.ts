@@ -1,6 +1,4 @@
 "use client";
-// describe the 'nodes' global object
-
 import type { Dispatch, SetStateAction } from "react";
 import { Nodes, User, Choice, ChoiceResult, CombatItem } from "@/types/types";
 import AbilityChecks from "./AbilityChecks";
@@ -11,7 +9,6 @@ import ChoicesOptions from "./Choices";
 
 import { useNarrationStore } from "@/stores/useNarrationStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
-import { useCombatStore } from "@/stores/useCombatStore";
 import AudioManager from "./AudioManager";
 
 export default class Engine {
@@ -27,7 +24,6 @@ export default class Engine {
   private audioManager: AudioManager = new AudioManager();
   private currentMusic: string = "";
   private currentSfx: string = "";
-  private playSoundEffect: (soundPath: string) => void;
 
   // class workers
   private abilityChecks;
@@ -35,6 +31,10 @@ export default class Engine {
   private exclusivePaths;
   private combat: Combat | undefined;
   private choicesOptions;
+
+  //story attributes
+  private pastNodes:Array<string | undefined>=[]
+  private pastUserChoices:Array<string | undefined>=[]
 
   // combat
   combatLockOn: boolean;
@@ -56,13 +56,12 @@ export default class Engine {
 
     //stores the important decisions made during the campaign
     this.relevantChoices = [];
-
-    //audio
-    this.playSoundEffect = useCombatStore.getState().playSoundEffect;
   }
 
-  playMusic(music: string = "backgroundMusic") {
-    this.currentMusic !== "" && this.audioManager.stopMusic(this.currentMusic);
+  playMusic(music: string = this.currentMusic) {
+    this.currentMusic !== "" &&
+      music !== this.currentMusic &&
+      this.audioManager.stopMusic(this.currentMusic);
     this.audioManager.playMusic(music);
     this.currentMusic = music;
   }
@@ -77,14 +76,23 @@ export default class Engine {
     this.audioManager.resetAllAudio();
   }
 
+  muteMusic() {
+    this.audioManager.muteMusic();
+  }
+
+  resumeMusic() {
+    this.audioManager.resumeMusic();
+  }
+
   // THIS METHOD DETERMINES THE NEXT NODE BASED ON THE USER'S CHOICE.
   // IF THE NODE IS UNIQUE (PENALTY, ABILITY CHECKS, COMBAT), WE HANDLE IT HERE
   async determineNextNode(
     currentChoice: Choice,
     setChoiceResult: Dispatch<SetStateAction<ChoiceResult>>,
-    userPastNodes: string[],
     clearNbOfTurn: (n: number) => void,
   ) {
+    this.logUserChoices(currentChoice.text);
+
     // ability checks
     if (currentChoice.check) {
       const check = this.abilityChecks.handler(currentChoice, this.node);
@@ -147,7 +155,7 @@ export default class Engine {
     } else if (currentChoice.nodeRef) {
       const nextNode = this.exclusivePaths.handlingChoicesPaths(
         currentChoice,
-        userPastNodes,
+        this.pastNodes,
       );
       this.updateNode(nextNode);
       setChoiceResult((prev: ChoiceResult) => ({
@@ -161,7 +169,7 @@ export default class Engine {
     } else if (currentChoice.campaignEnd) {
       this.relevantChoices = (currentChoice.relevantNodes ?? []).filter(
         (n: { node: string; text: string }) => {
-          if (userPastNodes.includes(n.node)) {
+          if (this.pastNodes.includes(n.node)) {
             return n.text;
           }
         },
@@ -213,12 +221,11 @@ export default class Engine {
   prepareChoicesForPlayer(
     setAllAvailableChoices: Dispatch<SetStateAction<Choice[] | undefined>>,
     choices: Choice[],
-    userPastChoices: string[],
   ) {
     this.choicesOptions.handler(
       setAllAvailableChoices,
       choices,
-      userPastChoices,
+      this.pastUserChoices,
     );
   }
 
@@ -251,6 +258,7 @@ export default class Engine {
   // setter to update the node inside the class
   setNodeInsideEngine(node: string) {
     this.node = node;
+    this.logPastNodes(node)
   }
 
   // getters to display the decisions made during the campaign and the total xp gained in the end screen
@@ -260,5 +268,13 @@ export default class Engine {
 
   getAccumulatedXp() {
     return this.accumulatedXp;
+  }
+
+  logUserChoices(choice:string) {
+    this.pastUserChoices.push(choice);
+  };
+
+  logPastNodes(node:string) {
+    this.pastNodes.push(node);
   }
 }

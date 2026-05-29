@@ -46,7 +46,6 @@ export default class ExclusivePaths {
             break;
 
           case "class":
-            console.log("classe!!!");
             altNode = this.handlingClassPaths(
               alt[i].value,
               userClass ?? "",
@@ -56,8 +55,6 @@ export default class ExclusivePaths {
             break;
         }
       }
-      console.log(altNode);
-      //   return altNode;
     }
   }
 
@@ -85,12 +82,12 @@ export default class ExclusivePaths {
     }
   }
 
-  handlingChoicesPaths(currentChoice: Choice, userPastNodes: string[]) {
+  handlingChoicesPaths(currentChoice: Choice, pastNodes: Array<string | undefined>) {
     const nextNode = currentChoice.next;
     let relevantStoryPaths: string | null = null;
     if (currentChoice.nodeRef) {
       for (let i = 0; i < currentChoice.nodeRef.length; i++) {
-        if (userPastNodes.includes(currentChoice.nodeRef[i])) {
+        if (pastNodes.includes(currentChoice.nodeRef[i])) {
           !relevantStoryPaths
             ? (relevantStoryPaths = currentChoice.nodeRef[i])
             : (relevantStoryPaths += "+" + currentChoice.nodeRef[i]);
