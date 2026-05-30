@@ -25,7 +25,7 @@ export async function GET(
 
 export async function PATCH(
   request: Request,
-  { params }: { params: Promise<{ quest_id: number }> },
+  { params }: { params: Promise<{ quest_id: string }> },
 ) {
   try {
     const { quest_id } = await params;
