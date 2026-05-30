@@ -40,23 +40,23 @@ export async function POST(request: Request) {
 
       case "/journal":
         r = await fetchQuests(sql, userId);
-        return r;
+        return NextResponse.json(r);
 
       case "/merchant":
         r = await fetchInventoryData(sql, userId);
-        return r;
+        return NextResponse.json(r);
 
       case "/inventory":
         r = await fetchInventoryData(sql, userId);
-        return r;
+        return NextResponse.json(r);
 
       case "/merchant/sell":
         r = await fetchInventoryData(sql, userId);
-        return r;
+        return NextResponse.json(r);
 
       case "/campaignRunning":
         r = await fetchPlayerCampaignData(sql, userId);
-        return r;
+        return NextResponse.json(r);
 
       default:
         r = await sql`
