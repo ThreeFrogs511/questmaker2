@@ -32,7 +32,7 @@ export default function DeletionModal({modal, openModalAction, setErrorAction, s
       .find((row) => row.startsWith("csrf="))
       ?.split("=")[1];
 
-    fetch(`/api/profileSettings/${currentUser.id}`, {
+    fetch(`/api/profileSettings/${currentUser.user_id}`, {
       method: "DELETE",
       headers: {
         "content-type": "application/json",

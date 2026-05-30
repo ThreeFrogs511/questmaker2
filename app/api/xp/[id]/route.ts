@@ -15,8 +15,8 @@ export async function PATCH(
     return NextResponse.json({ error: 'Invalid column' }, { status: 400 });
   }
 
-  const query = `UPDATE users SET ${column} = $1 WHERE id = $2`;
-  await sql.unsafe(query, [xp, id]); 
+  const query = `UPDATE characters SET ${column} = $1 WHERE user_id = $2`;
+  await sql.unsafe(query, [xp, id]);
 
   return NextResponse.json({ success: true });
 }

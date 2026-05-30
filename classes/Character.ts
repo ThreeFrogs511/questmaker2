@@ -1,9 +1,9 @@
 import { Draft, Class } from "@/types/types";
-import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
-
+import { useCharacterStore } from "@/stores/useCharacterStore";
+import logNewCharacter from "@/lib/auth/character/logNewCharacter";
 
 export default class Character {
-  private id: undefined | number;
+  private character_id: undefined | number;
   private username: string;
   private gender: string;
   private race: string;
@@ -23,6 +23,7 @@ export default class Character {
 
   constructor({ ...draft }) {
     // attributes based on draft
+    this.character_id;
     this.username = draft.username;
     this.gender = draft.gender;
     this.race = draft.race;
@@ -33,7 +34,7 @@ export default class Character {
     this.int = draft.int;
     this.wis = draft.wis;
     this.cha = draft.cha;
-    this.updateDraft = useCharacterCreationStore.getState().updateDraft;
+    this.updateDraft = useCharacterStore.getState().updateDraft;
     // attributes that'll be calculated later
     this.ac = 10;
     this.xp = 0;
@@ -67,6 +68,7 @@ export default class Character {
           ? Math.floor((mainAbilityValue[1] - 10) / 2)
           : 0;
       this.dopamine = Math.round(20 + mainAbilityModifier);
+      console.log(this.dopamine)
       this.updateDraft({ dopamine: this.dopamine });
     }
   }
@@ -82,12 +84,7 @@ export default class Character {
     this.calculateHitpoints();
     this.calculateDopamine(classes, draft);
     this.calculateAC(draft);
-    try {
-      
-      const response = await fetch(`/api/users/`, {
-        method: "PATCH",
-        headers: { "content-type": "application/JSON" },
-        body: JSON.stringify({
+    const newCharacter = {
           username: this.username,
           gender: this.gender,
           race: this.race,
@@ -101,21 +98,21 @@ export default class Character {
           hp: this.hp,
           ac: this.ac,
           dopamine: this.dopamine,
-        }),
-      });
-      const feedback = await response.json();
-      this.id = feedback.id;
+          dopamine_consumed:0,
+          coins:0,
+          xp:0,
+          lvl:1,
+          damage_taken:0,
+
+        }
+      const feedback = await logNewCharacter(newCharacter);
       return feedback;
-    } catch (err) {
-      return err;
-    }
+ 
   }
 
-  buildUserFromDraft(draft: Draft) {
+  buildCharacterFromDraft(draft: Draft) {
     const newUser = {
-      id: this.id ?? null,
       username: draft.username ?? null,
-      email: draft.email ?? null,
       xp: 0,
       hp: this.hp ?? null,
       dopamine: this.dopamine,
@@ -134,7 +131,7 @@ export default class Character {
       profile_completed: true,
       damage_taken: 0,
       coins: 0,
-      last_campaign_done:null
+      last_chapter_done: null
     };
     return newUser;
   }

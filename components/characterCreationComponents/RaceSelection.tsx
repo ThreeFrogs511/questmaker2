@@ -3,7 +3,7 @@ import { useEffect, useState } from "react";
 import { Button, Card } from "pixel-retroui";
 import Title from "./Title";
 import presets from "../../assets/characterPresets.json";
-import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import localFont from 'next/font/local'
 
 const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
@@ -16,8 +16,8 @@ export default function RaceSelection({
   setIndexTitleAction: React.Dispatch<React.SetStateAction<number>>;
 }) {
   const races = presets.races;
-  const updateDraft = useCharacterCreationStore((state) => state.updateDraft);
-  const draft = useCharacterCreationStore((state) => state.draft);
+  const updateDraft = useCharacterStore((state) => state.updateDraft);
+  const draft = useCharacterStore((state) => state.draft);
   const [raceDescription, setRaceDescription] = useState<string | undefined>(
     () =>
       draft.race

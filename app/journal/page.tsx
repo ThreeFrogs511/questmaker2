@@ -2,16 +2,16 @@
 import { useEffect } from "react";
 import List from "@/components/journal/List";
 import Toolbar from "@/components/journal/Toolbar";
-import { useUserStore } from "@/stores/useUserStore";
 import { useJournalStore } from "@/stores/useJournalStore";
 import useSound from "use-sound";
 import Loading from "@/app/loading";
 import localFont from 'next/font/local'
-
+import { useCharacterStore } from "@/stores/useCharacterStore";
 const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function Journal() {
-  const currentUser = useUserStore((state) => state.currentUser);
+  
+  const character = useCharacterStore((state) => state.character);
   const journalError = useJournalStore((state) => state.journalError);
   const setJournalError = useJournalStore((state) => state.setJournalError);
   const whichPage = useJournalStore((state) => state.whichPage);
@@ -112,7 +112,7 @@ export default function Journal() {
         <span>
           coins :{" "}
           <span className="text-amber-300">
-            {currentUser?.coins}
+            {character?.coins}
           </span>
         </span>
         <span

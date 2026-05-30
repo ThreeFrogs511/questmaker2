@@ -1,12 +1,14 @@
 "use client";
-import { createContext, useContext, useState, useEffect} from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useUserStore } from "@/stores/useUserStore";
-import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
 import prepareQuests from "@/lib/prepareQuests";
 import { useJournalStore } from "@/stores/useJournalStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
+import fetchAllData from "@/lib/me/fetchAllData";
+import isDatabaseQueryNecessary from "@/lib/me/isDataQueryNecessary";
 
 interface isDataLoadedType {
   isPlayerDataLoaded: boolean;
@@ -26,7 +28,6 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const login = useUserStore((state) => state.login);
-  const updateDraft = useCharacterCreationStore((state) => state.updateDraft);
   const setIsMenuOpen = useUserStore((state) => state.setIsMenuOpen);
   const setAreQuestsLoaded = useJournalStore(
     (state) => state.setAreQuestsLoaded,
@@ -34,6 +35,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const questsAreLoaded = useJournalStore((state) => state.areQuestsLoaded);
   const updateInventory = useInventoryStore((state) => state.updateInventory);
 
+  const hydrateCharacter = useCharacterStore((state) => state.hydrateCharacter);
   // states for user data and fetching status
   const [isFetchingDone, setIsFetchingDone] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState<isDataLoadedType>({
@@ -43,65 +45,40 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isProfileCompleted, setIsProfileCompleted] = useState(false);
 
-  function isDatabaseQueryNecessary(pathname: string) {
-    if (
-      pathname === "/journal" &&
-      questsAreLoaded &&
-      isDataLoaded.isPlayerDataLoaded
-    )
-      return false;
-    if ((pathname === "/characterSheet" || pathname==="/profileSettings") && isDataLoaded.isPlayerDataLoaded)
-      return false;
-    if (
-      (pathname === "/inventory" || pathname.includes("/merchant")) &&
-      isDataLoaded.isPlayerDataLoaded &&
-      isDataLoaded.isInventoryDataLoaded
-    ) {
-      return false;
-    }
-    if (
-      (pathname === "/launcher" || pathname.includes("/campaignRunning")) &&
-      isDataLoaded.isPlayerDataLoaded &&
-      isDataLoaded.isInventoryDataLoaded
-    ) {
-
-      return false;
-      
-    } 
-
-  }
 
   useEffect(() => {
-    const needQuery = isDatabaseQueryNecessary(pathname);
-    if (needQuery === false) return; 
+    const needQuery = isDatabaseQueryNecessary(pathname, isDataLoaded, questsAreLoaded);
+    if (needQuery === false) return;
 
-    fetch("/api/me", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ pathname: pathname }),
+    new Promise<any>(async (resolve, reject) => {
+      const data = await fetchAllData(pathname);
+      resolve(data);
+      reject(data);
     })
-      .then((r) => r.json())
       .then((data) => {
+        console.log(data)
         //if the user is authenticated
         if (data.authenticated) {
           // handling existing but incomplete profile
 
-          console.log("data:", data.user);
+          console.log("data:", data);
           setIsProfileCompleted(true);
           login({ ...data.user });
+          hydrateCharacter({...data.character});
           setIsDataLoaded((prev) => ({
             ...prev,
             isPlayerDataLoaded: true,
           }));
 
           // storing quests
-          if (data.todos) {
-            const listOrdered = data.todos.sort(
-              (a: { id: number }, b: { id: number }) => b.id - a.id,
+          if (data.quests) {
+   
+            const listOrdered = data.quests.sort(
+              (a: { quest_id: number }, b: { quest_id: number }) => b.quest_id - a.quest_id,
             );
             prepareQuests(!listOrdered[0].body ? [] : listOrdered);
             setAreQuestsLoaded(true);
-          }
+          };
 
           //storing inventory
           if (data.inventory) {
@@ -110,8 +87,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
               ...prev,
               isInventoryDataLoaded: true,
             }));
-          }
-
+          };
 
           setIsAuthenticated(true);
         }
@@ -134,12 +110,11 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       })
       .finally(() => {
         setIsFetchingDone(true);
-      });
+      })
   }, [
     pathname,
     router,
     login,
-    updateDraft,
     setIsMenuOpen,
     setAreQuestsLoaded,
     updateInventory,

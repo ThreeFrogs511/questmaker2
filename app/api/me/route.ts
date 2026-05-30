@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { sql } from "@/server/connexion";
 import { cookies } from "next/headers";
 import { fetchQuests } from "@/lib/fetchQuests";
-import { fetchProfileData } from "@/lib/fetchProfileData";
 import { fetchPlayerCampaignData } from "@/lib/fetchPlayerCampaignData";
 import { fetchInventoryData } from "@/lib/fetchInventoryData";
 import * as jose from "jose";
@@ -61,18 +60,48 @@ export async function POST(request: Request) {
 
       default:
         r = await sql`
-        SELECT id, email, username, xp, hp, user_class, lvl, race, gender,
-        str, dex, con, int, wis, cha, ac, damage_taken, dopamine, dopamine_consumed, profile_completed, coins, last_campaign_done
-        FROM users
-        WHERE id = ${userId}`;
+        SELECT
+          u.user_id, u.email, u.profile_completed, u.tutorial_completed, u.last_chapter_done,
+          c.character_id, c.username, c.xp, c.hp, c.user_class, c.lvl, c.race, c.gender,
+          c.str, c.dex, c.con, c.int, c.wis, c.cha, c.ac, c.damage_taken,
+          c.dopamine, c.dopamine_consumed, c.coins
+        FROM users u
+        LEFT JOIN characters c ON u.user_id = c.user_id
+        WHERE u.user_id = ${userId}`;
 
       if (!r || r.length === 0)
         return NextResponse.json({ err: "pas d'user existant" });
 
-      // returning the successful response with the user object
       return NextResponse.json({
         authenticated: true,
-        user: r[0],
+        user: {
+          user_id: Number(r[0].user_id),
+          email: r[0].email,
+          profile_completed: r[0].profile_completed,
+          tutorial_completed: r[0].tutorial_completed,
+          last_chapter_done: r[0].last_chapter_done !== null ? Number(r[0].last_chapter_done) : null,
+        },
+        character: {
+          character_id: r[0].character_id != null ? Number(r[0].character_id) : null,
+          username: r[0].username,
+          xp: Number(r[0].xp),
+          hp: Number(r[0].hp),
+          user_class: r[0].user_class,
+          lvl: Number(r[0].lvl),
+          race: r[0].race,
+          gender: r[0].gender,
+          str: Number(r[0].str),
+          dex: Number(r[0].dex),
+          con: Number(r[0].con),
+          int: Number(r[0].int),
+          wis: Number(r[0].wis),
+          cha: Number(r[0].cha),
+          ac: Number(r[0].ac),
+          damage_taken: Number(r[0].damage_taken),
+          dopamine: Number(r[0].dopamine),
+          dopamine_consumed: Number(r[0].dopamine_consumed),
+          coins: Number(r[0].coins),
+        },
       });
 
     }

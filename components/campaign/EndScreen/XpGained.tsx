@@ -2,7 +2,7 @@
 'use client'
 import { useEffect, useRef} from 'react'
 import XpBar from '../../userStats/XpBar'
-import { useUserStore } from '@/stores/useUserStore'
+import { useCharacterStore } from '@/stores/useCharacterStore'
 import Engine from '@/classes/Engine'
 import localFont from 'next/font/local'
 
@@ -18,8 +18,8 @@ export default function XpGained(
 
     }) {
 
-    const addXp = useUserStore(state => state.addXp)
-    const currentUser = useUserStore(state => state.currentUser)
+    const addXp = useCharacterStore(state => state.addXp)
+    const character = useCharacterStore(state => state.character)
     const accXp = gameplay.getAccumulatedXp();
 
     // the ref below prevents the double mount in dev, while hasXpBeenUpdated prevents
@@ -38,7 +38,7 @@ export default function XpGained(
             .then(()  => addXp(accXp))
             .then(() => setIsSkippingAllowedAction(true))
             .then(() => console.log("valeur de accXp = " + accXp))
-    }, [accXp, hasXpBeenUpdated, currentUser])
+    }, [accXp, hasXpBeenUpdated, character])
 
 
     return(

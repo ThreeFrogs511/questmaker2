@@ -1,3 +1,74 @@
+// users table — no username here, that lives in characters
+export type User = {
+  user_id: number | null;
+  email: string | null;
+  profile_completed: boolean;
+  tutorial_completed: boolean;
+  last_chapter_done: number | null;
+};
+
+export type Character = {
+  character_id?: number | null;
+  user_class: string | null;
+  username: string | null;
+  race: string | null;
+  gender: string | null;
+  lvl: number | null;
+  xp: number | null;
+  hp: number | null;
+  damage_taken: number;      // default 0
+  dopamine: number | null;
+  dopamine_consumed: number; // default 0
+  ac: number | null;
+  coins: number;             // default 0
+  str: number | null;
+  dex: number | null;
+  con: number | null;
+  int: number | null;
+  wis: number | null;
+  cha: number | null;
+};
+
+export type Moveset = {
+  moveset_id: number | null;
+  type: string | null;
+  name: string | null;
+  cooldown: number | null;
+  modifier: string | null;
+  lvl_required: number | null;
+  character_id: number | null;
+};
+
+// fetchQuests remaps quest_id → id
+export type Quest = {
+  id: number | null;
+  body: string | null;
+  completed: boolean;
+  user_id: number | null;
+};
+
+export type QuestRateLimit = {
+  user_id: number | null;
+  window_start: Date | null;
+  count: number; // default 0
+};
+
+export type CampaignIndex = {
+  id: number | null;
+  name: string | null;
+  mongo_id: string | null;
+  description: string | null;
+  chapter: number | null;
+};
+
+export type PayloadType ={
+  userId: number;
+  email: string;
+  isCompleted: boolean;
+  tutorialCompleted: boolean,
+  lastChapterDone: number | null,
+}
+
 // describe the 'nodes' global object
 export type Nodes = Record<string, Node>;
 
@@ -40,7 +111,7 @@ export type Choice = {
   relevantNodes?: Array<{ node: string; text: string }>;
   xp?: number;
   ost?: string;
-  abilityGained?:{type:string, name:string, dmg:number, cooldown: number}
+  abilityGained?: { type: string; name: string; dmg: number; cooldown: number };
 };
 
 type Alt = {
@@ -48,36 +119,8 @@ type Alt = {
   value: string;
 };
 
-// describe the type for the currentUser global state
-export type User = {
-  id: number | null;
-  username: string | null;
-  hp: number | null;
-  xp: number | null;
-  email: string | null;
-  dopamine: number | null;
-  dopamine_consumed: number;
-  gender: string | null;
-  user_class: string | null;
-  race: string | null;
-  lvl: number | null;
-  str: number | null;
-  dex: number | null;
-  con: number | null;
-  int: number | null;
-  wis: number | null;
-  cha: number | null;
-  ac: number | null;
-  profile_completed: boolean;
-  damage_taken: number;
-  coins: number;
-  last_campaign_done: string | null;
-};
-
 export type Draft = {
-  id: number | null;
   username: string | null;
-  email: string | null;
   hp: number | null;
   xp: number | null;
   dopamine: number | null;
@@ -93,10 +136,8 @@ export type Draft = {
   wis: number | null;
   cha: number | null;
   ac: number | null;
-  profile_completed: boolean;
   damage_taken: number;
   coins: number;
-  last_campaign_done: null;
 };
 
 export type Encounter = {
@@ -125,10 +166,10 @@ export type ChoiceResult = {
 };
 
 export type ListType = {
-  id: number | null;
+  quest_id: number | null;
   body: string | null;
   completed: boolean | null;
-  list: string | null;
+  list?: string | null;
   user_id: number | null;
 };
 
@@ -176,8 +217,8 @@ export type Item = {
   inventory_id: number | null;
   slug: string | null;
   user_id: number | null;
-  quantity: number | null
-}
+  quantity: number | null;
+};
 
 // Combat item types
 export type CombatAttackItem = {

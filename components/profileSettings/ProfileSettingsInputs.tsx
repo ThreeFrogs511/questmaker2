@@ -53,7 +53,7 @@ export default function ProfileSettingsInputs() {
       .find((row) => row.startsWith("csrf="))
       ?.split("=")[1];
 
-    fetch(`/api/profileSettings/${currentUser.id}`, {
+    fetch(`/api/profileSettings/${currentUser.user_id}`, {
       method: "PATCH",
       headers: {
         "content-type": "application/json",

@@ -1,25 +1,24 @@
 import { useUserStore } from "@/stores/useUserStore";
 
 export default class Quest {
-  async insert(body: string, id: number) {
+  async insert(body: string) {
     try {
-
-      const response = await fetch(`/api/todo/`, {
+      const response = await fetch(`/api/quests/`, {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ body: body, completed: false, user_id: id }),
+        body: JSON.stringify({ body: body, completed: false }),
       });
-      if (!response.ok) return {success:false, error: 'internal error'};
+      if (!response.ok) return { success: false, error: "internal error" };
 
       const feedback = await response.json();
       return feedback;
-    } catch  {
-      return {success: false, error: "server error"}
+    } catch {
+      return { success: false, error: "server error" };
     }
   }
 
-  async delete(todo_id: number) {
-    const response = await fetch(`/api/todo/${todo_id}`, {
+  async delete(quest_id: number) {
+    const response = await fetch(`/api/quests/${quest_id}`, {
       method: "DELETE",
     });
     const feedback = await response.json();
@@ -27,16 +26,15 @@ export default class Quest {
   }
 
   async complete(
-    todo_id: number,
+    quest_id: number,
     isCompleted: boolean,
     user_id: number | null,
   ) {
     try {
       const currentUser = useUserStore.getState().currentUser;
-
-      if (!todo_id) throw new Error("no quest id found");
-
-      const response = await fetch(`/api/todo/${todo_id}`, {
+      if (!quest_id) throw new Error("no quest id found");
+      
+      const response = await fetch(`/api/quests/${quest_id}`, {
         method: "PATCH",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -48,6 +46,8 @@ export default class Quest {
 
       const feedback = await response.json();
       return feedback;
-    } catch {}
+    } catch (error) {
+      return {err: error}
+    }
   }
 }

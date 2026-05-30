@@ -1,6 +1,7 @@
 "use client";
 import { useRef } from "react";
 import { useUserStore } from "@/stores/useUserStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import { usePathname } from "next/navigation";
 import { Store } from "@/types/types";
 import { useInventoryStore } from "@/stores/useInventoryStore";
@@ -14,7 +15,8 @@ const retroGaming = localFont({ src: '../../../public/fonts/retro_gaming.ttf' })
 
 export default function MerchantSell() {
   const currentUser = useUserStore((state) => state.currentUser);
-  const updateStats = useUserStore((state) => state.updateStats);
+  const character = useCharacterStore((state) => state.character);
+  const updateCharacter = useCharacterStore((state) => state.updateCharacter);
   const pathname = usePathname();
   const updateInventory = useInventoryStore((state) => state.updateInventory);
   const inventory = useInventoryStore((state) => state.inventory);
@@ -35,7 +37,7 @@ export default function MerchantSell() {
 
     // Saving old inventory state for rollback
     const previousInventory = inventory ? [...inventory] : null;
-    const previousCoins = currentUser?.coins ?? 0;
+    const previousCoins = character?.coins ?? 0;
 
     play();
 
@@ -53,12 +55,12 @@ export default function MerchantSell() {
     };
 
     //Optimistic UI : we also update the coins before the database
-    updateStats({ coins: previousCoins + (item.price ?? 0) });
+    updateCharacter({ coins: previousCoins + (item.price ?? 0) });
 
     //we finally update the database
     //we rollback when an error occurs
     try {
-      const r = await fetch(`../api/inventory/${currentUser?.id}`, {
+      const r = await fetch(`../api/inventory/${currentUser?.user_id}`, {
         method: "PATCH",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(item),
@@ -68,16 +70,16 @@ export default function MerchantSell() {
       if (feedback.success) {
         // Sync with authoritative server data
         updateInventory(feedback.list);
-        updateStats({ coins: feedback.coins });
+        updateCharacter({ coins: feedback.coins });
       } else {
         // Rollback optimistic update
         if (previousInventory !== null) updateInventory(previousInventory);
-        updateStats({ coins: previousCoins });
+        updateCharacter({ coins: previousCoins });
       }
     } catch (e) {
       //in case of server error 
       if (previousInventory !== null) updateInventory(previousInventory);
-      updateStats({ coins: previousCoins });
+      updateCharacter({ coins: previousCoins });
     }
 
     isSelling.current = false;

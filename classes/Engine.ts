@@ -9,6 +9,7 @@ import ChoicesOptions from "./Choices";
 
 import { useNarrationStore } from "@/stores/useNarrationStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import AudioManager from "./AudioManager";
 
 export default class Engine {
@@ -260,28 +261,30 @@ export default class Engine {
 
   // we use this method to save the new user's data in the database at the end of the campaign
   async savingUserData(currentUser: User) {
-    if (!currentUser) return;
-    if (!currentUser.id) console.log("no user id found for saving data");
-    const response = await fetch(`/api/users/${currentUser.id}`, {
+    if (!currentUser?.user_id) return;
+    const character = useCharacterStore.getState().character;
+
+    const response = await fetch(`/api/character/${currentUser.user_id}`, {
       method: "PUT",
-      headers: { "content-type": "application/JSON" },
-      body: JSON.stringify(currentUser),
+      headers: { "content-type": "application/json" },
+      body: JSON.stringify({
+        xp: character.xp,
+        damage_taken: character.damage_taken,
+        dopamine_consumed: character.dopamine_consumed,
+        coins: character.coins,
+      }),
     });
     const feedback = await response.json();
     if (!feedback.success) return { success: false };
 
     const inventory = useInventoryStore.getState().inventory;
-    const inventoryResponse = await fetch(`/api/inventory/${currentUser.id}`, {
+    const inventoryResponse = await fetch(`/api/inventory/${currentUser.user_id}`, {
       method: "PUT",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ inventory }),
     });
     const inventoryFeedback = await inventoryResponse.json();
-    if (inventoryFeedback.success) {
-      return { success: true };
-    } else {
-      return { success: false };
-    }
+    return inventoryFeedback.success ? { success: true } : { success: false };
   }
 
   // setter to update the node inside the class

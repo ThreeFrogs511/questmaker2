@@ -5,6 +5,7 @@ import items from "@/assets/items.json";
 import Image from "next/image";
 import useSound from "use-sound";
 import { useUserStore } from "@/stores/useUserStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
 import MerchantToolbar from "@/components/Merchant/MerchantToolBar";
 import localFont from 'next/font/local'
@@ -13,7 +14,8 @@ const retroGaming = localFont({ src: '../../../public/fonts/retro_gaming.ttf' })
 
 export default function MerchantPurchase() {
   const currentUser = useUserStore((state) => state.currentUser);
-  const updateStats = useUserStore((state) => state.updateStats);
+  const character = useCharacterStore((state) => state.character);
+  const updateCharacter = useCharacterStore((state) => state.updateCharacter);
   const updateInventory = useInventoryStore((state) => state.updateInventory);
   const inventory = useInventoryStore((state) => state.inventory);
   const isBuying = useRef(false);
@@ -30,7 +32,7 @@ export default function MerchantPurchase() {
     if (!inventory || isBuying.current) return;
     isBuying.current = true;
 
-    if ((currentUser?.coins ?? 0) < (item.price ?? 0)) {
+    if ((character?.coins ?? 0) < (item.price ?? 0)) {
       setNotEnoughMoney(true);
       isBuying.current = false;
       return;
@@ -38,7 +40,7 @@ export default function MerchantPurchase() {
 
     // Saving old inventory state for rollback
     const previousInventory = [...inventory];
-    const previousCoins = currentUser?.coins ?? 0;
+    const previousCoins = character?.coins ?? 0;
 
     play();
 
@@ -59,17 +61,17 @@ export default function MerchantPurchase() {
       optimisticInventory.push({
         inventory_id: null,
         slug: item.slug,
-        user_id: currentUser?.id ?? null,
+        user_id: currentUser?.user_id ?? null,
         quantity: 1,
       });
     }
     updateInventory(optimisticInventory);
-    updateStats({ coins: previousCoins - (item.price ?? 0) });
+    updateCharacter({ coins: previousCoins - (item.price ?? 0) });
 
     //we finally update the database
     //we rollback when an error occurs
     try {
-      const r = await fetch(`../api/inventory/${currentUser?.id}`, {
+      const r = await fetch(`../api/inventory/${currentUser?.user_id}`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(item),
@@ -80,25 +82,25 @@ export default function MerchantPurchase() {
         setNotEnoughMoney(false);
         // Sync with authoritative server data
         updateInventory(feedback.items);
-        updateStats({ coins: feedback.coins });
+        updateCharacter({ coins: feedback.coins });
       }
 
       if (feedback?.broke) {
         // Rollback optimistic update
         updateInventory(previousInventory);
-        updateStats({ coins: previousCoins });
+        updateCharacter({ coins: previousCoins });
         setNotEnoughMoney(true);
       }
 
       if (feedback?.error) {
         // Rollback optimistic update
         updateInventory(previousInventory);
-        updateStats({ coins: previousCoins });
+        updateCharacter({ coins: previousCoins });
         console.log("error:", feedback.error);
       }
     } catch (e) {
       updateInventory(previousInventory);
-      updateStats({ coins: previousCoins });
+      updateCharacter({ coins: previousCoins });
       console.log("error:", (e as Error).message);
     };
     

@@ -22,7 +22,7 @@ export async function POST(request: Request) {
     // checking if there's a match between the password input and the hashed password
     const match = await bcrypt.compare(
       data.user_password,
-      currentUser.user_password,
+      currentUser.password,
     );
 
     if (!match) return NextResponse.json({ err: "Wrong email or password" });
@@ -31,7 +31,7 @@ export async function POST(request: Request) {
     const alg = "HS256";
 
     const payload = {
-      userId: currentUser.id,
+      userId: currentUser.user_id,
       email: currentUser.email,
       isCompleted: currentUser.profile_completed,
     };
@@ -54,7 +54,7 @@ export async function POST(request: Request) {
     });
   
     // cleaning the user object, removing the password client-side
-    const { user_password, email, ...safeUser } = currentUser;
+    const { password, email, ...safeUser } = currentUser;
 
     return NextResponse.json({ userData: safeUser, success: true });
   } catch (err) {

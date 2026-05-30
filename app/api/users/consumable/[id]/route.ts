@@ -17,24 +17,24 @@ export async function PATCH(
     let r;
     switch (data.effectTarget) {
       case "damage_taken":
-        r = await sql`UPDATE users SET damage_taken = (
+        r = await sql`UPDATE characters SET damage_taken = (
           CASE
           WHEN damage_taken + ${data.effectValue} < 0 THEN 0
-          ELSE damage_taken + ${data.effectValue} 
+          ELSE damage_taken + ${data.effectValue}
           END
         )
-        WHERE id = ${id} 
+        WHERE user_id = ${id}
         RETURNING damage_taken AS target`;
         break;
 
       case "dopamine_consumed":
-        r = await sql`UPDATE users SET dopamine_consumed = (
+        r = await sql`UPDATE characters SET dopamine_consumed = (
           CASE
           WHEN dopamine_consumed + ${data.effectValue} < 0 THEN 0
-          ELSE dopamine_consumed + ${data.effectValue} 
+          ELSE dopamine_consumed + ${data.effectValue}
           END
         )
-        WHERE id = ${id} 
+        WHERE user_id = ${id}
         RETURNING dopamine_consumed AS target`;
 
       default:
@@ -62,8 +62,13 @@ export async function PATCH(
 
     return NextResponse.json({
       success: true,
-      inventory: inventoryUpdated,
-      effectTarget: r[0].target,
+      inventory: inventoryUpdated.map((n) => ({
+        ...n,
+        inventory_id: Number(n.inventory_id),
+        user_id: Number(n.user_id),
+        quantity: Number(n.quantity),
+      })),
+      effectTarget: Number(r[0].target),
     });
   } catch (err) {
     return NextResponse.json({ error: (err as Error).message });

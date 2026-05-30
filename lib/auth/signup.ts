@@ -24,19 +24,25 @@ export async function signupUser(
     const hash = await bcrypt.hash(password, 10);
 
     const result = await sql`
-      INSERT INTO users (email, user_password, profile_completed)
-      VALUES (${email}, ${hash}, ${false})
-      RETURNING id
+      INSERT INTO users (email, password, last_chapter_done)
+      VALUES (${email}, ${hash},0)
+      RETURNING user_id
     `;
 
-    const insertedId = result[0]?.id;
+    const insertedId = result[0]?.user_id;
 
     if (!insertedId) return { err: "Internal error, please try again" };
 
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const alg = "HS256";
 
-    const jwt = await new jose.SignJWT({ userId: insertedId, email, isCompleted: false })
+    const jwt = await new jose.SignJWT({
+      userId: insertedId,
+      email: email,
+      isCompleted: false,
+      tutorialCompleted: false,
+      lastChapterDone: null,
+    })
       .setProtectedHeader({ alg })
       .setIssuedAt()
       .setExpirationTime("7d")
@@ -62,6 +68,6 @@ export async function signupUser(
       }
     }
     console.error(err);
-    return { err: "Internal error, please try again" };
+    return { err: (err as Error).message };
   }
 }

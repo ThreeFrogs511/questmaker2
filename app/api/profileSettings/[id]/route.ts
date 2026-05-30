@@ -29,13 +29,13 @@ async function validateProfileEditInput(
     throw new Error("You must fill all the password inputs");
 
   //checking if the currentPassword input is correct
-  const r = await sql`SELECT user_password FROM users WHERE id = ${id}`;
+  const r = await sql`SELECT password FROM users WHERE user_id = ${id}`;
 
   if (currentPassword) {
     if (r[0].rowCount === 0) throw new Error("Erreur id");
     const match = await bcrypt.compare(
       currentPassword ?? "",
-      r[0].user_password,
+      r[0].password,
     );
     if (!match) throw new Error("Wrong password");
   }
@@ -90,12 +90,12 @@ export async function PATCH(
     let r;
     if (!currentPassword && !newPassword) {
       r =
-        await sql`UPDATE users SET email = ${data.email} WHERE id = ${id} RETURNING id`;
+        await sql`UPDATE users SET email = ${data.email} WHERE user_id = ${id} RETURNING id`;
     } else {
       // hashing the new password
       const hash = await bcrypt.hash(data.newPassword, 10);
       r =
-        await sql`UPDATE users SET email = ${data.email}, user_password = ${hash}  WHERE id = ${id} RETURNING id`;
+        await sql`UPDATE users SET email = ${data.email}, password = ${hash}  WHERE user_id = ${id} RETURNING id`;
     }
 
     if (r[0].rowCount <= 0) return NextResponse.json({ err: "internal error" });
@@ -142,7 +142,7 @@ export async function GET(
     const { id } = await params;
     if (!id) return NextResponse.json({ err: "no user id found" });
 
-    const r = await sql`SELECT email FROM users WHERE id = ${id}`;
+    const r = await sql`SELECT email FROM users WHERE user_id = ${id}`;
     if (!r[0].email) return NextResponse.json({ err: "no email found" });
 
 
@@ -163,7 +163,7 @@ export async function DELETE(
 
     await sql`
       DELETE FROM users
-      WHERE id = ${id}`;
+      WHERE user_id = ${id}`;
 
     const cookie = await cookies();
     const token: string | undefined = cookie.get("session")?.value;

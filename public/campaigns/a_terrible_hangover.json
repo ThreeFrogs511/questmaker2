@@ -736,7 +736,7 @@
       ]
     },
     "eden_explains_hunt_forest": {
-      "text": "<u>???</u> : \"<i>And you are welcome, stranger. But I was mainly interested in this creature's venom. Potent stuff. A powerful sleeping draught. I'm a bounty hunter, you see. I actually caught my latest target not far from here. But to do that, I had to use the very last drop of my sleeping vial. So stumbling upon this four-legged demon was a blessing... and stumbling on you as well, of course, ahem. You want a lift to the nearest town, I reckon ? Follow me.</i>\"",
+      "text": "<u>???</u> : \"<i>And you are welcome, stranger. But I was mainly interested in this creature's venom. Potent stuff. A powerful sleeping draught. I'm a bounty hunter, you see. I actually caught my latest target not far from here. But to do that, I had to use the very last drop of my sleeping vial. So stumbling upon this four-legged demon was a blessing... and stumbling upon you as well, of course, ahem. You want a lift to the nearest town, I reckon ? Follow me.</i>\"",
       "choices": [
         {
           "text": "Follow him outside the forest to his horse.",
@@ -1508,7 +1508,7 @@
       ]
     },
     "hands_in_the_air": {
-      "text": "You raise your hands, insisting you don't know this man. But it doesn't matter. You were sitting at Eden's table; that makes you an accomplice by default. A hand shoots out of nowhere and immobilizes the cuckold just as he's about to punch you. That hand belongs to the grim-looking elf, who had been staring at your medallion. He threatens the husband, refering to you as his 'target'. You realize your mistake: this mysterious elf did not come to save you—he's an assassin !</strong>",
+      "text": "It doesn't matter. You were sitting at Eden's table; that makes you an accomplice by default. A hand shoots out of nowhere and immobilizes the cuckold just as he's about to punch you. That hand belongs to the grim-looking elf, who had been staring at your medallion. He threatens the husband, refering to you as his 'target'. You realize your mistake: this mysterious elf did not come to save you—he's an assassin !</strong>",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1838,7 +1838,7 @@
           "next": "eden_talks_assassin"
         },
         {
-          "text": "Urge him to shove his proposition up where the sun doesn't shine",
+          "text": "Urge him to shove his proposition up where the sun doesn't shine.",
           "next": "eden_talks_assassin_alt"
         },
         {
@@ -1985,7 +1985,7 @@
       ]
     },
     "eden_gives_journal": {
-      "text": "<u>Eden</u> : \"<i>That’s probably the best decision you’ve made today. No time to celebrate—we’ve got work to do. That necromancer won’t stop himself. I have a plan (well, the start of one), but first... Here. This is a journal. Use it to track you what needs tracking. Between us, you need it most.<br> Now that that’s settled, let’s get to work, my dear partner. Questmaker has its first contract.</i><br><span style=\"color:#fbbf24\">You have unlocked the Journal !</span>\"",
+      "text": "<u>Eden</u> : \"<i>That’s probably the best decision you’ve made today. No time to celebrate—we’ve got work to do. That necromancer won’t stop himself. I have a plan (well, the start of one), but first... Here. This is a journal. Use it to track you what needs tracking. Between us, you need it most.<br> Now that that’s settled, let’s get to work, my dear partner. Questmaker has its first contract.</i>\"<br><span style=\"color:#fbbf24\">You have unlocked the Journal !</span>",
       "choices": [
         {
           "text": "[CONTINUE]",

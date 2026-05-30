@@ -3,7 +3,7 @@
 import { Card } from "pixel-retroui"
 import Title from './Title'
 import { Attributes } from "@/types/types"
-import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore"
+import { useCharacterStore } from "@/stores/useCharacterStore"
 import localFont from 'next/font/local'
 
 const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
@@ -14,11 +14,11 @@ export default function AbilityScoresSelection({ indexTitle, setIndexTitleAction
 }) {
 
     const abilitiesName = ['Strength', 'Dexterity', 'Constitution',  'Wisdom', 'Intelligence','Charisma'];
-    const abilityScores = useCharacterCreationStore(state => state.abilityScores);
-    const addPoint = useCharacterCreationStore(state => state.addPoint);
-    const removePoint = useCharacterCreationStore(state => state.removePoint);
-    const pointsToSpare = useCharacterCreationStore(state => state.pointsToSpare);
-    const setPointsToSpare = useCharacterCreationStore(state => state.setPointsToSpare);
+    const abilityScores = useCharacterStore(state => state.abilityScores);
+    const addPoint = useCharacterStore(state => state.addPoint);
+    const removePoint = useCharacterStore(state => state.removePoint);
+    const pointsToSpare = useCharacterStore(state => state.pointsToSpare);
+    const setPointsToSpare = useCharacterStore(state => state.setPointsToSpare);
     
   
 

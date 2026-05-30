@@ -1,9 +1,8 @@
 "use client";
 import { Button, Input } from "pixel-retroui";
-import useSound from "use-sound";
 import Quest from "@/classes/Quest";
-import { useUserStore } from "@/stores/useUserStore";
 import { useJournalStore } from "@/stores/useJournalStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import localFont from 'next/font/local'
 
 const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
@@ -11,7 +10,7 @@ const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 export default function Toolbar() {
 
   //store imports
-  const currentUser = useUserStore((state) => state.currentUser);
+  const character = useCharacterStore((state) => state)
   const whichPage = useJournalStore((state) => state.whichPage);
   const resetPage = useJournalStore((state) => state.resetPage);
   const allQuests = useJournalStore((state) => state.allQuests);
@@ -21,16 +20,16 @@ export default function Toolbar() {
 
   async function submitToDoClick() {
 
-    const value = (document.getElementById("todo") as HTMLInputElement).value;
-    if (value && currentUser.id) {
+    const value = (document.getElementById("quest-input") as HTMLInputElement).value;
+    if (!value || value === "") return;
       const quest = new Quest();
-      const feedback = await quest.insert(value, currentUser.id);
+      const feedback = await quest.insert(value);
 
       if (feedback.success) {
         const updatedList = [...allQuests ?? []];
         updatedList.unshift(feedback.quest);
         setAllQuests(updatedList);
-        (document.getElementById("todo") as HTMLInputElement).value = "";
+        (document.getElementById("quest-input") as HTMLInputElement).value = "";
 
         if (whichPage === 0 || whichPage === 2)  {
           const updatedCurrentList = updatedList.filter(n => n.completed === false);
@@ -41,7 +40,7 @@ export default function Toolbar() {
       } else {
         console.log(feedback.error);
       }
-    }
+    
   }
 
   return (
@@ -52,7 +51,7 @@ export default function Toolbar() {
           textColor="white"
           borderColor="white"
           type="text"
-          id="todo"
+          id="quest-input"
           placeholder="Your new quest..."
           maxLength={300}
           className="grow h-[70%]! text-xs!"

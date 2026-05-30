@@ -1,13 +1,10 @@
 'use client'
 
 import Title from './Title'
-import { useUserContext } from '@/context/context'
-import { useCharacterCreationStore } from '@/stores/useCharacterCreationStore'
-import { useUserStore } from '@/stores/useUserStore'
+import { useCharacterStore } from '@/stores/useCharacterStore'
 import { Input, Button } from "pixel-retroui"
-import { useEffect } from 'react'
 import localFont from 'next/font/local'
-
+import { useEffect } from 'react'
 const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function nameGenderSelection({indexTitle, setIndexTitleAction }: {
@@ -16,11 +13,14 @@ export default function nameGenderSelection({indexTitle, setIndexTitleAction }: 
 }) {
 
     // const {currentUser, setCurrentUser} = useUserContext();
-    const updateDraft = useCharacterCreationStore(state => state.updateDraft);
-    const draft = useCharacterCreationStore(state => state.draft);
+    const updateDraft = useCharacterStore(state => state.updateDraft);
+    const draft = useCharacterStore(state => state.draft);
     const gendersList = ['Male', 'Female'];
 
 
+    useEffect(() => {
+        console.log(draft.username)
+    }, [draft, draft.username])
 
     return(
         <>

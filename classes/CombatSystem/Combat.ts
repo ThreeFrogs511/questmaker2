@@ -1,6 +1,6 @@
 import {
   Nodes,
-  User,
+  Character,
   Encounter,
   Choice,
   CombatItem,
@@ -9,7 +9,7 @@ import {
 import Enemy from "./Enemy";
 import useAttackAction from "./useAttackAction";
 import useConsumableAction from "./useConsumableAction";
-import { useUserStore } from "@/stores/useUserStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useCombatStore } from "@/stores/useCombatStore";
 import { useNarrationStore } from "@/stores/useNarrationStore";
 import Die from "./Die";
@@ -18,7 +18,7 @@ export default class Combat {
   //user's attributes
   private currentUser;
   private updateStats;
-  private tempUserStats: User | undefined;
+  private tempUserStats: Character | undefined;
   private userModifier: number;
   private userFirstToAttack: boolean;
   private useAttack: useAttackAction | undefined;
@@ -53,8 +53,8 @@ export default class Combat {
     this.playSfx = playSfx;
     this.playMusic = playMusic;
 
-    this.currentUser = useUserStore.getState().currentUser;
-    this.updateStats = useUserStore.getState().updateStats;
+    this.currentUser = useCharacterStore.getState().character;
+    this.updateStats = useCharacterStore.getState().updateStats;
     this.userModifier = 0;
 
     this.setCombatLog = useCombatStore.getState().setCombatLog;

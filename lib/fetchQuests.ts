@@ -1,58 +1,67 @@
 import postgres from "postgres";
-import { NextResponse } from "next/server";
-import * as jose from "jose";
-import { cookies } from "next/headers";
+import { User } from "@/types/types";
 
 export async function fetchQuests(sql: postgres.Sql<{}>, userId: number) {
+  try {
+    console.log(userId)
   const r = await sql`SELECT
-        u.id AS global_user_id, u.email, u.username, u.xp, u.hp, u.user_class, u.lvl, u.race, u.gender,
-        u.str, u.dex, u.con, u.int, u.wis, u.cha, u.ac,
-        u.damage_taken, u.dopamine, u.dopamine_consumed, u.profile_completed, u.coins, u.last_campaign_done,
-        t.id, t.body, t.completed, t.user_id
+        u.user_id AS global_user_id, u.email, u.profile_completed, u.tutorial_completed, u.last_chapter_done, 
+        c.character_id, c.xp, c.hp, c.user_class, c.lvl, c.race, c.gender, c.username,
+        c.str, c.dex, c.con, c.int, c.wis, c.cha, c.ac, c.damage_taken, c.dopamine, c.dopamine_consumed, c.coins, c.user_id,
+        q.quest_id, q.body, q.completed, q.user_id AS quest_user_id
         FROM users u
-        LEFT JOIN todo t
-        ON u.id = t.user_id
-        WHERE u.id = ${userId}`;
+        LEFT JOIN quests q
+        ON u.user_id = q.user_id
+        LEFT JOIN characters c
+        ON u.user_id = c.user_id
+        WHERE u.user_id = ${userId}`;
+
 
   if (!r || r.length === 0)
-    return NextResponse.json({ err: "Error while fetching user's quests" });
+    return { err: "Error while fetching user's quests" };
 
   const allQuests = r.map((n) => {
     return {
-      id: n.id,
+      quest_id: n.quest_id,
       body: n.body,
       completed: n.completed,
-      user_id: n.user_id,
+      user_id: n.quest_user_id,
     };
   });
 
-
-  return NextResponse.json({
+  return {
     authenticated: true,
     user: {
-      id: r[0].global_user_id,
+      user_id: Number(r[0].global_user_id),
       email: r[0].email,
+      last_chapter_done: r[0].last_chapter_done !== null ? Number(r[0].last_chapter_done) : null,
+      tutorial_completed: r[0].tutorial_completed,
+      profile_completed: r[0].profile_completed,
+    },
+    character: {
+      character_id: Number(r[0].character_id),
       username: r[0].username,
-      xp: r[0].xp,
-      hp: r[0].hp,
+      xp: Number(r[0].xp),
+      hp: Number(r[0].hp),
       user_class: r[0].user_class,
-      lvl: r[0].lvl,
+      lvl: Number(r[0].lvl),
       race: r[0].race,
       gender: r[0].gender,
-      str: r[0].str,
-      dex: r[0].dex,
-      con: r[0].con,
-      int: r[0].int,
-      wis: r[0].wis,
-      cha: r[0].cha,
-      ac: r[0].ac,
-      damage_taken: r[0].damage_taken,
-      dopamine: r[0].dopamine,
-      dopamine_consumed: r[0].dopamine_consumed,
-      profile_completed: r[0].profile_completed,
-      coins: r[0].coins,
-      last_campaign_done: r[0].last_campaign_done,
+      str: Number(r[0].str),
+      dex: Number(r[0].dex),
+      con: Number(r[0].con),
+      int: Number(r[0].int),
+      wis: Number(r[0].wis),
+      cha: Number(r[0].cha),
+      ac: Number(r[0].ac),
+      damage_taken: Number(r[0].damage_taken),
+      dopamine: Number(r[0].dopamine),
+      dopamine_consumed: Number(r[0].dopamine_consumed),
+      coins: Number(r[0].coins),
     },
-    todos: allQuests,
-  });
+    quests: allQuests,
+  };
+  } catch (err) {
+    return err;
+  }
 }

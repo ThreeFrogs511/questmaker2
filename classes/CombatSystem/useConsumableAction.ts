@@ -1,12 +1,12 @@
 import { useCombatStore } from "@/stores/useCombatStore";
-import { User, CombatConsumableItem } from "@/types/types";
+import { Character, CombatConsumableItem } from "@/types/types";
 export default class useConsumableAction {
 
     private setCombatLog: (log: string) => void;
     private item;
     private currentUser;
 
-    constructor(item: CombatConsumableItem, currentUser: User) {
+    constructor(item: CombatConsumableItem, currentUser: Character) {
         this.setCombatLog = useCombatStore.getState().setCombatLog;
         this.item= item;
         this.currentUser = currentUser;

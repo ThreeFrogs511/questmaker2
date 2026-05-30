@@ -1,5 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react'
-import { useUserStore } from "@/stores/useUserStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import { Choice, ChoiceResult } from "@/types/types";
 
 export default class Penalties {
@@ -9,7 +9,7 @@ export default class Penalties {
         const penaltyValue = currentChoice.penalty?.value;
 
         if (penaltyTarget === 'hp' && penaltyValue !== undefined) {
-            useUserStore.getState().addDamage(penaltyValue);
+            useCharacterStore.getState().addDamage(penaltyValue);
             setChoiceResult((prev: ChoiceResult) => ({...prev, type:'penalty', success:false, value:penaltyValue, target:'HP',status:true}));
         }
     }

@@ -14,7 +14,7 @@ import { useEffect } from "react";
 
 import useSound from "use-sound";
 
-import { useUserStore } from "@/stores/useUserStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useCombatStore } from "@/stores/useCombatStore";
 import Engine from "@/classes/Engine";
 
@@ -40,7 +40,7 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
     enemy?.hp && enemyFullHealth ? enemy.hp / enemyFullHealth : undefined;
 
   // player store
-  const currentUser = useUserStore((state) => state.currentUser);
+  const character = useCharacterStore((state) => state.character);
 
   //loader
   useEffect(() => {
@@ -78,16 +78,16 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
           <div id="healthBars" className="flex items-center h-[70%] ">
             <div id="userSide" className="w-[80%] lg:w-[50%] mx-auto">
               <div className="text-center flex flex-col">
-                {currentUser.username ?? "You"}
-                <span>AC : {currentUser.ac}</span>
+                {character?.username ?? "You"}
+                <span>AC : {character?.ac}</span>
                 <span>
                   {Math.floor(
-                    currentUser.hp
-                      ? currentUser.hp - currentUser.damage_taken
-                      : 10 - currentUser.damage_taken,
+                    character?.hp
+                      ? character.hp - character.damage_taken
+                      : 10 - (character?.damage_taken ?? 0),
                   ) +
                     "/" +
-                    currentUser.hp}
+                    character?.hp}
                 </span>
               </div>
               <div className="w-[70%] mx-auto">

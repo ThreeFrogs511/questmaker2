@@ -1,20 +1,18 @@
 "use client";
 import useSound from "use-sound";
 import { useRef, useState } from "react";
-import { useUserStore } from "@/stores/useUserStore";
 import Quest from "@/classes/Quest";
 import { ListType } from "@/types/types";
 import { useJournalStore } from "@/stores/useJournalStore";
 import { Card } from "pixel-retroui";
-import Journal from "@/app/journal/page";
-import localFont from 'next/font/local'
-
-const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
+import localFont from "next/font/local";
+import { useCharacterStore } from "@/stores/useCharacterStore";
+const retroGaming = localFont({ src: "../../public/fonts/retro_gaming.ttf" });
 
 export default function List() {
   // current user data
-  const currentUser = useUserStore((state) => state.currentUser);
-  const updateStats = useUserStore((state) => state.updateStats);
+  const character = useCharacterStore((state) => state.character);
+  const updateCharacter = useCharacterStore((state) => state.updateCharacter);
   const setJournalError = useJournalStore((state) => state.setJournalError);
   const journalError = useJournalStore((state) => state.journalError);
   const allQuests = useJournalStore((state) => state.allQuests);
@@ -35,11 +33,17 @@ export default function List() {
 
   async function completion(
     currentCompleted: boolean | null,
-    id: number | null,
+    quest_id: number | null,
     user_id: number | null,
   ) {
+
     if (isLocked.current) return;
-    if (!id || currentCompleted === null || !allQuests || !displayedQuests)
+    if (
+      !quest_id ||
+      currentCompleted === null ||
+      !allQuests ||
+      !displayedQuests
+    )
       return;
 
     isLocked.current = true;
@@ -53,26 +57,29 @@ export default function List() {
     }
 
     const previousList = [...allQuests];
-    const previousCoins = currentUser?.coins ?? 0;
+    const previousCoins = character?.coins ?? 0;
     const optimisticList = allQuests.map((n) =>
-      n.id === id ? { ...n, completed: completionState } : n,
+      n.quest_id === quest_id ? { ...n, completed: completionState } : n,
     );
     setAllQuests(optimisticList);
 
     if (!currentCompleted) {
-      updateStats({ coins: currentUser?.coins + 1 });
+      updateCharacter({ coins: (Number(character?.coins) ?? 0) + 1 });
     } else {
-      updateStats({ coins: currentUser?.coins<=0 ? 0 : currentUser?.coins - 1 });
-    };
+      updateCharacter({
+        coins: (Number(character?.coins) <= 0 ? 0 : Number(character?.coins) - 1),
+      });
+    }
     setJournalError("");
 
     const quest = new Quest();
-    const feedback = await quest.complete(id, completionState, user_id);
+    const feedback = await quest.complete(quest_id, completionState, user_id);
 
     if (feedback.error) {
       // revert optimistic update on error
+      console.log(feedback)
       setAllQuests(previousList);
-      updateStats({ coins: previousCoins });
+      updateCharacter({ coins: previousCoins });
 
       if (feedback.error === "limit") {
         setJournalError("Hourly limit exceeded! Try again in an hour!");
@@ -102,7 +109,9 @@ export default function List() {
       // deletion sound effect
       deleting();
 
-      const updatedList: Array<ListType> = allQuests.filter((n) => n.id !== id);
+      const updatedList: Array<ListType> = allQuests.filter(
+        (n) => n.quest_id !== id,
+      );
       setAllQuests(updatedList);
       const updatedCurrentList: Array<ListType> = updatedList.filter(
         (n) => n.completed === false,
@@ -113,14 +122,16 @@ export default function List() {
 
   return (
     <>
-      <div className={`scrollingContainer h-full! flex flex-col gap-2 ${retroGaming.className}`}>
+      <div
+        className={`scrollingContainer h-full! flex flex-col gap-2 ${retroGaming.className}`}
+      >
         {displayedQuests?.map((item, index) => (
           <Card
             bg="black"
             borderColor="transparent"
             shadowColor="transparent"
             textColor="white"
-            data-id={item.id}
+            data-id={item.quest_id}
             data-completion={item.completed}
             data-user-id={item?.user_id}
             className="flex justify-between  items-center hover:border-white text-xl  py-1"
@@ -135,7 +146,7 @@ export default function List() {
                     : ` p-1 cursor-pointer inline-block min-w-5 h-5 border border-white mr-5 `
                 }
                 onClick={() =>
-                  completion(item.completed, item.id, item?.user_id)
+                  completion(item.completed, item.quest_id, item?.user_id)
                 }
               ></span>
 
@@ -153,7 +164,7 @@ export default function List() {
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 24 24"
               className="cursor-pointer max-w-5 h-auto ml-5 hover:text-red-500"
-              onClick={() => deletion(item.id)}
+              onClick={() => deletion(item.quest_id)}
             >
               <path
                 d="M16 2v4h6v2h-2v14H4V8H2V6h6V2h8zm-2 2h-4v2h4V4zm0 4H6v12h12V8h-4z"
