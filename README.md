@@ -68,6 +68,7 @@ middlewares/  # Input validation helpers
 ## Credits
 
 Copyright-free music from alkakrab.itch.io
+backgroundMusicMedieval.mp3 by André Luz Coletti from Pixabay.
 
 ---
 

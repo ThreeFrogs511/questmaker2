@@ -33,8 +33,8 @@ export default class Engine {
   private choicesOptions;
 
   //story attributes
-  private pastNodes:Array<string | undefined>=[]
-  private pastUserChoices:Array<string | undefined>=[]
+  private pastNodes: Array<string | undefined> = [];
+  private pastUserChoices: Array<string | undefined> = [];
 
   // combat
   combatLockOn: boolean;
@@ -93,108 +93,137 @@ export default class Engine {
   ) {
     this.logUserChoices(currentChoice.text);
 
-    // ability checks
-    if (currentChoice.check) {
-      const check = this.abilityChecks.handler(currentChoice, this.node);
-      if (check === null || check === undefined) return;
-      this.playSfx("diceRollSound");
+    let key: keyof Choice;
+    // if the next node lead to  a special event (check, penalty, combat, etc), we put it in this variable
+    // else we keep the normal next node and reset 'ChoiceResult' manually
+    let nextNode = null;
+    for (let key in currentChoice) {
+      switch (key) {
+        case "check":
+          console.log("check")
+          const check = this.abilityChecks.handler(currentChoice, this.node);
+          if (check === null || check === undefined) return;
+          this.playSfx("diceRollSound");
 
-      if (check.result === false) {
-        if (currentChoice.fail) {
-          this.updateNode(currentChoice.fail);
-        }
-        setChoiceResult((prev: ChoiceResult) => ({
-          ...prev,
-          type: "ability",
-          success: false,
-          value: check.value,
-          status: true,
-        }));
-      } else {
-        this.updateNode(currentChoice.next);
-        setChoiceResult((prev: ChoiceResult) => ({
-          ...prev,
-          type: "ability",
-          success: true,
-          value: check.value,
-          status: true,
-        }));
-        this.accumulatedXp = this.accumulatedXp + (currentChoice.xp ?? 0);
-      }
-
-      //penalties
-    } else if (currentChoice.penalty) {
-      this.penalties.handler(currentChoice, setChoiceResult);
-      this.updateNode(currentChoice.next);
-
-      //exclusive dialog/choice options based on race/class/gender
-    } else if (currentChoice.alt) {
-      console.log("handling exclusive path");
-      const nextNode = this.exclusivePaths.handler(currentChoice);
-      this.updateNode(nextNode);
-      setChoiceResult((prev: ChoiceResult) => ({
-        ...prev,
-        success: null,
-        value: null,
-        status: false,
-      }));
-
-      // launching combat
-    } else if (currentChoice.combat_started) {
-      // using bind() to pass the playSfx method from the AudioManager class
-      // to the Combat class then to the useAttackAction without losing the context of 'this'
-      this.combat = new Combat(
-        this.playSfx.bind(this),
-        this.playMusic.bind(this),
-      );
-      this.combat.preparingCombat(currentChoice, clearNbOfTurn);
-      this.updateNode(currentChoice.next);
-      this.playMusic("battleMusic");
-
-      //exclusive dialog, choices based on the user's past decisions in this chapter
-    } else if (currentChoice.nodeRef) {
-      const nextNode = this.exclusivePaths.handlingChoicesPaths(
-        currentChoice,
-        this.pastNodes,
-      );
-      this.updateNode(nextNode);
-      setChoiceResult((prev: ChoiceResult) => ({
-        ...prev,
-        success: null,
-        value: null,
-        status: false,
-      }));
-
-      //launching the end screen, displaying the relevant decisions made by the user
-    } else if (currentChoice.campaignEnd) {
-      this.relevantChoices = (currentChoice.relevantNodes ?? []).filter(
-        (n: { node: string; text: string }) => {
-          if (this.pastNodes.includes(n.node)) {
-            return n.text;
+          if (check.result === false) {
+            if (currentChoice.fail) {
+              nextNode = currentChoice.fail;
+            }
+            setChoiceResult((prev: ChoiceResult) => ({
+              ...prev,
+              type: "ability",
+              success: false,
+              value: check.value,
+              status: true,
+            }));
+          } else {
+            nextNode = currentChoice.next;
+            setChoiceResult((prev: ChoiceResult) => ({
+              ...prev,
+              type: "ability",
+              success: true,
+              value: check.value,
+              status: true,
+            }));
+            this.accumulatedXp = this.accumulatedXp + (currentChoice.xp ?? 0);
           }
-        },
-      );
-      this.accumulatedXp = this.accumulatedXp + 10;
-      this.updateNode(currentChoice.next);
+          break;
 
-      //normal nodes
-    } else if (currentChoice.ost) {
-      this.playMusic(currentChoice.ost);
-      this.updateNode(currentChoice.next);
-      setChoiceResult((prev: ChoiceResult) => ({
-        ...prev,
-        success: null,
-        value: null,
-        status: false,
-      }));
+        case "penalty":
+          console.log("penalty")
+          this.penalties.handler(currentChoice, setChoiceResult);
+          nextNode = currentChoice.next;
+          break;
+
+        case "combat_started":
+          console.log("combat")
+          // using bind() to pass the playSfx method from the AudioManager class
+          // to the Combat class then to the useAttackAction without losing the context of 'this'
+          this.combat = new Combat(
+            this.playSfx.bind(this),
+            this.playMusic.bind(this),
+          );
+          this.combat.preparingCombat(currentChoice, clearNbOfTurn);
+          // this.playMusic("battleMusic");
+          setChoiceResult((prev: ChoiceResult) => ({
+            ...prev,
+            success: null,
+            value: null,
+            status: false,
+          }));
+          nextNode = currentChoice.next;
+          break;
+
+        case "nodeRef":
+          console.log("nodeRef")
+          nextNode = this.exclusivePaths.handlingChoicesPaths(
+            currentChoice,
+            this.pastNodes,
+          );
+          setChoiceResult((prev: ChoiceResult) => ({
+            ...prev,
+            success: null,
+            value: null,
+            status: false,
+          }));
+          break;
+
+        case "alt":
+          console.log("alt")
+          nextNode = this.exclusivePaths.handler(currentChoice);
+          setChoiceResult((prev: ChoiceResult) => ({
+            ...prev,
+            success: null,
+            value: null,
+            status: false,
+          }));
+          break;
+
+        case "campaignEnd":
+          console.log("campaignend")
+          this.relevantChoices = (currentChoice.relevantNodes ?? []).filter(
+            (n: { node: string; text: string }) => {
+              if (this.pastNodes.includes(n.node)) return n.text;
+            },
+          );
+          this.accumulatedXp = this.accumulatedXp + 10;
+          setChoiceResult((prev: ChoiceResult) => ({
+            ...prev,
+            success: null,
+            value: null,
+            status: false,
+          }));
+          nextNode = currentChoice.next;
+          break;
+
+        case "ost":
+          console.log("ost")
+          this.playMusic(currentChoice.ost);
+          setChoiceResult((prev: ChoiceResult) => ({
+            ...prev,
+            success: null,
+            value: null,
+            status: false,
+          }));
+          nextNode = currentChoice.next;
+          break;
+
+ 
+      }
+    }
+
+
+    
+    if (nextNode) {
+      this.updateNode(nextNode);
     } else {
-      this.updateNode(currentChoice.next);
       setChoiceResult((prev: ChoiceResult) => ({
         ...prev,
         success: null,
         value: null,
         status: false,
       }));
+      this.updateNode(currentChoice.next);
     }
   }
 
@@ -258,7 +287,7 @@ export default class Engine {
   // setter to update the node inside the class
   setNodeInsideEngine(node: string) {
     this.node = node;
-    this.logPastNodes(node)
+    this.logPastNodes(node);
   }
 
   // getters to display the decisions made during the campaign and the total xp gained in the end screen
@@ -270,11 +299,11 @@ export default class Engine {
     return this.accumulatedXp;
   }
 
-  logUserChoices(choice:string) {
+  logUserChoices(choice: string) {
     this.pastUserChoices.push(choice);
-  };
+  }
 
-  logPastNodes(node:string) {
+  logPastNodes(node: string) {
     this.pastNodes.push(node);
   }
 }

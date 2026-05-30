@@ -2,11 +2,8 @@
 import { useEffect, useRef, useCallback } from "react";
 import CampaignHandler from "@/components/campaign/Global/CampaignHandler";
 import Loading from "@/app/loading";
-// main types
 import { useNarrationStore } from "@/stores/useNarrationStore";
-import { useCombatStore } from "@/stores/useCombatStore";
-import { Howler } from "howler";
-import { useRouter } from "next/navigation";
+
 
 export default function CampaignRunning({
   params,
@@ -52,9 +49,8 @@ export default function CampaignRunning({
       .then((values) => {
         if (!values) return;
         updateNode(values.firstNode);
-        updateNode("remembering_how_to_fight")
+        // updateNode("introducing_to_mayor")
         setCampaignTitle(values.title);
-        // play()
       })
       .catch((err) => console.log(err));
 

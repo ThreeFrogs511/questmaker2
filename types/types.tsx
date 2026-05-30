@@ -40,7 +40,7 @@ export type Choice = {
   relevantNodes?: Array<{ node: string; text: string }>;
   xp?: number;
   ost?: string;
-  abilityGained?:{type:string, name:string, dmg:number}
+  abilityGained?:{type:string, name:string, dmg:number, cooldown: number}
 };
 
 type Alt = {

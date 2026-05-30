@@ -69,12 +69,16 @@ export default function CampaignHandler() {
   }
 
   useEffect(() => {
-    gameplay.current?.playMusic("backgroundMusic");
+    gameplay.current?.playMusic("backgroundMedievalMusic");
 
     return () => {
       gameplay.current?.stopAllMusic();
     };
   }, []);
+
+  useEffect(() => {
+    console.log(currentNode)
+  },[currentNode])
 
   useEffect(() => {
     if (currentCampaign && currentNode && gameplay.current) {

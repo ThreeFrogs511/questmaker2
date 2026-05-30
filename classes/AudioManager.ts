@@ -17,18 +17,31 @@ export default class AudioManager {
     html5: true,
     volume: 0.9,
   });
+
+    private backgroundMedievalMusic: Howl = new Howl({
+    src: ["/music/backgroundMusicMedieval.mp3"],
+    loop: true,
+    html5: true,
+    volume: 0.9,
+  });
+
+
   private battleMusic: Howl = new Howl({
     src: ["/music/battle2.mp3"],
     loop: true,
-    html5: true,
     volume: 0.1,
+  });
+
+    private tavernBrawl: Howl = new Howl({
+    src: ["/music/tavernBrawl.mp3"],
+    loop: true,
+    volume: 0.6,
   });
 
   private victoryMusic: Howl = new Howl({
     src: ["/music/victory.mp3"],
     loop: false,
-    html5: true,
-    volume: 0.1,
+    volume: 0.6,
   });
 
   private currentMusicId: number | undefined;
@@ -38,6 +51,7 @@ export default class AudioManager {
 
   playSfx(soundName: string) {
     let sound = soundName as keyof this;
+    if ((this[sound] as Howl) === this.currentHowl) return;
     this.currentSfxId = (this[sound] as Howl)?.play();
     return this.currentSfxId;
   }
@@ -74,6 +88,7 @@ export default class AudioManager {
     }
 
     if ((this[music] as Howl) !== this.currentHowl) {
+      console.log("current howl:", this.currentHowl)
       this.currentHowl?.stop(this.currentMusicId);
       this.currentMusicId = (this[music] as Howl)?.play();
       this.currentHowl = this[music] as Howl;

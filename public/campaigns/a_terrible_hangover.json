@@ -5,7 +5,7 @@
   "meta": {
     "title": "A terrible hangover",
     "id_campaign": 1,
-    "ost": "backgroundMusic"
+    "ost": "backgroundMedievalMusic"
   },
   "nodes": {
     "intro_beach": {
@@ -21,7 +21,7 @@
       "text": "You dig deep into your memories, but your mind goes blank immediately. You cannot recall your past, the people you loved or hated, nor a single detail of your previous life. Even your own name escapes you. Just as despair creeps in, something metallic and shiny buried in the sand catches your eye: a broken medallion. A short sentence is engraved in the back. You read it. ",
       "choices": [
         {
-          "text": "\"<i>Do not forget where you come from, my dear <span style=\"color:yellow\">[USERNAME]</span></i>.\"",
+          "text": "\"<i>Do not forget where you come from, my dear <span style=\"color:#fbbf24\">[USERNAME]</span></i>.\"",
           "next": "decide_to_leave_beach"
         }
       ]
@@ -31,7 +31,7 @@
       "text": "A sharp flash hits you: you recognize that name. It is yours. <strong>This is your name !</strong> You have no idea who gave you this medallion, but it is the only lead you have. You hang it around your neck and take a deep breath. Staying on this empty shore will not bring your memories back. You turn away from the waves and head toward the rocky coast. An imposing wall of stone rises ahead of you. If you want to leave the beach, you will have to overcome this obstacle. <br> What do you choose ?",
       "choices": [
         {
-          "text": "Try to climb the rocky wall anyway. <span style=\"color:yellow\">(Strength DC 15)</span>",
+          "text": "Try to climb the rocky wall anyway. <span style=\"color:#fbbf24\">(Strength DC 15)</span>",
           "next": "rock_climb_success",
           "fail": "rock_climb_fail",
           "check": "str",
@@ -39,7 +39,7 @@
           "dc": 15
         },
         {
-          "text": "Scan the area for a clever way up. <span style=\"color:yellow\">(Intelligence DC 12)</span>",
+          "text": "Scan the area for a clever way up. <span style=\"color:#fbbf24\">(Intelligence DC 12)</span>",
           "next": "rock_search_solution_success",
           "fail": "rock_search_solution_fail",
           "check": "int",
@@ -69,7 +69,7 @@
       "text": "You attempt to climb the wall despite your aching muscles. it's going fine for a while, but when the top is at arm's length, those very arms of yours give up and you fall, head first, into the warm but fortunately soft sand. The easy way isn't going to cut it for you. You'll need to find another way up.",
       "choices": [
         {
-          "text": "Scan the area for a clever way up. <span style=\"color:yellow\">(Intelligence DC 12)</span>",
+          "text": "Scan the area for a clever way up. <span style=\"color:#fbbf24\">(Intelligence DC 12)</span>",
           "next": "rock_search_solution_success",
           "fail": "rock_search_solution_fail",
           "check": "int",
@@ -99,7 +99,7 @@
       "text": "You analyze your surroundings. Besides a few wandering crabs and algae, you eye catches nothing of value. The smart way up is out of the question.",
       "choices": [
         {
-          "text": "Try to climb the rocky wall anyway. <span style=\"color:yellow\">(Strength DC 15)</span>",
+          "text": "Try to climb the rocky wall anyway. <span style=\"color:#fbbf24\">(Strength DC 15)</span>",
           "next": "rock_climb_success",
           "fail": "rock_climb_fail",
           "check": "str",
@@ -139,7 +139,7 @@
       ]
     },
     "bridge_start": {
-      "text": "You step onto the bridge. The old wooden plank groans under your weight. A second step, then a third. Each creak echoes through the ravine below, reminding you how far you would fall if the bridge failed you. Strange, distant cries rise from the abyss, chilling your blood. Still, you press on, one careful step at a time. Just as the far side of the ravine finally comes into view, one last crack rings out. The bridge gives way beneath your feet. You fall into the void, arms flailing.",
+      "text": "You step onto the bridge. The old wooden plank groans under your weight. A second step, then a third. Strange, distant cries rise from the abyss, chilling your blood. Still, you press on, one careful step at a time. Just as the far side of the ravine finally comes into view, one last crack rings out. The bridge gives way beneath your feet. You fall into the void, arms flailing.",
       "choices": [
         {
           "text": "Think quick. Reach out for anything that might save you.",
@@ -255,7 +255,7 @@
           ]
         },
         {
-          "text": "These bandits don't look too bright. Attempt to negotiate with a well-crafted lie. <span style=\"color:yellow\">(Charisma DC 15)</span>",
+          "text": "These bandits don't look too bright. Attempt to negotiate with a well-crafted lie. <span style=\"color:#fbbf24\">(Charisma DC 15)</span>",
           "next": "attempt_negotiation_success",
           "fail": "attempt_negotiation_fail",
           "check": "cha",
@@ -276,7 +276,7 @@
           "next": "stand_your_ground"
         },
         {
-          "text": "[WIZARD] Search your mind for a fire spell and try to cast it. <span style=\"color:yellow\">(Intelligence DC 12)</span>",
+          "text": "[WIZARD] Search your mind for a fire spell and try to cast it. <span style=\"color:#fbbf24\">(Intelligence DC 12)</span>",
           "next": "attempt_fireball_success",
           "fail": "attempt_fireball_fail",
           "check": "int",
@@ -284,7 +284,7 @@
           "dc": 12
         },
         {
-          "text": "These bandits don't look too bright. Attempt to negotiate with a well-crafted lie. <span style=\"color:yellow\">(Charisma DC 15)</span>",
+          "text": "These bandits don't look too bright. Attempt to negotiate with a well-crafted lie. <span style=\"color:#fbbf24\">(Charisma DC 15)</span>",
           "next": "attempt_negotiation_success",
           "fail": "attempt_negotiation_fail",
           "check": "cha",
@@ -303,10 +303,9 @@
         {
           "text": "Refuse and prepare to fight, even if it means dying here. This medallion is the only lead you have.",
           "next": "stand_your_ground"
-
         },
         {
-          "text": "[BARD] Search your mind for a fire spell and try to cast it. <span style=\"color:yellow\">(Intelligence DC 12)</span>",
+          "text": "[BARD] Search your mind for a fire spell and try to cast it. <span style=\"color:#fbbf24\">(Intelligence DC 12)</span>",
           "next": "attempt_fireball_success",
           "fail": "attempt_fireball_fail",
           "check": "int",
@@ -314,7 +313,7 @@
           "dc": 12
         },
         {
-          "text": "These bandits don't look too bright. Attempt to negotiate with a well-crafted lie. <span style=\"color:yellow\">(Charisma DC 15)</span>",
+          "text": "These bandits don't look too bright. Attempt to negotiate with a well-crafted lie. <span style=\"color:#fbbf24\">(Charisma DC 15)</span>",
           "next": "attempt_negotiation_success",
           "fail": "attempt_negotiation_fail",
           "check": "cha",
@@ -333,10 +332,9 @@
         {
           "text": "Refuse and prepare to fight, even if it means dying here. This medallion is the only lead you have.",
           "next": "stand_your_ground"
-
         },
         {
-          "text": "[CLERIC] Search your mind for a fire spell and try to cast it. <span style=\"color:yellow\">(Intelligence DC 12)</span>",
+          "text": "[CLERIC] Search your mind for a fire spell and try to cast it. <span style=\"color:#fbbf24\">(Intelligence DC 12)</span>",
           "next": "attempt_fireball_success",
           "fail": "attempt_fireball_fail",
           "check": "int",
@@ -344,7 +342,7 @@
           "dc": 12
         },
         {
-          "text": "These bandits don't look too bright. Attempt to negotiate with a well-crafted lie. <span style=\"color:yellow\">(Charisma DC 15)</span>",
+          "text": "These bandits don't look too bright. Attempt to negotiate with a well-crafted lie. <span style=\"color:#fbbf24\">(Charisma DC 15)</span>",
           "next": "attempt_negotiation_success",
           "fail": "attempt_negotiation_fail",
           "check": "cha",
@@ -389,10 +387,15 @@
       ]
     },
     "attempt_fireball_success": {
-      "text": "You reach deep into your fractured memories for a simple fire spell, the very first lesson of most young mages. The formula somehow surfaces in your mind, the words shaky but complete. A small spark appears in your hand and engulfs one of the foes in flames. Burned to a crisp, he falls dead on the floor. One down, thirteen bandits to go. Thirteen pissed off bandits at that.",
+      "text": "You reach deep into your fractured memories for a simple fire spell, the very first lesson of most young mages. The formula somehow surfaces in your mind, the words shaky but complete. A small spark appears in your hand and engulfs one of the foes in flames. His charred body falls on the floor. One down, thirteen bandits to go. Thirteen pissed off bandits at that.<br><span style=\"color:#fbbf24\"> You have now unlocked Fireball ! </span>",
       "choices": [
         {
           "text": "Face the bandits’ reaction to your magic.",
+          "abilityGained": {
+            "type": "spell",
+            "name": "fireball",
+            "cooldown": "2"
+          },
           "next": "eden_rescue_bandits"
         }
       ]
@@ -429,7 +432,7 @@
       ]
     },
     "eden_rescue_bandits": {
-      "text": "The tension is unbearable. The bandits close in, ready to strike. Just as the first blow is about to fall, an arrow whistles through the air and buries itself in a bandit’s throat. A second arrow follows, then a third. The men around you fall in confusion and terror as arrows rain down on them. In the chaos, the leader seizes you and uses you as a living shield. You feel the cold steel of his blade against your neck. A final arrow sinks deep in the leader's back. He stiffens and drop on the floor. Out, but still breathing. ",
+      "text": "The bandits close in, ready to strike. Just as the first blow is about to fall, an arrow whistles through the air and buries itself in a bandit’s throat. A second arrow follows, then a third. The men around you fall in confusion and terror as arrows rain down on them. In the chaos, the leader seizes you and uses you as a living shield. Soon after, a final arrow sinks deep in his back. He stiffens and drop on the floor—Out, but still breathing. ",
       "choices": [
         {
           "text": "Grab your medallion back and look at the pile of corpses at your feet, trying to understand what just happened.",
@@ -442,7 +445,7 @@
       ]
     },
     "eden_rescue_bandits_swordplay": {
-      "text": "Your poor man's sword swirl and twirl around your waist in an rusty but elegant manner. You definitely did that before. Your show of strength hit the mark for a while—the bandits do stand back, but it doesn't last. Your stick won't even hurt a small animal, they know that. It doesn't matter, for at that very moment, an arrow lodges itself inside one of them. A second arrow follows, then a third. The men around you fall in confusion and terror as arrows rain down on them. In the chaos, the leader seizes you and uses you as a living shield. You feel the cold steel of his blade against your neck. A final arrow sinks deep in the leader's back. He stiffens and drop on the floor. Out, but still breathing. ",
+      "text": "Your poor man's sword swirl and twirl around your waist in an rusty but elegant manner. Your show of strength keep the bandits at bay, just long enough until, suddenly, an arrow lodges itself inside one of the bandits. A second arrow follows, then a third. Chaos ensues, the bandits drop like flies. The leader vainly tries to locate the archer, but a final arrow cuts his search short. He falls unconscious, leaving you the only one left standing.",
       "choices": [
         {
           "text": "Look at the pile of corpses at your feet, trying to understand what just happened.",
@@ -455,11 +458,17 @@
       ]
     },
     "eden_rescue_bandits_negotiation": {
-      "text": "Before you could try anything, an arrow whistles through the air and meets the leader's back. The bandit collapses on the floor, unconscious. Where did that come from? You hear someone approaching behind you, their footsteps calm and unhurried.",
+      "text": "Before you could try anything, an arrow brushes past your cheek and ends its course into the leader's back. The bandit collapses on the floor, unconscious. Footsteps behind you, calm and unhurried. A whistle. A confident man steps out of his hiding place and calmly surveys the bodies scattered around you, nodding once as if inspecting a job already done. He checks the leader's pulse, pulls out his last used arrow, then finally notices your presence. He laughs.",
       "choices": [
         {
-          "text": "Turn toward the source of the arrow.",
-          "next": "eden_appears_common_negotiation"
+          "text": "Take a proper look at your savior.",
+          "next": "eden_description_and_clothes",
+          "alt": [
+            {
+              "type": "gender",
+              "value": "female"
+            }
+          ]
         }
       ]
     },
@@ -476,7 +485,7 @@
       "text": "After nearly an hour of walking, you stumble upon a gigantic spiderweb stretching from tree to tree, thick as a curtain. You push aside some of the silk and freeze. A monstrous spider is at work, wrapping one of its prey in webbing. Not just any prey: a frail elf, whose twisted body shows he died slowly and painfully.",
       "choices": [
         {
-          "text": "Retreat carefully and try to hide without making a sound. <span style=\"color:yellow\">(Dexterity DC 15)</span>",
+          "text": "Retreat carefully and try to hide without making a sound. <span style=\"color:#fbbf24\">(Dexterity DC 15)</span>",
           "next": "hide_from_spider_success",
           "fail": "hide_from_spider_fail",
           "check": "dex",
@@ -484,7 +493,7 @@
           "dc": 15
         },
         {
-          "text": "Grab a sturdy branch and let out a menacing roar. <span style=\"color:yellow\">(Charisma DC 18)</span>",
+          "text": "Grab a sturdy branch and let out a menacing roar. <span style=\"color:#fbbf24\">(Charisma DC 18)</span>",
           "next": "scaring_spider_success",
           "fail": "scaring_spider_fail",
           "check": "cha",
@@ -492,7 +501,7 @@
           "dc": 18
         },
         {
-          "text": "Try to recall a basic fire spell and use magic. <span style=\"color:yellow\">(Intelligence DC 12)</span>",
+          "text": "Try to recall a basic fire spell and use magic. <span style=\"color:#fbbf24\">(Intelligence DC 12)</span>",
           "next": "forest_attempt_fireball_success",
           "fail": "forest_attempt_fireball_fail",
           "check": "int",
@@ -578,7 +587,13 @@
       "choices": [
         {
           "text": "Take a proper look at your savior.",
-          "next": "eden_description_and_clothes"
+          "next": "eden_description_and_clothes",
+          "alt": [
+            {
+              "type": "gender",
+              "value": "female"
+            }
+          ]
         }
       ]
     },
@@ -588,7 +603,7 @@
         {
           "text": "Take a proper look at your savior.",
           "next": "eden_description_and_clothes",
-           "alt": [
+          "alt": [
             {
               "type": "gender",
               "value": "female"
@@ -603,7 +618,7 @@
         {
           "text": "Take a proper look at your savior.",
           "next": "eden_description_and_clothes_forest",
-           "alt": [
+          "alt": [
             {
               "type": "gender",
               "value": "female"
@@ -613,33 +628,52 @@
       ]
     },
     "eden_description_and_clothes": {
-      "text": "???: \"<i>Hey there, stranger ! Isn't it a bit cold to walk around with your backside out in the open ? Oh, don't mind me. Just doing some shopping. You should do the same. Go on, get dressed. They won't need their clothes where they're going...</i>\"",
+      "text": "<u>???</u> : \"<i>Hey there, stranger ! Isn't it a bit cold to walk around with your backside out in the open ? Oh, don't mind me. Just doing some shopping. You should do the same. Go on, get dressed. They won't need their clothes where they're going...</i>\"",
       "choices": [
         {
-          "text": "Ask who he is and what he is doing here.",
+          "text": "Put some clothes on you, then ask who he is and what he is doing here.",
           "next": "eden_explains_hunt_bridge_alt"
         },
         {
-          "text": "Thank him for saving your life.",
+          "text": "Get dressed, while thanking him for saving your life.",
           "next": "eden_explains_hunt_bridge"
         }
       ]
     },
-      "eden_description_and_clothes_female": {
-      "text": "???: \"<i>Hey there, beautiful ! Isn't it a bit cold to walk around with your backside out in the open ? Wandering about looking like that in these parts, it's like you're asking for trouble. Oh, don't mind me. Just doing some shopping. You should do the same. Go on, get dressed. They won't need their clothes where they're going...</i>\"",
+    "eden_description_and_clothes_female": {
+      "text": "<u>???</u> : \"<i>Hey there, beautiful ! Isn't it a bit cold to walk around with your backside out in the open ? Not that I'm complaing, mind you... Wandering about... looking like that in these parts ; it's like you're asking for trouble ! Oh, don't mind me. Just doing some shopping. You should do the same. Go on, get dressed. They won't need their clothes where they're going...</i>\"",
       "choices": [
         {
-          "text": "Ask who he is and what he is doing here.",
+          "text": "Put some clothes on you, then ask who he is and what he is doing here.",
           "next": "eden_explains_hunt_bridge_alt"
         },
         {
-          "text": "Thank him for saving your life.",
+          "text": "Get dressed, while thanking him for saving your life.",
           "next": "eden_explains_hunt_bridge"
+        },
+        {
+          "text": "[FEMALE] Call him a pervert then hide behind a rock to get dressed with a little privacy.",
+          "next": "eden_explains_hunt_bridge",
+          "alt": [
+            {
+              "type": "gender",
+              "value": "female"
+            }
+          ]
+        }
+      ]
+    },
+    "eden_explains_hunt_bridge_female": {
+      "text": "<u>???</u> : \"<i>Relax, sweetheart ! I'm just teasing you. Trust me, these guys would have used you day and night then gutted you like a pig. But you don't have to be afraid. I'm a bounty hunter, m'am. And this fella, Regalus, the leader of this group, my bounty. Now that you're all dressed up, help me carry this sorry bastard up to my horse over there. It's time for me to cash in !\"",
+      "choices": [
+        {
+          "text": "Follow him to his horse. Then heave the body over the saddle.",
+          "next": "eden_ask_for_player_story"
         }
       ]
     },
     "eden_description_and_clothes_forest": {
-      "text": "???: \"<i>Hey there, stranger ! Isn't it a bit cold to walk around with your backside out in the open ? Oh, don't mind me. Just doing some shopping. You should do the same. Go on, get dressed. Go on then, take his clothes. This poor elf certainly won't need them anymore..</i>\"",
+      "text": "<u>???</u> : \"<i>Hey there, stranger ! Isn't it a bit cold to walk around with your backside out in the open ? Oh, don't mind me. Just doing some shopping. You should do the same. Go on, get dressed. Go on then, take his clothes. This poor elf certainly won't need them anymore..</i>\"",
       "choices": [
         {
           "text": "Ask who he is and what he is doing here.",
@@ -652,7 +686,7 @@
       ]
     },
     "eden_description_and_clothes_forest_female": {
-      "text": "???: \"<i>Hey there, beautiful ! Isn't it a bit cold to walk around with your backside out in the open ? I heard about women doing crazy kinky stuff in these forests, but in giant spiders territory ? That's a first. Oh, don't mind me. Just doing some shopping. You should do the same. Go on, get dressed. This elf won't need his clothes no more...</i>\"",
+      "text": "<u>???</u> : \"<i>Hey there, beautiful ! Isn't it a bit cold to walk around with your backside out in the open ? I heard about women doing crazy kinky stuff in these forests, but in giant spiders territory ? That's a first. Oh, don't mind me. Just doing some shopping. You should do the same. Go on, get dressed. This elf won't need his clothes no more...</i>\"",
       "choices": [
         {
           "text": "Ask who he is and what he is doing here.",
@@ -661,189 +695,233 @@
         {
           "text": "Thank him for saving your life.",
           "next": "eden_explains_hunt_forest"
+        },
+        {
+          "text": "[FEMALE] Call him a pervert then hide behind a tree to get dressed with a little privacy.",
+          "next": "eden_explains_hunt_forest",
+          "alt": [
+            {
+              "type": "gender",
+              "value": "female"
+            }
+          ]
+        }
+      ]
+    },
+    "eden_explains_hunt_forest_female": {
+      "text": "<u>???</u> : \"<i>Okay, okay. I'm sorry. I know this isn't the best scenery for this kind of talk. I'm a bounty hunter, m'am. And I just caught my latest prey not far from here. Regalus, a bandit leader, with a fat bounty on his head. I was heading back to town through this forest when I noticed this four-legged beast. Giant spiders make the perfect sleeping agent. I can in good conscience leave a lady alone in this forest. Follow me, I can give you a ride.\"",
+      "choices": [
+        {
+          "text": "Follow him outside the forest to his horse.",
+          "next": "eden_to_horse_forest"
         }
       ]
     },
     "eden_explains_hunt_bridge": {
-      "text": "???:\"<i>Saving you? That too, I suppose. But truth is, I was mostly interested in that fella. Name's Regalus. Nasty piece of work. There's a bounty of a thousand gold pieces on his head if I bring him back alive. Not bad for a few days of work. Took me some time to craft this sleeping arrowhead, but damn that was worth it.</i>\"",
+      "text": "<u>???</u> :\"<i>Saving you? Oh... That too, I suppose. Truth is, I was mostly interested in that fella. Name's Regalus. Nasty piece of work. There's a bounty of a thousand gold pieces on his head. Not bad for a few days of work. Took me some time to craft this sleeping arrowhead, but damn that was worth it. Now, give me a hand, would ya' ? Bloke's too heavy for me.</i>\"",
       "choices": [
         {
-          "text": "Follow him to his horse and the captured bandit.",
-          "next": "eden_to_horse"
+          "text": "Follow him to his horse. Then heave the body over the saddle.",
+          "next": "eden_ask_for_player_story"
         }
       ]
     },
     "eden_explains_hunt_bridge_alt": {
-      "text": "???: \"<i>Funny attitude for someone who was about to end up gutted by a pack of roadside scum...But if you insist: I'm a bounty hunter, and I just caught my latest prey. I was heading to the nearest city, cutting across this area, when I spotted a golden opportunity: Regalus and his little gang of idiots. Poor Regalus has a huge bounty on his head.Saving you was just a side effect. Fortunate for you, isn't it?</i>\"",
+      "text": "<u>???</u> : \"<i>Funny attitude for someone who was about to end up gutted by a pack of roadside scum...Look, I'm a bounty hunter, and this fella is my latest prey. I was heading to the nearest city when I spotted a golden opportunity: Regalus and his little gang of idiots. Poor Regalus has a huge bounty on his head. Saving you was just a fortunate side effect. Now, how about you help me get this arsehole onto my horse ?</i>\"",
       "choices": [
         {
-          "text": "Follow him to his horse and the captured bandit.",
-          "next": "eden_to_horse"
+          "text": "Follow him to his horse. Then heave the body over the saddle.",
+          "next": "eden_ask_for_player_story"
         }
       ]
     },
     "eden_explains_hunt_forest": {
-      "text": "???: \"<i>Saving you? Oh, that too, I suppose. Truth is, I was far more interested in this creature's venom. Potent stuff. A powerful sleeping draught. I'm a bounty hunter, you see. I actually caught my latest target not far from here. But to do that, I had to use the very last drop of my sleeping vial. So stumbling on this spider was a blessing... and stumbling on you as well, of course, ahem.</i>\"",
+      "text": "<u>???</u> : \"<i>And you are welcome, stranger. But I was mainly interested in this creature's venom. Potent stuff. A powerful sleeping draught. I'm a bounty hunter, you see. I actually caught my latest target not far from here. But to do that, I had to use the very last drop of my sleeping vial. So stumbling upon this four-legged demon was a blessing... and stumbling on you as well, of course, ahem. You want a lift to the nearest town, I reckon ? Follow me.</i>\"",
       "choices": [
         {
-          "text": "Follow him through the trees to his horse.",
+          "text": "Follow him outside the forest to his horse.",
           "next": "eden_to_horse_forest"
         }
       ]
     },
     "eden_explains_hunt_forest_alt": {
-      "text": "???: \"<i>Strange way of talking for someone who was about to end up in an oversized insect's stomach... But if you insist: I'm a bounty hunter, and I've just bagged my latest prey. Regalus is the name. Nasty piece of work, with a gorgeous bounty on his head.  I was on my way to the nearest city, cutting through this forest, when I noticed those webs above us. The venom of these creatures makes the perfect sleeping draught, ideal for someone in my line of work. So I decided to bring it down. Saving you was just a side effect. </i>\".",
+      "text": "<u>???</u> : \"<i>Okay... I see you're not the friendly and grateful type. I'm a bounty hunter, stranger, and I've just bagged my latest prey. I was heading back to the nearest city, cutting through this forest, when I noticed those webs above us. The venom of these creatures makes the perfect sleeping draught, ideal for someone in my line of work. Now, I'm heading back on the road. Care to join me ? Unless getting devoured by spiders is your thing. Not judging. </i>\".",
       "choices": [
         {
-          "text": "Follow him through the trees to his horse.",
+          "text": "Follow him outside the forest to his horse.",
           "next": "eden_to_horse_forest"
         }
       ]
     },
-    "eden_to_horse": {
-      "text": "You help the hunter drag the heavy, unconscious bandit toward his horse. One, two, three: together you heave the body over the saddle. The hunter climbs up behind his prisoner. The hunter then turns his gaze on you.\n\n\"What's your story, stranger? Not that I really care, but I'm curious to know what a clown like you is doing, naked, in the middle of these wild lands.</i>\"",
+
+    "eden_ask_for_player_story": {
+      "text": "<u>???</u> : \n\n\"<i>Thanks... dragging the bodies is always the worst part of my job, and it's not like I'm getting any younger. Tell me, what's your story, stranger? Not that I really care, but I'm curious to know what a clown like you is doing, naked, in the middle of these wild lands.</i>\"",
       "choices": [
         {
-          "text": "Tell him about your amnesia and how you woke up on the beach.",
+          "text": "Tell him about your amnesia and how you woke up on the beach...without clothes.",
           "next": "eden_reacts_amnesia"
         }
       ]
     },
     "eden_to_horse_forest": {
-      "text": "You follow the hunter through the undergrowth until you reach a small clearing. His horse waits there, calm and patient. A large man is already tied across the saddle, snoring loudly: Regalus, no doubt under the effect of the sleeping poison. The hunter adjusts the ropes with quick, efficient gestures. The hunter then tilts his head, studying you.\n\n\"<i>Anyway,</i>\"\n he says, \n\"<i>enough about me. What's your story? Not that I really care, but I'm curious to know what a clown like you is doing, naked, in the middle of these wild lands.</i>\"",
+      "text": "<u>???</u> : \n\n\"<i> There we are. What's your story? Not that I really care, but I'm curious to know what went through your head when you decided to wander about with your bossom out in the open ?</i>\"",
       "choices": [
         {
-          "text": "Tell him about your amnesia and how you woke up on the beach.",
+          "text": "Tell him about your amnesia and how you woke up on the beach... without clothes.",
           "next": "eden_reacts_amnesia"
         }
       ]
     },
     "eden_reacts_amnesia": {
-      "text": "You explain that you woke up on the beach with no memory of your past, no idea who you were, until you found the medallion with your name on it. The hunter listens, surprisingly silent. \"<i>Amnesia, huh?</i>\" he finally mutters. He stares at you for a long moment, as if weighing an idea in his head. He gestures at the saddle, inviting you to climb up. Then he clicks his tongue and jerks his chin toward the horse.",
+      "text": "<u>???</u> : \n\n\" <i>Amnesia, huh ? Interesting. You don't see that everyday. My name's <span style=\"color:#fbbf24\">Eden</span>, if that matters. What's yours ?</i>",
       "choices": [
         {
-          "text": "Climb onto the horse behind him.",
-          "next": "eden_ride_to_city"
+          "text": "Be honest and give him your name.",
+          "next": "name_given_eden_ride_to_city"
+        },
+        {
+          "text": "Lie and pretend you don't remember that either.",
+          "next": "name_not_given_eden_ride_to_city"
         }
       ]
     },
-    "eden_ride_to_city": {
-      "text": "You climb up behind the bounty hunter. The horse shifts under your combined weight. \"<i>You must be hungry and thirsty,</i>\" he says. \"<i>The bounty on Regalus will pay for the first round.</i>\"<br> With a click of his tongue, the horse starts at a trot, then a gallop, crossing the valley at full speed. After a moment, he speaks again.<br> \"<i>The name's Eden. Pleasure to meet you. The nearest city is about two hours away. I hope your backside can handle the ride, stranger.</i>\" <br>The wind lashes your face as the land rushes by and <strong>your strange new journey truly begins.</strong>",
+
+    "name_not_given_eden_ride_to_city": {
+      "text": "<u>Eden</u> : \"<i>That figures ! Sorry I even asked. Anyway... I long for some ale, I'm sure you do too. With the fat bounty I'm about to collect, I might even be kind enough to buy the first round. Now, get your ass on that horse before I change my mind.</i>\"",
       "choices": [
         {
-          "text": "Hold on tight.",
+          "text": "Climb behind him and hold on tight.",
+          "next": "crossing_on_horseback"
+        }
+      ]
+    },
+    "name_given_eden_ride_to_city": {
+      "text": "<u>Eden</u> : \"<i>Well met ! You must be hungry... and thirsty. The bounty on Regalus will pay for the first round. The nearest city is about two hours away, so I hope your backside can handle the ride.\"</i>",
+      "choices": [
+        {
+          "text": "Climb behind him and hold on tight.",
           "next": "crossing_on_horseback"
         }
       ]
     },
     "crossing_on_horseback": {
-      "text": "You ride across the valley at full speed. Behind you, Regalus—the bandit leader, the criminal who almost took your life and your medallion, the only remnant of your forgotten past—keeps snoring peacefully despite the jolts of the road. After several hours on horseback, you finally reach Kelia's Crossing, a small elven town ringed by immense fortifications, almost cut off from the rest of the world.",
+      "text": "You ride across the valley at full speed. In the back, Regalus, the bandit leader, snores peacefully despite the jolts of the road. After several hours on horseback, you reach <span style=\"color:#fbbf24\">Kelia's Crossing</span>, a small elven town ringed by immense fortifications, almost cut off from the rest of the world. Two elven legionaries stop you at the gate : no one is to enter in the city without a pass. One of the guards spots the blood on your clothes. His hand reaches for his sword...",
+      "choices": [
+        {
+          "text": "Tell him you injured yourself hiking.",
+          "next": "elf_and_eden_talk"
+        },
+        {
+          "text": "Assure him that you fought a grizzly bear in the wilds, and this blood is not yours.",
+          "next": "elf_and_eden_talk"
+        },
+        {
+          "text": "Warn him to look the other way or else things might get bloody for him too.",
+          "next": "elf_and_eden_talk_threat"
+        }
+      ]
+    },
+    "elf_and_eden_talk_threat": {
+      "text": "The guard curses you and draws his sword. Eden quickly intervenes. He nods toward the criminal tied to the back of his horse. The legionary immediately recognizes the sleeping bandit. Tensions ease. They let you enter, and one of the guard escorts you to the town hall.<br>The city is dead silent. The air heavy. Streets empty. The shops; all closed—a real ghost town. After a short walk, you reach the town hall. At the sight of Regalus, now fully awake and grunting, the Mayor rejoices.",
       "choices": [
         {
           "text": "[CONTINUE]",
-          "next": "elf_and_eden_talk"
+          "next": "introducing_to_mayor"
         }
       ]
     },
     "elf_and_eden_talk": {
-      "text": "\"Halt!\" one of the elven legionaries at the gate barks. \"No one enters the city without a pass; orders from the Dumvir.\" Eden flashes a mocking smile and simply nods toward the criminal tied to the back of his horse.\n\n\"Regalus!\" the legionary exclaims. \"Enter, the Dumvir will want to reward you personally. But know this: all entries and exits are forbidden from dusk onward.\" You follow Eden inside. The heavy city gates close behind you with a dull thud.",
+      "text": "Eden nods toward the criminal tied to the back of his horse. The legionary immediately recognizes the sleeping bandit. Tensions ease. They let you enter, and one of the guard escorts you to the town hall.<br>The city is dead silent. The air heavy. Streets empty. The shops; all closed—a real ghost town. After a short walk, you reach the town hall. At the sight of Regalus, now fully awake and grunting, the Mayor rejoices.",
       "choices": [
         {
           "text": "[CONTINUE]",
-          "next": "walking_city"
+          "next": "introducing_to_mayor"
         }
       ]
     },
-    "walking_city": {
-      "text": "The streets are overflowing with people. You cut on foot through the central square, monopolized today by a gigantic market. Merchants and locals crowd the stalls, haggling loudly over all manner of goods. The sheer mass of bodies and voices creates a deafening, chaotic cacophony.\n\nInside the Curia, the political heart of the city, a scribe announces your arrival to the Dumvir, the town leader.",
+
+    "introducing_to_mayor": {
+      "text": "<u>The Mayor</u> : \"<i>I had to see it for myself; that scoundrel Regalus, finally apprehended! Do you know how many people he robbed and killed ? You probably don't. But too many. Here's the reward, as promised. To tell you the honest truth, this vermin doesn't deserve to rot in jail. Here's my hunting knife. Hunters, spare us all a senseless trial : kill him now. \"</i> <br>Eden steps back and throws you a sly look : he wants you to make the choice. What do you do ?",
       "choices": [
         {
-          "text": "[CONTINUE]",
-          "next": "introducing_to_dumvir"
-        }
-      ]
-    },
-    "introducing_to_dumvir": {
-      "text": "The Dumvir, bent over his work, stops when he sees Regalus. The criminal, now awake, growls and struggles against his gag.\n\n\"That scoundrel Regalus, finally apprehended!\" the Dumvir rejoices. With a snap of his fingers, he has a hefty purse dropped into Eden's hand. \"To whom do I have the honor of paying this bounty?\" The hunter introduces himself with his usual nonchalance, then turns toward you.",
-      "choices": [
-        {
-          "text": "Introduce yourself timidly.",
-          "next": "introduction_answer"
-        },
-        {
-          "text": "Introduce yourself warmly with a firm handshake.",
-          "next": "introduction_answer"
-        },
-        {
-          "text": "Stay silent.",
-          "next": "no_introduction_answer"
-        }
-      ]
-    },
-    "introduction_answer": {
-      "text": "\"A pleasure to meet you!\" the politician replies, gripping your hand firmly. He signals two legionaries to escort Regalus to his cell, then immediately stops them midmotion.\n\n\"A criminal like Regalus implies a long, tedious trial,\" he sighs, pinching the bridge of his nose. \"I do not have time for that, especially right now...\"\n\nHe then turns toward Eden.",
-      "choices": [
-        {
-          "text": "[CONTINUE]",
-          "next": "dumvir_asking_favor"
-        }
-      ]
-    },
-    "dumvir_asking_favor": {
-      "text": "\"Tell me, bounty hunter: by law, you are entitled to end his life. It would spare me a useless trial...\" Eden strokes his beard, smelling an opportunity.\n\n\"Double the bounty and you've got a deal,\" he says.\n\n\"I'm afraid that's not in the budget,\" the Dumvir answers, his gaze now shifting to you. \"And your colleague? Would they be willing to rid Li'ark of a harmful criminal like Regalus?\"",
-      "choices": [
-        {
-          "text": "Kill Regalus.",
+          "text": "Accept the blade and cut Regalus' throat.",
           "next": "killing_regalus"
         },
         {
-          "text": "Refuse.",
+          "text": "Refuse the blade. You will not kill him.",
           "next": "sparing_regalus"
         }
       ]
     },
-    "no_introduction_answer": {
-      "text": "\"Not the talkative type, hmm? Very well,\"\n the Dumvir says dryly. He signals two legionaries to escort Regalus to his cell, then immediately calls them back.\n\n\"A criminal like Regalus implies a long, tedious trial. I do not have time for that, especially right now...\" he says, pinching the bridge of his nose.\n\nHe turns then toward Eden.",
-      "choices": [
-        {
-          "text": "[CONTINUE]",
-          "next": "dumvir_asking_favor"
-        }
-      ]
-    },
+
     "killing_regalus": {
-      "text": "You accept the Dumvir's blade. With a swift, decisive motion, you slice Regalus's throat. The criminal convulses, choking on his own blood as it spills at your feet. After a long, agonizing minute, his body goes rigid. The Dumvir watches in silence, then gives you a solemn nod of approval, clearly relieved and grateful that someone else has taken this burden upon themselves. His men quickly drag the corpse away.",
+      "text": "You accept the Mayor's knife. With a swift, decisive motion, you slice Regalus's throat. The criminal convulses, choking on his own blood as it spills at your feet. After a long, agonizing minute, his body goes rigid. The Mayor watches in silence, then gives you a solemn nod of approval, clearly relieved and grateful that someone else has taken this burden upon themselves. His men quickly drag the corpse away. Eden doesn't utter a word. He just smirks.",
       "choices": [
         {
-          "text": "Tell him it pleased you to erase a parasite like that from the world.",
+          "text": "Boast that you enjoy removing parasites like him from the world.",
           "next": "pleasure_killing_answer"
         },
         {
-          "text": "Tell him it was necessary, but you would rather have avoided such an act.",
+          "text": "Complain that, even thought it felt necessary, you would rather avoid killing.",
           "next": "necessary_kill_answer"
+        },
+        {
+          "text": "Pocket the knife while the Mayor is not looking. <span style=\"color:#fbbf24\">(Dexterity DC 15)</span>",
+          "next": "pocket_the_mayor_knife",
+          "fail": "pocket_the_mayor_knife_fail",
+          "check": "dex",
+          "xp": 10,
+          "dc": 12
         }
       ]
     },
-    "pleasure_killing_answer": {
-      "text": "\"A parasite, you say? I wouldn't go that far, but I understand your point of view,\" the Dumvir replies with a faint smile. \"In any case, hunters, what would you say to testing your mercenary talents once more for a bounty worth four times the one in your hands?\" Eden's eyes light up.\n\n\"Now you're speaking my language, Dumvir. Go on,\" he says. The politician gestures for you both to follow him into his office.",
+    "pocket_the_mayor_knife": {
+      "text": "With a flick of the wrist, you hide the knife up your sleeve, right under the Mayor's nose. Eden catches you in the act, but doesn't care enough to do anything. When the Mayor turns his attention back to you, his weapon has disappeared, unbeknowst to him.<br><span style=\"color:#fbbf24\"> You have now gained a Knife ! </span>",
       "choices": [
         {
-          "text": "Follow the Dumvir into his office.",
+          "text": "Play it cool and listen to what the Mayor has to say next.",
+          "next": "keep_silent_answer"
+        }
+      ]
+    },
+    "pocket_the_mayor_knife_fail": {
+      "text": "You try to hide the knife up your sleeve, but the weapon slips and falls on the ground. You attempt to quickly grab it, but the Mayor sees you, with his blade in your hand. He thanks you, thinking you're about to give it back to him. You decide to play along and comply. Your sleight of hand definitely needs some work.",
+      "choices": [
+        {
+          "text": "Curse under your breath then listen to what the Mayor has to say next.",
+          "next": "keep_silent_answer"
+        }
+      ]
+    },
+
+    "pleasure_killing_answer": {
+      "text": "<u>The Mayor</u> : \"<i>A parasite, you say? I wouldn't go that far, but I understand your point of view. In any case, hunters, what would you say to testing your mercenary talents once more for a bounty worth four times the one in your hands ? Follow me. Let's talk in private.</i>\"",
+      "choices": [
+        {
+          "text": "Follow the Mayor into his office.",
           "next": "discussing_undead"
+        },
+        {
+          "text": "Choose to stay outside. This obviously doesn't concern you.",
+          "next": "waiting_outside_for_eden"
         }
       ]
     },
     "necessary_kill_answer": {
-      "text": "\"Then we share the same conviction,\" the Dumvir answers. \"The blade should serve justice for all, not the whims of individuals. But that is a debate for another day. Hunters, what would you say to testing your mercenary talents once more for a bounty worth four times the one in your hands?\" Eden's eyes light up.\n\n\"Now you're speaking my language, Dumvir. Go on,\" he says. The politician gestures for you both to follow him into his office.",
+      "text": "<u>The Mayor</u> : \"<i>Then we share the same conviction. The blade should serve justice for all, not the whims of individuals. But that is a debate for another day. Hunters, what would you say to testing your mercenary talents once more for a bounty worth four times the one in your hands? Follow me.</i>\"",
       "choices": [
         {
-          "text": "Follow the Dumvir into his office.",
+          "text": "Follow the Mayor into his office.",
           "next": "discussing_undead"
+        },
+        {
+          "text": "Choose to stay outside. This obviously doesn't concern you.",
+          "next": "waiting_outside_for_eden"
         }
       ]
     },
     "sparing_regalus": {
-      "text": "You refuse. The Dumvir, slightly disappointed but clearly understanding, has Regalus dragged away toward the city prison. He shrugs.\n\n\"I do not blame you. It takes a certain kind of courage to do what is necessary. Not everyone is capable of it.\"\n Eden, who witnessed the whole scene from afar, can't contain his amusement.",
+      "text": "<u>The Mayor</u> : \"<i>Well, that's disappointing. But I do not blame you. It takes a certain kind of courage to do what is necessary. Not everyone is capable of it.</i>\"",
       "choices": [
         {
           "text": "Tell him that despite his crimes, Regalus still deserves a fair trial.",
@@ -856,43 +934,74 @@
       ]
     },
     "deserves_trial_answer": {
-      "text": "\"An admirable point of view, I admit,\" the Dumvir concedes. \"But Regalus will end up at the end of a rope, trial or no trial.\"\n\nHe leans back, studying both you and Eden. \"Now then, hunters, what would you say to testing your mercenary talents once more for a bounty worth four times the one in your hands?\" Eden's eyes light up.\n\n\"Now you're speaking my language, Dumvir. Go on,\" he says. The politician gestures for you both to follow him into his office.",
+      "text": "<u>The Mayor</u> : \"<i>An admirable point of view, I admit. But Regalus will end up at the end of a rope, trial or no trial. In any case, hunters, what would you say to testing your mercenary talents once more for a bounty worth four times the one in your hands? Come with me. Too many ears outside.</i>\"",
       "choices": [
         {
-          "text": "Follow the Dumvir into his office.",
+          "text": "Follow the Mayor into his office.",
           "next": "discussing_undead"
+        },
+        {
+          "text": "Choose to stay outside. This obviously doesn't concern you.",
+          "next": "waiting_outside_for_eden"
+        }
+      ]
+    },
+    "waiting_outside_for_eden": {
+      "text": "You remain outside while Eden joins the Mayor in his office. A couple of minutes later, Eden comes back, with a victorious smile on his face: he just accepted a fat contract. Something about a powerful necromancer hidden in the <span style=\"color:#fbbf24\">Crypt of the Ancient</span>. He's headed to the nearest tavern to celebrate, and you are to come with him: he won't accept 'no' for an answer.",
+      "choices": [
+        {
+          "text": "Go to the tavern.",
+          "next": "entering_the_tavern",
+          "alt": [
+            {
+              "type": "race",
+              "value": "human"
+            },
+            {
+              "type": "race",
+              "value": "orc"
+            }
+          ]
         }
       ]
     },
     "keep_silent_answer": {
-      "text": "\"Hunters, what would you say to testing your mercenary talents once more for a bounty worth four times the one in your hands?\" the Dumvir continues without waiting for your reaction. Eden's eyes light up.\n\n\"Now you're speaking my language, Dumvir. Go on,\" he says. The politician gestures for you both to follow him into his office.",
+      "text": "<u>The Mayor</u> : \"<i>Hunters, what would you say to testing your mercenary talents once more for a bounty worth four times the one in your hands? Let's go to my office, we'll talk there.</i>\"",
       "choices": [
         {
-          "text": "Follow the Dumvir into his office.",
+          "text": "Follow the Mayor into his office.",
           "next": "discussing_undead"
+        },
+        {
+          "text": "Choose to stay outside. This obviously doesn't concern you.",
+          "next": "waiting_outside_for_eden"
         }
       ]
     },
     "discussing_undead": {
-      "text": "In the privacy of his office, the Dumvir begins his tale. \"An ancient and occult evil has been plaguing our region for weeks now... The undead,\" he explains. \"Every night, these monsters crawl out from the bowels of the Globe and throw themselves against our walls. Piercing their rotten flesh with arrows is a pointless endeavor—they multiply and return in even greater numbers.\"\n You notice the goosebumps on his skin as flashes of those nights start crawling back in the Dumvir's head.",
+      "text": "In the privacy of his office, the Mayor begins his tale : undead has been plaguing the region for weeks. At dawn, these monsters crawl out from the bowels of the earth and throw themselves against the town walls. Piercing their rotten flesh with arrows is a pointless endeavor—they multiply and return in even greater numbers. The Mayor suddenly goes pale: one night, a guard failed at his job and let the doors open. Undead barged in, massacred thirty people.",
       "choices": [
         {
-          "text": "[CONTINUE]",
-          "next": "why_closing_the_city"
+          "text": "Wonder why the Mayor didn't ask for reinforcements.",
+          "next": "undead_no_reinforcements"
+        },
+        {
+          "text": "Ask him if he knows where these undead come from.",
+          "next": "dumvir_talks_necromancer"
         }
       ]
     },
-    "why_closing_the_city": {
-      "text": "\"They massacred a little girl less than a week ago. The entire city was in uproar. I had no choice but to close the city gates and restrict all travel. We pray every day that our fortifications will hold for one more night.\" The Dumvir gazes out the window at the bustling market below before continuing.",
+    "undead_no_reinforcements": {
+      "text": "<u>The Mayor</u> : \"<i> Reinforcements ? Do you take me for a fool ? Of course, I asked for reinforcements, begged even ! But the Empire is too busy fighting the Orcs in the South, and loosing. They don't have time for a little town like this. We once sought the aid of mercenaries, gave them a target. They never came back. Scratch that, they probably did, but decomposed... Whoever is behind these undead is very powerful. </i>\" ",
       "choices": [
         {
-          "text": "[CONTINUE]",
+          "text": "Inquire more about this 'powerful' individual.",
           "next": "dumvir_talks_necromancer"
         }
       ]
     },
     "dumvir_talks_necromancer": {
-      "text": "\"One of my scouts gave his life for the information I am about to share,\" the Dumvir says. He unrolls a map across his desk and drives the tip of his blade into a precise spot.\n\n\"We believe the surge of undead originates here, in the Crypt of the Ancients. Some ancient, forbidden magic is at work, and a necromancer of the worst kind must be behind it. I have sent my legionaries to assault the crypt time and again, but the coward hides behind an army of corpses.\"",
+      "text": "<u>The Mayor</u> : \"<i>One of my scouts gave his life for the information I am about to share. We believe the surge of undead originates from the <span style=\"color:#fbbf24\">Crypt of the Ancients</span>, in the mountains. Some forbidden magic is at work there, and a necromancer of the worst kind must be behind it. I have sent my legionaries to assault the crypt time and again, but the coward hides behind an army of corpses.</i>\"",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -901,7 +1010,7 @@
       ]
     },
     "dumvir_talks_necromancer_cont": {
-      "text": "\"And what does the Empire think of all this?\" Eden asks, intrigued.\n\nThe Dumvir scoffs. \"The Empire is far too busy waging war against the Orcs in the south. They have no time for a small city like ours. No, hunters: find a way to slip inside the crypt, stop the necromancer, and I will make you rich. Ten thousand gold pieces—each. What say you ? Will you answer the call?\" His final question is aimed especially... at you.",
+      "text": "<u>The Mayor</u> : \"<i>Hunters: find a way to slip inside the crypt, stop the necromancer, and I will make you rich. Ten thousand gold pieces—each. What say you ? Will you two hunters answer the call ? </i>\"",
       "choices": [
         {
           "text": "Correct him and explain that you are not a bounty hunter.",
@@ -914,25 +1023,26 @@
       ]
     },
     "explanation_attempt": {
-      "text": "You open your mouth, ready to correct the misunderstanding, but a hand lands on your shoulder: Eden's. He cuts you off.\n\n\"Twenty thousand each,\" the hunter says coldly. \"We are talking about undead, black magic, necromancers—not common roadside bandits. No, twenty thousand is the minimum for a job that might cost me my life... and my partner's.\" His hand remains firmly on your shoulder.\n\nThe Dumvir stiffens.",
+      "text": "You open your mouth, ready to correct the misunderstanding, but a hand lands on your shoulder: Eden's. He cuts you off and starts negotating ruthlessly. He asks for no less than twenty thousand, each. The Mayor stiffens, paces around his office. He finally gives in, and the two men shakes hands. Then, the Mayor walks you outside. When he's out of sight, Eden lets out a satisfied grin. With a nod, he beckons you to the nearest tavern. He wants to celebrate.",
       "choices": [
         {
-          "text": "[CONTINUE]",
-          "next": "eden_invite_you_tavern"
+          "text": "Go to the tavern.",
+          "next": "entering_the_tavern",
+          "alt": [
+            {
+              "type": "race",
+              "value": "human"
+            },
+            {
+              "type": "race",
+              "value": "orc"
+            }
+          ]
         }
       ]
     },
     "letting_eden_talk": {
-      "text": "\"Twenty thousand each,\" Eden says, his tone suddenly icy. \"We are talking about undead, black magic, necromancers—not common roadside bandits. No, twenty thousand is the minimum for a job that might cost me my life... and my partner's.\" His hand rests on your shoulder, almost possessive.\n\nThe Dumvir stiffens.",
-      "choices": [
-        {
-          "text": "[CONTINUE]",
-          "next": "eden_invite_you_tavern"
-        }
-      ]
-    },
-    "eden_invite_you_tavern": {
-      "text": "The town leader hesitates for a long moment, staring into space.\n\n\"Deal,\" he finally says. Eden claps his hands, satisfied.\n\n\"Perfect! You will not be disappointed by our services, illustrious Dumvir. The next time we meet will be to celebrate a necromancer's death. Our regards!\" The hunter pulls you outside, then turns to you. \"Before you say anything, I'm pretty sure I promised you a drink, didn't I? Off to the tavern.\"",
+      "text": "Eden rejects the Mayor's original offer. For these perilous stakes, he will settle for no less than twenty thousand per head. The Mayor hesitates, tries to make the hunter accept fifteen thousand, but Eden doesn't budge. His back against the wall, the Mayor can't do anything but accept. The two men shakes hands, then the Mayor accompanies you outside. When he's out of sight, Eden rubs his hand in glee. He puts his arm around your shoulder and drags you to the nearest tavern.",
       "choices": [
         {
           "text": "Go to the tavern.",
@@ -951,7 +1061,7 @@
       ]
     },
     "entering_the_tavern_human": {
-      "text": "Eden leads you to a tavern called \"The Robin and the Butterfly\", the beating heart of the town. Inside, you quickly become the subject of whispered gossip, as you are the two only humans in the establishment.The \"Flat-ears\", as they like to call your kind, are not common in these lands. You ignore this unwanted attention and go sit at a small table in a quiet corner.\n\n\"Pick your poison. This one's on me,\" Eden says in a jovial tone.",
+      "text": "Eden leads you to a tavern called \"The Robin and the Butterfly\", the beating heart of the town. Inside, you quickly become the subject of whispered gossip, as you are the two only humans in the establishment.The \"Flat-ears\", as they like to call your kind, are not common in these lands. You ignore this unwanted attention and go sit at a small table in a quiet corner. The hunter is buying.<br> Pick your poison.",
       "choices": [
         {
           "text": "Order a pint of beer.",
@@ -968,7 +1078,7 @@
       ]
     },
     "entering_the_tavern_orc": {
-      "text": "Eden leads you to a tavern called \"The Robin and the Butterfly\", the beating heart of the town. Inside, you quickly become the subject of whispered gossip—either because you walk in with a human, a rare find in this valley, or because you are an Orc...Probably that one. Whatever the case, you go sit at a small table in a quiet corner.\n\n\"Pick your poison. This one's on me,\" Eden says in a jovial tone.",
+      "text": "Eden leads you to a tavern called \"The Robin and the Butterfly\", the beating heart of the town. Inside, you quickly become the subject of whispered gossip—either because you walk in with a human, a rare find in this valley, or because you are an Orc...Probably that one. Whatever the case, you go sit at a small table in a quiet corner. The hunter is buying.<br> Pick your poison.",
       "choices": [
         {
           "text": "Order a pint of beer.",
@@ -985,7 +1095,7 @@
       ]
     },
     "entering_the_tavern": {
-      "text": "Eden leads you to a tavern called \"The Robin and the Butterfly\", the beating heart of the town. Inside, Eden quickly becomes the subject of whispered gossip, being the only human in the place—and in this entire region. Eden completely ignores it, as he guides you to a small table in a quiet corner.\n\n\"Pick your poison. This one's on me,\" He says in a jovial tone.",
+      "text": "Eden leads you to a tavern called \"The Robin and the Butterfly\", the beating heart of the town. Inside, Eden quickly becomes the subject of whispered gossip, being the only human in the place—and in this entire region. Eden completely ignores it, as he guides you to a small table in a quiet corner. The hunter is buying.<br> Pick your poison.",
       "choices": [
         {
           "text": "Order a pint of beer.",
@@ -1002,7 +1112,7 @@
       ]
     },
     "choosing_beer": {
-      "text": "\"A pint of beer? That's what I like to hear! Nothing better than a good foam after a successful hunt. I'll get that right away!\" Eden jumps to his feet and heads to the already crowded counter, manned by a grumpy old dwarf.\n\nYou wait, turning your medallion between your fingers, reading its engraved inscription. What is its story? What secrets does it hold about your past? So many questions, so few answers.",
+      "text": "Eden chooses a beer as well. He jumps to his feet and heads to the already crowded counter, manned by a grumpy old dwarf. You wait, turning your medallion between your fingers, reading its engraved inscription. What is its story? What secrets does it hold about your past? So many questions, so few answers. A shiver runs down your spine. You feel someone's gaze boring into the back of your neck. You turn discreetly and notice a disturbing elf sitting alone at the far end of the tavern, staring at your medallion without blinking.",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1011,7 +1121,7 @@
       ]
     },
     "choosing_wine": {
-      "text": "\"Wine? Drunk, but with class. I like it. I'll bring that right away, Your Highness,\" he says with a teasing bow.\n\nEden jumps to his feet and heads to the already crowded counter, manned by a grumpy old dwarf.\n\nYou wait, turning your medallion between your fingers, reading its engraved inscription. What is its story? What secrets does it hold about your past? So many questions, so few answers.",
+      "text": "Eden teases you with a regal bow. He then jumps to his feet and heads to the already crowded counter, manned by a grumpy old dwarf. You wait, turning your medallion between your fingers, reading its engraved inscription. What is its story? What secrets does it hold about your past? So many questions, so few answers. A shiver runs down your spine. You feel someone's gaze boring into the back of your neck. You turn discreetly and notice a disturbing elf sitting alone at the far end of the tavern, staring at your medallion without blinking.",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1020,7 +1130,7 @@
       ]
     },
     "choosing_milk": {
-      "text": "\"Milk?\" Eden bursts out laughing, then realizes you are serious. \"Oh. You're not joking. As you wish... I'll die of shame ordering that at the counter,\" he grumbles into his beard as he heads toward the bar.\n\nYou wait, turning your medallion between your fingers, reading its engraved inscription. What is its story? What secrets does it hold about your past? So many questions, so few answers.",
+      "text": "Eden bursts out laughing, then realizes you are serious. He sighs then he heads toward the bar, ashamed to order milk in a tavern. You wait, turning your medallion between your fingers, reading its engraved inscription. What is its story? What secrets does it hold about your past? So many questions, so few answers. A shiver runs down your spine. You feel someone's gaze boring into the back of your neck. You turn discreetly and notice a disturbing elf sitting alone at the far end of the tavern, staring at your medallion without blinking.",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1029,19 +1139,10 @@
       ]
     },
     "being_watched": {
-      "text": "\n\nA shiver runs down your spine. You feel someone's gaze boring into the back of your neck. You turn discreetly and notice a disturbing elf sitting alone at the far end of the tavern, staring at your medallion without blinking.\n\n\"You should put that trinket away,\" Eden says as he returns with the drinks. \"Unless getting mugged is one of your hobbies. I don't judge.\" He raises his pint.",
+      "text": "<u>Eden</u> : \"<i>You should put that trinket away. Unless getting mugged is one of your hobbies. Here's your drink. To you and to Regalus !</i> (he drinks) <i>Given your unfortunate situation, you must have a lot of questions about... everything. Go on then. Alcohol tends to loosen my tongue.</i>\"",
       "choices": [
         {
-          "text": "Raise your pint",
-          "next": "eden_open_for_questions"
-        }
-      ]
-    },
-    "eden_open_for_questions": {
-      "text": "To you, and to Regalus!\" the bounty hunter declares, clinking his mug against yours. You drink. Then Eden continues: \"Given your... unfortunate situation,\" he says, referring to your amnesia, \"you must have a lot of questions about... well, everything. Go on. I'll do my best to answer. Alcohol makes me rather talkative.\"",
-      "choices": [
-        {
-          "text": "Ask why he pretended you were a bounty hunter to the Dumvir.",
+          "text": "Ask why he pretended you were a bounty hunter to the Mayor.",
           "next": "eden_explains_lie"
         },
         {
@@ -1063,7 +1164,7 @@
       ]
     },
     "eden_explains_lie": {
-      "text": "Eden smiles. \"What did you expect me to do? That's how the game is played. Politicians like the Dumvir always favor guilds over lone wolves like me. In their minds, a solo mercenary equals a scam. But a guild? Now that looks professional.\n\nBelieve me, he would never have given me such a juicy contract if I'd told him the truth, and he certainly wouldn't have accepted my final price. Don't worry, I don't intend to throw you into a swarm of undead. This contract concerns me and me alone.\"",
+      "text": "<u>Eden</u> : \"<i>What did you expect me to do? That's how the game is played. Politicians like the Mayor always favor guilds over lone wolves like me. In their minds, a solo mercenary equals a scam. But a guild? Now that looks professional. Don't worry, I don't intend to throw you into a swarm of undead. This contract concerns me and me alone.\"",
       "choices": [
         {
           "text": "Ask what he knows about Kelia's Crossing.",
@@ -1084,10 +1185,10 @@
       ]
     },
     "eden_explains_city": {
-      "text": "\"What to say about Kelia's Crossing?\" Eden leans back. \"A city lost in the middle of nowhere, not particularly important on its own. It's mostly a mandatory stop for anyone heading to Silvarius, the capital of Li'ark. Plenty of travelers, pilgrims, and merchants stay here a few days before getting back on the road.\n\nI've made a few stops here myself during my many hunts... and had a few... 'fortuitous' encounters, if you catch my meaning. The women here are very... forward.\"",
+      "text": "<u>Eden</u> : \"<i>What to say about Kelia's Crossing ? A city lost in the middle of nowhere, not particularly important on its own. A mandatory stop for anyone heading to <span style=\"color:#fbbf24\">Silvarius, the capital of Li'ark</span>. Plenty of travelers, pilgrims, and merchants stay here a few days before getting back on the road. I've made a few stops here myself during my many hunts... and had a few... 'fortuitous' encounters, if you catch my meaning. The women here are very... forward.</i>\"",
       "choices": [
         {
-          "text": "Ask why he pretended you were a bounty hunter to the Dumvir.",
+          "text": "Ask why he pretended you were a bounty hunter to the Mayor.",
           "next": "eden_explains_lie"
         },
         {
@@ -1105,10 +1206,10 @@
       ]
     },
     "eden_explains_globe": {
-      "text": "Eden grabs a piece of bread from the next table as an illustration: \n\"You've got this little stretch of land, that's the Globe. This continent is split into four major nations.\" He cuts the bread in four pieces then continues : \n\"First, the kingdom of <em>Salor</em>: the dwarves. There's <em>Orzug</em>: the Orcs—I wouldn't recommend visiting. The kingdom of <em>Bourbon</em>, that's the Felines, quite the peculiar specimens. And finally, the elven empire of <em>Li'ark</em>, the largest nation on the Globe.\n\nRemember that and you should be fine.\"",
+      "text": "<u>Eden</u>: \"<i>You've got this little stretch of land, that's the <span style=\"color:#fbbf24\">Globe</span>. This continent is split into four major nations. First, the kingdom of <span style=\"color:#fbbf24\">Salor</span>: the dwarves. There's <span style=\"color:#fbbf24\">Orzug</span>: the Orcs—I wouldn't recommend visiting. The kingdom of <span style=\"color:#fbbf24\">Bourbon</span>, that's the Felines, quite the peculiar specimens. And finally, the elven empire of <span style=\"color:#fbbf24\">Li'ark</span>, the largest nation on the Globe. Got all that ?</i>\"",
       "choices": [
         {
-          "text": "Ask why he pretended you were a bounty hunter to the Dumvir.",
+          "text": "Ask why he pretended you were a bounty hunter to the Mayor.",
           "next": "eden_explains_lie"
         },
         {
@@ -1126,10 +1227,10 @@
       ]
     },
     "eden_explains_medallion": {
-      "text": "\"No, it doesn't ring any bells,\" he says after a moment. \"Very pretty, though. But again, you should avoid waving such a shiny piece of jewelry around in a place like this. You'll attract the wrong kind of attention, if you know what I mean.\" You can only agree with the hunter; you still feel the unsettling elf's eyes fixed on you.",
+      "text": "<u>Eden</u> : \"<i>No, doesn't ring any bells. Sorry. Very pretty, though. But again, you should avoid waving such a shiny piece of jewelry around in a place like this. You'll attract the wrong kind of attention, if you know what I mean.</i>\"",
       "choices": [
         {
-          "text": "Ask why he pretended you were a bounty hunter to the Dumvir.",
+          "text": "Ask why he pretended you were a bounty hunter to the Mayor.",
           "next": "eden_explains_lie"
         },
         {
@@ -1147,7 +1248,7 @@
       ]
     },
     "end_of_question": {
-      "text": "\"Very well, in that case...\" Eden drains his glass in one last gulp and cracks his fingers. \"I believe our business is officially concluded.\" He stands.\n\nAt that exact moment, a young dwarf woman climbs up onto the small stage at the back of the tavern. She hefts a lute almost as big as she is, tunes it, then taps her foot in rhythm. Once she finds her cadence, she starts playing a lively, festive tune. Enchanted by the music, the tavern ignites.",
+      "text": "<u>Eden</u> : \"Very well, in that case...</i> (he drains his glass in one last gulp) <i>I believe our business is officially concluded. You're not the worst company, mind you, but I must get to work. I have a necromancer to hunt down.</i>\"",
       "choices": [
         {
           "text": "Beg for his help. You will not survive alone.",
@@ -1162,23 +1263,35 @@
               "value": "elf"
             },
             {
+              "type": "race",
+              "value": "human"
+            },
+            {
+              "type": "race",
+              "value": "dwarf"
+            },
+            {
+              "type": "race",
+              "value": "half-elf"
+            },
+            {
+              "type": "race",
+              "value": "felinois"
+            },
+            {
               "type": "gender",
               "value": "female"
             }
           ]
         },
         {
-          "text": "Ask what he plans to do now.",
-          "next": "asking_for_eden_plans"
-        },
-        {
-          "text": "Offer to buy one last round.",
-          "next": "asking_for_new_round"
+          "text": "Let him leave and contemplate the daunting task ahead of you.",
+          "next": "eden_trouble"
         }
       ]
     },
     "asking_for_eden_help_female": {
-      "text": "\"Sorry, sweetheart, but I don't do charity,\" Eden says. \"I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. And besides, a pretty lady like you is bound to find a protector in this city if she really wants one.\n\nAs for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell.\" Eden grabs his quiver and heads for the exit.",
+      "text": "<u>Eden</u> : \"<i>Sorry, sweetheart, but I don't do charity. I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. And besides, a pretty lady like you is bound to find a protector in this city if she really wants one. As for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell !</i>\"",
       "choices": [
         {
           "text": "Let him leave and contemplate the daunting task ahead of you.",
@@ -1187,7 +1300,7 @@
       ]
     },
     "asking_for_eden_help_elf": {
-      "text": "\"Sorry, but I don't do charity,\" Eden says. \"I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. You're an elf, in an elven city, inside an elven empire. You'll be like a fish in water.\n\nAs for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell.\" Eden grabs his quiver and heads for the exit.",
+      "text": "<u>Eden</u> : \"<i>Sorry, but I don't do charity. I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. You're an elf, in an elven city, inside an elven empire. You'll be like right at home !\n\nAs for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell !</i>\"",
       "choices": [
         {
           "text": "Let him leave and contemplate the daunting task ahead of you.",
@@ -1196,7 +1309,7 @@
       ]
     },
     "asking_for_eden_help_orc": {
-      "text": "\"Sorry, but I don't do charity,\" Eden says. \"I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. Granted, you're an Orc lost in an ocean of elves. You're not exactly holding all the cards, I'll admit...\n\nAs for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell.\" Eden grabs his quiver and heads for the exit.",
+      "text": "<u>Eden</u> : \"<i>Sorry, but I don't do charity. I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. Granted, you're an Orc in enemy's territory. You're not exactly holding all the cards... What can I do ? As for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell ! </i>\" Eden grabs his quiver and heads for the exit.",
       "choices": [
         {
           "text": "Let him leave and contemplate the daunting task ahead of you.",
@@ -1204,8 +1317,8 @@
         }
       ]
     },
-    "asking_for_eden_help": {
-      "text": "\"Sorry, but I don't do charity,\" Eden says. \"I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. You have clothes on your back, two legs, two arms, and you are in a trading city with opportunities on every corner.\n\nAs for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell.\" Eden grabs his quiver and heads for the exit.",
+    "asking_for_eden_help_human": {
+      "text": "<u>Eden</u> : \"<i>Sorry, but I don't do charity. I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. You have clothes on your back, two legs, two arms, and you are in a trading city with opportunities on every corner. As for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell ! </i>\"",
       "choices": [
         {
           "text": "Let him leave and contemplate the daunting task ahead of you.",
@@ -1213,8 +1326,8 @@
         }
       ]
     },
-    "asking_for_eden_plans": {
-      "text": "\"What I'm going to do? First: a hot meal, a bubble bath, and a soft bed. Then, with what's left of my bounty, I'll hire the services of a charming little elven strumpet for the night. Tomorrow, once I'm well-rested after an evening of debauchery, I'll put together the perfect plan to hunt down that necromancer. Business as usual.\" Eden grabs his quiver and heads for the exit.",
+    "asking_for_eden_help_dwarf": {
+      "text": "<u>Eden</u> : \"<i>Sorry, but I don't do charity. I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. You dwarves have a head for numbers and a nose for gold. You'll figure something out. As for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell ! </i>\"",
       "choices": [
         {
           "text": "Let him leave and contemplate the daunting task ahead of you.",
@@ -1222,17 +1335,28 @@
         }
       ]
     },
-    "asking_for_new_round": {
-      "text": "Eden bursts out laughing. \"You know what? I like you. I don't usually pay for a second round—nor even a first, for that matter—but you helped me land an exceptional contract, after all. The least I can do is buy you another drink. But I insist on choosing your order; the barkeep here makes an exquisite Salorian mead.\" The hunter sets his quiver down on the table and heads to the counter.",
+    "asking_for_eden_help_felinois": {
+      "text": "<u>Eden</u> : \"<i>Sorry, but I don't do charity. I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. You will 'purr' your way out of this. Get it ? 'Purr', because you're a Felinois. No ? Whatever... As for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell ! </i>\"",
       "choices": [
         {
-          "text": "Let him order.",
+          "text": "Let him leave and contemplate the daunting task ahead of you.",
           "next": "eden_trouble"
         }
       ]
     },
+
+    "asking_for_eden_help_half-elf": {
+      "text": "<u>Eden</u> : \"<i>Sorry, but I don't do charity. I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. You're an elf, for the Gods' sake ! Well, at least half of one. As long as you ignore the elven nationalists, the racists and troubles in general, yon won't end up in some strange ghettos. As for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell ! </i>\"",
+      "choices": [
+        {
+          "text": "Let him leave and contemplate the daunting task ahead of you.",
+          "next": "eden_trouble"
+        }
+      ]
+    },
+
     "eden_trouble": {
-      "text": "Suddenly, three elves burst into the tavern with a crash. \"Eden? Where is Eden?!\" one of them bellows. Eden goes pale and immediately sits back down beside you. He tries to make himself as small as possible, burying his face in his hands.\n\n\"Eden?!\" the elf continues. \"I know you're here. Show yourself, you filthy human!\" You lean forward, curious to see the angry elf's face, but the hunter stops you.\n\nHe whispers: \"No... Please, don't move...\" It's painfully obvious that Eden and this elf have unfinished business.",
+      "text": "Suddenly, three elves burst into the tavern with a crash. The most angry one bellows the name of Eden. The hunter  immediately sits back down beside you and tries to make himself as small as possible, burying his face in his hands. You lean forward, curious to see the angry elf's face, but Eden stops you. It's painfully obvious that he and this elf have unfinished business.",
       "choices": [
         {
           "text": "Tell the elf Eden is right in front of you.",
@@ -1251,7 +1375,7 @@
       ]
     },
     "revealing_eden_location": {
-      "text": "\"What are you doing, you idiot?!?\" the hunter hisses under his breath.\n\n\"Ah! There you are, hiding in the shadows as usual,\" the angry elf exclaims. The trio encircles your table. The outraged elf slams his fist onto the wood.\n\n\"Coming back to Kelia's Crossing was a fatal mistake, hunter. Your last one. My city will be your grave.\" Eden clears his throat, a strained smile creeping onto his face. You just know it: he's about to make things worse.",
+      "text": "The hunter hisses under his breath. The three elves encircle your table, and the outraged elf slams his fist onto the wood. He threatens Eden, tells him that coming back to Kelia's Crossing was a mistake after what he has done. Eden clears his throat, a strained smile creeping onto his face. You just know it: he's about to make things worse.",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1266,14 +1390,14 @@
       ]
     },
     "eden_punched": {
-      "text": "\"Before we start throwing punches, I'd like you to answer one question: did I rob you, or did I cuckold you? In all honesty, I have no idea.\" The elf grabs Eden by the collar.\n\n\"My Aila! She told me everything! How dare you?\"\n\n\"Ah, so cuckold then—\" The punch lands before he can finish. The elf's powerful hook sends Eden crashing onto another table, sending it flying. Then his attention turns to you.",
+      "text": "Eden asks this simple question : is it about money or someone's wife ? The elf goes livid and grabs the bounty hunter by the collar. Mumbles something about an 'Aila'—the wife, you wager. Eden grins. A punch lands before he can even utter a single word. His powerful hook sends him crashing onto another table. The enraged elf then turns his attention to you.",
       "choices": [
         {
           "text": "Insult him.",
           "next": "insulting_the_elf"
         },
         {
-          "text": "Raise your hands: you claim you don't even know this man.",
+          "text": "Raise your hands: claim you don't even know this man.",
           "next": "hands_in_the_air"
         },
         {
@@ -1283,14 +1407,14 @@
       ]
     },
     "eden_punched_female": {
-      "text": "\"Before we start throwing punches, I'd like you to answer one question: did I rob you, or did I cuckold you? In all honesty, I have no idea.\" The elf grabs Eden by the collar.\n\n\"My Aila! She told me everything! How dare you?\"\n\n\"Ah, so cuckold then—\" The punch lands before he can finish. The elf's powerful hook sends Eden crashing onto another table, sending it flying. Then his attention turns to you.",
+      "text": "Eden asks this simple question : is it about money or someone's wife ? The elf goes livid and grabs the bounty hunter by the collar. Mumbles something about an 'Aila'—the wife, you wager. Eden grins. A punch lands before he can even utter a single word. His powerful hook sends him crashing onto another table. The enraged elf then turns his attention to you.",
       "choices": [
         {
           "text": "Insult him.",
           "next": "insulting_the_elf"
         },
         {
-          "text": "Raise your hands: you claim you don't even know this man.",
+          "text": "Raise your hands: claim you don't even know this man.",
           "next": "hands_in_the_air"
         },
         {
@@ -1304,7 +1428,7 @@
       ]
     },
     "play_along_keep_silent": {
-      "text": "The elves scour every corner of the tavern in search of the hunter. One of them passes right beside him but doesn't seem to recognize him. Eden lets out a sigh of relief, thinking he's out of danger.\n\nBut the elf comes back, something about Eden having caught his eye. His ears, clumsily hidden behind his hair—round and flat, like a human's.\n\n\"He's here!\" the elf shouts to his companions. Eden curses under his breath. The trio quickly encircles your table. No way to run for our poor hunter.",
+      "text": "The elves scour every corner of the tavern in search of the hunter. One of them passes right beside him but doesn't seem to recognize him. Eden lets out a sigh of relief, thinking he's out of danger. But the elf comes back, something about Eden having caught his eye : his ears, clumsily hidden behind his hair—round and flat. Human ears. The three elves quickly encircle your table. No way to run for our poor hunter.",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1319,14 +1443,14 @@
       ]
     },
     "eden_punched_alt": {
-      "text": "The yelling elf yanks Eden's hair back, fully revealing his face.\n\n\"There you are, miserable human. Lurking in the dark like the vermin you are!\" The hunter tries to defuse the situation:\n\n\"Whatever wrong I may have done, know, my good sir, that it was not intentional. Let's talk—\"\n\n\"You think you can sleep with my wife and walk away unscathed, scum?\" the elf growls.\n\n\"Oh... Aila... In my defense, she started it—\" The cuckolded elf drives his fist straight into Eden's nose, sending him flying onto another table. Then he turns toward you.",
+      "text": "The yelling elf yanks Eden's hair back, fully revealing his face. The hunter tries to defuse the situation : whatever he did, he's sorry. But it's not enough. The elf mutters something about an 'Aila'—the wife. Eden smirks, says that she started it. The cuckolded elf drives his fist straight into Eden's nose, sending him flying onto another table. Then he turns toward you.",
       "choices": [
         {
           "text": "Insult him.",
           "next": "insulting_the_elf"
         },
         {
-          "text": "Raise your hands: you claim you don't even know this man.",
+          "text": "Raise your hands: claim you don't even know this man.",
           "next": "hands_in_the_air"
         },
         {
@@ -1336,14 +1460,14 @@
       ]
     },
     "eden_punched_alt_female": {
-      "text": "The yelling elf yanks Eden's hair back, fully revealing his face.\n\n\"There you are, miserable human!\" The hunter tries to defuse the situation:\n\n\"Whatever wrong I may have done, know, my good sir, that it was not intentional. Let's talk—\"\n\n\"You think you can sleep with my wife and walk away unscathed, scum?\" the elf growls.\n\n\"Oh... Aila... In my defense, she started it—\" The cuckolded elf drives his fist straight into Eden's nose, sending him flying onto another table. Then he turns toward you.",
+      "text": "The yelling elf yanks Eden's hair back, fully revealing his face. The hunter tries to defuse the situation : whatever he did, he's sorry. But it's not enough. The elf mutters something about an 'Aila'—the wife. Eden smirks, says that she started it. The cuckolded elf drives his fist straight into Eden's nose, sending him flying onto another table. Then he turns toward you.",
       "choices": [
         {
           "text": "Insult him.",
           "next": "insulting_the_elf"
         },
         {
-          "text": "Raise your hands: you claim you don't even know this man.",
+          "text": "Raise your hands: claim you don't even know this man.",
           "next": "hands_in_the_air"
         },
         {
@@ -1357,33 +1481,16 @@
       ]
     },
     "play_along_keep_silent_human": {
-      "text": "The elves scour every corner of the tavern in search of the hunter. Because you are facing the entrance—and because you are human—one of them spots you quickly.\n\n\"Boss, 'that him?\" he asks the shouting elf, grabbing your arm. The enraged elf studies your face, then shakes his head; you don't match the description in his mind. His gaze shifts to your companion instead.\n\nHe grabs Eden's hair and yanks it back, fully revealing the hunter's face and his plastic smile.",
+      "text": "The elves scour every corner of the tavern in search of the hunter. Because you are facing the entrance—and because you are human—the angry elf spots you quickly. He studies your face, then shakes his head; you don't match the description in his mind. His gaze shifts to your companion instead. He grabs Eden's hair and yanks it back, fully revealing the hunter's face and his plastic smile.",
       "choices": [
         {
           "text": "[CONTINUE]",
-          "next": "play_along_keep_silent_human_cont"
-        }
-      ]
-    },
-    "play_along_keep_silent_human_cont": {
-      "text": "\n\n\"There you are, miserable human!\" The hunter tries to defuse the situation.\n\n\"Whatever wrong I may have done, know, my good sir, that it was not intentional. Let's talk—\"\n\n\"You think you can sleep with my wife and walk away unscathed, scum?\" the elf growls.\n\n\"Oh... Aila... In my defense, she was the one who started it. She needed to be satisfied—\" The cuckolded elf drives his fist straight into Eden's nose, sending him flying onto another table. Then he turns toward you.",
-      "choices": [
-        {
-          "text": "Insult him.",
-          "next": "insulting_the_elf"
-        },
-        {
-          "text": "Raise your hands: you claim you don't even know this man.",
-          "next": "hands_in_the_air"
-        },
-        {
-          "text": "Try to run.",
-          "next": "try_to_run"
+          "next": "eden_punched_alt"
         }
       ]
     },
     "insulting_the_elf": {
-      "text": "You unleash a torrent of insults. In response, the cuckolded elf grabs you violently by the throat and raises his fist high in the air, ready to smash it into your face.\n\nBut the punch never lands. Someone has just stepped into the conflict. You recognize your savior: the grim-looking elf who had been staring at your medallion.\n\n\"Hands off. I have a contract on this one's head,\" he says, referring to you.\n\nYou finally understand why that elf watched you so intently: he's an assassin, and you are his target!",
+      "text": "You unleash a torrent of insults. In response, the cuckold grabs you violently by the throat and raises his fist high in the air, ready to smash it into your face. But the grim-looking elf, the one who had been staring at your medallion from afar, intervenes. He orders the angry husband to back off, that you are his 'target'. You finally understand why that elf watched you so intently: he's an assassin !",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1392,7 +1499,7 @@
       ]
     },
     "insulting_the_elf_cont": {
-      "text": "Blinded by rage, the cuckold ignores the assassin’s words and answers with a brutal headbutt that sends him crashing onto a dwarf’s table. Enraged, the dwarf strikes back, while Eden joins in by sucker-punching one of the elves. The bard falls silent, someone shouts “Fight,” tables are shoved aside, and the assassin, the dwarf, and the elves square up. Eden glances at you: you’re in the brawl now.",
+      "text": "Blinded by rage, the cuckold answers with a brutal headbutt that sends the assassin crashing onto a dwarf’s table. Pissed, the dwarf strikes back. Eden joins the fray by sucker-punching one of the elves' companion.<br> Someone shouts 'Fight !'. Tables are shoved aside. The assassin, the dwarf, and the elves square up. Eden glances at you: whether you like it or not, you’re in the brawl now.",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1401,7 +1508,7 @@
       ]
     },
     "hands_in_the_air": {
-      "text": "You raise your hands, insisting you don't even know this man. But it doesn't matter. You were sitting at Eden's table; that makes you an accomplice by default.\n\nA hand shoots out of nowhere and immobilizes the cuckold just as he's about to punch you. That hand belongs to the grim-looking elf, who had been staring at your medallion.\n\n\"Hands off. I have a contract on this one's head,\" he says, referring to you.\n\nYou realize your mistake. <strong>This elf did not come to save you. He's an assassin, and you are his target.</strong>",
+      "text": "You raise your hands, insisting you don't know this man. But it doesn't matter. You were sitting at Eden's table; that makes you an accomplice by default. A hand shoots out of nowhere and immobilizes the cuckold just as he's about to punch you. That hand belongs to the grim-looking elf, who had been staring at your medallion. He threatens the husband, refering to you as his 'target'. You realize your mistake: this mysterious elf did not come to save you—he's an assassin !</strong>",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1410,7 +1517,7 @@
       ]
     },
     "hands_in_the_air_cont": {
-      "text": "The cuckold seethes with rage. In a swift movement, he sends the assassin sprawling onto the neighboring table—a dwarf's. The dwarf, outraged at seeing his drink spilled, punches the assassin in turn. One of the cuckold's companions suddenly takes a fist to the face from Eden, who clearly isn't finished yet.\n\nThe bard falls silent. \"Fight!\" someone shouts. Tables are shoved aside to clear space: the assassin, the dwarf, and the trio of elves all square up. Eden shoots you a conspiratorial look; you are now part of this brawl.",
+      "text": "The cuckold seethes with rage. In a swift movement, he sends the assassin sprawling onto the neighboring table—a dwarf's who, outraged at seeing his drink spilled, punches the assassin in return. One of the cuckold's companions is punched by Eden, who clearly isn't done yet.<br> Someone shouts 'Fight !'. Tables are shoved aside. The assassin, the dwarf, and the elves square up. Eden glances at you: whether you like it or not, you’re in the brawl now.",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1419,7 +1526,7 @@
       ]
     },
     "try_to_run": {
-      "text": "You leap from your seat and dash toward the exit. Not fast enough: the two other elves quickly catch you and pin your arms.\n\nThe cuckold drives a brutal punch into your stomach, then another into your face. But an unknown figure joins the fray and stops the third blow from ever landing. It's the grim-looking elf who had been staring at your medallion. An ally, maybe?\n\n\" Hands off. I have a contract on this one's head,\" he says, referring to you.\n\n You realize he is an assassin, and the trio of elves an obstacle between him and his target—you.",
+      "text": "You leap from your seat and dash toward the exit. Not fast enough: the two other elves quickly catch you and pin your arms. The cuckold drives a brutal punch into your stomach, then another into your face. An unknown figure joins the fray and stops the third blow from ever landing. It's the grim-looking elf who had been staring at your medallion. An ally, maybe? Not quite, as this new participant refers to you as his 'target'. You realize he is an assassin, and the trio of elves an obstacle between him and his target—you.",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1428,7 +1535,7 @@
       ]
     },
     "try_to_run_cont": {
-      "text": "The cuckold, beside himself with rage, tackles the assassin to the ground. They crash onto a dwarf's table. The dwarf, furious at his spilled pint, answers by punching the assassin in return. Eden, now back on his feet, breaks a chair over the back of one of the elves who had been holding you.\n\nThe bard stops her song. \"Fight!\" someone shouts. Tables are shoved aside to clear space: the assassin, the dwarf, and the trio of elves all square up. Eden shoots you a conspiratorial look; you are now part of this brawl.",
+      "text": "The cuckold, beside himself with rage, tackles the assassin like a bull. They crash onto a dwarf's table. The dwarf, furious about his spilled ale, expresses his displeasure with a nose-breaking punch that sends the assassin flying again. Eden, now back on his feet, breaks a chair on one of the husband's companion, freeing you in the process.<br> Someone shouts 'Fight !'. Tables are shoved aside. The assassin, the dwarf, and the elves square up. Eden glances at you: whether you like it or not, you’re in the brawl now.",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1437,7 +1544,7 @@
       ]
     },
     "screaming_for_help_woman": {
-      "text": "You let out a shrill scream. Surely someone will rush to help a defenseless woman? Unfortunately, the general noise of the tavern drown out your cries. The cuckolded elf silences you with the back of his hand. You fall to the floor.\n\nAn unknown figure suddenly comes to your aid. It's the grim-looking elf who had been staring at your medallion.\n\n\" Hands off. I have a contract on this one's head,\" he says, referring to you.\n\nThen it clicks. He wasn't staring at you because he found you attractive. He was staring because you are his target. This man is an assassin !",
+      "text": "You let out a shrill scream. Surely someone will rush to help a defenseless woman? Unfortunately, drunks don't make the best gentlemen—nobody comes to your aid. The cuckolded elf silences you with a backslap. The grim-looking elf, the one who had been staring at your medallion, intervenes: he won't let the husband have at it, because he has a 'contract on your head'. It clicks with you : this elf is an assassin, and you are his target !",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1446,7 +1553,7 @@
       ]
     },
     "screaming_for_help_woman_cont": {
-      "text": "The cuckold growls. With a lightning-fast uppercut, he sends the assassin crashing onto a dwarf's table. The dwarf, furious at his spilled pint, punches the assassin in turn. Eden joins the chaos and smashes a glass on the cuckold's skull in retribution.\n\nThe bard stops her song. \"Fight!\" someone shouts. Tables are shoved aside to clear space: the assassin, the dwarf, and the trio of elves all square up. Eden shoots you a conspiratorial look; you are now part of this brawl.",
+      "text": "The cuckold growls. With a lightning-fast uppercut, he sends the assassin crashing onto a dwarf's table. The dwarf, furious that he just spilled his hard-earned ale, punches the assassin too. Eden joins the chaos and smashes a glass on the cuckold's skull in retribution.<br> Someone shouts 'Fight !'. Tables are shoved aside. The assassin, the dwarf, and the elves square up. Eden glances at you: whether you like it or not, you’re in the brawl now.",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1455,14 +1562,14 @@
       ]
     },
     "remembering_how_to_fight": {
-      "text": "This turn of events unlocks another part of your old self. A sudden wave of forgotten knowledge floods your mind. You have been in situations like this before—more than once. And you fought. That's it: you remember how to fight! The dwarf hefts a table as if it weighs nothing and hurls it at the cuckold's two companions. Eden grabs a nearby pint, downs it in one gulp, then charges the cuckold head-on. The assassin weaves through the chaos, retrieves his blade from the floor, and blocks every way out. He has no intention of letting you leave alive.",
+      "text": "This turn of events unlocks another part of your old self. You have been in situations like this before—more than once. That's it: you remember how to fight ! The dwarf hefts a table as if it weighs nothing and hurls it at the cuckold's two companions. Eden grabs a nearby pint, downs it in one gulp, then charges the cuckold head-on. The assassin retrieves his blade from the floor blocks every way out. He has no intention of letting you leave alive, but you have no intention of dying today.",
       "choices": [
         {
           "text": "[START COMBAT]",
           "next": "bar_fight_combat",
           "combat_started": true,
           "enemy_id": "abc123",
-          "ost": "bar_fight_music"
+          "ost": "tavernBrawl"
         }
       ]
     },
@@ -1495,7 +1602,7 @@
       ]
     },
     "bard_save": {
-      "text": "But his blade never reaches you: the assassin is struck full force by a lightning spell. You turn around  to see the young bard, who's using her lute as a magical focus. With a single chord, she casts another spell—a sleep enchantment that hypnotizes the three elves and stops them cold. Wounded and cornered, the assassin flees. The fight is over. An uneasy silence falls over the tavern, all eyes fixed on you, waiting for your reaction.",
+      "text": "But his blade never reaches you: the assassin is struck full force by a lightning spell. You turn around to see a young dwarf bard using her lute as a magical focus. With a single chord, she casts another spell—a sleep enchantment that hypnotizes the three elves and stops them cold. Wounded and cornered, the assassin flees. The fight is over. An uneasy silence falls over the tavern, all eyes fixed on you, waiting for your reaction.",
       "choices": [
         {
           "text": "Apologize for the inconvenience and urge them to go about their business.",
@@ -1506,12 +1613,12 @@
           "next": "fight_over_silent"
         },
         {
-          "text": "Daring one of them to say something: you're still itching for a fight. <span style=\"color:yellow\">(Charisma DC 15)</span>",
+          "text": "Daring one of them to say something: you're still itching for a fight. <span style=\"color:#fbbf24\">(Charisma DC 18)</span>",
           "next": "fight_over_provoke",
           "fail": "fight_over_provoke_fail",
           "check": "cha",
           "xp": 15,
-          "dc": 15
+          "dc": 18
         }
       ]
     },
@@ -1527,7 +1634,7 @@
           "next": "fight_over_silent"
         },
         {
-          "text": "Daring one of them to say something: you're still itching for a fight. <span style=\"color:yellow\">(Charisma DC 15)</span>",
+          "text": "Daring one of them to say something: you're still itching for a fight. <span style=\"color:#fbbf24\">(Charisma DC 15)</span>",
           "next": "fight_over_provoke",
           "fail": "fight_over_provoke_fail",
           "check": "cha",
@@ -1552,7 +1659,7 @@
           "next": "fight_over_silent"
         },
         {
-          "text": "Daring one of them to say something: you're still itching for a fight. <span style=\"color:yellow\">(Charisma DC 15)</span>",
+          "text": "Daring one of them to say something: you're still itching for a fight. <span style=\"color:#fbbf24\">(Charisma DC 15)</span>",
           "next": "fight_over_provoke",
           "fail": "fight_over_provoke_fail",
           "check": "cha",
@@ -1656,7 +1763,7 @@
       ]
     },
     "eden_praises_[forest_entry+killing_regalus]": {
-      "text": "Outside, Eden says nothing. He studies you from head to toe, clearly unsettled by your display in the tavern, his mind racing as he pieces together a plan you will inevitably be part of.\n\n\"I misjudged you,\" he finally says. \n\n\"When I met you in that web-choked forest, I took you for a helpless wimp. But after what I saw in the tavern… and the way you killed Regalus… I’m impressed. You have the makings of a true hunter.\"",
+      "text": "<u>Eden</u> : \"<i>I gotta admit, I misjudged you. When I met you in that web-choked forest, I took you for a helpless wimp. But after what I saw in the tavern… and the way you executed Regalus with a firm hand… I’m impressed. You have the makings of a true hunter.</i>\"",
       "choices": [
         {
           "text": "Tease him—is it a praise you're hearing?",
@@ -1673,7 +1780,7 @@
       ]
     },
     "eden_praises_[forest_entry+sparing_regalus]": {
-      "text": "Outside, Eden says nothing. He studies you from head to toe, clearly unsettled by your display in the tavern, his mind racing as he pieces together a plan you will inevitably be part of.\n\n\"I misjudged you,\" he finally says. \n\n\"When I met you in that web-choked forest, I took you for a helpless wimp. But after what I saw in the tavern… I’m impressed. You have the makings of a true hunter.\"",
+      "text": "<u>Eden</u> : \"<i>I gotta admit, I misjudged you. When I met you in that web-choked forest, I took you for a helpless wimp. But after what I saw in the tavern… I’m impressed. You have the makings of a true hunter.</i>\"",
       "choices": [
         {
           "text": "Tease him—is it a praise you're hearing?",
@@ -1690,7 +1797,7 @@
       ]
     },
     "eden_praises_[bridge_start+killing_regalus]": {
-      "text": "Outside, Eden says nothing. He studies you from head to toe, clearly unsettled by your display in the tavern, his mind racing as he pieces together a plan you will inevitably be part of.\n\n\"I misjudged you,\" he finally says. \n\n\"When I met you in the bandits’ ambush, I took you for a helpless wimp. But after what I saw in the tavern… and the way you killed Regalus… I’m impressed. You have the makings of a true hunter.\"",
+      "text": "<u>Eden</u> : \"<i>I gotta admit, I misjudged you. When I met you in the bandits’ ambush, I took you for a helpless wimp. But after what I saw in the tavern… and the way you killed Regalus… I’m impressed. You have the makings of a true hunter.</i>\"",
       "choices": [
         {
           "text": "Tease him—is it a praise you're hearing?",
@@ -1707,7 +1814,7 @@
       ]
     },
     "eden_praises_[bridge_start+sparing_regalus]": {
-      "text": "Outside, Eden says nothing. He studies you from head to toe, clearly unsettled by your display in the tavern, his mind racing as he pieces together a plan you will inevitably be part of.\n\n\"I misjudged you,\" he finally says. \n\n\"When I met you in the bandits’ ambush, I took you for a helpless wimp. But after what I saw in the tavern… I’m impressed. You have the makings of a true hunter.\"",
+      "text": "<u>Eden</u> :  \"<i>I gotta admint, I misjudged you. When I met you in the bandits’ ambush, I took you for a helpless wimp. But after what I saw in the tavern… I’m impressed. You have the makings of a true hunter.</i>\"",
       "choices": [
         {
           "text": "Tease him—is it a praise you're hearing?",
@@ -1724,7 +1831,7 @@
       ]
     },
     "eden_flirts_back": {
-      "text": "\"And what if it was?\"\n the hunter replies tactfully. \n\"Don’t get used to it, though. Either way, I think we should stick together—you and me. We could help each other. I wouldn’t say no to an experienced fighter at my side when I face an evil necromancer and his undead army, and you’ll need someone watching your back…\"",
+      "text": "<u>Eden</u> : \"<i>And what if it was ? Don’t get used to it, though. Either way, I think we should stick together—you and me. We could help each other. I wouldn’t say no to an experienced fighter at my side when I face an evil necromancer and his undead army, and you’ll need someone watching your back…</i>\"",
       "choices": [
         {
           "text": "Say that you don't need his help.",
@@ -1741,7 +1848,7 @@
       ]
     },
     "eden_uses_irony": {
-      "text": "\"You’re welcome, my new friend,\"\n he says with a touch of irony. \"But if you really want to thank me, stay by my side for a while. Few people fight the way you do. Having you next to me would improve my odds against that necromancer. Ending up as human compost doesn’t appeal to me. And you’ll need an exceptional mercenary like me to cover your back—the tavern proved that.\"",
+      "text": "<u>Eden</u> : \"<i>Alright, cool it with the sarcasm. Anyway, you should stay by my side for a while. Few people fight the way you do. Having you next to me would improve my odds against that necromancer. Ending up as human compost doesn’t sit well with me. And you’ll need an exceptional mercenary like me to cover your back—the tavern incident proved that.</i>\"",
       "choices": [
         {
           "text": "Say that you don't need his help.",
@@ -1758,7 +1865,7 @@
       ]
     },
     "eden_responds_to_insult": {
-      "text": "\"Fair enough. I had that coming,\"\n he says with a grin. \n\"Jokes aside, you need me as much as I need you. Let’s work together. I’m about to face a necromancer who can stand against an army, and you… you’ve got a target as big as the Azure Tower on your head. The knife-wielding elf was just the first.\"",
+      "text": "<u>Eden</u> : \"<i>Fair enough, I had that coming. Jokes aside, you need me as much as I need you. Let’s work together. I’m about to face a necromancer who can stand against an army, and you… you’ve got a target as big as the Azure Tower on your head. The knife-wielding elf was just the first.</i>\"",
       "choices": [
         {
           "text": "Say that you don't need his help.",
@@ -1775,7 +1882,7 @@
       ]
     },
     "eden_talks_assassin": {
-      "text": "\"Did losing your memory cost you your ability to think? The fourth elf—the one you fought—was after you, not me. Someone wealthy paid that assassin handsomely to kill you. If I were you, I’d track down the source and remove them. Hard to do if you’re dead first. That assassin was only the beginning. You need me.\"",
+      "text": "<u>Eden</u> : \"<i>Did losing your memory cost you your ability to think? The fourth elf—the one you fought—was after you, not me. Someone paid that assassin handsomely to kill you. If I were you, I’d track down the source and 'remove' them. Hard to do that if you’re dead. That assassin was only the beginning. You need me.</i>\"",
       "choices": [
         {
           "text": "Question his motivation. You know your \"why\", but not his.",
@@ -1784,7 +1891,7 @@
       ]
     },
     "eden_talks_assassin_alt": {
-      "text": "\"You...\", he stops, then : \n\"I wonder how long you and that tongue of yours are going to fare against the ever-coming wave of assassins approaching. That's right, the elf that almost rip your guts apart : he's an assassin, paid handsomely by someone really powerful to kill you. If you go at this alone, you're not going to last a month—a week, without me. You need eyes behind your back. You need me.\"",
+      "text": "<u>Eden</u> :  \"<i>You...I wonder how long you and that tongue of yours are going to fare against the ever-coming wave of assassins approaching. That's right, the elf that almost rip your guts apart : he's an assassin, paid handsomely by someone really powerful to kill you. If you go at this alone, you're not going to last a month—a week, without me. You need eyes behind your back. You need me.</i>\"",
       "choices": [
         {
           "text": "Question his motivation. You know your \"why\", but not his.",
@@ -1793,7 +1900,7 @@
       ]
     },
     "eden_explains_motivation": {
-      "text": "\"When I was younger, I had a dream. This dream involved the Li'ark army. So, I enlisted. I had the talent and could’ve risen fast. But blindly obeying orders from who-knows-who, for gods-know-what? No thanks. I left. I gave up on my dream and started hunting, trading ideals for coin. I always worked alone—and it worked. But the tavern fight… fighting side by side… I haven’t felt that alive in a very long time. I want my dream back.\"",
+      "text": "<u>Eden</u> : \"When I was younger, I had a dream. This dream involved the Li'ark army. So, I enlisted. I had the talent and could’ve risen fast. But blindly obeying orders from who-knows-who, for gods-know-what? No thanks. I left. I gave up on my dream and started hunting, trading ideals for coin. I always worked alone—and it worked. But the tavern fight… fighting side by side… I haven’t felt that alive in a very long time.</i>\"",
       "choices": [
         {
           "text": "Dig deeper : what's that dream of his ?",
@@ -1810,7 +1917,7 @@
       ]
     },
     "eden_explains_dream": {
-      "text": "\"Questmaker. That’s the dream. A guild answering to no authority but justice. An independent squad—free, incorruptible, and fair. But to make a dream like that real, I need two things. First: money. The Dumvir’s contract would give me enough to officially get the business started. Second: a business partner. The law is clear—a guild must consist of at least two people. I’m the first, and the second is…\" Eden gives you a pointed look, waiting for you to finish the sentence.",
+      "text": "<u>Eden</u> : \"<i><span style=\"color:#fbbf24\">Questmaker</span>. That’s the dream. A guild answering to no authority but justice. An independent force—free, incorruptible, and fair. But to make a dream like that real, I need two things. First : money. The Mayor’s contract would give me enough to officially get the business started. Second : a business partner. The law is clear—a guild must consist of at least two people. I’m the first, and the second is…</i>\"",
       "choices": [
         {
           "text": "Guess you're the \"second\".",
@@ -1827,7 +1934,7 @@
       ]
     },
     "eden_explains_dream_pissed": {
-      "text": "\"Questmaker, you impatient imbecile. A guild answering to no authority but justice. An independent squad—free, incorruptible, and fair. But to make a dream like that real, I need two things. First: money. The Dumvir’s contract would give me enough to officially get the business started. Second: a business partner. The law is clear—a guild must consist of at least two people. I’m the first, and the second is…\" Eden gives you a pointed look, waiting for you to finish the sentence.",
+      "text": "<u>Eden</u> : \"<i><span style=\"color:#fbbf24\">Questmaker</span>, you impatient imbecile. A guild answering to no authority but justice. An independent force—free, incorruptible, and fair. But to make a dream like that real, I need two things. First: money. The Mayor’s contract would give me enough to officially get the business started. Second: a business partner. The law is clear—a guild must consist of at least two people. I’m the first, and the second is…</i>\"",
       "choices": [
         {
           "text": "Guess you're the \"second\".",
@@ -1844,7 +1951,7 @@
       ]
     },
     "eden_recruits_player": {
-      "text": "\"Let’s be clear: I won’t pay you—for a long time. I also can’t guarantee you a distant, painless death. But I can promise you one thing: my loyalty. Against the mystery of your memory, against the next assassin trying to earn his keep… against anything. My loyalty, without limit. So—will you join me? Will you become the second official member of Questmaker?\"",
+      "text": "<u>Eden</u> : \"<i>Let’s be clear: I won’t pay you—for a long time. I also can’t guarantee you a distant, painless death. But I can promise you one thing: my loyalty. Against the mystery of your memory, against the next assassin trying to earn his keep… against anything. My loyalty, without limit. So—will you join me? Will you become the second official member of Questmaker ? </i>\"",
       "choices": [
         {
           "text": "Say that it's the lamest sale pitch ever. You're in",
@@ -1861,10 +1968,10 @@
       ]
     },
     "eden_recruits_player_alt": {
-      "text": "\"Who? You, you gloomy idiot. Let’s be clear: I won’t pay you—for a long time. I also can’t promise you a distant, painless death. But I can promise you one thing: my loyalty. Against the riddle of your lost memory, against the next assassin looking to make a living… against everything. My unwavering loyalty. So—will you join me? Will you become the second official member of Questmaker?\"",
+      "text": "<u>Eden</u> : \"<i>'Who'? You, you gloomy idiot. Let’s be clear: I won’t pay you—for a long time. I also can’t promise you a distant, painless death. But I can promise you one thing: my loyalty. Against the riddle of your lost memory, against the next assassin looking to make a living… against everything. My unwavering loyalty. So—will you join me? Will you become the second official member of Questmaker ? </i>\"",
       "choices": [
         {
-          "text": "Say that it's the lamest sale pitch ever. You're in",
+          "text": "Say that it's the lamest sale pitch ever. You're in.",
           "next": "eden_gives_journal"
         },
         {
@@ -1878,7 +1985,7 @@
       ]
     },
     "eden_gives_journal": {
-      "text": "\"That’s probably the best decision you’ve made today.” Eden slaps your shoulder hard and nods, his awkward way of showing gratitude. “No time to celebrate—we’ve got work to do. That necromancer won’t stop himself. I have a plan—well, the start of one—but first…” He pulls a battered journal from his satchel and hands it to you. “Use it to track your quests. Between us, you need it most.\"\n He winks at you mockingly.",
+      "text": "<u>Eden</u> : \"<i>That’s probably the best decision you’ve made today. No time to celebrate—we’ve got work to do. That necromancer won’t stop himself. I have a plan (well, the start of one), but first... Here. This is a journal. Use it to track you what needs tracking. Between us, you need it most.<br> Now that that’s settled, let’s get to work, my dear partner. Questmaker has its first contract.</i><br><span style=\"color:#fbbf24\">You have unlocked the Journal !</span>\"",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1887,7 +1994,7 @@
       ]
     },
     "end_campaign": {
-      "text": "“Now that that’s settled, let’s get to work, my dear partner. Questmaker has its first contract.” You follow Eden toward the nearest inn, more confident than when you woke in pain on the beach, yet still haunted by unease. Someone wants you dead for a life you no longer remember, and your only clue is the shadowy medallion at your neck. <strong>Whatever its secret is, it has already begun to stir.</strong>",
+      "text": "You follow Eden toward the nearest inn, more confident than when you woke in pain on the beach, yet still haunted by unease. Someone wants you dead for a life you no longer remember, and your only clue is the shadowy medallion at your neck.<br> <strong>Whatever its secret is, it has already begun to stir.</strong>",
       "choices": [
         {
           "text": "[END]",
@@ -1928,7 +2035,7 @@
         {
           "text": "[CONTINUE]",
           "next": "assassin_lunges_at_you",
-          "ost": "backgroundMusic"
+          "ost": "backgroundMedievalMusic"
         }
       ]
     },
