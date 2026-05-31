@@ -5,15 +5,14 @@ import { useState} from "react";
 import localFont from 'next/font/local'
 
 
-import CombatChoices from "./combatChoices";
+import CombatChoices from "./CombatChoices";
 import InventoryCombatModal from "./InventoryCombatModal";
 
 // used to interpret HTML in JSON
 import parse from "html-react-parser";
 import { useEffect } from "react";
 
-import useSound from "use-sound";
-
+import TempHitpointsBar from "./TempHitpointsBar";
 import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useCombatStore } from "@/stores/useCombatStore";
 import Engine from "@/classes/Engine";
@@ -29,9 +28,7 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
   const nbOfTurn = useCombatStore((state) => state.nbOfTurn);
   const hasRoundStarted = useCombatStore((state) => state.hasRoundStarted);
   const isInventoryOpened = useCombatStore((state) => state.isInventoryOpened);
-  const soundEffect = useCombatStore((state)=> state.soundEffect);
-  const playSoundEffect = useCombatStore((state)=> state.playSoundEffect);
-  
+  const tempPlayerData = useCombatStore((state) => state.tempPlayerData)
 
   // local states
   const [loader, setLoader] = useState(false);
@@ -40,7 +37,6 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
     enemy?.hp && enemyFullHealth ? enemy.hp / enemyFullHealth : undefined;
 
   // player store
-  const character = useCharacterStore((state) => state.character);
 
   //loader
   useEffect(() => {
@@ -78,20 +74,21 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
           <div id="healthBars" className="flex items-center h-[70%] ">
             <div id="userSide" className="w-[80%] lg:w-[50%] mx-auto">
               <div className="text-center flex flex-col">
-                {character?.username ?? "You"}
-                <span>AC : {character?.ac}</span>
+                {tempPlayerData?.username ?? "You"}
+                <span>AC : {tempPlayerData?.ac}</span>
                 <span>
                   {Math.floor(
-                    character?.hp
-                      ? character.hp - character.damage_taken
-                      : 10 - (character?.damage_taken ?? 0),
+                    tempPlayerData?.hp
+                      ? tempPlayerData.hp - tempPlayerData.damage_taken
+                      : 10 - (tempPlayerData?.damage_taken ?? 0),
                   ) +
                     "/" +
-                    character?.hp}
+                    tempPlayerData?.hp}
                 </span>
               </div>
               <div className="w-[70%] mx-auto">
-                <HitpointsBar />
+                {/* <HitpointsBar /> */}
+                <TempHitpointsBar gameplay={gameplay} />
               </div>
             </div>
 
@@ -132,12 +129,10 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
         </div>
         <CombatChoices
           gameplay={gameplay}
-          setSoundEffectAction={playSoundEffect}
         />
         {isInventoryOpened && (
           <InventoryCombatModal
             gameplay={gameplay}
-            setSoundEffectAction={playSoundEffect}
           />
         )}
       </section>

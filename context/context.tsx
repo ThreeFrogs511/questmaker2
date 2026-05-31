@@ -7,12 +7,15 @@ import prepareQuests from "@/lib/prepareQuests";
 import { useJournalStore } from "@/stores/useJournalStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
 import { useCharacterStore } from "@/stores/useCharacterStore";
+import { useCombatStore } from "@/stores/useCombatStore";
 import fetchAllData from "@/lib/me/fetchAllData";
 import isDatabaseQueryNecessary from "@/lib/me/isDataQueryNecessary";
 
 interface isDataLoadedType {
   isPlayerDataLoaded: boolean;
   isInventoryDataLoaded: boolean;
+  isMovesetsDataLoaded:boolean;
+  
 }
 
 interface userContextType {
@@ -29,34 +32,36 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const pathname = usePathname();
   const login = useUserStore((state) => state.login);
   const setIsMenuOpen = useUserStore((state) => state.setIsMenuOpen);
-  const setAreQuestsLoaded = useJournalStore(
-    (state) => state.setAreQuestsLoaded,
-  );
+  const setAreQuestsLoaded = useJournalStore((state) => state.setAreQuestsLoaded,);
   const questsAreLoaded = useJournalStore((state) => state.areQuestsLoaded);
   const updateInventory = useInventoryStore((state) => state.updateInventory);
-
+  const character = useCharacterStore((state)=> state.character)
   const hydrateCharacter = useCharacterStore((state) => state.hydrateCharacter);
+  const hydrateMovesets = useCombatStore((state)=> state.hydrateMovesets);
   // states for user data and fetching status
   const [isFetchingDone, setIsFetchingDone] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState<isDataLoadedType>({
     isPlayerDataLoaded: false,
     isInventoryDataLoaded: false,
+    isMovesetsDataLoaded:false
   });
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isProfileCompleted, setIsProfileCompleted] = useState(false);
 
+  useEffect(() => {
+    console.log("hp = ", character.hp)
+  }, [character])
 
   useEffect(() => {
     const needQuery = isDatabaseQueryNecessary(pathname, isDataLoaded, questsAreLoaded);
     if (needQuery === false) return;
-
+  
     new Promise<any>(async (resolve, reject) => {
       const data = await fetchAllData(pathname);
       resolve(data);
       reject(data);
     })
       .then((data) => {
-        console.log(data)
         //if the user is authenticated
         if (data.authenticated) {
           // handling existing but incomplete profile
@@ -89,6 +94,15 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
             }));
           };
 
+          //storing movesets (skills)
+          if (data.movesets) {
+            hydrateMovesets(data.movesets);
+            setIsDataLoaded((prev) => ({
+              ...prev,
+              isMovesetsDataLoaded:true
+            }));
+          };
+
           setIsAuthenticated(true);
         }
 
@@ -102,7 +116,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
           } else {
             router.push("/titleScreen");
           }
-        }
+        };
       })
       .catch((err) => {
         console.log("error:", err);

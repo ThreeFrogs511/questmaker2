@@ -11,11 +11,7 @@ import localFont from 'next/font/local'
 const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function InventoryClient() {
-  const { isAuthenticated, isProfileCompleted } = useUserContext();
 
-  if (!isAuthenticated || !isProfileCompleted) {
-    return <Loading />;
-  }
 
   return (
     <>

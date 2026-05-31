@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Encounter } from "@/types/types";
+import { Encounter, Moveset, Character } from "@/types/types";
 
 type useCombatStore = {
   combatLog: string;
@@ -27,6 +27,14 @@ type useCombatStore = {
   playSoundEffect: (soundPath: string) => void;
   soundEffect: string;
 
+  movesets:Moveset[] | [];
+  hydrateMovesets : (movesets:Moveset[]) => void;
+
+  tempPlayerData: Character;
+  updateTempPlayerData: (patch: Partial<Character>) => void;
+  hydrateTempPlayerData : (data:Character) => void;
+
+  resetMovesets : ([]) => void
   resetAll: () => void;
 };
 
@@ -37,6 +45,7 @@ export const useCombatStore = create<useCombatStore>((set) => ({
       combatLog: state.combatLog + text,
     })),
   clearCombatLog: () => set({ combatLog: "" }),
+
   enemy: undefined,
   updateEnemy: (patch) =>
     set((state) => ({
@@ -45,8 +54,12 @@ export const useCombatStore = create<useCombatStore>((set) => ({
         ...patch,
       },
     })),
+
+    
+
   isCombatOn: false,
   setCombat: (bool) => set({ isCombatOn: bool }),
+  
   hasRoundStarted: false,
   updateRoundStatus: (bool) => set({ hasRoundStarted: bool }),
   nbOfTurn: 1,
@@ -61,7 +74,65 @@ export const useCombatStore = create<useCombatStore>((set) => ({
   soundEffect: "",
   playSoundEffect: (string) => set({ soundEffect: string }),
 
+  movesets: [],
+  hydrateMovesets : (movesets) => set({movesets:movesets}),
+
+    tempPlayerData: {
+    character_id: null,
+    username: null,
+    xp: null,
+    hp: null,
+    dopamine: null,
+    dopamine_consumed: 0,
+    gender: null,
+    user_class: null,
+    race: null,
+    lvl: null,
+    str: 10,
+    dex: 10,
+    con: 10,
+    int: 10,
+    wis: 10,
+    cha: 10,
+    ac: null,
+    damage_taken: 0,
+    coins: 0,
+  },
+
+  updateTempPlayerData: (patch) =>
+  set((state) => {
+    return {
+      tempPlayerData: {
+        ...state.tempPlayerData,
+        ...patch,
+      },
+    };
+  }),
+
+  hydrateTempPlayerData : (data) => set({tempPlayerData:data}),
+  resetMovesets : () => set({movesets:[]}),
+
   resetAll: () => set(({
+    tempPlayerData:    
+    {character_id: null,
+    username: null,
+    xp: null,
+    hp: null,
+    dopamine: null,
+    dopamine_consumed: 0,
+    gender: null,
+    user_class: null,
+    race: null,
+    lvl: null,
+    str: 10,
+    dex: 10,
+    con: 10,
+    int: 10,
+    wis: 10,
+    cha: 10,
+    ac: null,
+    damage_taken: 0,
+    coins: 0},
     combatLog:"",
     enemy:undefined,
     isCombatOn:false,

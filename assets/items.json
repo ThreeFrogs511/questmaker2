@@ -89,4 +89,20 @@
     "imageUrl": "/icons/items/dopamine-potion.svg",
     "active": true
   }
+,
+  {
+    "slug": "hunting-knife",
+    "name": "Hunting Knife",
+    "description": "A sharp blade that cuts deep.",
+    "type": "weapon",
+    "family": "knife",
+    "tier": 1,
+    "effectTarget": "damage_taken",
+    "effectType": "increase",
+    "effectValue": 10,
+    "price": 5,
+    "stackable": false,
+    "imageUrl": "/icons/items/hunting-knife.svg",
+    "active": true
+  }
 ]

@@ -1,10 +1,10 @@
-import { Store } from "@/types/types";
+import { Item as ItemType } from "@/types/types";
 import { useUserStore } from "@/stores/useUserStore";
 import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
 
 export default class Item {
-    async useConsumable(item: Store) {
+    async useConsumable(item: ItemType) {
         if (item.type !== "consumable") return;
         const currentUser = useUserStore.getState().currentUser;
         const updateCharacter = useCharacterStore.getState().updateCharacter;

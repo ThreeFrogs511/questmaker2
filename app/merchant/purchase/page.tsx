@@ -1,6 +1,6 @@
 "use client";
 import { useRef, useState } from "react";
-import { Store } from "@/types/types";
+import { Item } from "@/types/types";
 import items from "@/assets/items.json";
 import Image from "next/image";
 import useSound from "use-sound";
@@ -27,7 +27,7 @@ export default function MerchantPurchase() {
   });
 
   //Using optmistic UI to avoid long loading times
-  async function handlePurchase(item: Store) {
+  async function handlePurchase(item: Item) {
     //prevents double-clicking
     if (!inventory || isBuying.current) return;
     isBuying.current = true;
@@ -115,7 +115,7 @@ export default function MerchantPurchase() {
           setNotEnoughMoneyAction={setNotEnoughMoney}
         />
         <div className="scrollingContainer h-full! flex flex-col gap-5 md:gap-2 ">
-          {items?.map((item: Store, index: number) => (
+          {items?.map((item: Item, index: number) => (
             <figure
               key={index}
               className="grid grid-cols-4 items-center px-2 hover:border-amber-300! max-h-[15%]! min-h-[15%]! md:max-h-[20%]! md:min-h-[20%]! text-center border-2! p-1 md:p-5 cursor-pointer! rounded"

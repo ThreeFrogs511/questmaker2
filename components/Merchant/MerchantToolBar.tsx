@@ -36,7 +36,7 @@ export default function MerchantToolbar({
   }, [notEnoughMoney]);
 
   return (
-    <div className={`w-[90%] mx-auto flex justify-between mb-4 text-xs md:text-sm ${retroGaming.className}`}>
+    <div id="merchant-toolbar" className={`w-[90%] mx-auto flex justify-between mb-4 text-xs md:text-sm ${retroGaming.className}`}>
       <p>
         Your coins:{" "}
         <span className={`text-amber-300 ${flash ? "error-animate" : ""}`}>

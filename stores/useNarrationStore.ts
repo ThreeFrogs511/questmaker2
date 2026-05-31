@@ -1,5 +1,6 @@
 import { create } from 'zustand'
 import { Nodes } from '@/types/types'
+import Engine from '@/classes/Engine'
 
 type useNarrationStore = {
     currentCampaign: Nodes | undefined
@@ -8,7 +9,6 @@ type useNarrationStore = {
     setCampaignTitle: (campaignTitle: string) => void
     currentNode: keyof Nodes | undefined
     updateNode: (currentNode: keyof Nodes | undefined) => void
-    ost: (() => void) | undefined,
     resetAll: () => void
 
 }
@@ -16,12 +16,11 @@ type useNarrationStore = {
 
 export const useNarrationStore = create<useNarrationStore>((set, get, store) => ({
     currentCampaign: undefined,
-    setCurrentCampaign : (nodes) => set(({currentCampaign:nodes})),
+    setCurrentCampaign : (nodes) => set({currentCampaign:nodes}),
     campaignTitle : undefined,
-    setCampaignTitle: (title) => set(({campaignTitle:title})),
+    setCampaignTitle: (title) => set({campaignTitle:title}),
     currentNode:undefined,
-    updateNode: (node) => set(({ currentNode : node})),   
-    ost: undefined,
+    updateNode: (node) => set({ currentNode : node}),   
     resetAll: () => {
         set(store.getInitialState())
     }

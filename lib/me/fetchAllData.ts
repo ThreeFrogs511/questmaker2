@@ -1,20 +1,13 @@
-'use server';
+"use server";
 import { sql } from "@/server/connexion";
 import { cookies } from "next/headers";
 import { fetchQuests } from "@/lib/fetchQuests";
-import { fetchProfileData } from "@/lib/fetchProfileData";
 import { fetchPlayerCampaignData } from "@/lib/fetchPlayerCampaignData";
 import { fetchInventoryData } from "@/lib/fetchInventoryData";
 import * as jose from "jose";
+import { PayloadType } from "@/types/types";
 
-interface PayloadType {
-  userId: number;
-  email: string;
-  isCompleted: boolean;
-};
-
-
-export default async function fetchAllData(pathname:string) {
+export default async function fetchAllData(pathname: string) {
   try {
     // cookies
     const cookieStore = await cookies();
@@ -25,9 +18,12 @@ export default async function fetchAllData(pathname:string) {
     if (!jwt) return { err: "Not authenticated" };
 
     const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
-    const { payload } : { payload: PayloadType } = await jose.jwtVerify(jwt, secretKey)
-    const userId:number = payload.userId;
-    const email:string = payload.email;
+    const { payload }: { payload: PayloadType } = await jose.jwtVerify(
+      jwt,
+      secretKey,
+    );
+    const userId: number = payload.userId;
+    const email: string = payload.email;
 
     if (!userId || !email) return { err: "No user id attached" };
 
@@ -35,9 +31,7 @@ export default async function fetchAllData(pathname:string) {
     // fetching user's data and handling errors
     let r;
 
-
     switch (pathname) {
-
       case "/journal":
         r = await fetchQuests(sql, userId);
         return r;
@@ -54,60 +48,71 @@ export default async function fetchAllData(pathname:string) {
         r = await fetchInventoryData(sql, userId);
         return r;
 
-      case "/campaignRunning":
-        r = await fetchPlayerCampaignData(sql, userId);
-        return r;
-
       default:
-        r = await sql`
-        SELECT
+        r = await sql`SELECT
           u.user_id, u.email, u.profile_completed, u.tutorial_completed, u.last_chapter_done,
           c.character_id, c.username, c.xp, c.hp, c.user_class, c.lvl, c.race, c.gender,
           c.str, c.dex, c.con, c.int, c.wis, c.cha, c.ac, c.damage_taken,
-          c.dopamine, c.dopamine_consumed, c.coins
+          c.dopamine, c.dopamine_consumed, c.coins,
+          i.inventory_id, i.slug, i.user_id AS inventory_user_id, i.quantity::int4 AS quantity, i.item_type as type,
+        (SELECT json_agg(row_to_json(t)) FROM (SELECT * FROM movesets m where m.character_id = c.character_id 
+        ) t   ) as movesets
         FROM users u
         LEFT JOIN characters c ON u.user_id = c.user_id
-        WHERE u.user_id = ${userId}`;
+        LEFT JOIN inventory i ON u.user_id = i.user_id
+        WHERE u.user_id = ${userId}
+        ORDER BY inventory_id DESC`;
 
-      if (!r || r.length === 0)
-        return { err: "pas d'user existant" };
+        if (!r || r.length === 0) return { err: "pas d'user existant" };
 
-      return {
-        authenticated: true,
-        user: {
-          user_id: Number(r[0].user_id),
-          email: r[0].email,
-          profile_completed: r[0].profile_completed,
-          tutorial_completed: r[0].tutorial_completed,
-          last_chapter_done: r[0].last_chapter_done !== null ? Number(r[0].last_chapter_done) : null,
-        },
-        character: {
-          character_id: r[0].character_id != null ? Number(r[0].character_id) : null,
-          username: r[0].username,
-          xp: Number(r[0].xp),
-          hp: Number(r[0].hp),
-          user_class: r[0].user_class,
-          lvl: Number(r[0].lvl),
-          race: r[0].race,
-          gender: r[0].gender,
-          str: Number(r[0].str),
-          dex: Number(r[0].dex),
-          con: Number(r[0].con),
-          int: Number(r[0].int),
-          wis: Number(r[0].wis),
-          cha: Number(r[0].cha),
-          ac: Number(r[0].ac),
-          damage_taken: Number(r[0].damage_taken),
-          dopamine: Number(r[0].dopamine),
-          dopamine_consumed: Number(r[0].dopamine_consumed),
-          coins: Number(r[0].coins),
-        },
-      };
+        const inventory = r
+          .filter((n) => n.inventory_id !== null)
+          .map((n) => ({
+            inventory_id: Number(n.inventory_id),
+            slug: n.slug,
+            quantity: Number(n.quantity),
+            type: n.type,
+          }));
 
+        return {
+          authenticated: true,
+          user: {
+            user_id: Number(r[0].user_id),
+            email: r[0].email,
+            profile_completed: r[0].profile_completed,
+            tutorial_completed: r[0].tutorial_completed,
+            last_chapter_done:
+              r[0].last_chapter_done !== null
+                ? Number(r[0].last_chapter_done)
+                : null,
+          },
+          character: {
+            character_id:
+              r[0].character_id != null ? Number(r[0].character_id) : null,
+            username: r[0].username,
+            xp: Number(r[0].xp),
+            hp: Number(r[0].hp),
+            user_class: r[0].user_class,
+            lvl: Number(r[0].lvl),
+            race: r[0].race,
+            gender: r[0].gender,
+            str: Number(r[0].str),
+            dex: Number(r[0].dex),
+            con: Number(r[0].con),
+            int: Number(r[0].int),
+            wis: Number(r[0].wis),
+            cha: Number(r[0].cha),
+            ac: Number(r[0].ac),
+            damage_taken: Number(r[0].damage_taken),
+            dopamine: Number(r[0].dopamine),
+            dopamine_consumed: Number(r[0].dopamine_consumed),
+            coins: Number(r[0].coins),
+          },
+          movesets: r[0].movesets,
+          inventory,
+        };
     }
-
   } catch (err) {
     return { err: (err as Error).message };
   }
-
 }

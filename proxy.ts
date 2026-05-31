@@ -1,18 +1,11 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import * as jose from "jose";
-
-
-interface PayloadType {
-  userId: number;
-  email: string;
-  isCompleted: boolean;
-}
+import { PayloadType } from "./types/types";
 
 export async function proxy(request: NextRequest) {
   try {
     //getting the cookie
-    // const token = request.cookies.get("session")?.value;
     const jwt = request.cookies.get("auth")?.value;
 
     // if no token, redirect to title screen
@@ -30,18 +23,26 @@ export async function proxy(request: NextRequest) {
       return NextResponse.redirect(new URL("/characterCreation", request.url));
     };
 
+    if (pathname!=="/intro" && payload.tutorialCompleted === false) {
+      return NextResponse.redirect(new URL('/intro', request.url));
+    }
+
     if (!payload || !payload.email || !payload.userId) {
       throw new Error("Authentification error")
     }
 
     switch (pathname) {
       case "/signup":
+        console.log("redirection1")
         return NextResponse.redirect(new URL("/journal", request.url));
       case "/login":
+
         return NextResponse.redirect(new URL("/journal", request.url));
       case "/titleScreen":
+
         return NextResponse.redirect(new URL("/journal", request.url));
       case "/":
+
         return NextResponse.redirect(new URL("/journal", request.url))
       default:
 

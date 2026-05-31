@@ -1,15 +1,25 @@
 "use client";
 import type { Dispatch, SetStateAction } from "react";
-import { Nodes, User, Choice, ChoiceResult, CombatItem } from "@/types/types";
+import {
+  Character,
+  Nodes,
+  User,
+  Choice,
+  ChoiceResult,
+  Moveset,
+  Item,
+} from "@/types/types";
 import AbilityChecks from "./AbilityChecks";
 import Penalties from "./Penalties";
 import ExclusivePaths from "./ExclusivePaths";
 import Combat from "./CombatSystem/Combat";
 import ChoicesOptions from "./Choices";
+import Reward from "./Reward";
 
 import { useNarrationStore } from "@/stores/useNarrationStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
 import { useCharacterStore } from "@/stores/useCharacterStore";
+import { useCombatStore } from "@/stores/useCombatStore";
 import AudioManager from "./AudioManager";
 
 export default class Engine {
@@ -32,10 +42,14 @@ export default class Engine {
   private exclusivePaths;
   private combat: Combat | undefined;
   private choicesOptions;
-
+  private reward: Reward | undefined;
   //story attributes
   private pastNodes: Array<string | undefined> = [];
   private pastUserChoices: Array<string | undefined> = [];
+
+  //snapshots of the users' data for the campaign
+  private tempSkillset: Moveset[] = useCombatStore.getState().movesets;
+  private tempInventory: Item[] | null = useInventoryStore.getState().inventory;
 
   // combat
   combatLockOn: boolean;
@@ -54,6 +68,7 @@ export default class Engine {
     this.exclusivePaths = new ExclusivePaths();
     this.combat = undefined;
     this.choicesOptions = new ChoicesOptions();
+    this.reward = undefined;
 
     //stores the important decisions made during the campaign
     this.relevantChoices = [];
@@ -93,7 +108,6 @@ export default class Engine {
     clearNbOfTurn: (n: number) => void,
   ) {
     this.logUserChoices(currentChoice.text);
-
     let key: keyof Choice;
     // if the next node lead to  a special event (check, penalty, combat, etc), we put it in this variable
     // else we keep the normal next node and reset 'ChoiceResult' manually
@@ -101,7 +115,7 @@ export default class Engine {
     for (let key in currentChoice) {
       switch (key) {
         case "check":
-          console.log("check")
+          console.log("check");
           const check = this.abilityChecks.handler(currentChoice, this.node);
           if (check === null || check === undefined) return;
           this.playSfx("diceRollSound");
@@ -131,13 +145,11 @@ export default class Engine {
           break;
 
         case "penalty":
-          console.log("penalty")
           this.penalties.handler(currentChoice, setChoiceResult);
           nextNode = currentChoice.next;
           break;
 
         case "combat_started":
-          console.log("combat")
           // using bind() to pass the playSfx method from the AudioManager class
           // to the Combat class then to the useAttackAction without losing the context of 'this'
           this.combat = new Combat(
@@ -156,7 +168,7 @@ export default class Engine {
           break;
 
         case "nodeRef":
-          console.log("nodeRef")
+          console.log("nodeRef");
           nextNode = this.exclusivePaths.handlingChoicesPaths(
             currentChoice,
             this.pastNodes,
@@ -170,7 +182,7 @@ export default class Engine {
           break;
 
         case "alt":
-          console.log("alt")
+          console.log("alt");
           nextNode = this.exclusivePaths.handler(currentChoice);
           setChoiceResult((prev: ChoiceResult) => ({
             ...prev,
@@ -181,7 +193,7 @@ export default class Engine {
           break;
 
         case "campaignEnd":
-          console.log("campaignend")
+          console.log("campaignend");
           this.relevantChoices = (currentChoice.relevantNodes ?? []).filter(
             (n: { node: string; text: string }) => {
               if (this.pastNodes.includes(n.node)) return n.text;
@@ -198,7 +210,6 @@ export default class Engine {
           break;
 
         case "ost":
-          console.log("ost")
           this.playMusic(currentChoice.ost);
           setChoiceResult((prev: ChoiceResult) => ({
             ...prev,
@@ -209,12 +220,22 @@ export default class Engine {
           nextNode = currentChoice.next;
           break;
 
- 
+        case "reward":
+          if (!currentChoice.reward) return;
+          const newReward = currentChoice.reward as Item[];
+          this.reward = new Reward(newReward, this.tempInventory ?? []);
+          this.reward.addNewItems();
+          setChoiceResult((prev: ChoiceResult) => ({
+            ...prev,
+            success: null,
+            value: null,
+            status: false,
+          }));
+          nextNode = currentChoice.next;
+          break;
       }
     }
 
-
-    
     if (nextNode) {
       this.updateNode(nextNode);
     } else {
@@ -229,11 +250,12 @@ export default class Engine {
   }
 
   //FOR COMBAT ONLY : IF THE PLAYER MAKES A MOVE, WE CALL THIS METHOD
-  async handlePlayerCombatChoices(item: CombatItem) {
+  async handlePlayerCombatChoices(move: Moveset) {
     if (!this.combat) return;
 
     // if the user open their inventory
-    if ("text" in item && item.text === "inventory") {
+    if (move.name === "inventory") {
+      console.log("inventory open!");
       this.combat.inventoryHandler();
       return;
     }
@@ -242,7 +264,7 @@ export default class Engine {
     if (!this.combatLockOn) {
       this.combatLockOn = true;
       await this.combat
-        .system(item, this.node)
+        .system(move, this.node)
         .then(() => (this.combatLockOn = false));
     }
   }
@@ -278,11 +300,14 @@ export default class Engine {
     if (!feedback.success) return { success: false };
 
     const inventory = useInventoryStore.getState().inventory;
-    const inventoryResponse = await fetch(`/api/inventory/${currentUser.user_id}`, {
-      method: "PUT",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ inventory }),
-    });
+    const inventoryResponse = await fetch(
+      `/api/inventory/${currentUser.user_id}`,
+      {
+        method: "PUT",
+        headers: { "content-type": "application/json" },
+        body: JSON.stringify({ inventory }),
+      },
+    );
     const inventoryFeedback = await inventoryResponse.json();
     return inventoryFeedback.success ? { success: true } : { success: false };
   }
@@ -301,6 +326,23 @@ export default class Engine {
   getAccumulatedXp() {
     return this.accumulatedXp;
   }
+
+  getTempInventory() {
+    return this.tempInventory ?? [];
+  }
+
+  setTempInventoryInsideEngine(inventory:Item[]) {
+    this.tempInventory = inventory;
+  }
+
+  getTempSkillset() {
+    return this.tempSkillset ?? [];
+  }
+
+  setTempSkillset(skillset:Moveset[]) {
+    this.tempSkillset = skillset;
+  }
+
 
   logUserChoices(choice: string) {
     this.pastUserChoices.push(choice);

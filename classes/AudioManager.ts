@@ -10,6 +10,9 @@ export default class AudioManager {
   private missSound: Howl = new Howl({ src: ["/sounds/miss.m4a"] });
   private diceRollSound: Howl = new Howl({ src: ["/sounds/dice.m4a"] });
   private headbuttSound: Howl = new Howl({ src: ["/sounds/headbutt.m4a"] });
+  private clickSound: Howl = new Howl({ src: ["/sounds/click.mp3"] });
+  private scratchSound: Howl = new Howl({ src: ["/sounds/scratch.mp3"] });
+
 
   private backgroundMusic: Howl = new Howl({
     src: ["/music/ost2.mp3"],

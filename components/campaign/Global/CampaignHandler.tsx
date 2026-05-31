@@ -223,7 +223,6 @@ export default function CampaignHandler() {
                   key={key}
                   onPointerDown={() => {
                     if (isLocked.current) return;
-
                     if (gameplay.current) {
                       gameplay.current.determineNextNode(
                         item,

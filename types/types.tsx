@@ -30,13 +30,17 @@ export type Character = {
 };
 
 export type Moveset = {
-  moveset_id: number | null;
-  type: string | null;
-  name: string | null;
-  cooldown: number | null;
-  modifier: string | null;
-  lvl_required: number | null;
-  character_id: number | null;
+  moveset_id?: number | null;
+  type?: string | null;
+  name?: string | null;
+  cooldown?: number | null;
+  modifier?: string | null;
+  lvl_required?: number | null;
+  dopamine_required?: number | null;
+  character_id?: number | null;
+  dmg?: number | null;
+  target?: string;
+  value?: number;
 };
 
 // fetchQuests remaps quest_id → id
@@ -67,6 +71,7 @@ export type PayloadType ={
   isCompleted: boolean;
   tutorialCompleted: boolean,
   lastChapterDone: number | null,
+  accessLevel: string
 }
 
 // describe the 'nodes' global object
@@ -111,7 +116,7 @@ export type Choice = {
   relevantNodes?: Array<{ node: string; text: string }>;
   xp?: number;
   ost?: string;
-  abilityGained?: { type: string; name: string; dmg: number; cooldown: number };
+  reward?: Item[]
 };
 
 type Alt = {
@@ -196,42 +201,39 @@ export type Attributes = {
   cha: number;
 };
 
-export type Store = {
-  active: boolean | null;
-  description: string | null;
-  effectTarget: string | null;
-  effectType: string | null;
-  effectValue: number | null;
-  family: string | null;
-  imageUrl: string | null;
-  name: string | null;
-  price: number | null;
-  slug: string | null;
-  stackable: boolean | null;
-  tier: number | null;
-  type: string | null;
+export type Item = {
+  active?: boolean | null;
+  description?: string | null;
+  effectTarget?: string | null;
+  effectType?: string | null;
+  effectValue?: number | null;
+  family?: string | null;
+  imageUrl?: string | null;
+  inventory_id?: number | null;
+  name?: string | null;
+  price?: number | null;
+  slug?: string | null;
+  stackable?: boolean | null;
+  tier?: number | null;
+  type?: string | null;
+  user_id?: number | null;
   quantity?: number | null;
 };
 
-export type Item = {
-  inventory_id: number | null;
-  slug: string | null;
-  user_id: number | null;
-  quantity: number | null;
-};
-
 // Combat item types
-export type CombatAttackItem = {
-  text?: string;
-  userDmg?: number | null;
-  type?: undefined;
-};
+// export type CombatAttackItem = {
+//   text?: string;
+//   userDmg?: number | null;
+//   type?: undefined;
+// };
 
-export type CombatConsumableItem = {
-  type: "item";
-  name: string;
-  target: string;
-  value: number;
-};
+// export type CombatConsumableItem = {
+//   type: "item";
+//   name: string;
+//   target: string;
+//   value: number;
+// };
 
-export type CombatItem = CombatAttackItem | CombatConsumableItem;
+
+
+// export type CombatItem = CombatAttackItem | CombatConsumableItem;

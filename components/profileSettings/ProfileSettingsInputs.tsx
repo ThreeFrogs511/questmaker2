@@ -139,12 +139,12 @@ export default function ProfileSettingsInputs() {
       </div>
       <p
         className={
-          error.trim()
+          error?.trim()
             ? `h-10 text-red-600 text-xs text-center`
             : `h-10 text-green-400 text-xs text-center`
         }
       >
-        {error.trim() === "" ? valid : error}
+        {error?.trim() === "" ? valid : error}
       </p>
 
       <DeletionModal

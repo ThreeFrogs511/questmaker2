@@ -29,7 +29,8 @@ export async function loginUser(
       email: currentUser.email,
       isCompleted: currentUser.profile_completed,
       tutorialCompleted: currentUser.tutorial_completed,
-      lastChapterDone: currentUser.last_chapter_done
+      lastChapterDone: currentUser.last_chapter_done,
+      accessLevel: row[0]?.access_level
     })
       .setProtectedHeader({ alg })
       .setIssuedAt()

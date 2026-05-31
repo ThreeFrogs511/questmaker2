@@ -1,9 +1,10 @@
 "use client";
-import { useEffect, useRef, useCallback } from "react";
+import { useEffect, useRef } from "react";
 import CampaignHandler from "@/components/campaign/Global/CampaignHandler";
 import Loading from "@/app/loading";
 import { useNarrationStore } from "@/stores/useNarrationStore";
-
+import { useCombatStore } from "@/stores/useCombatStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 
 export default function CampaignRunning({
   params,
@@ -33,6 +34,8 @@ export default function CampaignRunning({
 
   const hasCampaignLaunched = currentCampaign && currentNode ? true : false;
 
+  const character = useCharacterStore((state)=>state.character);
+  const hydrateTempPlayerData = useCombatStore((state)=> state.hydrateTempPlayerData);
 
   useEffect(() => {
     if (hasCampaignLaunched) return;
@@ -49,8 +52,9 @@ export default function CampaignRunning({
       .then((values) => {
         if (!values) return;
         updateNode(values.firstNode);
-        // updateNode("introducing_to_mayor")
+        // updateNode("remembering_how_to_fight")
         setCampaignTitle(values.title);
+        hydrateTempPlayerData(character);
       })
       .catch((err) => console.log(err));
 

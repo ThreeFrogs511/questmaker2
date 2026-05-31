@@ -26,10 +26,11 @@ export async function signupUser(
     const result = await sql`
       INSERT INTO users (email, password, last_chapter_done)
       VALUES (${email}, ${hash},0)
-      RETURNING user_id
+      RETURNING user_id, access_level
     `;
 
     const insertedId = result[0]?.user_id;
+    const accessLevel = result[0]?.access_level;
 
     if (!insertedId) return { err: "Internal error, please try again" };
 
@@ -42,6 +43,7 @@ export async function signupUser(
       isCompleted: false,
       tutorialCompleted: false,
       lastChapterDone: null,
+      accessLevel:accessLevel
     })
       .setProtectedHeader({ alg })
       .setIssuedAt()

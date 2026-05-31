@@ -3,7 +3,7 @@ interface isDataLoadedType {
   isPlayerDataLoaded?: boolean;
   isInventoryDataLoaded?: boolean;
   isUserDataLoaded?: boolean;
-  isQuestDataLoaded?: boolean;
+  isMovesetsDataLoaded?: boolean;
 };
 
 
@@ -26,14 +26,16 @@ export default function isDatabaseQueryNecessary(
   if (
     (pathname === "/inventory" || pathname.includes("/merchant")) &&
     isDataLoaded.isPlayerDataLoaded &&
-    isDataLoaded.isInventoryDataLoaded
+    isDataLoaded.isInventoryDataLoaded &&
+    isDataLoaded.isMovesetsDataLoaded
   ) {
     return false;
   }
   if (
     (pathname === "/launcher" || pathname.includes("/campaignRunning")) &&
     isDataLoaded.isPlayerDataLoaded &&
-    isDataLoaded.isInventoryDataLoaded
+    isDataLoaded.isInventoryDataLoaded &&
+    isDataLoaded.isMovesetsDataLoaded
   ) {
     return false;
   }

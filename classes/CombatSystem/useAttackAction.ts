@@ -1,5 +1,5 @@
 import { useCombatStore } from "@/stores/useCombatStore";
-import { CombatAttackItem } from "@/types/types";
+import { Moveset } from "@/types/types";
 
 export default class useAttackAction {
 
@@ -10,7 +10,7 @@ export default class useAttackAction {
   private playSfx;
   private updateRoundStatus: (boolean: boolean) => void;
 
-  constructor(item: CombatAttackItem, enemyAC: number, playSfx:(sound:string)=>void) {
+  constructor(item: Moveset, enemyAC: number, playSfx:(sound:string)=>void) {
       this.playSfx=playSfx;
       this.setCombatLog = useCombatStore.getState().setCombatLog;
       this.attack = item;
@@ -31,7 +31,7 @@ export default class useAttackAction {
   };
 
   calculateDmg() {
-      const dmgMax = this.attack.userDmg;
+      const dmgMax = this.attack.dmg;
       let finalDmg;
       if (dmgMax) {
           finalDmg = Math.floor(Math.random() * dmgMax)+1;
@@ -53,10 +53,10 @@ export default class useAttackAction {
       this.setCombatLog(log);
       return null;
     } else {
-      const sound = this.attack.text ?? "";
+      const sound = this.attack.name ?? "";
       let formattedAttackName="";
-      if (this.attack.text !== "" && this.attack.text) {
-      formattedAttackName = this.attack.text?.charAt(0).toLocaleUpperCase() + this.attack.text.slice(1)
+      if (this.attack.name !== "" && this.attack.name) {
+      formattedAttackName = this.attack.name?.charAt(0).toLocaleUpperCase() + this.attack.name.slice(1)
       }
       console.log(formattedAttackName)
       this.playSfx(sound+"Sound");

@@ -7,7 +7,9 @@ export async function fetchPlayerCampaignData(sql: postgres.Sql<{}>, userId: num
       c.character_id, c.username, c.xp, c.hp, c.user_class, c.lvl, c.race, c.gender,
       c.str, c.dex, c.con, c.int, c.wis, c.cha, c.ac, c.damage_taken,
       c.dopamine, c.dopamine_consumed, c.coins,
-      i.inventory_id, i.slug, i.user_id AS inventory_user_id, i.quantity::int4 AS quantity
+      i.inventory_id, i.slug, i.user_id AS inventory_user_id, i.quantity::int4 AS quantity, i.item_type as type,
+    (SELECT json_agg(row_to_json(t)) FROM (SELECT * FROM movesets m where m.character_id = c.character_id 
+    ) t   ) as movesets
     FROM users u
     LEFT JOIN characters c ON u.user_id = c.user_id
     LEFT JOIN inventory i ON u.user_id = i.user_id
@@ -23,6 +25,7 @@ export async function fetchPlayerCampaignData(sql: postgres.Sql<{}>, userId: num
       inventory_id: Number(n.inventory_id),
       slug: n.slug,
       quantity: Number(n.quantity),
+      type: n.type
     }));
 
   return {
@@ -56,5 +59,6 @@ export async function fetchPlayerCampaignData(sql: postgres.Sql<{}>, userId: num
       coins: Number(r[0].coins),
     },
     inventory,
+    movesets: r[0].movesets
   };
 }

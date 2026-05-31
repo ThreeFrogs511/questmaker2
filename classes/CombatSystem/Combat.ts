@@ -1,24 +1,16 @@
-import {
-  Nodes,
-  Character,
-  Encounter,
-  Choice,
-  CombatItem,
-  CombatConsumableItem,
-} from "@/types/types";
+import { Moveset, Nodes, Character, Encounter, Choice } from "@/types/types";
 import Enemy from "./Enemy";
 import useAttackAction from "./useAttackAction";
 import useConsumableAction from "./useConsumableAction";
-import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useCombatStore } from "@/stores/useCombatStore";
 import { useNarrationStore } from "@/stores/useNarrationStore";
 import Die from "./Die";
 
 export default class Combat {
   //user's attributes
-  private currentUser;
-  private updateStats;
-  private tempUserStats: Character | undefined;
+  // private currentUser;
+  // private updateStats;
+  private playerDataBeforeCombat: Character | undefined;
   private userModifier: number;
   private userFirstToAttack: boolean;
   private useAttack: useAttackAction | undefined;
@@ -48,13 +40,19 @@ export default class Combat {
 
   private updateRoundStatus: (boolean: boolean) => void;
 
-  constructor(playSfx:(sfx:string)=>void, playMusic:(music:string)=>void) {
+  private tempPlayerData = useCombatStore.getState().tempPlayerData;
+  private updateTempPlayerData = useCombatStore.getState().updateTempPlayerData;
 
+
+  constructor(
+    playSfx: (sfx: string) => void,
+    playMusic: (music: string) => void,
+  ) {
     this.playSfx = playSfx;
     this.playMusic = playMusic;
 
-    this.currentUser = useCharacterStore.getState().character;
-    this.updateStats = useCharacterStore.getState().updateStats;
+    // this.currentUser = useCharacterStore.getState().character;
+    // this.updateStats = useCharacterStore.getState().updateStats;
     this.userModifier = 0;
 
     this.setCombatLog = useCombatStore.getState().setCombatLog;
@@ -62,7 +60,7 @@ export default class Combat {
 
     this.userFirstToAttack = true;
     this.useAttack = undefined;
-    this.tempUserStats = undefined;
+    this.playerDataBeforeCombat = undefined;
 
     this.createEnemy = new Enemy();
     this.updateEnemy = useCombatStore.getState().updateEnemy;
@@ -79,11 +77,14 @@ export default class Combat {
     this.updateNode = useNarrationStore.getState().updateNode;
 
     this.updateRoundStatus = useCombatStore.getState().updateRoundStatus;
+
+
   }
 
   handleIniative() {
     // user initiative
-    const userDex = this.currentUser.dex;
+    const userDex = this.tempPlayerData.dex;
+    // const userDex = this.currentUser.dex;
     const userModifier = userDex && Math.floor((userDex - 10) / 2);
     this.userModifier = userModifier ?? 0;
     const die = new Die(20);
@@ -102,12 +103,11 @@ export default class Combat {
     }
 
     if (initiativeRollUser && initiativeRollEnemy) {
-
-      // blocking clicks to let the die rolling sound play 
+      // blocking clicks to let the die rolling sound play
       // and avoid overlapping with future sound effects
       this.updateRoundStatus(true);
       // this.playSoundEffect("die_roll");
-      this.playSfx("diceRollSound")
+      this.playSfx("diceRollSound");
 
       if (initiativeRollUser > initiativeRollEnemy) {
         this.userFirstToAttack = true;
@@ -166,8 +166,7 @@ export default class Combat {
 
     // creating a snapshot containing the user's main stats before starting the fight
     // used to reset their stats in case of a game over or if the player leave
-    this.tempUserStats = { ...this.currentUser };
-
+    this.playerDataBeforeCombat = { ...this.tempPlayerData};
     // fetching current enemy data
     this.encounter = {
       ...this.createEnemy.fetchEnemyData(currentChoice.enemy_id),
@@ -183,7 +182,7 @@ export default class Combat {
   }
 
   async system(
-    item: CombatItem,
+    move: Moveset,
     node: keyof Nodes | undefined,
     // setSoundEffect: (effect: string) => void,
   ) {
@@ -195,7 +194,7 @@ export default class Combat {
 
     if (this.userFirstToAttack) {
       this.clearCombatLog("");
-      await this.handleUserTurn(item, node);
+      await this.handleUserTurn(move, node);
 
       // if user win, we kill the running process
       if (this.fight_over) return;
@@ -210,7 +209,6 @@ export default class Combat {
         }, 1000);
       });
       if (!this.fight_over) this.setNbOfTurn(1);
-
     } else {
       this.clearCombatLog("");
       await this.handleEnemyTurn(node);
@@ -221,7 +219,7 @@ export default class Combat {
       await new Promise<void>((resolve) => {
         setTimeout(() => resolve(), 1000);
       });
-      await this.handleUserTurn(item, node);
+      await this.handleUserTurn(move, node);
       await new Promise<void>((resolve) => {
         setTimeout(() => {
           resolve();
@@ -231,15 +229,19 @@ export default class Combat {
     }
   }
 
-  async handleUserTurn(item: CombatItem, node: keyof Nodes | undefined) {
+  async handleUserTurn(move: Moveset, node: keyof Nodes | undefined) {
     return new Promise<void>(async (resolve) => {
       this.fight_over &&= false;
       if (!this.encounter || !this.encounter.hp) return;
 
-      if (item.type === "item") {
-        this.useItem(item, resolve);
+      if (move.type !=="skill") {
+        this.useItem(move, resolve);
       } else {
-        this.useAttack = new useAttackAction(item, this.encounter.ac ?? 10, this.playSfx);
+        this.useAttack = new useAttackAction(
+          move,
+          this.encounter.ac ?? 10,
+          this.playSfx,
+        );
         const damageDoneByUser = await this.useAttack.resolver();
         if (!damageDoneByUser) {
           resolve();
@@ -252,7 +254,7 @@ export default class Combat {
         this.updateEnemy({ hp: this.encounter.hp });
       }
 
-      // DEALING WITH THE FALLOUT : IF THE PLAYER WIN OR NOT
+      // DEALING WITH THE FALLOUT : IF THE PLAYER WIN 
       if (this.encounter.hp <= 0) {
         // prevent another turn from incrementing because the fight is over
         this.fight_over = true;
@@ -267,11 +269,11 @@ export default class Combat {
         this.resetNbOfTurn(1);
 
         // updating the user' stats
-        this.updateStats({ ...this.currentUser });
+        // this.updateStats({ ...this.currentUser });
 
         // moving on to the victory node
         this.updateNode(`${node}_victory`);
-        this.playMusic("victoryMusic")
+        this.playMusic("victoryMusic");
         resolve();
       } else {
         resolve();
@@ -288,7 +290,7 @@ export default class Combat {
       const moves =
         this.encounter.movesets && Object.entries(this.encounter.movesets);
 
-      if (moves && this.currentUser.hp) {
+      if (moves && this.tempPlayerData.hp) {
         // we pick an attack at random : the name and the dmg done
         let [enemyAttack, enemyDmg] =
           moves[Math.floor(Math.random() * moves.length)];
@@ -298,13 +300,12 @@ export default class Combat {
 
         // we calculate if the enemy hit or miss
         const attackRoll = this.handleAttackRolls(
-          this.currentUser.ac ?? 10,
+          this.tempPlayerData.ac ?? 10,
           this.enemyModifier,
         );
 
         if (!attackRoll.hit) {
-          // this.playSoundEffect("enemy_miss");
-          this.playSfx("missSound")
+          this.playSfx("missSound");
           const log = `<div className="lg:text-xl text-xs mb-1">
               The enemy missed! (Roll: ${attackRoll.roll <= 0 ? 1 : attackRoll.roll})<br>
               </div>`;
@@ -317,27 +318,26 @@ export default class Combat {
         } else {
           const soundName = enemyAttack + "Sound";
           this.playSfx(soundName);
-          enemyAttack = enemyAttack.charAt(0).toLocaleUpperCase() + enemyAttack.slice(1)
+          enemyAttack =
+            enemyAttack.charAt(0).toLocaleUpperCase() + enemyAttack.slice(1);
           const log = `<div className="lg:text-xl text-xs mb-1">
             The enemy uses <span style="color:#fbbf24">${enemyAttack}</span> for <span style="color:#fbbf24">${enemyFinalDmg}</span> damage!
             </div>`;
           this.setCombatLog(log);
 
           // incrementing the total damage taken
-          this.currentUser.damage_taken =
-            this.currentUser.damage_taken + enemyFinalDmg;
+          this.tempPlayerData.damage_taken =
+            this.tempPlayerData.damage_taken + enemyFinalDmg;
 
-          //prevent the damage to be superior to the hp in order to avoid negative values
-          this.currentUser.damage_taken >= this.currentUser.hp &&
-            (this.currentUser.damage_taken = this.currentUser.hp);
+          //prevent the damage from being superior to the hp in order to avoid negative values
+          this.tempPlayerData.damage_taken >= this.tempPlayerData.hp &&
+            (this.tempPlayerData.damage_taken = this.tempPlayerData.hp);
 
           // calculate the user's current virtual hp compared to total damage taken
-          const hpLeft = this.currentUser.hp - this.currentUser.damage_taken;
+          const hpLeft = this.tempPlayerData.hp - this.tempPlayerData.damage_taken;
 
           // updating the real state to update the hp bar in the combatInterface component
-          // updateStats({damage_taken:this.currentUser.damage_taken});
-          this.updateStats({ damage_taken: this.currentUser.damage_taken });
-
+          this.updateTempPlayerData({damage_taken:this.tempPlayerData.damage_taken})
           // FALLOUT : if the player loses or not
           if (hpLeft <= 0) {
             // prevent another turn from incrementing because the fight is over
@@ -356,9 +356,10 @@ export default class Combat {
             this.updateNode(`${node}_game_over`);
             this.resetNbOfTurn(1);
             // resetting the user stats and enemy
-         
-            this.updateStats({
-              damage_taken: this.tempUserStats?.damage_taken,
+
+            if (!this.playerDataBeforeCombat) return;
+            this.updateTempPlayerData({
+              damage_taken: this.playerDataBeforeCombat?.damage_taken,
             });
             resolve();
           } else {
@@ -371,20 +372,19 @@ export default class Combat {
 
   inventoryHandler() {
     const inventoryStatus = useCombatStore.getState().isInventoryOpened;
-    // !inventoryStatus ? this.openInventory(true) : this.openInventory(false);
     this.openInventory(!inventoryStatus ? true : false);
   }
 
-  useItem(item: CombatConsumableItem, resolve: () => void) {
-    const userAction = new useConsumableAction(item, this.currentUser);
+  useItem(item: Moveset, resolve: () => void) {
+    const userAction = new useConsumableAction(item);
     const itemTarget = item.target;
     switch (itemTarget) {
       case "damage_taken":
         const damageRemoved = userAction.consumeHealthPotion();
         console.log(damageRemoved);
         if (damageRemoved === null || damageRemoved === undefined) return;
-        this.currentUser.damage_taken = damageRemoved;
-        this.updateStats({ damage_taken: this.currentUser.damage_taken });
+        this.tempPlayerData.damage_taken = damageRemoved;
+        this.updateTempPlayerData({ damage_taken: this.tempPlayerData.damage_taken });
         break;
 
       default:

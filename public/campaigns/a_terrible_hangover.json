@@ -391,7 +391,7 @@
       "choices": [
         {
           "text": "Face the bandits’ reaction to your magic.",
-          "abilityGained": {
+          "reward": {
             "type": "spell",
             "name": "fireball",
             "cooldown": "2"
@@ -880,7 +880,10 @@
       "choices": [
         {
           "text": "Play it cool and listen to what the Mayor has to say next.",
-          "next": "keep_silent_answer"
+          "next": "keep_silent_answer",
+          "reward": [
+            { "type": "weapon", "slug": "hunting-knife", "quantity": 1 }
+          ]
         }
       ]
     },
@@ -1985,7 +1988,7 @@
       ]
     },
     "eden_gives_journal": {
-      "text": "<u>Eden</u> : \"<i>That’s probably the best decision you’ve made today. No time to celebrate—we’ve got work to do. That necromancer won’t stop himself. I have a plan (well, the start of one), but first... Here. This is a journal. Use it to track you what needs tracking. Between us, you need it most.<br> Now that that’s settled, let’s get to work, my dear partner. Questmaker has its first contract.</i>\"<br><span style=\"color:#fbbf24\">You have unlocked the Journal !</span>",
+      "text": "<u>Eden</u> : \"<i>That’s probably the best decision you’ve made today. No time to celebrate—we’ve got work to do. That necromancer won’t stop himself. I have a plan (well, the start of one), but first... Here. This is a journal. Use it to track what needs tracking. Between us, you need it most.<br> Now that that’s settled, let’s get to work, my dear partner. Questmaker has its first contract.</i>\"<br><span style=\"color:#fbbf24\">You have unlocked the Journal !</span>",
       "choices": [
         {
           "text": "[CONTINUE]",

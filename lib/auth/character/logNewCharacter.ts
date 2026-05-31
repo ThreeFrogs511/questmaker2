@@ -5,7 +5,6 @@ import * as jose from "jose";
 import { Character } from "@/types/types";
 import { PayloadType } from "@/types/types";
 
-
 export default async function logNewCharacter(data: Character) {
   try {
     const cookieStore = await cookies();
@@ -24,24 +23,43 @@ export default async function logNewCharacter(data: Character) {
 
     if (!user_id || !email) return { err: "User not found" };
 
-    const result = await sql`
-      INSERT INTO characters (user_class, username, race, gender, hp, dopamine, ac, str, dex, con, int, wis, cha, user_id)
-      VALUES (${data.user_class}, ${data.username}, ${data.race}, ${data.gender}, ${data.hp}, ${data.dopamine}, ${data.ac}, ${data.str}, ${data.dex}, ${data.con}, ${data.int}, ${data.wis}, ${data.cha}, ${user_id})
-      RETURNING character_id
-    `;
+    // const result = await sql`
+    //   INSERT INTO characters (user_class, username, race, gender, hp, dopamine, ac, str, dex, con, int, wis, cha, user_id)
+    //   VALUES (${data.user_class}, ${data.username}, ${data.race}, ${data.gender}, ${data.hp}, ${data.dopamine}, ${data.ac}, ${data.str}, ${data.dex}, ${data.con}, ${data.int}, ${data.wis}, ${data.cha}, ${user_id})
+    //   RETURNING character_id
+    // `;
 
-    
-    await sql`UPDATE users SET profile_completed = true WHERE user_id = ${user_id}`;
-    console.log(result)
+
+    //attempt to improve perf with CTE expressions - Work In Progress
+    const result = await sql`
+    WITH 
+    chr AS (
+      INSERT INTO characters (user_class, username, race, gender, hp, dopamine, ac, str, dex, con, int, wis, cha, user_id) VALUES (${data.user_class}, ${data.username}, ${data.race}, ${data.gender}, ${data.hp}, ${data.dopamine}, ${data.ac}, ${data.str}, ${data.dex}, ${data.con}, ${data.int}, ${data.wis}, ${data.cha}, ${user_id})
+      RETURNING character_id
+      ),
+    usr AS (
+      UPDATE users SET profile_completed = true WHERE user_id = ${user_id}
+      ),
+    moves AS (
+      INSERT INTO movesets (type, name, modifier, character_id) 
+      VALUES ('skill', (CASE WHEN ${data.race} = 'Felinois' THEN 'scratch' ELSE 'punch' END), 'str', (SELECT character_id FROM chr))
+      )
+    SELECT character_id from chr`;
+    //
+
+    // await sql`UPDATE users SET profile_completed = true WHERE user_id = ${user_id}`;
+    console.log(result);
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const alg = "HS256";
+
+    if (!result[0].character_id) throw new Error("Server error while trying to create the character. Please try again.")
 
     const newPayload = {
       userId: user_id,
       email: email,
       isCompleted: true,
-      tutorialCompleted:false,
-      lastChapterDone:null
+      tutorialCompleted: false,
+      lastChapterDone: null,
     };
 
     const newJwt = await new jose.SignJWT(newPayload)
@@ -63,7 +81,7 @@ export default async function logNewCharacter(data: Character) {
 
     return { success: true };
   } catch (err) {
-    const error = String((err as Error).message)
+    const error = String((err as Error).message);
     return { err: error };
   }
 }
