@@ -718,7 +718,7 @@
       ]
     },
     "eden_explains_hunt_bridge": {
-      "text": "<u>???</u> :\"<i>Saving you? Oh... That too, I suppose. Truth is, I was mostly interested in that fella. Name's Regalus. Nasty piece of work. There's a bounty of a thousand gold pieces on his head. Not bad for a few days of work. Took me some time to craft this sleeping arrowhead, but damn that was worth it. Now, give me a hand, would ya' ? Bloke's too heavy for me.</i>\"",
+      "text": "<u>???</u> : \"<i>Saving you? Oh... That too, I suppose. Truth is, I was mostly interested in that fella. Name's Regalus. Nasty piece of work. There's a bounty of a thousand gold pieces on his head. Not bad for a few days of work. Took me some time to craft this sleeping arrowhead, but damn that was worth it. Now, give me a hand, would ya' ? Bloke's too heavy for me.</i>\"",
       "choices": [
         {
           "text": "Follow him to his horse. Then heave the body over the saddle.",
@@ -1845,7 +1845,7 @@
           "next": "eden_talks_assassin_alt"
         },
         {
-          "text": "Ask him what he meant by that",
+          "text": "Ask him what he meant by that.",
           "next": "eden_talks_assassin"
         }
       ]

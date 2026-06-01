@@ -39,8 +39,9 @@ export type Moveset = {
   dopamine_required?: number | null;
   character_id?: number | null;
   dmg?: number | null;
-  target?: string;
-  value?: number;
+  effectTarget?: string;
+  effectValue?: number;
+  is_skill_activated?:boolean;
 };
 
 // fetchQuests remaps quest_id → id
@@ -220,20 +221,3 @@ export type Item = {
   quantity?: number | null;
 };
 
-// Combat item types
-// export type CombatAttackItem = {
-//   text?: string;
-//   userDmg?: number | null;
-//   type?: undefined;
-// };
-
-// export type CombatConsumableItem = {
-//   type: "item";
-//   name: string;
-//   target: string;
-//   value: number;
-// };
-
-
-
-// export type CombatItem = CombatAttackItem | CombatConsumableItem;

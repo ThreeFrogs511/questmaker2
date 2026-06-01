@@ -26,7 +26,6 @@ export default function UserItems({
   useEffect(() => {
     if (!inventory) return;
     const tempInv: Array<Item> = [];
-
     for (let i = 0; i < inventory?.length; i++) {
       const matchingItem: Item | undefined = items.find(
         (n) => n.slug === inventory[i].slug,
@@ -42,11 +41,7 @@ export default function UserItems({
         tempInv.push(userItem);
       }
     }
-    setDisplayedInventory(
-      mode === "combat"
-        ? tempInv.filter((i) => i.type === "consumable")
-        : (tempInv ?? []),
-    );
+    setDisplayedInventory(tempInv);
   }, [inventory, mode]);
 
   return (

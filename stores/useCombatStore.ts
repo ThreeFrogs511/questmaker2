@@ -1,5 +1,5 @@
 import { create } from "zustand";
-import { Encounter, Moveset, Character } from "@/types/types";
+import { Encounter, Moveset, Character, Item } from "@/types/types";
 
 type useCombatStore = {
   combatLog: string;
@@ -27,15 +27,23 @@ type useCombatStore = {
   playSoundEffect: (soundPath: string) => void;
   soundEffect: string;
 
-  movesets:Moveset[] | [];
-  hydrateMovesets : (movesets:Moveset[]) => void;
+  movesets: Moveset[] | [];
+  hydrateMovesets: (movesets: Moveset[]) => void;
+
+  tempMovesets: Moveset[] | [];
+  updateTempMovesets: (movesets: Moveset[]) => void;
+  // updateTempMovesets: (patch: Partial<Moveset[]>) => void;
 
   tempPlayerData: Character;
   updateTempPlayerData: (patch: Partial<Character>) => void;
-  hydrateTempPlayerData : (data:Character) => void;
+  hydrateTempPlayerData: (data: Character) => void;
 
-  resetMovesets : ([]) => void
+  resetMovesets: ([]) => void;
   resetAll: () => void;
+
+  tempInventory: Array<Item> | null;
+  updateTempInventory: (i: Array<Item>) => void;
+  decrementTempInventory: (slug: string) => void;
 };
 
 export const useCombatStore = create<useCombatStore>((set) => ({
@@ -55,11 +63,9 @@ export const useCombatStore = create<useCombatStore>((set) => ({
       },
     })),
 
-    
-
   isCombatOn: false,
   setCombat: (bool) => set({ isCombatOn: bool }),
-  
+
   hasRoundStarted: false,
   updateRoundStatus: (bool) => set({ hasRoundStarted: bool }),
   nbOfTurn: 1,
@@ -75,9 +81,9 @@ export const useCombatStore = create<useCombatStore>((set) => ({
   playSoundEffect: (string) => set({ soundEffect: string }),
 
   movesets: [],
-  hydrateMovesets : (movesets) => set({movesets:movesets}),
+  hydrateMovesets: (movesets) => set({ movesets: movesets }),
 
-    tempPlayerData: {
+  tempPlayerData: {
     character_id: null,
     username: null,
     xp: null,
@@ -100,46 +106,65 @@ export const useCombatStore = create<useCombatStore>((set) => ({
   },
 
   updateTempPlayerData: (patch) =>
-  set((state) => {
-    return {
+    set((state) => {
+      return {
+        tempPlayerData: {
+          ...state.tempPlayerData,
+          ...patch,
+        },
+      };
+    }),
+
+  hydrateTempPlayerData: (data) => set({ tempPlayerData: data }),
+  resetMovesets: () => set({ movesets: [] }),
+
+  tempMovesets: [],
+  updateTempMovesets: (movesets) => set({ tempMovesets: movesets }),
+
+  tempInventory: [],
+  updateTempInventory: (i) => set({ tempInventory: i }),
+  decrementTempInventory: (slug) =>
+    set((state) => {
+      if (!state.tempInventory) return {};
+      const updated = state.tempInventory
+        .map((item) =>
+          item.slug === slug
+            ? { ...item, quantity: (item.quantity ?? 1) - 1 }
+            : item,
+        )
+        .filter((item) => (item.quantity ?? 0) > 0);
+      return { tempInventory: updated };
+    }),
+  resetAll: () =>
+    set({
       tempPlayerData: {
-        ...state.tempPlayerData,
-        ...patch,
+        character_id: null,
+        username: null,
+        xp: null,
+        hp: null,
+        dopamine: null,
+        dopamine_consumed: 0,
+        gender: null,
+        user_class: null,
+        race: null,
+        lvl: null,
+        str: 10,
+        dex: 10,
+        con: 10,
+        int: 10,
+        wis: 10,
+        cha: 10,
+        ac: null,
+        damage_taken: 0,
+        coins: 0,
       },
-    };
-  }),
-
-  hydrateTempPlayerData : (data) => set({tempPlayerData:data}),
-  resetMovesets : () => set({movesets:[]}),
-
-  resetAll: () => set(({
-    tempPlayerData:    
-    {character_id: null,
-    username: null,
-    xp: null,
-    hp: null,
-    dopamine: null,
-    dopamine_consumed: 0,
-    gender: null,
-    user_class: null,
-    race: null,
-    lvl: null,
-    str: 10,
-    dex: 10,
-    con: 10,
-    int: 10,
-    wis: 10,
-    cha: 10,
-    ac: null,
-    damage_taken: 0,
-    coins: 0},
-    combatLog:"",
-    enemy:undefined,
-    isCombatOn:false,
-    hasRoundStarted:false,
-    nbOfTurn:1,
-    menu:"",
-    isInventoryOpened:false,
-    soundEffect:""
-  }))
+      combatLog: "",
+      enemy: undefined,
+      isCombatOn: false,
+      hasRoundStarted: false,
+      nbOfTurn: 1,
+      menu: "",
+      isInventoryOpened: false,
+      soundEffect: "",
+    }),
 }));

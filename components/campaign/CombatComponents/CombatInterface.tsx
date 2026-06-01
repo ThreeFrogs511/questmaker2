@@ -3,18 +3,15 @@ import HitpointsBar from "../../userStats/HitpointsBar";
 import { ProgressBar } from "pixel-retroui";
 import { useState} from "react";
 import localFont from 'next/font/local'
-
-
+import items from "@/assets/items.json";
 import CombatChoices from "./CombatChoices";
 import InventoryCombatModal from "./InventoryCombatModal";
-
-// used to interpret HTML in JSON
-import parse from "html-react-parser";
-import { useEffect } from "react";
-
+import parse from "html-react-parser"; // used to interpret HTML in JSON
+import { useEffect, useRef } from "react";
+import { Item } from "@/types/types";
 import TempHitpointsBar from "./TempHitpointsBar";
-import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useCombatStore } from "@/stores/useCombatStore";
+import { useInventoryStore } from "@/stores/useInventoryStore";
 import Engine from "@/classes/Engine";
 
 const retroGaming = localFont({
@@ -30,6 +27,10 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
   const isInventoryOpened = useCombatStore((state) => state.isInventoryOpened);
   const tempPlayerData = useCombatStore((state) => state.tempPlayerData)
 
+useEffect(() => {
+  console.log("inventaire ouvert = ", isInventoryOpened);
+},[isInventoryOpened])
+
   // local states
   const [loader, setLoader] = useState(false);
   const [enemyFullHealth] = useState<number | undefined>(enemy?.hp);
@@ -44,6 +45,7 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
       setLoader(true);
     }, 50);
   }, []);
+
 
 
   return (

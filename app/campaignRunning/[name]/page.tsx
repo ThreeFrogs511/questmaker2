@@ -5,6 +5,9 @@ import Loading from "@/app/loading";
 import { useNarrationStore } from "@/stores/useNarrationStore";
 import { useCombatStore } from "@/stores/useCombatStore";
 import { useCharacterStore } from "@/stores/useCharacterStore";
+import { useInventoryStore } from "@/stores/useInventoryStore";
+import { Item, Moveset } from "@/types/types";
+import items from "@/assets/items.json";
 
 export default function CampaignRunning({
   params,
@@ -34,12 +37,63 @@ export default function CampaignRunning({
 
   const hasCampaignLaunched = currentCampaign && currentNode ? true : false;
 
-  const character = useCharacterStore((state)=>state.character);
-  const hydrateTempPlayerData = useCombatStore((state)=> state.hydrateTempPlayerData);
+  const character = useCharacterStore((state) => state.character);
+  const hydrateTempPlayerData = useCombatStore(
+    (state) => state.hydrateTempPlayerData,
+  );
+
+  const realInventoryModel = useInventoryStore((state) => state.inventory);
+  const updateTempInventory = useCombatStore(
+    (state) => state.updateTempInventory,
+  );
+  const tempInventory = useCombatStore((state) => state.tempInventory)
+
+  const movesetsModel = useCombatStore((state) => state.movesets);
+  const updateTempMovesets = useCombatStore(
+    (state) => state.updateTempMovesets,
+  );
+  const hasAllDataBeenHydrated = useRef(false);
+
+  //We need to create a snapshot of the player's data in case they quit the campaign before the end
+  //We should be able to reset his game data to a pre-campaign state
+  function hydrateTempGameData() {
+    //player's stats
+    hydrateTempPlayerData({ ...character });
+
+    //player's inventory
+    if (!realInventoryModel || hasAllDataBeenHydrated.current) return;
+    const tempInv: Array<Item> = [];
+
+    for (let i = 0; i < realInventoryModel?.length; i++) {
+      const matchingItem: Item | undefined = items.find(
+        (n) => n.slug === realInventoryModel[i].slug,
+      );
+      if (!matchingItem) {
+        continue;
+      } else {
+        const userItem: Item = {
+          ...matchingItem,
+          quantity: realInventoryModel[i].quantity,
+          inventory_id:realInventoryModel[i].inventory_id
+        };
+        tempInv.push(userItem);
+      }
+    }
+    updateTempInventory([...tempInv]);
+
+    //player's movesets (skills mostly)
+    const userActions: Moveset[] = [{ type: "action", name: "inventory" }];
+    const userConcatMoves = userActions.concat(movesetsModel);
+    while (userConcatMoves.length < 12) {
+      userConcatMoves.push({});
+    }
+    updateTempMovesets([...userConcatMoves]);
+    hasAllDataBeenHydrated.current = true;
+  };
 
   useEffect(() => {
     if (hasCampaignLaunched) return;
-  
+
     startNewCampaign()
       .then((data) => {
         if (!data) return null;
@@ -52,13 +106,17 @@ export default function CampaignRunning({
       .then((values) => {
         if (!values) return;
         updateNode(values.firstNode);
-        // updateNode("remembering_how_to_fight")
+        updateNode("remembering_how_to_fight");
         setCampaignTitle(values.title);
-        hydrateTempPlayerData(character);
+        hydrateTempGameData();
       })
       .catch((err) => console.log(err));
-
   }, []);
+
+  useEffect(() => {
+    console.log(tempInventory)
+  }, [tempInventory])
+
 
   return <>{hasCampaignLaunched ? <CampaignHandler /> : <Loading />}</>;
 }

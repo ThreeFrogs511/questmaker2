@@ -1,6 +1,5 @@
 import type { Dispatch, SetStateAction } from 'react'
-import { useCharacterStore } from "@/stores/useCharacterStore";
-import { Choice, ChoiceResult, Character} from "@/types/types";
+import { Choice, ChoiceResult} from "@/types/types";
 import { useCombatStore } from '@/stores/useCombatStore';
 
 export default class Penalties {

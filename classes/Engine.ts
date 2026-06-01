@@ -21,6 +21,7 @@ import { useInventoryStore } from "@/stores/useInventoryStore";
 import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useCombatStore } from "@/stores/useCombatStore";
 import AudioManager from "./AudioManager";
+import savePlayerProgress from "@/lib/campaign/savePlayerProgress";
 
 export default class Engine {
   // main attributes
@@ -115,7 +116,6 @@ export default class Engine {
     for (let key in currentChoice) {
       switch (key) {
         case "check":
-          console.log("check");
           const check = this.abilityChecks.handler(currentChoice, this.node);
           if (check === null || check === undefined) return;
           this.playSfx("diceRollSound");
@@ -168,7 +168,6 @@ export default class Engine {
           break;
 
         case "nodeRef":
-          console.log("nodeRef");
           nextNode = this.exclusivePaths.handlingChoicesPaths(
             currentChoice,
             this.pastNodes,
@@ -182,7 +181,6 @@ export default class Engine {
           break;
 
         case "alt":
-          console.log("alt");
           nextNode = this.exclusivePaths.handler(currentChoice);
           setChoiceResult((prev: ChoiceResult) => ({
             ...prev,
@@ -193,7 +191,6 @@ export default class Engine {
           break;
 
         case "campaignEnd":
-          console.log("campaignend");
           this.relevantChoices = (currentChoice.relevantNodes ?? []).filter(
             (n: { node: string; text: string }) => {
               if (this.pastNodes.includes(n.node)) return n.text;
@@ -250,17 +247,16 @@ export default class Engine {
   }
 
   //FOR COMBAT ONLY : IF THE PLAYER MAKES A MOVE, WE CALL THIS METHOD
-  async handlePlayerCombatChoices(move: Moveset) {
+  async handlePlayerCombatChoices(move: Moveset | Item) {
     if (!this.combat) return;
 
-    // if the user open their inventory
-    if (move.name === "inventory") {
-      console.log("inventory open!");
-      this.combat.inventoryHandler();
-      return;
-    }
+    // // if the user open their inventory
+    // if (move.name === "inventory") {
+    //   this.combat.inventoryHandler();
+    //   return;
+    // }
 
-    // if the user choose an attack or use a consumable item
+    // if the user choose an attack or to use an item
     if (!this.combatLockOn) {
       this.combatLockOn = true;
       await this.combat
@@ -284,32 +280,27 @@ export default class Engine {
   // we use this method to save the new user's data in the database at the end of the campaign
   async savingUserData(currentUser: User) {
     if (!currentUser?.user_id) return;
-    const character = useCharacterStore.getState().character;
 
-    const response = await fetch(`/api/character/${currentUser.user_id}`, {
-      method: "PUT",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({
-        xp: character.xp,
-        damage_taken: character.damage_taken,
-        dopamine_consumed: character.dopamine_consumed,
-        coins: character.coins,
-      }),
-    });
-    const feedback = await response.json();
-    if (!feedback.success) return { success: false };
+    const tempPlayerData = useCombatStore.getState().tempPlayerData;
+    const tempInventory = useCombatStore.getState().tempInventory;
+    const tempMovesets = useCombatStore.getState().tempMovesets;
 
-    const inventory = useInventoryStore.getState().inventory;
-    const inventoryResponse = await fetch(
-      `/api/inventory/${currentUser.user_id}`,
-      {
-        method: "PUT",
-        headers: { "content-type": "application/json" },
-        body: JSON.stringify({ inventory }),
-      },
+    const originalInventory = useInventoryStore.getState().inventory;
+    const originalMovesets = useCombatStore.getState().movesets;
+    const feedback = await savePlayerProgress(
+      tempPlayerData,
+      tempInventory ?? [],
+      tempMovesets,
+      originalInventory ?? [],
+      originalMovesets,
     );
-    const inventoryFeedback = await inventoryResponse.json();
-    return inventoryFeedback.success ? { success: true } : { success: false };
+    if (!feedback?.success) {
+      console.log(feedback?.err)
+      return { success: false };
+    } else {
+      return {success:true}
+    }
+
   }
 
   // setter to update the node inside the class
@@ -326,23 +317,6 @@ export default class Engine {
   getAccumulatedXp() {
     return this.accumulatedXp;
   }
-
-  getTempInventory() {
-    return this.tempInventory ?? [];
-  }
-
-  setTempInventoryInsideEngine(inventory:Item[]) {
-    this.tempInventory = inventory;
-  }
-
-  getTempSkillset() {
-    return this.tempSkillset ?? [];
-  }
-
-  setTempSkillset(skillset:Moveset[]) {
-    this.tempSkillset = skillset;
-  }
-
 
   logUserChoices(choice: string) {
     this.pastUserChoices.push(choice);
