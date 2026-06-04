@@ -59,9 +59,8 @@ export default function MerchantPurchase() {
       };
     } else {
       optimisticInventory.push({
-        inventory_id: null,
         slug: item.slug,
-        user_id: currentUser?.user_id ?? null,
+        user_id: currentUser?.user_id ?? undefined,
         quantity: 1,
       });
     }
