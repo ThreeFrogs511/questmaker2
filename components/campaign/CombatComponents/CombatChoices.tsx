@@ -2,11 +2,11 @@
 
 import { useCombatStore } from "@/stores/useCombatStore";
 import Engine from "@/classes/Engine";
+import { useEffect } from "react";
 
 export default function CombatChoices({ gameplay }: { gameplay: Engine }) {
 
 
-  // we take the actual movesets and hydrate the temporary movesets state
   const tempMovesets = useCombatStore((state) => state.tempMovesets);
 
   const hasRoundStarted = useCombatStore((state) => state.hasRoundStarted);
@@ -14,6 +14,10 @@ export default function CombatChoices({ gameplay }: { gameplay: Engine }) {
 
   const isInventoryOpened = useCombatStore((state) => state.isInventoryOpened);
   const openInventory = useCombatStore((state) => state.openInventory);
+
+  useEffect(() => {
+    console.log(tempMovesets)
+  }, [tempMovesets])
 
   if (tempMovesets.length <=0) {
     return null
@@ -48,7 +52,7 @@ export default function CombatChoices({ gameplay }: { gameplay: Engine }) {
             >
               {move.name && (
                 <img
-                  src={`/icons/${move.name.toLowerCase()}.svg`}
+                  src={`${move.name === "inventory" ? '/icons/inventory.svg' : move.url}`}
                   alt=""
                   className="max-w-full h-auto"
                 />

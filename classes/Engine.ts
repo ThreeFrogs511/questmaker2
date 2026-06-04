@@ -18,7 +18,6 @@ import Reward from "./Reward";
 
 import { useNarrationStore } from "@/stores/useNarrationStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
-import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useCombatStore } from "@/stores/useCombatStore";
 import AudioManager from "./AudioManager";
 import savePlayerProgress from "@/lib/campaign/savePlayerProgress";
@@ -84,7 +83,6 @@ export default class Engine {
   }
 
   playSfx(soundName: string) {
-    // this.currentSfx !== "" && this.audioManager.stopSFX(this.currentSfx);
     this.audioManager.playSfx(soundName);
     this.currentSfx = soundName;
   }
@@ -157,7 +155,6 @@ export default class Engine {
             this.playMusic.bind(this),
           );
           this.combat.preparingCombat(currentChoice, clearNbOfTurn);
-          // this.playMusic("battleMusic");
           setChoiceResult((prev: ChoiceResult) => ({
             ...prev,
             success: null,
@@ -219,8 +216,8 @@ export default class Engine {
 
         case "reward":
           if (!currentChoice.reward) return;
-          const newReward = currentChoice.reward as Item[];
-          this.reward = new Reward(newReward, this.tempInventory ?? []);
+          const newReward = currentChoice.reward as Item[]; // 1 or many items rewarded possible
+          this.reward = new Reward(newReward);
           this.reward.addNewItems();
           setChoiceResult((prev: ChoiceResult) => ({
             ...prev,
@@ -249,12 +246,6 @@ export default class Engine {
   //FOR COMBAT ONLY : IF THE PLAYER MAKES A MOVE, WE CALL THIS METHOD
   async handlePlayerCombatChoices(move: Moveset | Item) {
     if (!this.combat) return;
-
-    // // if the user open their inventory
-    // if (move.name === "inventory") {
-    //   this.combat.inventoryHandler();
-    //   return;
-    // }
 
     // if the user choose an attack or to use an item
     if (!this.combatLockOn) {

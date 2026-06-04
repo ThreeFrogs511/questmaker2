@@ -73,7 +73,6 @@ export default class AudioManager {
     if (!this.currentHowl || !this.currentMusicId) return;
     this.currentMusicTime = this.currentHowl.seek(this.currentMusicId);
     this.currentHowl = this.currentHowl?.mute(true, this.currentMusicId);
-    console.log("pausing ?");
   }
 
   resumeMusic() {
@@ -91,7 +90,6 @@ export default class AudioManager {
     }
 
     if ((this[music] as Howl) !== this.currentHowl) {
-      console.log("current howl:", this.currentHowl)
       this.currentHowl?.stop(this.currentMusicId);
       this.currentMusicId = (this[music] as Howl)?.play();
       this.currentHowl = this[music] as Howl;

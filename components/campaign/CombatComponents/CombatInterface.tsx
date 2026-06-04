@@ -27,9 +27,10 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
   const isInventoryOpened = useCombatStore((state) => state.isInventoryOpened);
   const tempPlayerData = useCombatStore((state) => state.tempPlayerData)
 
-useEffect(() => {
-  console.log("inventaire ouvert = ", isInventoryOpened);
-},[isInventoryOpened])
+  useEffect(() => {
+    console.log("damage_taken = ", tempPlayerData.damage_taken)
+  }, [tempPlayerData])
+
 
   // local states
   const [loader, setLoader] = useState(false);

@@ -48,9 +48,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isProfileCompleted, setIsProfileCompleted] = useState(false);
 
-  useEffect(() => {
-    console.log("hp = ", character.hp)
-  }, [character])
+
 
   useEffect(() => {
     const needQuery = isDatabaseQueryNecessary(pathname, isDataLoaded, questsAreLoaded);

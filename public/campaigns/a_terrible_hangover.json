@@ -392,7 +392,7 @@
         {
           "text": "Face the bandits’ reaction to your magic.",
           "reward": {
-            "type": "spell",
+            "type": "moveset",
             "name": "fireball",
             "cooldown": "2"
           },
@@ -791,7 +791,13 @@
       "choices": [
         {
           "text": "Climb behind him and hold on tight.",
-          "next": "crossing_on_horseback"
+          "next": "crossing_on_horseback",           
+          "alt": [
+            {
+              "type": "race",
+              "value": "orc"
+            }
+          ]
         }
       ]
     },
@@ -800,7 +806,13 @@
       "choices": [
         {
           "text": "Climb behind him and hold on tight.",
-          "next": "crossing_on_horseback"
+          "next": "crossing_on_horseback",
+           "alt": [
+            {
+              "type": "race",
+              "value": "orc"
+            }
+          ]
         }
       ]
     },
@@ -821,6 +833,24 @@
         }
       ]
     },
+        "crossing_on_horseback_orc": {
+      "text": "You ride across the valley at full speed. In the back, Regalus, the bandit leader, snores peacefully despite the jolts of the road. After several hours on horseback, you reach <span style=\"color:#fbbf24\">Kelia's Crossing</span>, a small elven town ringed by immense fortifications, almost cut off from the rest of the world. Two elven legionaries stop you at the gate : no one is to enter in the city without a pass. One of the guards, who obviously have a disdain for Orcs like you, spots the blood on your clothes. An orc with blood on him ? He reaches for his sword, ready to use it.",
+      "choices": [
+        {
+          "text": "Tell him you injured yourself hiking.",
+          "next": "elf_and_eden_talk"
+        },
+        {
+          "text": "Assure him that you fought a grizzly bear in the wilds, and this blood is not yours.",
+          "next": "elf_and_eden_talk"
+        },
+        {
+          "text": "Warn him to look the other way or else things might get bloody for him too.",
+          "next": "elf_and_eden_talk_threat"
+        }
+      ]
+    },
+
     "elf_and_eden_talk_threat": {
       "text": "The guard curses you and draws his sword. Eden quickly intervenes. He nods toward the criminal tied to the back of his horse. The legionary immediately recognizes the sleeping bandit. Tensions ease. They let you enter, and one of the guard escorts you to the town hall.<br>The city is dead silent. The air heavy. Streets empty. The shops; all closed—a real ghost town. After a short walk, you reach the town hall. At the sight of Regalus, now fully awake and grunting, the Mayor rejoices.",
       "choices": [
@@ -1312,7 +1342,7 @@
       ]
     },
     "asking_for_eden_help_orc": {
-      "text": "<u>Eden</u> : \"<i>Sorry, but I don't do charity. I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. Granted, you're an Orc in enemy's territory. You're not exactly holding all the cards... What can I do ? As for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell ! </i>\" Eden grabs his quiver and heads for the exit.",
+      "text": "<u>Eden</u> : \"<i>Sorry, but I don't do charity. I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. Granted, you're an Orc in enemy's territory. You're not exactly holding all the cards... What can I do ? As for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell ! </i>\" (Eden grabs his quiver and heads for the exit)",
       "choices": [
         {
           "text": "Let him leave and contemplate the daunting task ahead of you.",

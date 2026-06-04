@@ -81,9 +81,11 @@ export default function CampaignRunning({
     }
     updateTempInventory([...tempInv]);
 
-    //player's movesets (skills mostly)
-    const userActions: Moveset[] = [{ type: "action", name: "inventory" }];
-    const userConcatMoves = userActions.concat(movesetsModel);
+    //player's movesets 
+    const userActions: Moveset[] = [{ type: "action", name: "inventory", url:"icons/inventory.svg" }];
+    //insert logic for 'is_activated' skills
+    const onlyActivatedSkills = movesetsModel.filter(n => n.is_skill_activated)
+    const userConcatMoves = userActions.concat(onlyActivatedSkills);
     while (userConcatMoves.length < 12) {
       userConcatMoves.push({});
     }

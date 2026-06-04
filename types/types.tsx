@@ -30,18 +30,21 @@ export type Character = {
 };
 
 export type Moveset = {
-  moveset_id?: number | null;
-  type?: string | null;
-  name?: string | null;
-  cooldown?: number | null;
-  modifier?: string | null;
-  lvl_required?: number | null;
-  dopamine_required?: number | null;
-  character_id?: number | null;
-  dmg?: number | null;
+  moveset_id?: number;
+  type?: string;
+  name?: string;
+  cooldown?: number;
+  modifier?: string;
+  lvl_required?: number;
+  dopamine_required?: number;
+  character_id?: number;
+  dmg?: number;
   effectTarget?: string;
   effectValue?: number;
   is_skill_activated?:boolean;
+  damage?: string;
+  for?: string[];
+  url?:string;
 };
 
 // fetchQuests remaps quest_id → id
@@ -203,21 +206,21 @@ export type Attributes = {
 };
 
 export type Item = {
-  active?: boolean | null;
-  description?: string | null;
-  effectTarget?: string | null;
-  effectType?: string | null;
-  effectValue?: number | null;
-  family?: string | null;
-  imageUrl?: string | null;
-  inventory_id?: number | null;
-  name?: string | null;
-  price?: number | null;
-  slug?: string | null;
-  stackable?: boolean | null;
-  tier?: number | null;
-  type?: string | null;
-  user_id?: number | null;
-  quantity?: number | null;
+  active?: boolean;
+  description?: string;
+  effectTarget?: string;
+  effectType?: string;
+  effectValue?: number;
+  family?: string;
+  imageUrl?: string;
+  inventory_id?: number;
+  name?: string;
+  price?: number;
+  slug?: string;
+  stackable?: boolean;
+  tier?: number;
+  type?: string;
+  user_id?: number;
+  quantity?: number;
 };
 

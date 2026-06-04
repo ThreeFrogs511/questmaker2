@@ -17,8 +17,7 @@ export async function fetchInventoryData(
     WHERE u.user_id = ${userId}
     ORDER BY inventory_id DESC`;
 
-  if (!r || r.length === 0)
-    return { err: "pas d'user existant" };
+  if (!r || r.length === 0) return { err: "pas d'user existant" };
 
   const inventory = r
     .filter((n) => n.inventory_id !== null)
@@ -26,7 +25,7 @@ export async function fetchInventoryData(
       inventory_id: Number(n.inventory_id),
       slug: n.slug,
       quantity: Number(n.quantity),
-      type: n.type
+      type: n.type,
     }));
 
   return {
@@ -36,10 +35,12 @@ export async function fetchInventoryData(
       email: r[0].email,
       profile_completed: r[0].profile_completed,
       tutorial_completed: r[0].tutorial_completed,
-      last_chapter_done: r[0].last_chapter_done !== null ? Number(r[0].last_chapter_done) : null,
+      last_chapter_done:
+        r[0].last_chapter_done !== null ? Number(r[0].last_chapter_done) : null,
     },
     character: {
-      character_id: r[0].character_id != null ? Number(r[0].character_id) : null,
+      character_id:
+        r[0].character_id != null ? Number(r[0].character_id) : null,
       username: r[0].username,
       xp: Number(r[0].xp),
       hp: Number(r[0].hp),
