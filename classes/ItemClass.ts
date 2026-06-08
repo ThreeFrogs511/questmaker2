@@ -318,4 +318,12 @@ export default class ItemClass {
   getSnapshotPlayerData() {
     return this.snapshotOfPreviousData;
   };
+
+  buyItem() {
+
+  };
+
+  sellItem() {
+
+  };
 }

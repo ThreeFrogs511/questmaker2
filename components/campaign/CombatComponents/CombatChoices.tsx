@@ -15,9 +15,6 @@ export default function CombatChoices({ gameplay }: { gameplay: Engine }) {
   const isInventoryOpened = useCombatStore((state) => state.isInventoryOpened);
   const openInventory = useCombatStore((state) => state.openInventory);
 
-  useEffect(() => {
-    console.log(tempMovesets)
-  }, [tempMovesets])
 
   if (tempMovesets.length <=0) {
     return null
