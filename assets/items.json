@@ -103,6 +103,7 @@
     "price": 5,
     "stackable": false,
     "imageUrl": "/icons/items/hunting-knife.svg",
-    "active": true
+    "active": true,
+    "lvl_required":1
   }
 ]

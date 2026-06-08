@@ -14,13 +14,12 @@ export async function POST(
 
     //fetching all inventory and character coins data
     const userInventory = await sql`
-      SELECT i.inventory_id, i.slug, i.user_id AS inventory_user_id, i.quantity,
+      SELECT i.slug, i.user_id AS inventory_user_id, i.quantity,
              c.coins, u.user_id AS global_user_id
       FROM users u
       LEFT JOIN characters c ON u.user_id = c.user_id
       LEFT JOIN inventory i ON u.user_id = i.user_id
-      WHERE u.user_id = ${id}
-      ORDER BY inventory_id DESC`;
+      WHERE u.user_id = ${id}`;
 
     let updateInventory;
 
@@ -34,7 +33,7 @@ export async function POST(
 
     if (match.length > 0) {
       updateInventory = await sql`UPDATE inventory SET quantity = quantity + 1 WHERE slug = ${item.slug} 
-      RETURNING inventory_id, slug, quantity::int4 AS quantity`;
+      RETURNING slug, quantity::int4 AS quantity`;
 
       if (updateInventory[0].length <= 0) return NextResponse.json({ error: "error while updating inventory" });
 
@@ -61,7 +60,7 @@ export async function POST(
 
         updateInventory =
         await sql`INSERT INTO inventory(slug, user_id, quantity) VALUES (${item.slug}, ${id}, 1) 
-        RETURNING inventory_id, slug, quantity::int4 AS quantity`;
+        RETURNING slug, quantity::int4 AS quantity`;
       
         if (updateInventory[0].length <= 0) return NextResponse.json({ error: "error while updating inventory" });
       
@@ -132,7 +131,7 @@ export async function PATCH(
 
     const q = await sql`UPDATE characters SET coins = coins + ${item.price} WHERE user_id = ${id} RETURNING coins`;
 
-    const list = await sql`SELECT * FROM inventory WHERE user_id = ${id} ORDER BY inventory_id DESC`
+    const list = await sql`SELECT * FROM inventory WHERE user_id = ${id} `
 
     return NextResponse.json({ list: list, success: true, coins: Number(q[0].coins) });
   } catch (err) {

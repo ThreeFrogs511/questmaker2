@@ -51,7 +51,7 @@ export default function SummaryCreation({
       if (feedback.success) {
         const newCharacter = player.buildCharacterFromDraft(draft);
         hydrateCharacter(newCharacter);
-        router.push("/journal");
+        router.push("/intro");
       } else if (feedback.err) {
         console.log("error while creating your character");
       }

@@ -55,7 +55,9 @@ export default function EndScreenInterface({ gameplay }: { gameplay: Engine }) {
               if (!isSkippingAllowed) return;
               if (page === 2) {
                 const r = await gameplay.savingUserData(currentUser);
-                r?.success && router.push("/journal");
+                if (r?.success) { 
+                  router.push("/journal")
+                }
               } else {
                 setPage((prev) => prev + 1);
               }

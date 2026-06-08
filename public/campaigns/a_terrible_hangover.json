@@ -339,7 +339,7 @@
           "fail": "attempt_fireball_fail",
           "check": "int",
           "xp": 12,
-          "dc": 12
+          "dc": 1
         },
         {
           "text": "These bandits don't look too bright. Attempt to negotiate with a well-crafted lie. <span style=\"color:#fbbf24\">(Charisma DC 15)</span>",
@@ -391,11 +391,10 @@
       "choices": [
         {
           "text": "Face the bandits’ reaction to your magic.",
-          "reward": {
+          "reward": [{
             "type": "moveset",
-            "name": "fireball",
-            "cooldown": "2"
-          },
+            "name": "fireball"
+          }],
           "next": "eden_rescue_bandits"
         }
       ]
@@ -547,11 +546,16 @@
       ]
     },
     "forest_attempt_fireball_success": {
-      "text": "You close your eyes and let your mind drift through broken memories. A basic fire spell surfaces: the first trick taught to young mages. You whisper the incantation and focus. A tiny flame appears in your hand and leaps toward the spider. It would have worked, if the creature wasn't so quick on its feet. It steps back right on time and then turns on you with murderous rage, knocking you to the ground and pinning you.",
+      "text": "You close your eyes and let your mind drift through broken memories. A basic fire spell surfaces: the first trick taught to young mages. You whisper the incantation and focus. A tiny flame appears in your hand and leaps toward the spider. It would have worked, if the creature wasn't so quick on its feet. It steps back right on time and then turns on you with murderous rage, knocking you to the ground and pinning you.<br><span style=\"color:#fbbf24\"> You have now unlocked Fireball ! </span>",
       "choices": [
         {
           "text": "Look for a last-second miracle.",
+          "reward": [{
+            "type": "moveset",
+            "name": "fireball"
+          }],
           "next": "eden_rescue_spider_danger"
+
         }
       ]
     },
@@ -641,7 +645,7 @@
       ]
     },
     "eden_description_and_clothes_female": {
-      "text": "<u>???</u> : \"<i>Hey there, beautiful ! Isn't it a bit cold to walk around with your backside out in the open ? Not that I'm complaing, mind you... Wandering about... looking like that in these parts ; it's like you're asking for trouble ! Oh, don't mind me. Just doing some shopping. You should do the same. Go on, get dressed. They won't need their clothes where they're going...</i>\"",
+      "text": "<u>???</u> : \"<i>Hey there, beautiful ! Isn't it a bit cold to walk around with your backside out in the open ? Not that I'm complaining, mind you... Wandering about... looking like that in these parts ; it's like you're asking for trouble ! Oh, don't mind me. Just doing some shopping. You should do the same. Go on, get dressed. They won't need their clothes where they're going...</i>\"",
       "choices": [
         {
           "text": "Put some clothes on you, then ask who he is and what he is doing here.",
@@ -901,7 +905,7 @@
           "fail": "pocket_the_mayor_knife_fail",
           "check": "dex",
           "xp": 10,
-          "dc": 12
+          "dc": 1
         }
       ]
     },
@@ -912,7 +916,7 @@
           "text": "Play it cool and listen to what the Mayor has to say next.",
           "next": "keep_silent_answer",
           "reward": [
-            { "type": "weapon", "slug": "hunting-knife", "quantity": 1 }
+            { "type": "item", "slug": "hunting-knife", "quantity": 1 }
           ]
         }
       ]
@@ -2018,7 +2022,7 @@
       ]
     },
     "eden_gives_journal": {
-      "text": "<u>Eden</u> : \"<i>That’s probably the best decision you’ve made today. No time to celebrate—we’ve got work to do. That necromancer won’t stop himself. I have a plan (well, the start of one), but first... Here. This is a journal. Use it to track what needs tracking. Between us, you need it most.<br> Now that that’s settled, let’s get to work, my dear partner. Questmaker has its first contract.</i>\"<br><span style=\"color:#fbbf24\">You have unlocked the Journal !</span>",
+      "text": "<u>Eden</u> : \"<i>That’s probably the best decision you’ve made today. No time to celebrate—we’ve got work to do. I have a plan (well, the start of one), but first... Here. This is a journal. Use it to track what needs tracking. Between us, you need it the most.<br> Now, let’s get to work, my dear partner. Questmaker has its first contract.</i>\"<br><span style=\"color:#fbbf24\">You have unlocked the Journal !</span>",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -2077,7 +2081,8 @@
       "choices": [
         {
           "text": "[RESTART]",
-          "next": "remembering_how_to_fight"
+          "next": "remembering_how_to_fight",
+          "ost": "backgroundMedievalMusic"
         }
       ]
     }

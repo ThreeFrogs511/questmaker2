@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/server/connexion";
 import { cookies } from "next/headers";
-import { fetchQuests } from "@/lib/fetchQuests";
+import { fetchQuests } from "@/lib/quests/fetchQuests";
 import { fetchPlayerCampaignData } from "@/lib/fetchPlayerCampaignData";
 import { fetchInventoryData } from "@/lib/fetchInventoryData";
 import * as jose from "jose";

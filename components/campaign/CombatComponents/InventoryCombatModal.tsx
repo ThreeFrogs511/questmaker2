@@ -52,7 +52,7 @@ export default function InventoryCombatModal({
     gameplay
       .handlePlayerCombatChoices(item)
       .then(() => updateRoundStatus(false));
-  }
+  };
 
 
   if (!tempInventory) {
@@ -107,7 +107,7 @@ export default function InventoryCombatModal({
                     onPointerDown={() => handleItemUse(item)}
                   >
                     {item.type === "consumable" && "Use"}
-                    {item.type === "weapon" && "Equip"}
+                    {item.type === "weapon" && (item.equipped ? "Desequip" : "Equip")}
                   </div>
                 </figure>
               ))}

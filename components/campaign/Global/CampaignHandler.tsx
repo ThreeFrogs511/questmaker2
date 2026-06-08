@@ -63,7 +63,7 @@ export default function CampaignHandler() {
   const gameplay = useRef<Engine | undefined>(undefined);
   if (!gameplay.current) {
     gameplay.current = new Engine(currentNode);
-  }
+  };
 
   useEffect(() => {
     gameplay.current?.playMusic("backgroundMedievalMusic");

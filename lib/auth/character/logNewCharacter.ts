@@ -34,8 +34,8 @@ export default async function logNewCharacter(data: Character) {
       UPDATE users SET profile_completed = true WHERE user_id = ${user_id}
       ),
     moves AS (
-      INSERT INTO movesets (type, name, modifier, character_id, is_activated) 
-      VALUES ('basic_skill', (CASE WHEN ${data.race} = 'Felinois' THEN 'scratch' ELSE 'punch' END), 'str', (SELECT character_id FROM chr), TRUE)
+      INSERT INTO movesets (type, name, character_id, is_skill_activated) 
+      VALUES ('basic_skill', (CASE WHEN ${data.race} = 'Felinois' THEN 'scratch' ELSE 'punch' END), (SELECT character_id FROM chr), TRUE)
       )
     SELECT character_id from chr`;
     //
@@ -75,6 +75,7 @@ export default async function logNewCharacter(data: Character) {
     return { success: true };
   } catch (err) {
     const error = String((err as Error).message);
+    console.log("error : ", error)
     return { err: error };
   }
 }

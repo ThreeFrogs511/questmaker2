@@ -16,11 +16,11 @@ export type Character = {
   lvl: number | null;
   xp: number | null;
   hp: number | null;
-  damage_taken: number;      // default 0
+  damage_taken: number; // default 0
   dopamine: number | null;
   dopamine_consumed: number; // default 0
   ac: number | null;
-  coins: number;             // default 0
+  coins: number; // default 0
   str: number | null;
   dex: number | null;
   con: number | null;
@@ -34,25 +34,25 @@ export type Moveset = {
   type?: string;
   name?: string;
   cooldown?: number;
-  modifier?: string;
+  modifier?: string[];
   lvl_required?: number;
   dopamine_required?: number;
   character_id?: number;
   dmg?: number;
   effectTarget?: string;
   effectValue?: number;
-  is_skill_activated?:boolean;
+  is_skill_activated?: boolean;
   damage?: string;
   for?: string[];
-  url?:string;
+  url?: string;
 };
 
 // fetchQuests remaps quest_id → id
 export type Quest = {
-  id: number | null;
-  body: string | null;
+  quest_id: number;
+  body: string;
   completed: boolean;
-  user_id: number | null;
+  user_id: number;
 };
 
 export type QuestRateLimit = {
@@ -69,14 +69,14 @@ export type CampaignIndex = {
   chapter: number | null;
 };
 
-export type PayloadType ={
+export type PayloadType = {
   userId: number;
   email: string;
   isCompleted: boolean;
-  tutorialCompleted: boolean,
-  lastChapterDone: number | null,
-  accessLevel: string
-}
+  tutorialCompleted: boolean;
+  lastChapterDone: number | null;
+  accessLevel: string;
+};
 
 // describe the 'nodes' global object
 export type Nodes = Record<string, Node>;
@@ -91,6 +91,13 @@ export type Node = {
   true?: string;
   false?: string;
   fail?: string;
+};
+
+export type Rewards = {
+    type:string;
+    slug?:string;
+    quantity?: number;
+    name?: string;
 };
 
 // describe the type of the choice array and all the possibles options
@@ -120,7 +127,7 @@ export type Choice = {
   relevantNodes?: Array<{ node: string; text: string }>;
   xp?: number;
   ost?: string;
-  reward?: Item[]
+  reward?: Rewards[]
 };
 
 type Alt = {
@@ -222,5 +229,6 @@ export type Item = {
   type?: string;
   user_id?: number;
   quantity?: number;
+  equipped?: boolean;
+  lvl_required?: number;
 };
-

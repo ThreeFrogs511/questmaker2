@@ -4,6 +4,7 @@ import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useCombatStore } from "@/stores/useCombatStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
 import { updatePlayerDataAfterConsumableUse } from "@/lib/inventory/updatePlayerDataAfterConsumableUse";
+import { updatePlayerDataAfterWeaponUse } from "@/lib/inventory/updatePlayerDataAfterWeaponUse";
 import AudioManager from "./AudioManager";
 import movesets from '@/assets/movesets.json'
 
@@ -17,7 +18,7 @@ export default class ItemClass {
   };
   private audio: AudioManager
 
-  constructor(item: ItemType, mode = "free", audio=new AudioManager()) {
+  constructor(item: ItemType, mode="free", audio=new AudioManager()) {
     this.mode = mode;
     this.item = item;
     this.snapshotOfPreviousData = {
@@ -33,7 +34,14 @@ export default class ItemClass {
         const r = await this.useConsumable();
         return {success:r}
     } else if (this.item?.type === "weapon") {
-      this.equipWeapon();
+      const r = this.hasWeaponBeenAlreadyEquipped();
+      if (r) {
+        const r = this.desequipWeapon();
+        return {success:r, action:"desequip"};
+      } else {
+        const r = await this.equipWeapon();
+        return {success:r, action:"equip"};
+      }
       //equipe weapon method
     } else if (this.item?.type === "armor") {
       //equipe armor method
@@ -79,49 +87,172 @@ export default class ItemClass {
         return true;
       } else if (r === false) {
         updateCharacter({...this.snapshotOfPreviousData.character});
-        useCombatStore.getState().hydrateMovesets({...this.snapshotOfPreviousData.movesets});
-        useInventoryStore.getState().updateInventory({...this.snapshotOfPreviousData.inventory ?? []});
+        useCombatStore.getState().hydrateMovesets([...this.snapshotOfPreviousData.movesets]);
+        useInventoryStore.getState().updateInventory([...this.snapshotOfPreviousData.inventory ?? []]);
         return false;
       };
     };
   };
 
-  equipWeapon() {
+  hasWeaponBeenAlreadyEquipped() {
     if (this.mode === "combat") {
+      const tempMoveSets = useCombatStore.getState().tempMovesets;
+      const skill = tempMoveSets.find(n => n.for?.includes(this.item?.slug ?? ""));
+      if (skill) {
+        return true;
+      } else {
+        return false;
+      };
+
+    } else if (this.mode === "free") {
+      const movesets = useCombatStore.getState().movesets;
+      const skill = movesets.find(n => n.for?.includes(this.item?.slug ?? ""));
+      if (skill) {
+        //
+        return true;
+      } else {
+        //equip
+        return false;
+      }
+    };
+  };
+
+  async equipWeapon() {
+    if (this.mode === "combat" && this.item?.equipped === false) {
       const tempMoveSets = useCombatStore.getState().tempMovesets;
       const updateTempMovesets = useCombatStore.getState().updateTempMovesets;
       const newSkill:Moveset | undefined = movesets.find(n => n.for?.includes(this.item?.slug ?? ""))
-      if (!newSkill) {
-        return;
-      } 
+      const character_id=useCharacterStore.getState().character.character_id
+      if (!newSkill || !character_id) return;
       newSkill.is_skill_activated = true;
-      const updatedTempMovesets = tempMoveSets.map((n) => {
+
+      const updatedTempMovesets:Moveset[] = tempMoveSets.map((n) => {
         if (n.type === "basic_skill" || n.type === "weapon_skill") {
-          n = newSkill
+          n = {...newSkill, character_id:character_id}
         }
         return n;
       });
-      console.log(updatedTempMovesets)
       updateTempMovesets(updatedTempMovesets);
-    } else if (this.mode === "free") {
+      const updatedTempInventory = useCombatStore.getState().tempInventory?.map((n) => {
+        if (n.slug === this.item?.slug) {
+          return {...n, equipped:true}
+        } else {
+          return n;
+        }
+      });
+      useCombatStore.getState().updateTempInventory(updatedTempInventory ?? []);
+
+    } else if (this.mode === "free" && this.item?.equipped === false) {
       const movesets = useCombatStore.getState().movesets;
       const hydrateMovesets = useCombatStore.getState().hydrateMovesets;
-      const updatedMovesets = movesets.map((n) => {
-        if (n.type === "basic_skill" || n.type === "weapon") {
-          const newSkill = movesets.filter(n => n.for?.includes(this.item?.slug ?? ""));
-          if (!newSkill) {
-            //error
-          }
+      const newSkill:Moveset | undefined = movesets.find(n => n.for?.includes(this.item?.slug ?? ""));
+      const character_id=useCharacterStore.getState().character.character_id
+      if (!newSkill || !character_id) return;
+      newSkill.is_skill_activated = true;
+      
 
-          n = {
-            //attack
-          };
-        }
+      const updatedMovesets:Moveset[] = movesets.map((n) => {
+        if (n.type === "basic_skill" || n.type === "weapon_skill") {
+          n = {...newSkill, character_id:character_id}
+        };
         return n;
       });
       hydrateMovesets(updatedMovesets);
+
+      const updatedInventory = useInventoryStore.getState().inventory?.map((n) => {
+        if (n.slug === this.item?.slug) {
+          return {...n, equipped:true}
+        } else {
+          return n;
+        };
+      });
+      useInventoryStore.getState().updateInventory(updatedInventory ?? []);
+
+      const r = await this.persistNewChangeInDatabase();
+      if (r) {
+        this.determineWhichSoundToPlay();
+        return true;
+      } else {
+        useCombatStore.getState().hydrateMovesets([...this.snapshotOfPreviousData.movesets]);
+        useInventoryStore.getState().updateInventory([...this.snapshotOfPreviousData.inventory ?? []]);
+        return false;
+      }
+
+
     }
-  }
+  };
+
+  async desequipWeapon() {
+    if (this.mode === "combat" && this.item?.equipped === true) {
+      const tempMoveSets = useCombatStore.getState().tempMovesets;
+      const tempPlayerData = useCombatStore.getState().tempPlayerData;
+      const updateTempMovesets = useCombatStore.getState().updateTempMovesets;
+      const replacementSkill = movesets.find(n => {
+        if (tempPlayerData.race === "Felinois") {
+          return n.name === "scratch";
+        } else {
+          return n.name ==="punch";
+        }
+      });
+      if (!replacementSkill) return;
+      const movesetsWithoutWeaponSkill:Moveset[] | undefined = tempMoveSets.map((n) => {
+        if (n.type === "weapon_skill" && n.for?.includes(this.item?.slug ?? "")) {
+          n = replacementSkill;
+        }
+        return n;
+      });
+      updateTempMovesets([...movesetsWithoutWeaponSkill]);
+      const updatedTempInventory = useCombatStore.getState().tempInventory?.map((n) => {
+        if (n.slug === this.item?.slug) {
+          return {...n, equipped:false}
+        } else {
+          return n;
+        }
+      })
+      useCombatStore.getState().updateTempInventory(updatedTempInventory ?? []);
+
+
+    } else if (this.mode === "free" && this.item?.equipped === true) {
+      const character = useCharacterStore.getState().character
+      const movesets = useCombatStore.getState().movesets;
+      const hydrateMovesets = useCombatStore.getState().hydrateMovesets;
+      const replacementSkill = movesets.find(n => {
+        if (character.race === "Felinois") {
+          return n.name === "scratch";
+        } else {
+          return n.name ==="punch";
+        }
+      });
+      if (!replacementSkill) return;
+      const movesetsWithoutWeaponSkill:Moveset[] | undefined = movesets.map((n) => {
+        if (n.type === "weapon_skill" && n.for?.includes(this.item?.slug ?? "")) {
+          n = replacementSkill;
+        }
+        return n;
+      });
+      hydrateMovesets([...movesetsWithoutWeaponSkill]);
+      const updatedInventory = useCombatStore.getState().tempInventory?.map((n) => {
+        if (n.slug === this.item?.slug) {
+          return {...n, equipped:false}
+        } else {
+          return n;
+        }
+      })
+      useCombatStore.getState().updateTempInventory([...updatedInventory ?? []]);
+
+      const r = await this.persistNewChangeInDatabase();
+      if (r) {
+        this.determineWhichSoundToPlay();
+        return true;
+      } else {
+        useCombatStore.getState().hydrateMovesets([...this.snapshotOfPreviousData.movesets]);
+        useInventoryStore.getState().updateInventory([...this.snapshotOfPreviousData.inventory ?? []]);
+        return false;
+      }
+
+
+    }
+  };
 
   determineWhichSoundToPlay() {
     if (this.item?.family?.includes("potion")) {
@@ -129,7 +260,7 @@ export default class ItemClass {
     } else if (this.item?.type === "weapon") {
       //play equip weapon sound
     }
-  }
+  };
 
   decrementInventoryAfterUse() {
     if (this.mode === "combat") {
@@ -158,20 +289,31 @@ export default class ItemClass {
         .filter((n) => (n.quantity ?? 0) > 0);
       hydrateInventory(updatedInventory ?? []);
     }
-  }
+  };
 
   async persistNewChangeInDatabase() {
-    if (this.mode === "free" && this.item?.type === "consumable" && this.item) {
-      const feedback = await updatePlayerDataAfterConsumableUse(this.item);
-      if (feedback.err) {
-        console.log("error:", feedback.err);
-        return false;
-      } else if (feedback.success) {
-        console.log(feedback)
-        return true;
+    if (this.mode === "free" && this.item) {
+      if (this.item?.type === "consumable") {
+        const feedback = await updatePlayerDataAfterConsumableUse(this.item);
+        if (feedback.err) {
+          console.log("error:", feedback.err);
+          return false;
+        } else if (feedback.success) {
+          console.log(feedback)
+          return true;
+        };
+      } else if (this.item?.type === "weapon") {
+        const feedback = await updatePlayerDataAfterWeaponUse(this.item, useCharacterStore.getState().character);
+        if (feedback.err) {
+          console.log("error:", feedback.err);
+          return false;
+        } else if (feedback.success) {
+          console.log(feedback)
+          return true;
+        };
       }
     }
-  }
+  };
 
   getSnapshotPlayerData() {
     return this.snapshotOfPreviousData;

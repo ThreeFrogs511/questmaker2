@@ -11,6 +11,7 @@ import { useCombatStore } from "@/stores/useCombatStore";
 import { useNarrationStore } from "@/stores/useNarrationStore";
 import Die from "./Die";
 import ItemClass from "../ItemClass";
+import characterPresets from "@/assets/characterPresets.json";
 
 export default class Combat {
   //user's attributes
@@ -148,9 +149,9 @@ export default class Combat {
     }
   }
 
-  handleAttackRolls(AC: number, modifier: number) {
+  handleAttackRolls(AC: number, modifierValue: number) {
     const attackRoll =
-      Math.floor(Math.random() * 20) + 1 + modifier + (AC - 10);
+      Math.floor(Math.random() * 20) + 1 + modifierValue + (AC - 10);
     const hit = AC > attackRoll ? false : true;
     return { hit: hit, roll: attackRoll };
   }
@@ -167,14 +168,43 @@ export default class Combat {
   calculateUserDmg(move: Moveset) {
     if (!move || !move.dmg) return;
     const dmgMax = move.dmg;
-    const tempPlayerData = useCombatStore.getState().tempPlayerData;
-    const modifier = move.modifier as keyof Character;
-    const modifierValue = Math.floor(
-      ((tempPlayerData[modifier] as number) - 10) / 2,
-    );
-    console.log("modifier value for this attack = ", modifierValue);
-    let finalDmg = Math.floor(Math.random() * dmgMax + 1 + modifierValue);
+    const modifierValue = this.calcutateModifierValue(move)
+    console.log("modifier value = ", modifierValue)
+
+    let finalDmg = Math.floor(Math.random() * dmgMax + 1 + (modifierValue ?? 0));
     return finalDmg;
+  }
+
+  calcutateModifierValue(move: Moveset) {
+    const tempPlayerData = useCombatStore.getState().tempPlayerData;
+    const user_class = tempPlayerData.user_class;
+    const classData = characterPresets.classes.find(
+      (n) => n.class === user_class,
+    );
+    if (!classData) return;
+
+    //for magic spells mostly, the player use one of their main magic attributes (wis, int, cha) as modifier
+    //for physical class, we pick the highest value of the three
+    //for other non magic skill, we still use the same logic, the result remains the same
+    const mainAttributeBasedOnClass = classData.mainAbility;
+    let attr = move.modifier?.find((n) =>
+      n.includes(mainAttributeBasedOnClass),
+    );
+    //if the player's main attribute is used for the spell
+    if (attr) {
+      const attrValue = tempPlayerData[attr as keyof Character] as number;
+      const modifierValue = Math.floor((attrValue - 10) / 2);
+      return modifierValue;
+    } else {
+      if (!move.modifier) return;
+      const tempPlayerAttr = [];
+      for (let m of move.modifier) {
+        tempPlayerAttr.push(tempPlayerData[m as keyof Character] as number);
+      };
+      const maxValue = Math.max(...tempPlayerAttr); // highest attribute value;
+      const modifierValue = Math.floor((maxValue - 10) / 2);
+      return modifierValue;
+    };
   };
 
   preparingCombat(currentChoice: Choice, resetNbOfTurn: (n: number) => void) {
@@ -266,10 +296,22 @@ export default class Combat {
         resolve();
       } else {
         const finalDmg = this.calculateUserDmg(move);
-        const moveModifier = (move as Moveset).modifier as keyof Character;
-        const modifierValue = useCombatStore.getState().tempPlayerData[
-          moveModifier
-        ] as number;
+
+        //calculating modifier values for attack roll
+        const tempPlayerData = useCombatStore.getState().tempPlayerData;
+        const user_class = tempPlayerData.user_class;
+        const classData = characterPresets.classes.find(
+          (n) => n.class === user_class,
+        );
+        console.log("classData = ", classData);
+        const mainAttribute = classData?.mainAbility;
+        if (!mainAttribute) return;
+
+        let attr = (move as Moveset).modifier?.find((n) =>
+          n.includes(mainAttribute),
+        ) as keyof Character;
+        const attrValue = !attr ? 10 : (tempPlayerData[attr] as number);
+        const modifierValue = Math.floor((attrValue - 10) / 2);
         const attackRoll = this.handleAttackRolls(
           this.encounter.ac ?? 10,
           modifierValue,
@@ -282,10 +324,12 @@ export default class Combat {
             You missed! (Roll: ${attackRoll.roll <= 0 ? 1 : attackRoll.roll})
           </div>`;
           this.setCombatLog(log);
-          return null;
+          resolve();
         } else {
-          console.log("nom de l'attaque = ", move.name);
-          const sound = move.name ?? "";
+          
+          //cleaning the attack name sound and log
+          const arr = move.name?.split(" ") ?? "";
+          const sound = arr[0];
           let formattedAttackName = "";
           if (move.name !== "" && move.name) {
             formattedAttackName =
@@ -322,8 +366,8 @@ export default class Combat {
             resolve();
           } else {
             resolve();
-          };
-        };
+          }
+        }
       }
     });
   }
@@ -409,6 +453,7 @@ export default class Combat {
 
             // moving to the game over and restart node
             this.updateNode(`${node}_game_over`);
+            this.playMusic("gameOverMusic");
             this.resetNbOfTurn(1);
 
             // resetting the user stats
@@ -428,7 +473,7 @@ export default class Combat {
               useCombatStore
                 .getState()
                 .updateTempMovesets([...this.movesetsBeforeCombat]);
-            };
+            }
 
             resolve();
           } else {
@@ -441,7 +486,7 @@ export default class Combat {
 
   async useItem(item: Item) {
     const itemToUse = new ItemClass(item, "combat");
-    itemToUse.handler();
+    const feedback = await itemToUse.handler();
     let log;
     if (item.type === "consumable") {
       log = `
@@ -451,48 +496,10 @@ export default class Combat {
     } else if (item.type === "weapon") {
       log = `
         <div className="lg:text-xl text-xs mb-1">
-          You equip <span style="color:#fbbf24">${item.name}</span> !
+          You ${feedback?.action === "desequip" ? "desequip" : "equip"} <span style="color:#fbbf24">${item.name}</span> !
         </div>`;
     }
     this.setCombatLog(log ?? "");
   }
-
-  // if (item.type === "consumable") {
-  //   const userAction = new useConsumableAction(item, this.playSfx);
-  //   const itemTarget = item.effectTarget;
-  //   switch (itemTarget) {
-  //     case "damage_taken":
-  //       const damageRemoved = userAction.consumeHealthPotion();
-  //       if (damageRemoved === null || damageRemoved === undefined) return;
-  //       this.tempPlayerData.damage_taken = damageRemoved;
-  //       this.updateTempPlayerData({
-  //         damage_taken: this.tempPlayerData.damage_taken,
-  //       });
-  //       break;
-
-  //     default:
-  //       break;
-  //   }
-  //   // the user equips a new weapon
-  // } else if (item.type === "weapon") {
-  //   const tempMovesets = useCombatStore.getState().tempMovesets;
-  //   const updateMovesets = useCombatStore.getState().updateTempMovesets;
-  //   const decrementTempInventory =
-  //     useCombatStore.getState().decrementTempInventory;
-  //   const newMove = {
-  //     dmg: 10,
-  //     dopamine_required: 0,
-  //     lvl_required: 1,
-  //     modifier: "dex",
-  //     name: "slash",
-  //     type: "weapon",
-  //   };
-  //   tempMovesets.splice(1, 1, newMove);
-  //   updateMovesets([...tempMovesets]);
-  //   decrementTempInventory("hunting-knife");
-  //   const log = `<div className="lg:text-xl text-xs mb-1">
-  //         You equip <span style="color:#fbbf24">${item.name}</span> !
-  //         </div>`;
-  //   this.setCombatLog(log);
-  // }
+  
 }

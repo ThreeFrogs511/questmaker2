@@ -3,10 +3,10 @@
     "type": "basic_skill",
     "name": "scratch",
     "cooldown": 0,
-    "modifier": "str",
+    "modifier": ["str"],
     "lvl_required": 1,
     "dopamine_required": 0,
-    "dmg": 1,
+    "dmg": 5,
     "is_skill_activated": true,
     "url": "/icons/scratch.svg"
   },
@@ -14,21 +14,21 @@
     "type": "basic_skill",
     "name": "punch",
     "cooldown": 0,
-    "modifier": "str",
+    "modifier": ["str"],
     "lvl_required": 1,
     "dopamine_required": 0,
-    "dmg": 1,
+    "dmg": 5,
     "is_skill_activated": true,
     "url": "/icons/punch.svg"
   },
   {
     "type": "weapon_skill",
-    "dmg": 5,
+    "dmg": 10,
     "cooldown": 0,
     "dopamine_required": 0,
     "lvl_required": 1,
-    "modifier": "dex",
-    "name": "slash",
+    "modifier":[ "dex"],
+    "name": "slash (hunting knife)",
     "for": ["hunting-knife"],
     "is_skill_activated": false,
     "url": "/icons/slash.svg"
@@ -37,11 +37,10 @@
     "type": "weapon_skill",
     "dmg": 2,
     "cooldown": 0,
-
     "dopamine_required": 0,
     "lvl_required": 1,
-    "modifier": "str",
-    "name": "slash",
+    "modifier": ["str"],
+    "name": "slash (rusty sword)",
     "for": ["rusty-sword"],
     "is_skill_activated": false,
     "url": "/icons/slash.svg"
@@ -50,11 +49,10 @@
     "type": "weapon_skill",
     "dmg": 2,
     "cooldown": 0,
-
     "dopamine_required": 0,
     "lvl_required": 1,
-    "modifier": "str",
-    "name": "bludgeon",
+    "modifier": ["str"],
+    "name": "bludgeon (blacksmith hammer)",
     "for": ["blacksmith-hammer"],
     "is_skill_activated": false,
     "url": "/icons/???.svg"
@@ -63,13 +61,23 @@
     "type": "weapon_skill",
     "dmg": 2,
     "cooldown": 0,
-
     "dopamine_required": 0,
     "lvl_required": 1,
-    "modifier": "dex",
+    "modifier": ["dex"],
     "name": "pierce",
     "for": ["broken-spike"],
     "is_skill_activated": false,
     "url": "/icons/???.svg"
+  },
+    {
+    "type": "skill",
+    "dmg": 10,
+    "cooldown": 2,
+    "dopamine_required": 0,
+    "lvl_required": 1,
+    "modifier": ["int", "cha", "wis"],
+    "name": "fireball",
+    "is_skill_activated": false,
+    "url": "/icons/fireball.svg"
   }
 ]

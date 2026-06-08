@@ -1,7 +1,6 @@
 "use client";
 import type { Dispatch, SetStateAction } from "react";
 import {
-  Character,
   Nodes,
   User,
   Choice,
@@ -21,6 +20,7 @@ import { useInventoryStore } from "@/stores/useInventoryStore";
 import { useCombatStore } from "@/stores/useCombatStore";
 import AudioManager from "./AudioManager";
 import savePlayerProgress from "@/lib/campaign/savePlayerProgress";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 
 export default class Engine {
   // main attributes
@@ -216,9 +216,7 @@ export default class Engine {
 
         case "reward":
           if (!currentChoice.reward) return;
-          const newReward = currentChoice.reward as Item[]; // 1 or many items rewarded possible
-          this.reward = new Reward(newReward);
-          this.reward.addNewItems();
+          new Reward(currentChoice.reward).handler();
           setChoiceResult((prev: ChoiceResult) => ({
             ...prev,
             success: null,
@@ -273,25 +271,36 @@ export default class Engine {
     if (!currentUser?.user_id) return;
 
     const tempPlayerData = useCombatStore.getState().tempPlayerData;
+
+    //updating xp in tempPlayerData
+    const tempPlayerDataWithXpUpdated = {
+      ...tempPlayerData,
+      xp:this.accumulatedXp
+    };
+    useCombatStore.getState().updateTempPlayerData({...tempPlayerDataWithXpUpdated});
+
     const tempInventory = useCombatStore.getState().tempInventory;
     const tempMovesets = useCombatStore.getState().tempMovesets;
 
     const originalInventory = useInventoryStore.getState().inventory;
     const originalMovesets = useCombatStore.getState().movesets;
+
     const feedback = await savePlayerProgress(
-      tempPlayerData,
+      useCombatStore.getState().tempPlayerData,
       tempInventory ?? [],
       tempMovesets,
       originalInventory ?? [],
       originalMovesets,
     );
     if (!feedback?.success) {
-      console.log(feedback?.err)
+      console.log(feedback?.err);
       return { success: false };
     } else {
-      return {success:true}
+      useCharacterStore.getState().hydrateCharacter({ ...useCombatStore.getState().tempPlayerData });
+      useInventoryStore.getState().updateInventory([...(tempInventory ?? [])]);
+      useCombatStore.getState().hydrateMovesets([...tempMovesets]);
+      return { success: true };
     }
-
   }
 
   // setter to update the node inside the class

@@ -37,7 +37,6 @@ export default function XpGained(
         new Promise<void>(resolve => {setTimeout(() => {resolve();}, 200)})
             .then(()  => addXp(accXp))
             .then(() => setIsSkippingAllowedAction(true))
-            .then(() => console.log("valeur de accXp = " + accXp))
     }, [accXp, hasXpBeenUpdated, character])
 
 

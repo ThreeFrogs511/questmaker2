@@ -13,6 +13,7 @@ export default class AudioManager {
   private clickSound: Howl = new Howl({ src: ["/sounds/click.mp3"] });
   private scratchSound: Howl = new Howl({ src: ["/sounds/scratch.mp3"] });
   private potionSound: Howl = new Howl({ src: ["/sounds/potion.mp3"] });
+  private thumpSound: Howl =new Howl({ src: ["/sounds/dramatic-thump.mp3"], volume: 0.9 });
 
   private backgroundMusic: Howl = new Howl({
     src: ["/music/ost2.mp3"],
@@ -47,10 +48,17 @@ export default class AudioManager {
     volume: 0.6,
   });
 
+    private gameOverMusic: Howl = new Howl({
+    src: ["/music/game_over.wav"],
+    loop: false,
+    volume: 0.6,
+  });
+
   private currentMusicId: number | undefined;
   private currentSfxId: number | undefined;
   private currentHowl: Howl | undefined;
   private currentMusicTime: number = 0;
+
 
   playSfx(soundName: string) {
     let sound = soundName as keyof this;
@@ -103,6 +111,6 @@ export default class AudioManager {
   }
 
   resetAllAudio() {
-    this.currentHowl?.stop(this.currentMusicId);
+    Howler.stop();
   }
 }

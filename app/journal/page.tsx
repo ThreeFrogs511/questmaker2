@@ -7,7 +7,10 @@ import useSound from "use-sound";
 import Loading from "@/app/loading";
 import localFont from 'next/font/local'
 import { useCharacterStore } from "@/stores/useCharacterStore";
+import { fetchQuests } from "@/lib/quests/fetchQuests";
 const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
+import { Quest } from "@/types/types";
+import prepareQuests from "@/lib/quests/prepareQuests";
 
 export default function Journal() {
   
@@ -23,6 +26,7 @@ export default function Journal() {
     (state) => state.setDisplayedQuests,
   );
   const areQuestsLoaded = useJournalStore((state) => state.areQuestsLoaded);
+  const setAreQuestsLoaded = useJournalStore((state) => state.setAreQuestsLoaded);
   const errorAnim = useJournalStore((state) => state.errorAnim);
   const setErrorAnim = useJournalStore((state) => state.setErrorAnim);
 
@@ -44,6 +48,21 @@ export default function Journal() {
 
   useEffect(() => {
     setJournalError("");
+    if (areQuestsLoaded) return;
+    fetchQuests()
+      .then((data) => {
+        if (data.err) throw new Error(data.err);
+        const quests = data.quests ?? [];
+        const listOrdered = quests.sort(
+          (a: { quest_id: number }, b: { quest_id: number }) => b.quest_id - a.quest_id
+        );
+        prepareQuests(listOrdered.length > 0 && !listOrdered[0].body ? [] : listOrdered);
+        setAreQuestsLoaded(true);
+      })
+      .catch((err) => {
+        console.log("error : ", err);
+      });
+   
   }, []);
 
   useEffect(() => {
