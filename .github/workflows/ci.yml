@@ -58,7 +58,16 @@ jobs:
       - name: Seed database schema
         env:
           PGPASSWORD: docker
-        run: psql -h localhost -U docker -d questmaker -f data.sql
+        run: |
+          psql -h localhost -U docker -d questmaker -c "
+            CREATE TABLE IF NOT EXISTS quests (
+              quest_id  INTEGER GENERATED ALWAYS AS IDENTITY,
+              body      VARCHAR(300) NOT NULL,
+              completed BOOLEAN NOT NULL,
+              user_id   INTEGER NOT NULL,
+              CONSTRAINT quests_pkey PRIMARY KEY (quest_id)
+            );
+          "
 
       - name: Run integration tests
         env:
