@@ -3,7 +3,7 @@ import { useState } from "react";
 import { Button, Card } from "pixel-retroui";
 import Title from "./Title";
 import presets from "../../assets/characterPresets.json";
-import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import { Attributes } from "@/types/types";
 import localFont from 'next/font/local'
 
@@ -18,12 +18,12 @@ export default function ClassSelection({
 }) {
   const classes = presets.classes;
 
-  const updateDraft = useCharacterCreationStore((state) => state.updateDraft);
-  const draft = useCharacterCreationStore((state) => state.draft);
-  const setAbilityScores = useCharacterCreationStore(
+  const updateDraft = useCharacterStore((state) => state.updateDraft);
+  const draft = useCharacterStore((state) => state.draft);
+  const setAbilityScores = useCharacterStore(
     (state) => state.setAbilityScores,
   );
-  const resetPointsToSpare = useCharacterCreationStore(
+  const resetPointsToSpare = useCharacterStore(
     (state) => state.resetPointsToSpare,
   );
   const [classDescription, setClassDescription] = useState<string | undefined>(

@@ -1,4 +1,4 @@
-import { useUserStore } from "@/stores/useUserStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import { Choice, Nodes } from "@/types/types";
 
 export default class ExclusivePaths {
@@ -6,12 +6,12 @@ export default class ExclusivePaths {
 
   handler(currentChoice: Choice) {
     // setting up
-    const currentUser = useUserStore.getState().currentUser;
+    const character = useCharacterStore.getState().character;
     const nextNode = currentChoice.next;
     let altNode;
-    const userRace = currentUser.race;
-    const userGender = currentUser.gender;
-    const userClass = currentUser.user_class;
+    const userRace = character.race;
+    const userGender = character.gender;
+    const userClass = character.user_class;
     // fetching the "alt" array
     const alt = currentChoice.alt;
 

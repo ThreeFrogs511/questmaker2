@@ -3,42 +3,46 @@ import { sql } from "@/server/connexion";
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ quest_id: string }> },
 ) {
   try {
-    const { id } = await params;
-    if (!id) return NextResponse.json({ error: "id null" });
+    const { quest_id } = await params;
+    if (!quest_id) return NextResponse.json({ error: "id null" });
 
-    const todos = await sql`
-        SELECT t.id, t.body, t.completed, t.user_id
-        FROM todo
-        WHERE user_id = ${id}
-        ORDER BY id DESC`;
+    const quests = await sql`
+        SELECT quest_id, body, completed, user_id
+        FROM quests
+        WHERE user_id = ${quest_id}
+        ORDER BY quest_id DESC`;
 
-    if (todos.length === 0) return NextResponse.json({ error: "No todos yet" });
+    if (quests.length === 0) return NextResponse.json({ error: "No quests yet" });
 
-    return NextResponse.json(todos);
+    return NextResponse.json(quests);
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message });
   }
 }
 
-// compléter ou annuler la complétion d'une quête
 export async function PATCH(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ quest_id: string }> },
 ) {
   try {
-    const { id } = await params;
-    if (!id) return NextResponse.json({ error: "id null" });
+    const { quest_id } = await params;
 
-    const data = await request.json();   
+    if (!quest_id) return NextResponse.json({ error: "id null" });
+
+    const data = await request.json();
+
+    console.log("data.taskUserId = ", data.taskUserId)
+    console.log("data.currentUser.user_id  = ", data.currentUser?.user_id)
 
     if (data.completed === undefined)
       return NextResponse.json({ error: "Missing field: completed" });
-    if (!data.taskUserId || !data.currentUser || !data.currentUser.id)
+    if (!data.taskUserId || !data.currentUser || !data.currentUser?.user_id)
+    
       return NextResponse.json({ error: "missing id" });
-    if (data.taskUserId !== data.currentUser?.id)
+    if (data.taskUserId !== parseInt(data.currentUser?.user_id))
       return NextResponse.json({
         error: "You are not authorized to use this action",
       });
@@ -48,11 +52,11 @@ export async function PATCH(
         rl AS (
           SELECT count, window_start
           FROM quest_rate_limit
-          WHERE user_id = ${data.currentUser.id}
+          WHERE user_id = ${data.currentUser.user_id}
         ),
         state AS (
           SELECT
-            COALESCE((SELECT count        FROM rl), 0)    AS current_count,
+            COALESCE((SELECT count        FROM rl), 0)     AS current_count,
             COALESCE((SELECT window_start FROM rl), NOW()) AS window_start
         ),
         derived AS (
@@ -67,54 +71,54 @@ export async function PATCH(
             ) AS is_limited
           FROM state
         ),
-        todo_upd AS (
-          UPDATE todo
+        quest_upd AS (
+          UPDATE quests
           SET completed = ${data.completed}
-          WHERE id = ${id}
+          WHERE quest_id = ${quest_id}
             AND NOT (SELECT is_limited FROM derived)
-          RETURNING id
+          RETURNING quest_id
         ),
         rl_values AS (
           SELECT
             CASE
-              WHEN NOT ${data.completed}::boolean            THEN GREATEST(current_count - 1, 0)
-              WHEN current_count >= 5 AND one_hour_passed    THEN 1
-              ELSE                                                current_count + 1
+              WHEN NOT ${data.completed}::boolean         THEN GREATEST(current_count - 1, 0)
+              WHEN current_count >= 5 AND one_hour_passed THEN 1
+              ELSE                                             current_count + 1
             END AS new_count,
             CASE
               WHEN NOT ${data.completed}::boolean THEN window_start
               ELSE                                    NOW()
             END AS new_window_start
           FROM derived
-          WHERE EXISTS (SELECT 1 FROM todo_upd)
+          WHERE EXISTS (SELECT 1 FROM quest_upd)
         ),
         rl_upd AS (
           INSERT INTO quest_rate_limit (user_id, count, window_start)
-          SELECT ${data.currentUser.id}, new_count, new_window_start FROM rl_values
+          SELECT ${data.currentUser.user_id}, new_count, new_window_start FROM rl_values
           ON CONFLICT (user_id) DO UPDATE
             SET count        = EXCLUDED.count,
                 window_start = EXCLUDED.window_start
         ),
         coins_upd AS (
-          UPDATE users
+          UPDATE characters
           SET coins = GREATEST(
             coins + CASE WHEN ${data.completed}::boolean THEN 1 ELSE -1 END,
             0
           )
-          WHERE id = ${data.currentUser.id}
-            AND EXISTS (SELECT 1 FROM todo_upd)
+          WHERE user_id = ${data.currentUser.user_id}
+            AND EXISTS (SELECT 1 FROM quest_upd)
           RETURNING coins
         )
       SELECT
         (SELECT is_limited FROM derived)    AS is_limited,
-        (SELECT id          FROM todo_upd)  AS todo_id,
-        (SELECT coins       FROM coins_upd) AS coins
+        (SELECT quest_id   FROM quest_upd)  AS quest_id,
+        (SELECT coins      FROM coins_upd)  AS coins
     `;
 
     if (result[0].is_limited) throw new Error("limit");
-    if (!result[0].todo_id)   throw new Error("Server error. Please try later.");
+    if (!result[0].quest_id)  throw new Error("Server error. Please try later.");
 
-    return NextResponse.json({ success: true, coins: result[0].coins });
+    return NextResponse.json({ success: true, coins: Number(result[0].coins) });
   } catch (error) {
     return NextResponse.json({ error: (error as Error).message });
   }
@@ -122,15 +126,15 @@ export async function PATCH(
 
 export async function DELETE(
   request: Request,
-  { params }: { params: Promise<{ id: string }> },
+  { params }: { params: Promise<{ quest_id: string }> },
 ) {
   try {
-    const { id } = await params;
-    if (id === undefined) throw new Error("Undefined user id");
+    const { quest_id } = await params;
+    if (quest_id === undefined) throw new Error("Undefined quest id");
 
     await sql`
-      DELETE FROM todo
-      WHERE id = ${id}`;
+      DELETE FROM quests
+      WHERE quest_id = ${quest_id}`;
 
     return NextResponse.json({ success: true });
   } catch (error) {

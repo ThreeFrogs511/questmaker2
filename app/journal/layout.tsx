@@ -1,6 +1,5 @@
 import Header from "@/components/global/Header";
-import MerchantHeader from "@/components/Merchant/MerchantHeader";
-
+// import GameHUD from "@/components/global/HUD";
 export default function MerchantLayout({
   children,
 }: {
@@ -12,6 +11,7 @@ export default function MerchantLayout({
       <section id="todo-list" className="h-full overflow-hidden flex flex-col">
    
         {children}
+        {/* <GameHUD /> */}
       </section>
     </div>
   );

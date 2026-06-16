@@ -1,6 +1,6 @@
 import type { Dispatch, SetStateAction } from "react";
 import { Choice } from "@/types/types";
-import { useUserStore } from "@/stores/useUserStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 export default class ChoicesOptions {
   constructor() {}
 
@@ -45,17 +45,17 @@ export default class ChoicesOptions {
   }
 
   insertDynamicInfo(filteredChoices: Choice[]) {
-    const currentUser = useUserStore.getState().currentUser;
+    const character = useCharacterStore.getState().character;
     if (filteredChoices) {
       const dynamicChoices = filteredChoices.map((n: Choice) => {
         if (n.text.includes("[USERNAME]")) {
           n.text = n.text.replace(
             "[USERNAME]",
-            `${currentUser.username ?? ""}`,
+            `${character.username ?? ""}`,
           );
           return n;
         } else if (n.text.includes("[RACE]")) {
-          n.text = n.text.replace("[RACE]", `${currentUser.race ?? ""}`);
+          n.text = n.text.replace("[RACE]", `${character.race ?? ""}`);
           return n;
         } else {
           return n;

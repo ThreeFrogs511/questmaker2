@@ -4,13 +4,13 @@ import Hitpoints from "@/components/userStats/HitpointsBar";
 import DopamineBar from "@/components/userStats/DopamineBar";
 import Progress from "@/components/userStats/XpBar";
 import Header from "@/components/global/Header";
-import { useUserStore } from "@/stores/useUserStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import localFont from 'next/font/local'
 
 const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
 
 export default function CharacterSheetClient() {
-  const currentUser = useUserStore((state) => state.currentUser);
+  const character = useCharacterStore((state) => state.character);
 
 
   return (
@@ -44,26 +44,26 @@ export default function CharacterSheetClient() {
                     <li className="text-base! w-full md:text-lg! grid grid-cols-2">
                       <div>Username:</div>
                       <div className="text-amber-300">
-                        {currentUser?.username ?? "Loading"}
+                        {character?.username ?? "Loading"}
                       </div>
                     </li>
                     <li className="text-base! w-full md:text-lg! grid grid-cols-2">
                       <div>Level:</div>
-                      <div className="text-amber-300">{currentUser?.lvl}</div>
+                      <div className="text-amber-300">{character?.lvl}</div>
                     </li>
                     <li className="text-base! w-full md:text-lg! grid grid-cols-2">
                       <div>Class:</div>
                       <div className="text-amber-300">
-                        {currentUser?.user_class}
+                        {character?.user_class}
                       </div>
                     </li>
                     <li className="text-base! w-full md:text-lg! grid grid-cols-2">
                       <div>Race:</div>
-                      <div className="text-amber-300">{currentUser?.race}</div>
+                      <div className="text-amber-300">{character?.race}</div>
                     </li>
                     <li className="text-base! w-full md:text-lg! grid grid-cols-2">
                       <div>Coins:</div>
-                      <div className="text-amber-300">{currentUser?.coins}</div>
+                      <div className="text-amber-300">{character?.coins}</div>
                     </li>
                   </ul>
                 </div>
@@ -115,72 +115,72 @@ export default function CharacterSheetClient() {
                   <span>Strength</span>
                   <span
                     className={
-                      currentUser?.str && currentUser.str >= 10
+                      character?.str && character.str >= 10
                         ? "text-yellow-400"
                         : "text-red-600"
                     }
                   >
-                    {currentUser?.str ?? ""}
+                    {character?.str ?? ""}
                   </span>
                 </li>
                 <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
                   <span>Dexterity</span>
                   <span
                     className={
-                      currentUser?.dex && currentUser.dex >= 10
+                      character?.dex && character.dex >= 10
                         ? "text-yellow-400"
                         : "text-red-600"
                     }
                   >
-                    {currentUser?.dex ?? ""}
+                    {character?.dex ?? ""}
                   </span>
                 </li>
                 <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
                   <span>Constitution</span>
                   <span
                     className={
-                      currentUser?.con && currentUser.con >= 10
+                      character?.con && character.con >= 10
                         ? "text-yellow-400"
                         : "text-red-600"
                     }
                   >
-                    {currentUser?.con ?? ""}
+                    {character?.con ?? ""}
                   </span>
                 </li>
                 <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
                   <span>Wisdom</span>
                   <span
                     className={
-                      currentUser?.wis && currentUser.wis >= 10
+                      character?.wis && character.wis >= 10
                         ? "text-yellow-400"
                         : "text-red-600"
                     }
                   >
-                    {currentUser?.wis ?? ""}
+                    {character?.wis ?? ""}
                   </span>
                 </li>
                 <li className=" w-[80%] mx-auto py-2 flex justify-between text-base!  md:text-lg!">
                   <span>Intelligence</span>
                   <span
                     className={
-                      currentUser?.int && currentUser.int >= 10
+                      character?.int && character.int >= 10
                         ? "text-yellow-400"
                         : "text-red-600"
                     }
                   >
-                    {currentUser?.int ?? ""}
+                    {character?.int ?? ""}
                   </span>
                 </li>
                 <li className=" w-[80%] mx-auto mb-5 py-2 flex justify-between text-base!  md:text-lg!">
                   <span>Charisma</span>
                   <span
                     className={
-                      currentUser?.cha && currentUser.cha >= 10
+                      character?.cha && character.cha >= 10
                         ? "text-yellow-400"
                         : "text-red-600"
                     }
                   >
-                    {currentUser?.cha ?? ""}
+                    {character?.cha ?? ""}
                   </span>
                 </li>
               </ul>

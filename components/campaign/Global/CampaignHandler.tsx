@@ -47,9 +47,6 @@ export default function CampaignHandler() {
     success: null,
   });
 
-  // stores the nodes' history
-  const [userPastNodes, setUserPastNodes] = useState<Array<string>>([]);
-
   // prevents double clicking on keyboard and errors
   const [keyboardPressed, setKeyboardPressed] = useState(false);
 
@@ -66,7 +63,7 @@ export default function CampaignHandler() {
   const gameplay = useRef<Engine | undefined>(undefined);
   if (!gameplay.current) {
     gameplay.current = new Engine(currentNode);
-  }
+  };
 
   useEffect(() => {
     gameplay.current?.playMusic("backgroundMedievalMusic");
@@ -76,9 +73,7 @@ export default function CampaignHandler() {
     };
   }, []);
 
-  useEffect(() => {
-    console.log(currentNode)
-  },[currentNode])
+
 
   useEffect(() => {
     if (currentCampaign && currentNode && gameplay.current) {
@@ -171,7 +166,7 @@ export default function CampaignHandler() {
       {isCampaignOver && <EndScreenInterface gameplay={gameplay.current} />}
 
       {/* narration container*/}
-      <div className="h-[48dvh] lg:h-[40dvh] lg:mb-5!">
+      <div className="h-[60dvh] lg:h-[40dvh] lg:mb-5!">
         {/* headers wrapper */}
         <div
           id="titleWrapper"
@@ -223,7 +218,6 @@ export default function CampaignHandler() {
                   key={key}
                   onPointerDown={() => {
                     if (isLocked.current) return;
-
                     if (gameplay.current) {
                       gameplay.current.determineNextNode(
                         item,

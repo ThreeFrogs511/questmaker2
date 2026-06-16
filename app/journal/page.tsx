@@ -2,16 +2,19 @@
 import { useEffect } from "react";
 import List from "@/components/journal/List";
 import Toolbar from "@/components/journal/Toolbar";
-import { useUserStore } from "@/stores/useUserStore";
 import { useJournalStore } from "@/stores/useJournalStore";
 import useSound from "use-sound";
 import Loading from "@/app/loading";
 import localFont from 'next/font/local'
-
+import { useCharacterStore } from "@/stores/useCharacterStore";
+import { fetchQuests } from "@/lib/quests/fetchQuests";
 const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
+import { Quest } from "@/types/types";
+import prepareQuests from "@/lib/quests/prepareQuests";
 
 export default function Journal() {
-  const currentUser = useUserStore((state) => state.currentUser);
+  
+  const character = useCharacterStore((state) => state.character);
   const journalError = useJournalStore((state) => state.journalError);
   const setJournalError = useJournalStore((state) => state.setJournalError);
   const whichPage = useJournalStore((state) => state.whichPage);
@@ -23,6 +26,7 @@ export default function Journal() {
     (state) => state.setDisplayedQuests,
   );
   const areQuestsLoaded = useJournalStore((state) => state.areQuestsLoaded);
+  const setAreQuestsLoaded = useJournalStore((state) => state.setAreQuestsLoaded);
   const errorAnim = useJournalStore((state) => state.errorAnim);
   const setErrorAnim = useJournalStore((state) => state.setErrorAnim);
 
@@ -44,6 +48,21 @@ export default function Journal() {
 
   useEffect(() => {
     setJournalError("");
+    if (areQuestsLoaded) return;
+    fetchQuests()
+      .then((data) => {
+        if (data.err) throw new Error(data.err);
+        const quests = data.quests ?? [];
+        const listOrdered = quests.sort(
+          (a: { quest_id: number }, b: { quest_id: number }) => b.quest_id - a.quest_id
+        );
+        prepareQuests(listOrdered.length > 0 && !listOrdered[0].body ? [] : listOrdered);
+        setAreQuestsLoaded(true);
+      })
+      .catch((err) => {
+        console.log("error : ", err);
+      });
+   
   }, []);
 
   useEffect(() => {
@@ -112,7 +131,7 @@ export default function Journal() {
         <span>
           coins :{" "}
           <span className="text-amber-300">
-            {currentUser?.coins}
+            {character?.coins}
           </span>
         </span>
         <span

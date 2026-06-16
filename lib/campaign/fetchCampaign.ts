@@ -2,12 +2,7 @@
 import { sql } from "@/server/connexion";
 import * as jose from "jose";
 import { cookies } from "next/headers";
-
-interface PayloadType {
-  userId: number;
-  email: string;
-  isCompleted: boolean;
-}
+import { PayloadType } from "@/types/types";
 
 export default async function fetchCampaign() {
   try {
@@ -28,19 +23,16 @@ export default async function fetchCampaign() {
     let userId = payload.userId;
 
     const r =
-      await sql`SELECT last_campaign_done FROM users WHERE id= ${userId}`;
-    const campaign_id = r[0].last_campaign_done;
+      await sql`SELECT last_chapter_done FROM users WHERE user_id = ${userId}`;
+    const lastChapter= r[0].last_chapter_done;
     let currentCampaign;
 
-    if (campaign_id === null) {
+    if (lastChapter<=0) {
       currentCampaign =
         await sql`SELECT * FROM dnd_campaign_index WHERE chapter = 1`;
     } else {
-      const lastCampaign =
-        await sql`SELECT chapter FROM dnd_campaign_index WHERE mongo_id = ${campaign_id}`;
-      const newChapter = parseInt(lastCampaign[0].chapter) + 1;
       currentCampaign =
-        await sql`SELECT * FROM dnd_campaign_index WHERE chapter = ${newChapter}`;
+        await sql`SELECT * FROM dnd_campaign_index WHERE chapter = ${lastChapter+1}`;
     }
 
     return currentCampaign[0];

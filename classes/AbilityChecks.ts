@@ -1,4 +1,4 @@
-import { useUserStore } from "@/stores/useUserStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import { Choice, Nodes } from "@/types/types";
 export default class AbilityChecks {
 
@@ -7,10 +7,10 @@ export default class AbilityChecks {
 
       const dc = currentChoice.dc;
       if (dc) {
-        const currentUser = useUserStore.getState().currentUser;
+        const character = useCharacterStore.getState().character;
         const statKey = currentChoice.check;
         const userStat = statKey
-          ? Object.entries(currentUser).find(([key]) => key === statKey)
+          ? Object.entries(character).find(([key]) => key === statKey)
           : undefined;
         const modifier = Math.floor(((userStat?.[1] as number ?? 10) - 10) / 2);
         let abilityScore = Math.floor(Math.random() * 20) + 1 + modifier;

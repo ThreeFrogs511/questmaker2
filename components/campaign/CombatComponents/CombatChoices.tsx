@@ -1,67 +1,55 @@
 "use client";
 
 import { useCombatStore } from "@/stores/useCombatStore";
-import { useEffect, useRef, useState } from "react";
 import Engine from "@/classes/Engine";
+import { useEffect } from "react";
 
-export default function CombatChoices({
-  gameplay,
-  setSoundEffectAction,
-}: {
-  gameplay: Engine;
-  setSoundEffectAction: (effect: string) => void;
-}) {
-  const userAttacks = [
-    { text: "inventory", userDmg: null },
-    { text: "punch", userDmg: 10 },
-    { text: "fireball", userDmg: 10 },
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-    {},
-  ];
+export default function CombatChoices({ gameplay }: { gameplay: Engine }) {
 
-  // combat store
+
+  const tempMovesets = useCombatStore((state) => state.tempMovesets);
+
   const hasRoundStarted = useCombatStore((state) => state.hasRoundStarted);
   const updateRoundStatus = useCombatStore((state) => state.updateRoundStatus);
+
   const isInventoryOpened = useCombatStore((state) => state.isInventoryOpened);
-  //
+  const openInventory = useCombatStore((state) => state.openInventory);
 
-  useEffect(() => {
-    console.log("hasRoundStarted changed:", hasRoundStarted);
-  }, [hasRoundStarted]);
 
-  return (
+  if (tempMovesets.length <=0) {
+    return null
+  } else {
+  return ( 
     <>
       <div
         id="combatChoices"
         className={`grid grid-cols-6 grid-rows-2 lg:grid-cols-12 lg:grid-rows-1 content-center items-center px-2! lg:px-5 gap-2 h-auto mb-2`}
       >
-        {userAttacks.map((item, key) => {
+        {tempMovesets?.map((move, key) => {
           return (
             <figure
               key={key}
               onPointerDown={() => {
                 if (hasRoundStarted) return;
+                if (move.name ==="inventory") {
+                  openInventory(true);
+                  return;
+                };
+                
                 updateRoundStatus(true);
                 gameplay
-                  .handlePlayerCombatChoices(item)
+                  .handlePlayerCombatChoices(move)
                   .then(() => updateRoundStatus(false));
               }}
               className={
                 hasRoundStarted
                   ? `text-center border-2! cursor-not-allowed!  max-h-full! aspect-square overflow-hidden opacity-50 rounded-lg`
-                  : `hover:border-3! text-center border-2! cursor-pointer!  max-h-full! aspect-square overflow-hidden ${item.text === "inventory" && isInventoryOpened ? "border-amber-400!" : "border-white"} rounded-lg`
+                  : `hover:border-3! text-center border-2! cursor-pointer!  max-h-full! aspect-square overflow-hidden ${move.name === "inventory" && isInventoryOpened ? "border-amber-400!" : "border-white"} rounded-lg`
               }
             >
-              {item.text && (
+              {move.name && (
                 <img
-                  src={`/icons/${item.text.toLowerCase()}.svg`}
+                  src={`${move.name === "inventory" ? '/icons/inventory.svg' : move.url}`}
                   alt=""
                   className="max-w-full h-auto"
                 />
@@ -72,4 +60,5 @@ export default function CombatChoices({
       </div>
     </>
   );
+  }
 }

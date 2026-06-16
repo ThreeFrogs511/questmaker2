@@ -3,19 +3,15 @@ import HitpointsBar from "../../userStats/HitpointsBar";
 import { ProgressBar } from "pixel-retroui";
 import { useState} from "react";
 import localFont from 'next/font/local'
-
-
-import CombatChoices from "./combatChoices";
+import items from "@/assets/items.json";
+import CombatChoices from "./CombatChoices";
 import InventoryCombatModal from "./InventoryCombatModal";
-
-// used to interpret HTML in JSON
-import parse from "html-react-parser";
-import { useEffect } from "react";
-
-import useSound from "use-sound";
-
-import { useUserStore } from "@/stores/useUserStore";
+import parse from "html-react-parser"; // used to interpret HTML in JSON
+import { useEffect, useRef } from "react";
+import { Item } from "@/types/types";
+import TempHitpointsBar from "./TempHitpointsBar";
 import { useCombatStore } from "@/stores/useCombatStore";
+import { useInventoryStore } from "@/stores/useInventoryStore";
 import Engine from "@/classes/Engine";
 
 const retroGaming = localFont({
@@ -29,9 +25,8 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
   const nbOfTurn = useCombatStore((state) => state.nbOfTurn);
   const hasRoundStarted = useCombatStore((state) => state.hasRoundStarted);
   const isInventoryOpened = useCombatStore((state) => state.isInventoryOpened);
-  const soundEffect = useCombatStore((state)=> state.soundEffect);
-  const playSoundEffect = useCombatStore((state)=> state.playSoundEffect);
-  
+  const tempPlayerData = useCombatStore((state) => state.tempPlayerData)
+
 
   // local states
   const [loader, setLoader] = useState(false);
@@ -39,8 +34,6 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
   const enemyHealth =
     enemy?.hp && enemyFullHealth ? enemy.hp / enemyFullHealth : undefined;
 
-  // player store
-  const currentUser = useUserStore((state) => state.currentUser);
 
   //loader
   useEffect(() => {
@@ -48,6 +41,7 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
       setLoader(true);
     }, 50);
   }, []);
+
 
 
   return (
@@ -78,20 +72,21 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
           <div id="healthBars" className="flex items-center h-[70%] ">
             <div id="userSide" className="w-[80%] lg:w-[50%] mx-auto">
               <div className="text-center flex flex-col">
-                {currentUser.username ?? "You"}
-                <span>AC : {currentUser.ac}</span>
+                {tempPlayerData?.username ?? "You"}
+                <span>AC : {tempPlayerData?.ac}</span>
                 <span>
                   {Math.floor(
-                    currentUser.hp
-                      ? currentUser.hp - currentUser.damage_taken
-                      : 10 - currentUser.damage_taken,
+                    tempPlayerData?.hp
+                      ? tempPlayerData.hp - tempPlayerData.damage_taken
+                      : 10 - (tempPlayerData?.damage_taken ?? 0),
                   ) +
                     "/" +
-                    currentUser.hp}
+                    tempPlayerData?.hp}
                 </span>
               </div>
               <div className="w-[70%] mx-auto">
-                <HitpointsBar />
+                {/* <HitpointsBar /> */}
+                <TempHitpointsBar gameplay={gameplay} />
               </div>
             </div>
 
@@ -132,12 +127,10 @@ export default function CombatInterface({ gameplay }: { gameplay: Engine }) {
         </div>
         <CombatChoices
           gameplay={gameplay}
-          setSoundEffectAction={playSoundEffect}
         />
         {isInventoryOpened && (
           <InventoryCombatModal
             gameplay={gameplay}
-            setSoundEffectAction={playSoundEffect}
           />
         )}
       </section>

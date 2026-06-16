@@ -2,19 +2,19 @@
 
 import { ProgressBar } from 'pixel-retroui';
 import { useEffect, useState} from 'react';
-import { useUserStore } from '@/stores/useUserStore';
+import { useCharacterStore } from '@/stores/useCharacterStore';
 
 export default function DopamineBar() {
 
-    const currentUser = useUserStore(state => state.currentUser);
+    const character = useCharacterStore(state => state.character);
     const [dopamineInPercentage, setDopamineInPercentage] = useState(0);
 
     useEffect(() => {
-        if (currentUser && currentUser.dopamine) {
-            const percentage = ((currentUser.dopamine-currentUser.dopamine_consumed)/currentUser.dopamine)*100;
-            setDopamineInPercentage(percentage<0 ? 20 : percentage);
-        } 
-    }, [currentUser, currentUser.hp, currentUser.damage_taken]);
+        if (character?.dopamine) {
+            const percentage = ((character.dopamine - character.dopamine_consumed) / character.dopamine) * 100;
+            setDopamineInPercentage(percentage < 0 ? 20 : percentage);
+        }
+    }, [character, character.hp, character.damage_taken]);
     
     return(
         <>

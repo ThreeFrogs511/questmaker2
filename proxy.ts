@@ -1,18 +1,11 @@
 import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import * as jose from "jose";
-
-
-interface PayloadType {
-  userId: number;
-  email: string;
-  isCompleted: boolean;
-}
+import { PayloadType } from "./types/types";
 
 export async function proxy(request: NextRequest) {
   try {
     //getting the cookie
-    // const token = request.cookies.get("session")?.value;
     const jwt = request.cookies.get("auth")?.value;
 
     // if no token, redirect to title screen
@@ -24,30 +17,54 @@ export async function proxy(request: NextRequest) {
       secretKey,
     );
 
-    const pathname = request.nextUrl.pathname;
 
-    if (pathname !== "/characterCreation" && payload.isCompleted === false) {
-      return NextResponse.redirect(new URL("/characterCreation", request.url));
-    };
+    const pathname = request.nextUrl.pathname;
+    const authorizedPathnameTutorialIncomplete = [
+      "/intro",
+      "/campaignRunning/a_terrible_hangover",
+      "/titleScreen",
+    ];
 
     if (!payload || !payload.email || !payload.userId) {
-      throw new Error("Authentification error")
+      throw new Error("Authentification error");
     }
 
-    switch (pathname) {
-      case "/signup":
-        return NextResponse.redirect(new URL("/journal", request.url));
-      case "/login":
-        return NextResponse.redirect(new URL("/journal", request.url));
-      case "/titleScreen":
-        return NextResponse.redirect(new URL("/journal", request.url));
-      case "/":
-        return NextResponse.redirect(new URL("/journal", request.url))
-      default:
-
-        return NextResponse.next();
+    if (pathname !== "/characterCreation" && payload.isCompleted === false) {
+      console.log("redirection char creation");
+      return NextResponse.redirect(new URL("/characterCreation", request.url));
     }
-  } catch {
+
+
+    if (
+      payload.isCompleted === true &&
+      payload.tutorialCompleted === false &&
+      !authorizedPathnameTutorialIncomplete.includes(pathname)
+    ) {
+      console.log("redirection tutorial");
+      return NextResponse.redirect(new URL("/intro", request.url));
+    }
+
+      switch (pathname) {
+        case "/signup":
+          return NextResponse.redirect(new URL("/journal", request.url));
+        case "/login":
+          return NextResponse.redirect(new URL("/journal", request.url));
+        case "/titleScreen":
+          return NextResponse.redirect(new URL("/journal", request.url));
+        case "/":
+          return NextResponse.redirect(new URL("/journal", request.url));
+        case "/characterCreation":
+          return NextResponse.redirect(new URL("/journal", request.url));
+        case "/intro":
+          return NextResponse.redirect(new URL("/journal", request.url));
+
+        default:
+          return NextResponse.next();
+      }
+    
+
+  } catch (err) {
+    console.log((err as Error).message)
     const pathname = request.nextUrl.pathname;
     switch (pathname) {
       case "/signup":
@@ -63,5 +80,6 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.json|.*\\.mp3|.*\\.wav|.*\\.m4a|.*\\.svg).*)"],
+
 };

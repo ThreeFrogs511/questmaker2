@@ -18,16 +18,19 @@ export async function loginUser(
 
     const currentUser = row[0];
 
-    const match = await bcrypt.compare(password, currentUser.user_password);
+    const match = await bcrypt.compare(password, currentUser.password);
     if (!match) return { err: "Wrong email or password" };
 
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const alg = "HS256";
 
     const jwt = await new jose.SignJWT({
-      userId: currentUser.id,
+      userId: currentUser.user_id,
       email: currentUser.email,
       isCompleted: currentUser.profile_completed,
+      tutorialCompleted: currentUser.tutorial_completed,
+      lastChapterDone: currentUser.last_chapter_done,
+      accessLevel: row[0]?.access_level
     })
       .setProtectedHeader({ alg })
       .setIssuedAt()
@@ -44,7 +47,7 @@ export async function loginUser(
       maxAge: 60 * 60 * 24 * 7,
     });
 
-    const { user_password: _pw, ...safeUser } = currentUser;
+    const { password: _pw, ...safeUser } = currentUser;
     return { success: true, userData: safeUser as User };
   } catch (err) {
     return { err: (err as Error).message };

@@ -10,12 +10,13 @@
             "wis": 10,
             "cha": 10
         },
-        "hp": 10,
+        "hp": 1,
         "dopamine": 20,
         "movesets": {
-            "headbutt": 3,
-            "slash": 2
+            "headbutt": 5,
+            "slash": 7,
+            "punch": 5
         },
-        "ac":10
+        "ac":12
     }
 ]

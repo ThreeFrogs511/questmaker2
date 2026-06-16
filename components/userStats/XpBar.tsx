@@ -1,12 +1,10 @@
 import { ProgressBar } from 'pixel-retroui';
-import { useUserStore } from '@/stores/useUserStore';
-import { useEffect } from 'react';
+import { useCharacterStore } from '@/stores/useCharacterStore';
 
 export default function Bar() {
 
-    const currentUser = useUserStore(state => state.currentUser);
+    const character = useCharacterStore(state => state.character);
 
-    
     return(
         <>
         <div className="xpBar">
@@ -15,7 +13,7 @@ export default function Bar() {
             color="green"
             borderColor="white"
             className="w-full transition-width! duration-700! ease-in-out!"
-            progress={currentUser && currentUser.xp ? currentUser.xp : 0}
+            progress={character?.xp ?? 0}
             />
         </div>
         </>

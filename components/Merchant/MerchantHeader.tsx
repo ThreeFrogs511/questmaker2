@@ -1,6 +1,6 @@
 "use client";
-import { useState, useEffect, useRef, useMemo } from "react";
-import { useUserContext } from "@/context/context";
+import { useState, useEffect, useRef } from "react";
+import { useUserStore } from "@/stores/useUserStore";
 import { merchantGreetings } from "@/assets/merchantGreetings";
 import Loading from "@/app/loading";
 import localFont from 'next/font/local'
@@ -12,10 +12,7 @@ export default function MerchantHeader() {
   const [isTyping, setIsTyping] = useState(true);
   const counter = useRef(-1);
   const [greetings, setGreetings] = useState("");
-  
-
-  const { isAuthenticated, isProfileCompleted } = useUserContext();
- 
+   
   
   useEffect(() => {
     const selectedGreetings =
@@ -35,9 +32,6 @@ export default function MerchantHeader() {
     return () => clearInterval(intervalId);
   }, [isTyping]);
 
-  if (!isAuthenticated || !isProfileCompleted) {
-    return <Loading />;
-  }
 
   return (
     <div id="header-merchant" className={retroGaming.className}>

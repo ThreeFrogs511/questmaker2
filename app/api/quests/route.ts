@@ -1,0 +1,42 @@
+import { sql } from "@/server/connexion";
+import { NextResponse, NextRequest } from "next/server";
+import { PayloadType } from "@/types/types";
+import * as jose from "jose";
+
+export async function POST(request: NextRequest) {
+  try {
+    const data = await request.json();
+
+    const jwt = request.cookies.get("auth")?.value;
+
+    if (!jwt) throw new Error("No token");
+
+    const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
+    const { payload }: { payload: PayloadType } = await jose.jwtVerify(
+      jwt,
+      secretKey,
+    );
+    const user_id = payload?.userId;
+
+    if (!user_id) throw new Error("No user id");
+
+    if (data.completed === null || data.completed === undefined)
+      throw new Error("error while sending quest completion state");
+    if (!data.body || data.body.trim() === "")
+      throw new Error("quests can not be empty");
+
+    const result = await sql`
+      INSERT INTO quests (body, completed, user_id)
+      VALUES (${data.body}, ${data.completed}, ${user_id})
+      RETURNING quest_id, body, completed, user_id
+    `;
+
+    const insertedQuest = result[0];
+
+    if (!insertedQuest) throw new Error("error while submitting the quest");
+
+    return NextResponse.json({ success: true, quest: insertedQuest });
+  } catch (err) {
+    return NextResponse.json({ error: (err as Error).message });
+  }
+}

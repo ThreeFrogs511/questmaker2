@@ -5,12 +5,17 @@ import Character from "@/classes/Character";
 import { useRouter } from "next/navigation";
 import presets from "../../assets/characterPresets.json";
 import { useUserStore } from "@/stores/useUserStore";
-import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useEffect } from "react";
-import { User } from "@/types/types";
-import localFont from 'next/font/local'
+import { User, Draft } from "@/types/types";
+import localFont from "next/font/local";
 
-const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
+type feedback = {
+  success?: boolean;
+  err?: string;
+};
+
+const retroGaming = localFont({ src: "../../public/fonts/retro_gaming.ttf" });
 
 export default function SummaryCreation({
   indexTitle,
@@ -32,27 +37,24 @@ export default function SummaryCreation({
 
   // import the login function from dedicated zustand store
   const login = useUserStore((state) => state.login);
-  const draft = useCharacterCreationStore((state) => state.draft);
-  const updateDraft = useCharacterCreationStore((state) => state.updateDraft);
-  const abilityScores = useCharacterCreationStore((state) => state.abilityScores)
-
+  const draft = useCharacterStore((state) => state.draft);
+  const hydrateCharacter = useCharacterStore((state) => state.hydrateCharacter);
+  const updateDraft = useCharacterStore((state) => state.updateDraft);
+  const abilityScores = useCharacterStore((state) => state.abilityScores);
   const classes = presets.classes;
+
   async function handleCharacterCreation2() {
-    if (
-      draft.race &&
-      draft.user_class &&
-      draft.username &&
-      draft.gender
-    ) {
+    if (draft.race && draft.user_class && draft.username && draft.gender) {
       const player = new Character({ ...draft });
-      const feedback = await player.completeProfile(draft, classes);
+
+      const feedback: feedback = await player.completeProfile(draft, classes);
       if (feedback.success) {
-        const newUser: User = player.buildUserFromDraft(draft);
-        login(newUser);
-        router.push("/journal");
+        const newCharacter = player.buildCharacterFromDraft(draft);
+        hydrateCharacter(newCharacter);
+        router.push("/intro");
+      } else if (feedback.err) {
+        console.log("error while creating your character");
       }
-    } else {
-      console.log("profile incomplete");
     }
   }
 

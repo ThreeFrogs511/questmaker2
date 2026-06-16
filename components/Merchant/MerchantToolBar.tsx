@@ -1,5 +1,5 @@
 "use client";
-import { useUserStore } from "@/stores/useUserStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useState, useEffect } from "react";
 import useSound from "use-sound";
 import { useRouter } from "next/navigation";
@@ -17,7 +17,7 @@ export default function MerchantToolbar({
   setNotEnoughMoneyAction,
 }: MerchantToolbarProps) {
 
-  const currentUser = useUserStore((state) => state.currentUser);
+  const character = useCharacterStore((state) => state.character);
   const [errorMoney] = useSound("/sounds/error.mp3");
   const [flash, setFlash] = useState(false);
   const router = useRouter();
@@ -36,11 +36,11 @@ export default function MerchantToolbar({
   }, [notEnoughMoney]);
 
   return (
-    <div className={`w-[90%] mx-auto flex justify-between mb-4 text-xs md:text-sm ${retroGaming.className}`}>
+    <div id="merchant-toolbar" className={`w-[90%] mx-auto flex justify-between mb-4 text-xs md:text-sm ${retroGaming.className}`}>
       <p>
         Your coins:{" "}
         <span className={`text-amber-300 ${flash ? "error-animate" : ""}`}>
-          {currentUser?.coins}
+          {character?.coins}
         </span>
       </p>
 

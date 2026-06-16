@@ -10,6 +10,10 @@ export default class AudioManager {
   private missSound: Howl = new Howl({ src: ["/sounds/miss.m4a"] });
   private diceRollSound: Howl = new Howl({ src: ["/sounds/dice.m4a"] });
   private headbuttSound: Howl = new Howl({ src: ["/sounds/headbutt.m4a"] });
+  private clickSound: Howl = new Howl({ src: ["/sounds/click.mp3"] });
+  private scratchSound: Howl = new Howl({ src: ["/sounds/scratch.mp3"] });
+  private potionSound: Howl = new Howl({ src: ["/sounds/potion.mp3"] });
+  private thumpSound: Howl =new Howl({ src: ["/sounds/dramatic-thump.mp3"], volume: 0.9 });
 
   private backgroundMusic: Howl = new Howl({
     src: ["/music/ost2.mp3"],
@@ -44,10 +48,17 @@ export default class AudioManager {
     volume: 0.6,
   });
 
+    private gameOverMusic: Howl = new Howl({
+    src: ["/music/game_over.wav"],
+    loop: false,
+    volume: 0.6,
+  });
+
   private currentMusicId: number | undefined;
   private currentSfxId: number | undefined;
   private currentHowl: Howl | undefined;
   private currentMusicTime: number = 0;
+
 
   playSfx(soundName: string) {
     let sound = soundName as keyof this;
@@ -70,7 +81,6 @@ export default class AudioManager {
     if (!this.currentHowl || !this.currentMusicId) return;
     this.currentMusicTime = this.currentHowl.seek(this.currentMusicId);
     this.currentHowl = this.currentHowl?.mute(true, this.currentMusicId);
-    console.log("pausing ?");
   }
 
   resumeMusic() {
@@ -88,7 +98,6 @@ export default class AudioManager {
     }
 
     if ((this[music] as Howl) !== this.currentHowl) {
-      console.log("current howl:", this.currentHowl)
       this.currentHowl?.stop(this.currentMusicId);
       this.currentMusicId = (this[music] as Howl)?.play();
       this.currentHowl = this[music] as Howl;
@@ -102,6 +111,6 @@ export default class AudioManager {
   }
 
   resetAllAudio() {
-    this.currentHowl?.stop(this.currentMusicId);
+    Howler.stop();
   }
 }

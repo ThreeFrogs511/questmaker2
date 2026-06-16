@@ -1,24 +1,24 @@
 "use client";
-import { createContext, useContext, useState, useEffect} from "react";
+import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useUserStore } from "@/stores/useUserStore";
-import { useCharacterCreationStore } from "@/stores/useCharacterCreationStore";
-import prepareQuests from "@/lib/prepareQuests";
+import prepareQuests from "@/lib/quests/prepareQuests";
 import { useJournalStore } from "@/stores/useJournalStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
+import { useCharacterStore } from "@/stores/useCharacterStore";
+import { useCombatStore } from "@/stores/useCombatStore";
+import fetchAllData from "@/lib/me/fetchAllData";
 
 interface isDataLoadedType {
   isPlayerDataLoaded: boolean;
   isInventoryDataLoaded: boolean;
+  isMovesetsDataLoaded: boolean;
 }
 
 interface userContextType {
   isFetchingDone: boolean;
-  isProfileCompleted: boolean;
-  isAuthenticated: boolean;
-  isDataLoaded: isDataLoadedType;
-}
+};
 
 const UserDataContext = createContext<userContextType | null>(null);
 
@@ -26,97 +26,45 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const router = useRouter();
   const pathname = usePathname();
   const login = useUserStore((state) => state.login);
-  const updateDraft = useCharacterCreationStore((state) => state.updateDraft);
   const setIsMenuOpen = useUserStore((state) => state.setIsMenuOpen);
   const setAreQuestsLoaded = useJournalStore(
     (state) => state.setAreQuestsLoaded,
   );
-  const questsAreLoaded = useJournalStore((state) => state.areQuestsLoaded);
   const updateInventory = useInventoryStore((state) => state.updateInventory);
-
+  const hydrateCharacter = useCharacterStore((state) => state.hydrateCharacter);
+  const hydrateMovesets = useCombatStore((state) => state.hydrateMovesets);
   // states for user data and fetching status
   const [isFetchingDone, setIsFetchingDone] = useState(false);
   const [isDataLoaded, setIsDataLoaded] = useState<isDataLoadedType>({
     isPlayerDataLoaded: false,
     isInventoryDataLoaded: false,
+    isMovesetsDataLoaded: false,
   });
-  const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isProfileCompleted, setIsProfileCompleted] = useState(false);
-
-  function isDatabaseQueryNecessary(pathname: string) {
-    if (
-      pathname === "/journal" &&
-      questsAreLoaded &&
-      isDataLoaded.isPlayerDataLoaded
-    )
-      return false;
-    if ((pathname === "/characterSheet" || pathname==="/profileSettings") && isDataLoaded.isPlayerDataLoaded)
-      return false;
-    if (
-      (pathname === "/inventory" || pathname.includes("/merchant")) &&
-      isDataLoaded.isPlayerDataLoaded &&
-      isDataLoaded.isInventoryDataLoaded
-    ) {
-      return false;
-    }
-    if (
-      (pathname === "/launcher" || pathname.includes("/campaignRunning")) &&
-      isDataLoaded.isPlayerDataLoaded &&
-      isDataLoaded.isInventoryDataLoaded
-    ) {
-
-      return false;
-      
-    } 
-
-  }
 
   useEffect(() => {
-    const needQuery = isDatabaseQueryNecessary(pathname);
-    if (needQuery === false) return; 
+    if (
+      isDataLoaded.isPlayerDataLoaded &&
+      isDataLoaded.isInventoryDataLoaded &&
+      isDataLoaded.isMovesetsDataLoaded
+    ) {
+      return;
+    }
 
-    fetch("/api/me", {
-      method: "POST",
-      headers: { "content-type": "application/json" },
-      body: JSON.stringify({ pathname: pathname }),
-    })
-      .then((r) => r.json())
+    fetchAllData(pathname)
       .then((data) => {
-        //if the user is authenticated
         if (data.authenticated) {
-          // handling existing but incomplete profile
-
-          console.log("data:", data.user);
-          setIsProfileCompleted(true);
+          console.log("data:", data);
           login({ ...data.user });
-          setIsDataLoaded((prev) => ({
-            ...prev,
+          hydrateCharacter({ ...data.character });
+          updateInventory(data.inventory ?? []);
+          hydrateMovesets(data.movesets ?? []);
+          setIsDataLoaded({
             isPlayerDataLoaded: true,
-          }));
-
-          // storing quests
-          if (data.todos) {
-            const listOrdered = data.todos.sort(
-              (a: { id: number }, b: { id: number }) => b.id - a.id,
-            );
-            prepareQuests(!listOrdered[0].body ? [] : listOrdered);
-            setAreQuestsLoaded(true);
-          }
-
-          //storing inventory
-          if (data.inventory) {
-            updateInventory(data.inventory ?? []);
-            setIsDataLoaded((prev) => ({
-              ...prev,
-              isInventoryDataLoaded: true,
-            }));
-          }
-
-
-          setIsAuthenticated(true);
+            isInventoryDataLoaded: true,
+            isMovesetsDataLoaded: true,
+          });
         }
 
-        //not authenticated
         if (data.err) {
           console.log("error:", data.err);
           if (pathname === "/signup") {
@@ -139,7 +87,6 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
     pathname,
     router,
     login,
-    updateDraft,
     setIsMenuOpen,
     setAreQuestsLoaded,
     updateInventory,
@@ -150,9 +97,6 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       <UserDataContext.Provider
         value={{
           isFetchingDone,
-          isAuthenticated,
-          isProfileCompleted,
-          isDataLoaded,
         }}
       >
         {isFetchingDone && children}

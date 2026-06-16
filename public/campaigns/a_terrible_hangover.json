@@ -339,7 +339,7 @@
           "fail": "attempt_fireball_fail",
           "check": "int",
           "xp": 12,
-          "dc": 12
+          "dc": 1
         },
         {
           "text": "These bandits don't look too bright. Attempt to negotiate with a well-crafted lie. <span style=\"color:#fbbf24\">(Charisma DC 15)</span>",
@@ -391,11 +391,10 @@
       "choices": [
         {
           "text": "Face the bandits’ reaction to your magic.",
-          "abilityGained": {
-            "type": "spell",
-            "name": "fireball",
-            "cooldown": "2"
-          },
+          "reward": [{
+            "type": "moveset",
+            "name": "fireball"
+          }],
           "next": "eden_rescue_bandits"
         }
       ]
@@ -547,11 +546,16 @@
       ]
     },
     "forest_attempt_fireball_success": {
-      "text": "You close your eyes and let your mind drift through broken memories. A basic fire spell surfaces: the first trick taught to young mages. You whisper the incantation and focus. A tiny flame appears in your hand and leaps toward the spider. It would have worked, if the creature wasn't so quick on its feet. It steps back right on time and then turns on you with murderous rage, knocking you to the ground and pinning you.",
+      "text": "You close your eyes and let your mind drift through broken memories. A basic fire spell surfaces: the first trick taught to young mages. You whisper the incantation and focus. A tiny flame appears in your hand and leaps toward the spider. It would have worked, if the creature wasn't so quick on its feet. It steps back right on time and then turns on you with murderous rage, knocking you to the ground and pinning you.<br><span style=\"color:#fbbf24\"> You have now unlocked Fireball ! </span>",
       "choices": [
         {
           "text": "Look for a last-second miracle.",
+          "reward": [{
+            "type": "moveset",
+            "name": "fireball"
+          }],
           "next": "eden_rescue_spider_danger"
+
         }
       ]
     },
@@ -641,7 +645,7 @@
       ]
     },
     "eden_description_and_clothes_female": {
-      "text": "<u>???</u> : \"<i>Hey there, beautiful ! Isn't it a bit cold to walk around with your backside out in the open ? Not that I'm complaing, mind you... Wandering about... looking like that in these parts ; it's like you're asking for trouble ! Oh, don't mind me. Just doing some shopping. You should do the same. Go on, get dressed. They won't need their clothes where they're going...</i>\"",
+      "text": "<u>???</u> : \"<i>Hey there, beautiful ! Isn't it a bit cold to walk around with your backside out in the open ? Not that I'm complaining, mind you... Wandering about... looking like that in these parts ; it's like you're asking for trouble ! Oh, don't mind me. Just doing some shopping. You should do the same. Go on, get dressed. They won't need their clothes where they're going...</i>\"",
       "choices": [
         {
           "text": "Put some clothes on you, then ask who he is and what he is doing here.",
@@ -718,7 +722,7 @@
       ]
     },
     "eden_explains_hunt_bridge": {
-      "text": "<u>???</u> :\"<i>Saving you? Oh... That too, I suppose. Truth is, I was mostly interested in that fella. Name's Regalus. Nasty piece of work. There's a bounty of a thousand gold pieces on his head. Not bad for a few days of work. Took me some time to craft this sleeping arrowhead, but damn that was worth it. Now, give me a hand, would ya' ? Bloke's too heavy for me.</i>\"",
+      "text": "<u>???</u> : \"<i>Saving you? Oh... That too, I suppose. Truth is, I was mostly interested in that fella. Name's Regalus. Nasty piece of work. There's a bounty of a thousand gold pieces on his head. Not bad for a few days of work. Took me some time to craft this sleeping arrowhead, but damn that was worth it. Now, give me a hand, would ya' ? Bloke's too heavy for me.</i>\"",
       "choices": [
         {
           "text": "Follow him to his horse. Then heave the body over the saddle.",
@@ -736,7 +740,7 @@
       ]
     },
     "eden_explains_hunt_forest": {
-      "text": "<u>???</u> : \"<i>And you are welcome, stranger. But I was mainly interested in this creature's venom. Potent stuff. A powerful sleeping draught. I'm a bounty hunter, you see. I actually caught my latest target not far from here. But to do that, I had to use the very last drop of my sleeping vial. So stumbling upon this four-legged demon was a blessing... and stumbling on you as well, of course, ahem. You want a lift to the nearest town, I reckon ? Follow me.</i>\"",
+      "text": "<u>???</u> : \"<i>And you are welcome, stranger. But I was mainly interested in this creature's venom. Potent stuff. A powerful sleeping draught. I'm a bounty hunter, you see. I actually caught my latest target not far from here. But to do that, I had to use the very last drop of my sleeping vial. So stumbling upon this four-legged demon was a blessing... and stumbling upon you as well, of course, ahem. You want a lift to the nearest town, I reckon ? Follow me.</i>\"",
       "choices": [
         {
           "text": "Follow him outside the forest to his horse.",
@@ -791,7 +795,13 @@
       "choices": [
         {
           "text": "Climb behind him and hold on tight.",
-          "next": "crossing_on_horseback"
+          "next": "crossing_on_horseback",           
+          "alt": [
+            {
+              "type": "race",
+              "value": "orc"
+            }
+          ]
         }
       ]
     },
@@ -800,7 +810,13 @@
       "choices": [
         {
           "text": "Climb behind him and hold on tight.",
-          "next": "crossing_on_horseback"
+          "next": "crossing_on_horseback",
+           "alt": [
+            {
+              "type": "race",
+              "value": "orc"
+            }
+          ]
         }
       ]
     },
@@ -821,6 +837,24 @@
         }
       ]
     },
+        "crossing_on_horseback_orc": {
+      "text": "You ride across the valley at full speed. In the back, Regalus, the bandit leader, snores peacefully despite the jolts of the road. After several hours on horseback, you reach <span style=\"color:#fbbf24\">Kelia's Crossing</span>, a small elven town ringed by immense fortifications, almost cut off from the rest of the world. Two elven legionaries stop you at the gate : no one is to enter in the city without a pass. One of the guards, who obviously have a disdain for Orcs like you, spots the blood on your clothes. An orc with blood on him ? He reaches for his sword, ready to use it.",
+      "choices": [
+        {
+          "text": "Tell him you injured yourself hiking.",
+          "next": "elf_and_eden_talk"
+        },
+        {
+          "text": "Assure him that you fought a grizzly bear in the wilds, and this blood is not yours.",
+          "next": "elf_and_eden_talk"
+        },
+        {
+          "text": "Warn him to look the other way or else things might get bloody for him too.",
+          "next": "elf_and_eden_talk_threat"
+        }
+      ]
+    },
+
     "elf_and_eden_talk_threat": {
       "text": "The guard curses you and draws his sword. Eden quickly intervenes. He nods toward the criminal tied to the back of his horse. The legionary immediately recognizes the sleeping bandit. Tensions ease. They let you enter, and one of the guard escorts you to the town hall.<br>The city is dead silent. The air heavy. Streets empty. The shops; all closed—a real ghost town. After a short walk, you reach the town hall. At the sight of Regalus, now fully awake and grunting, the Mayor rejoices.",
       "choices": [
@@ -871,7 +905,7 @@
           "fail": "pocket_the_mayor_knife_fail",
           "check": "dex",
           "xp": 10,
-          "dc": 12
+          "dc": 1
         }
       ]
     },
@@ -880,7 +914,10 @@
       "choices": [
         {
           "text": "Play it cool and listen to what the Mayor has to say next.",
-          "next": "keep_silent_answer"
+          "next": "keep_silent_answer",
+          "reward": [
+            { "type": "item", "slug": "hunting-knife", "quantity": 1 }
+          ]
         }
       ]
     },
@@ -1309,7 +1346,7 @@
       ]
     },
     "asking_for_eden_help_orc": {
-      "text": "<u>Eden</u> : \"<i>Sorry, but I don't do charity. I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. Granted, you're an Orc in enemy's territory. You're not exactly holding all the cards... What can I do ? As for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell ! </i>\" Eden grabs his quiver and heads for the exit.",
+      "text": "<u>Eden</u> : \"<i>Sorry, but I don't do charity. I'm a bounty hunter, not a priest. Don't look at me like that, you'll manage, I'm sure of it. Granted, you're an Orc in enemy's territory. You're not exactly holding all the cards... What can I do ? As for your amnesia, take it as a fresh start. No ties, no obligations. It's almost exciting, when you think about it. On that note—farewell ! </i>\" (Eden grabs his quiver and heads for the exit)",
       "choices": [
         {
           "text": "Let him leave and contemplate the daunting task ahead of you.",
@@ -1508,7 +1545,7 @@
       ]
     },
     "hands_in_the_air": {
-      "text": "You raise your hands, insisting you don't know this man. But it doesn't matter. You were sitting at Eden's table; that makes you an accomplice by default. A hand shoots out of nowhere and immobilizes the cuckold just as he's about to punch you. That hand belongs to the grim-looking elf, who had been staring at your medallion. He threatens the husband, refering to you as his 'target'. You realize your mistake: this mysterious elf did not come to save you—he's an assassin !</strong>",
+      "text": "It doesn't matter. You were sitting at Eden's table; that makes you an accomplice by default. A hand shoots out of nowhere and immobilizes the cuckold just as he's about to punch you. That hand belongs to the grim-looking elf, who had been staring at your medallion. He threatens the husband, refering to you as his 'target'. You realize your mistake: this mysterious elf did not come to save you—he's an assassin !</strong>",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -1838,11 +1875,11 @@
           "next": "eden_talks_assassin"
         },
         {
-          "text": "Urge him to shove his proposition up where the sun doesn't shine",
+          "text": "Urge him to shove his proposition up where the sun doesn't shine.",
           "next": "eden_talks_assassin_alt"
         },
         {
-          "text": "Ask him what he meant by that",
+          "text": "Ask him what he meant by that.",
           "next": "eden_talks_assassin"
         }
       ]
@@ -1985,7 +2022,7 @@
       ]
     },
     "eden_gives_journal": {
-      "text": "<u>Eden</u> : \"<i>That’s probably the best decision you’ve made today. No time to celebrate—we’ve got work to do. That necromancer won’t stop himself. I have a plan (well, the start of one), but first... Here. This is a journal. Use it to track you what needs tracking. Between us, you need it most.<br> Now that that’s settled, let’s get to work, my dear partner. Questmaker has its first contract.</i><br><span style=\"color:#fbbf24\">You have unlocked the Journal !</span>\"",
+      "text": "<u>Eden</u> : \"<i>That’s probably the best decision you’ve made today. No time to celebrate—we’ve got work to do. I have a plan (well, the start of one), but first... Here. This is a journal. Use it to track what needs tracking. Between us, you need it the most.<br> Now, let’s get to work, my dear partner. Questmaker has its first contract.</i>\"<br><span style=\"color:#fbbf24\">You have unlocked the Journal !</span>",
       "choices": [
         {
           "text": "[CONTINUE]",
@@ -2044,7 +2081,8 @@
       "choices": [
         {
           "text": "[RESTART]",
-          "next": "remembering_how_to_fight"
+          "next": "remembering_how_to_fight",
+          "ost": "backgroundMedievalMusic"
         }
       ]
     }

@@ -1,9 +1,6 @@
 "use client";
 import Menu from "@/components/global/Menu";
 import { useState } from "react";
-import { useUserStore } from "@/stores/useUserStore";
-
-
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   

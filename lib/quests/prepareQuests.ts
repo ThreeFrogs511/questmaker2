@@ -9,4 +9,5 @@ export default async function prepareQuests(list: Array<ListType>) {
   
   const currentQuests = list.filter((n) => n.completed === false);
   setDisplayedQuests(currentQuests);
+  
 }

@@ -9,9 +9,9 @@ request: Request,
     const {userId} = await params;
     if (!userId) return NextResponse.json({err:"no user id found"});
 
-    const r = await sql`SELECT last_campaign_done FROM users WHERE id= ${userId}`;
+    const r = await sql`SELECT last_chapter_done FROM users WHERE user_id = ${userId}`;
     console.log(r)
-    const campaign_id = r[0].last_campaign_done;
+    const campaign_id = r[0].last_chapter_done;
     let currentCampaign;
 
 
