@@ -31,21 +31,26 @@ Questmaker is a productivity app with a full RPG layer on top. Create a D&D avat
 
 ### Architecture
 
-PostgreSQL (Neon) handles all relational data — users, sessions, quests, rate limiting. Campaign content and the item catalog are static JSON files served directly from `public/`, which keeps the campaign system zero-latency and dependency-free. PostgreSQL is the only runtime database.
+PostgreSQL (Neon) handles all relational data — users, characters, quests, inventory, movesets, and rate limiting. Campaign content and the item catalog are static JSON files served directly from `public/`, which keeps the campaign system zero-latency and dependency-free. PostgreSQL is the only runtime database.
 
 ```mermaid
 flowchart LR
     subgraph PostgreSQL["PostgreSQL (Neon)"]
         users["users"]
-        sessions["sessions"]
-        todo["todo (quests)"]
+        characters["characters"]
+        quests["quests"]
+        inventory["inventory"]
+        movesets["movesets"]
         rate_limit["quest_rate_limit"]
+        campaign_index["dnd_campaign_index"]
     end
 
     subgraph Static["Static JSON (public/)"]
         campaigns["Campaign node graphs"]
         items["Item catalog"]
     end
+
+    campaign_index -.->|slug reference| campaigns
 ```
 
 ### Campaign engine
