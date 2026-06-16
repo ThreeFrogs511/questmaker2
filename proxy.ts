@@ -29,9 +29,12 @@ export async function proxy(request: NextRequest) {
       throw new Error("Authentification error");
     }
 
-    if (pathname !== "/characterCreation" && payload.isCompleted === false) {
-      console.log("redirection char creation");
-      return NextResponse.redirect(new URL("/characterCreation", request.url));
+    if (payload.isCompleted === false) {
+      if (pathname !== "/characterCreation") {
+        console.log("redirection char creation");
+        return NextResponse.redirect(new URL("/characterCreation", request.url));
+      }
+      return NextResponse.next();
     }
 
 
