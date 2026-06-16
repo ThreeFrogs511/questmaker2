@@ -5,9 +5,11 @@ import { loginUser } from "@/lib/auth/login";
 import { useRouter } from "next/navigation";
 import { useUserStore } from "@/stores/useUserStore";
 import { User } from "@/types/types";
-import localFont from 'next/font/local'
+import localFont from "next/font/local";
 
-const retroGaming = localFont({ src: '../../../public/fonts/retro_gaming.ttf' })
+const retroGaming = localFont({
+  src: "../../../public/fonts/retro_gaming.ttf",
+});
 
 type FeedbackType = {
   success?: boolean;
@@ -19,6 +21,7 @@ export default function LoginForm() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [hasClicked, setHasClicked] = useState(false);
   const inputStyle =
     "w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!";
   const router = useRouter();
@@ -26,24 +29,28 @@ export default function LoginForm() {
 
   async function submitHandler(e: React.SyntheticEvent) {
     e.preventDefault();
+    if (hasClicked) return;
     setError("");
     const inputEmail = email.trim();
     const inputPassword = password.trim();
 
+
     const feedback: FeedbackType = await loginUser(inputEmail, inputPassword);
 
     if (feedback.success && feedback.userData) {
+      setHasClicked(true);
       if (!feedback.userData.profile_completed) {
         router.push("/characterCreation");
       } else {
         login({ ...feedback.userData });
         router.push("/journal");
       }
-    }
+    };
 
     if (feedback.err) {
       setError(feedback.err);
-    }
+      setHasClicked(false);
+    };
   }
 
   return (
@@ -94,7 +101,7 @@ export default function LoginForm() {
         type="submit"
         className="w-full p-2! mx-auto!"
       >
-        Resume my adventure
+        {hasClicked ? "Loading..." : "Resume my adventure"}
       </Button>
 
       <div className="text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">
