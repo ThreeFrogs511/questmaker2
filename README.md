@@ -31,7 +31,7 @@ Questmaker is a productivity app with a full RPG layer on top. Create a D&D avat
 
 ### Architecture
 
-PostgreSQL (Neon) handles all relational data — users, characters, quests, inventory, movesets, and rate limiting. Campaign content and the item catalog are static JSON files served directly from `public/`, which keeps the campaign system zero-latency and dependency-free. PostgreSQL is the only runtime database.
+PostgreSQL (Neon) handles all relational data — users, characters, quests, inventory, movesets, and rate limiting. Campaign node graphs are static JSON files served from `public/campaigns/`, keeping the campaign system zero-latency and dependency-free. Game data models (items, enemies, movesets) live in `assets/` as bundled JSON, used as templates by the game logic at runtime.
 
 ```mermaid
 flowchart LR
@@ -45,9 +45,14 @@ flowchart LR
         campaign_index["dnd_campaign_index"]
     end
 
-    subgraph Static["Static JSON (public/)"]
+    subgraph Static["Static JSON (public/campaigns/)"]
         campaigns["Campaign node graphs"]
-        items["Item catalog"]
+    end
+
+    subgraph Assets["Bundled JSON (assets/)"]
+        items["items.json — item models"]
+        enemies["enemies.json — enemy templates"]
+        movesets_json["movesets.json — moveset templates"]
     end
 
     campaign_index -.->|slug reference| campaigns
@@ -127,11 +132,12 @@ classes/      # Business logic — Engine, AbilityChecks, Combat, Character, Que
 components/   # React UI components
 context/      # Auth/session context provider (bootstraps all Zustand stores on load)
 stores/       # 6 Zustand state stores
-server/       # PostgreSQL connection (Neon)
-lib/          # Shared utilities
-public/campaigns/ # Campaign content as static JSON node graphs
-middlewares/  # Input validation helpers
-types/        # Shared TypeScript types
+server/           # PostgreSQL connection (Neon)
+lib/              # Shared utilities
+assets/           # Bundled JSON data models (items, enemies, movesets)
+public/campaigns/ # Campaign node graphs served as static JSON
+middlewares/      # Input validation helpers
+types/            # Shared TypeScript types
 ```
 
 > Currently scoped to one campaign chapter and a starter item catalogue — the architecture is built to support more.
