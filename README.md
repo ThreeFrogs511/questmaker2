@@ -69,6 +69,8 @@ Campaign content is a graph of **nodes** in MongoDB, each with narrative text an
 | `alt` | `ExclusivePaths` | Branches by the player's race, class, or gender |
 | `nodeRef` | `ExclusivePaths` | Branches based on which past nodes the player visited |
 | `combat_started` | `Combat` | Initializes a fight sequence |
+| `ost` | `AudioManager` | Changes the background music track, then advances |
+| `reward` | `Reward` | Grants the player a reward, then advances |
 | `campaignEnd` | — | Shows end screen + awards accumulated XP |
 | _(none)_ | — | Normal advance to the next node |
 
@@ -87,7 +89,16 @@ The `Choices` class pre-processes choices before display: removes already-picked
 
 ### State management
 
-Six Zustand stores with non-overlapping responsibilities: `useUserStore` (D&D stats, coins, XP), `useNarrationStore` (campaign node graph + current pointer), `useCombatStore` (combat log, enemy, turn tracking), `useInventoryStore`, `useJournalStore` (quests + pagination), and `useCharacterCreationStore` (point-buy draft during character creation).
+Six Zustand stores with non-overlapping responsibilities:
+
+| Store | Holds |
+|---|---|
+| `useUserStore` | Session state — current user object, auth errors, menu open flag |
+| `useCharacterStore` | Live character data (all D&D stats, HP, XP, coins) + point-buy draft during character creation |
+| `useNarrationStore` | Campaign node graph, campaign title, current node pointer |
+| `useCombatStore` | Combat log, enemy encounter, turn counter, menu navigation, movesets, pre-combat snapshots (`tempPlayerData`, `tempInventory`, `tempMovesets`) |
+| `useInventoryStore` | Player inventory array (slug + quantity per item) |
+| `useJournalStore` | Quest list, pagination, loading state |
 
 ---
 
@@ -127,16 +138,17 @@ npm run dev
 ## Project Structure
 
 ```
-app/          # Next.js App Router pages and API routes
-classes/      # Business logic — Engine, AbilityChecks, Combat, Character, Quest, Item
-components/   # React UI components
-context/      # Auth/session context provider (bootstraps all Zustand stores on load)
-stores/       # 6 Zustand state stores
+app/              # Next.js App Router pages and API routes
+classes/          # Business logic — Engine, AbilityChecks, Combat, Character, Quest, Item
+components/       # React UI components
+context/          # Auth/session context provider (bootstraps all Zustand stores on load)
+stores/           # Zustand state stores (user, character, narration, combat, inventory, journal)
 server/           # PostgreSQL connection (Neon)
-lib/              # Shared utilities
+lib/              # Server-side logic by domain (auth, campaign, inventory, quests) + input validation
 assets/           # Bundled JSON data models (items, enemies, movesets)
 public/campaigns/ # Campaign node graphs served as static JSON
-middlewares/      # Input validation helpers
+database/         # Database conceptual diagram
+test/             # Smoke, unit, and integration tests
 types/            # Shared TypeScript types
 ```
 
