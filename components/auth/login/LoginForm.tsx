@@ -76,12 +76,12 @@ export default function LoginForm() {
             placeholder="Password"
             onChange={(e) => setPassword(e.target.value)}
           />
-          <a
+          {/* <a
             href="/forgot"
             className="hover:underline! mt-2! text-xs text-center"
           >
             Forgot password ?
-          </a>
+          </a> */}
         </div>
       </div>
 
