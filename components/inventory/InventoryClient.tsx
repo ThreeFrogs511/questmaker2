@@ -102,7 +102,7 @@ export default function InventoryClient() {
               }}
             >
               {item.type === "consumable" && "Use"}
-              {item.type === "weapon" && "Equip"}
+              {item.type === "weapon" && (!item.equipped ? "Equip" : "Desequip")}
             </div>
           </figure>
         ))}
