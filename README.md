@@ -9,7 +9,6 @@ Questmaker is a productivity app with a full RPG layer on top. Create a D&D avat
 ![Next.js](https://img.shields.io/badge/Next.js_16-black?logo=next.js&logoColor=white)
 ![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)
 ![PostgreSQL](https://img.shields.io/badge/PostgreSQL-4169E1?logo=postgresql&logoColor=white)
-![MongoDB](https://img.shields.io/badge/MongoDB_Atlas-47A248?logo=mongodb&logoColor=white)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-06B6D4?logo=tailwindcss&logoColor=white)
 ![Vercel](https://img.shields.io/badge/Deployed_on_Vercel-black?logo=vercel&logoColor=white)
 
@@ -30,9 +29,9 @@ Questmaker is a productivity app with a full RPG layer on top. Create a D&D avat
 
 ## Engineering Highlights
 
-### Dual-database architecture
+### Architecture
 
-PostgreSQL (Neon) handles all relational data — users, sessions, quests, rate limiting. MongoDB Atlas stores campaign content as node graphs and the item catalog. A `dnd_campaign_index` table in Postgres bridges the two: it maps campaign slugs to MongoDB document IDs, keeping relational integrity on the structured side while leaving graph-shaped narrative content in a document store where it belongs.
+PostgreSQL (Neon) handles all relational data — users, sessions, quests, rate limiting. Campaign content and the item catalog are static JSON files served directly from `public/`, which keeps the campaign system zero-latency and dependency-free. PostgreSQL is the only runtime database.
 
 ```mermaid
 flowchart LR
@@ -41,15 +40,12 @@ flowchart LR
         sessions["sessions"]
         todo["todo (quests)"]
         rate_limit["quest_rate_limit"]
-        campaign_index["dnd_campaign_index"]
     end
 
-    subgraph MongoDB["MongoDB Atlas"]
+    subgraph Static["Static JSON (public/)"]
         campaigns["Campaign node graphs"]
-        store_items["Shop items / catalog"]
+        items["Item catalog"]
     end
-
-    campaign_index -.->|mongo_id reference| campaigns
 ```
 
 ### Campaign engine
@@ -94,7 +90,7 @@ Six Zustand stores with non-overlapping responsibilities: `useUserStore` (D&D st
 | Styling | Tailwind CSS + pixel-retroui |
 | State | Zustand (6 stores) |
 | Relational DB | PostgreSQL via Neon (serverless) |
-| Document DB | MongoDB Atlas |
+| Content | Static JSON files (`public/`) |
 | Auth | Session-based, HTTP-only cookies |
 | Deployment | Vercel |
 
@@ -127,7 +123,8 @@ components/   # React UI components
 context/      # Auth/session context provider (bootstraps all Zustand stores on load)
 stores/       # 6 Zustand state stores
 server/       # PostgreSQL connection (Neon)
-lib/          # MongoDB connection + shared utilities
+lib/          # Shared utilities
+public/campaigns/ # Campaign content as static JSON node graphs
 middlewares/  # Input validation helpers
 types/        # Shared TypeScript types
 ```

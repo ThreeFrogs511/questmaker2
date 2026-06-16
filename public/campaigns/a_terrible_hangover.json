@@ -905,7 +905,7 @@
           "fail": "pocket_the_mayor_knife_fail",
           "check": "dex",
           "xp": 10,
-          "dc": 1
+          "dc": 16
         }
       ]
     },
@@ -1115,7 +1115,7 @@
       ]
     },
     "entering_the_tavern_orc": {
-      "text": "Eden leads you to a tavern called \"The Robin and the Butterfly\", the beating heart of the town. Inside, you quickly become the subject of whispered gossip—either because you walk in with a human, a rare find in this valley, or because you are an Orc...Probably that one. Whatever the case, you go sit at a small table in a quiet corner. The hunter is buying.<br> Pick your poison.",
+      "text": "Eden leads you to a tavern called \"The Robin and the Butterfly\", the beating heart of the town. Inside, you quickly become the subject of whispered gossip—either because you walk in with a human, a rare find in this valley, or because you are an Orc... Probably that one. Whatever the case, you go sit at a small table in a quiet corner. The hunter is buying.<br> Pick your poison.",
       "choices": [
         {
           "text": "Order a pint of beer.",
@@ -1991,7 +1991,7 @@
       "text": "<u>Eden</u> : \"<i>Let’s be clear: I won’t pay you—for a long time. I also can’t guarantee you a distant, painless death. But I can promise you one thing: my loyalty. Against the mystery of your memory, against the next assassin trying to earn his keep… against anything. My loyalty, without limit. So—will you join me? Will you become the second official member of Questmaker ? </i>\"",
       "choices": [
         {
-          "text": "Say that it's the lamest sale pitch ever. You're in",
+          "text": "Say that it's the lamest sale pitch ever. You're in.",
           "next": "eden_gives_journal"
         },
         {
