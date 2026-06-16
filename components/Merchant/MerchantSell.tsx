@@ -70,7 +70,7 @@ export default function MerchantSell() {
     }
     updateCharacter({ coins: previousCoins + (item.price ?? 0) });
 
-    const r = await fetch(`/api/inventory/${currentUser?.user_id}`, {
+    const r = await fetch(`/api/inventory/${character?.character_id}`, {
       method: "PATCH",
       headers: { "content-type": "application/json" },
       body: JSON.stringify(item),

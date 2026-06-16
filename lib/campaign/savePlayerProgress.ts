@@ -33,7 +33,7 @@ export default async function savePlayerProgress(
     const formattedInventoryArrayForSql = tempInventory.map((n) => {
       return {
         slug: n.slug,
-        user_id: userId,
+        character_id: Number(tempPlayerData.character_id),
         quantity: n.quantity,
         item_type: n.type,
         equipped: n.equipped ?? false,
@@ -82,11 +82,11 @@ export default async function savePlayerProgress(
             WHERE character_id = ${tempPlayerData.character_id} AND user_id = ${userId}
             RETURNING user_id
         ),
-        dlt_inv AS (DELETE from inventory WHERE user_id = ${userId}),
+        dlt_inv AS (DELETE from inventory WHERE character_id = ${tempPlayerData.character_id}),
 
         reset_mvst AS (DELETE FROM movesets WHERE character_id = ${tempPlayerData.character_id}),
 
-        insert_mvst AS (INSERT INTO movesets ${sql(formattedMovesetsArrayForSql, 'type', 'name', 'character_id', 'is_skill_activated')} 
+        insert_mvst AS (INSERT INTO movesets ${sql(formattedMovesetsArrayForSql, 'type', 'name', 'character_id', 'is_skill_activated')}
         ON CONFLICT (name, character_id)
         DO UPDATE
         SET is_skill_activated = EXCLUDED.is_skill_activated
@@ -123,22 +123,22 @@ export default async function savePlayerProgress(
             RETURNING user_id
         ),
 
-        reset_inv AS (DELETE from inventory WHERE user_id = ${userId}
+        reset_inv AS (DELETE from inventory WHERE character_id = ${tempPlayerData.character_id}
         ),
 
         reset_mvst AS (DELETE FROM movesets WHERE character_id = ${tempPlayerData.character_id}),
 
-        insert_mvst AS (INSERT INTO movesets ${sql(formattedMovesetsArrayForSql, 'type', 'name', 'character_id', 'is_skill_activated')} 
+        insert_mvst AS (INSERT INTO movesets ${sql(formattedMovesetsArrayForSql, 'type', 'name', 'character_id', 'is_skill_activated')}
         ON CONFLICT (name, character_id)
         DO UPDATE
         SET is_skill_activated = EXCLUDED.is_skill_activated
         )
-        
-        INSERT INTO inventory ${sql(formattedInventoryArrayForSql, 'slug', 'user_id', 'quantity', 'item_type', 'equipped')} 
-        ON CONFLICT (slug, user_id)
+
+        INSERT INTO inventory ${sql(formattedInventoryArrayForSql, 'slug', 'character_id', 'quantity', 'item_type', 'equipped')}
+        ON CONFLICT (slug, character_id)
         DO UPDATE
         SET quantity= EXCLUDED.quantity, equipped = EXCLUDED.equipped
-        RETURNING user_id
+        RETURNING character_id
        `;
     }
 

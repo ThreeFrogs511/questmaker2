@@ -34,10 +34,10 @@ export default function HUD() {
   }, [movesets]);
   return (
     <>
-      <div className="fixed z-999 bottom-0 right-0 left-0 h-[15%] w-full border-t-2! border-white flex">
+      <div className="fixed z-999 bottom-0 right-0 left-0 h-[13%] w-[80%] border-2! mx-auto border-white grid grid-cols-20 grid-rows-1">
         <div
           id="bars-container"
-          className="w-[20%]  h-full border-r-3! border-white! flex flex-col items-center justify-center p-2 gap-2"
+          className="col-span-10 h-full border-r! border-white! flex flex-col items-center justify-center p-2 gap-2"
         >
           <div id="hp-bar" className="w-[80%] h-full border! border-white! ">
             <div
@@ -63,39 +63,31 @@ export default function HUD() {
 
         <div
           id="main-stats-container"
-          className="w-[15%] h-full border-r-3! border-white! flex flex-col items-center justify-center p-2 text-xs"
+          className="col-span-5 h-full border-r! border-l! border-white! grid grid-cols-4! text-sm "
         >
-          <p className="text-xs">
+          <div className="flex flex-col items-center col-span-2">
+          <p >
             {useCharacterStore.getState().character.username}
           </p>
           <p>{useCharacterStore.getState().character.race}</p>
           <p>{useCharacterStore.getState().character.user_class}</p>
-          <p>lvl {useCharacterStore.getState().character.lvl}</p>
-          <p>{useCharacterStore.getState().character.coins} gold</p>
+          </div>
+          <div className="col-span-2 flex items-center justify-center">
+          <p className="text-xl!">lvl {useCharacterStore.getState().character.lvl}</p>
+          </div>
+        </div>
+
+        <div id="gold-container" className="col-span-3 h-full border-r! border-l! border-white! flex gap-1 flex-wrap text-xs">
+          <p>{useCharacterStore.getState().character.coins} gold</p>  
         </div>
 
         <div
-          id="movesets-container"
-          className="w-[80%] h-full border! border-white! flex "
+          id="???-container"
+          className="col-span-2 h-full flex border-white!"
         >
-          {displayedMoveset?.map((move, key) => {
-            return (
-              <figure
-                key={key}
-                className={`text-center border! max-h-full! aspect-square overflow-hidden rounded-lg`}
-              >
-                {move.name && (
-                  <img
-                    src={`${move.url}`}
-                    alt=""
-                    className="max-w-full h-auto"
-                  />
-                )}
-              </figure>
-            );
-          })}
+         
         </div>
-        
+
       </div>
     </>
   );

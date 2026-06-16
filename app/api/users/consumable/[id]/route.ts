@@ -9,7 +9,7 @@ export async function PATCH(
     const { id } = await params;
     const data = await request.json();
 
-    if (!id) return NextResponse.json({ error: "User id not found" });
+    if (!id) return NextResponse.json({ error: "Character id not found" });
 
     const ALLOWED = ["damage_taken", "dopamine_consumed"];
     const col = ALLOWED.find((n) => n === data.effectTarget);
@@ -23,7 +23,7 @@ export async function PATCH(
           ELSE damage_taken + ${data.effectValue}
           END
         )
-        WHERE user_id = ${id}
+        WHERE character_id = ${id}
         RETURNING damage_taken AS target`;
         break;
 
@@ -34,7 +34,7 @@ export async function PATCH(
           ELSE dopamine_consumed + ${data.effectValue}
           END
         )
-        WHERE user_id = ${id}
+        WHERE character_id = ${id}
         RETURNING dopamine_consumed AS target`;
 
       default:
@@ -47,25 +47,23 @@ export async function PATCH(
     let i;
     if (Number(data.quantity) <= 1) {
       i =
-        await sql`DELETE FROM inventory WHERE slug = ${data.slug} AND user_id = ${id} RETURNING slug`;
+        await sql`DELETE FROM inventory WHERE slug = ${data.slug} AND character_id = ${id} RETURNING slug`;
     } else {
       i =
-        await sql`UPDATE inventory SET quantity = quantity - 1 WHERE slug = ${data.slug} AND user_id = ${id} RETURNING quantity`;
+        await sql`UPDATE inventory SET quantity = quantity - 1 WHERE slug = ${data.slug} AND character_id = ${id} RETURNING quantity`;
       if (!i || i[0].length <= 0)
         return NextResponse.json({ error: "error while updating database" });
     }
 
     const inventoryUpdated =
-      await sql`SELECT * FROM inventory WHERE user_id = ${id}`;
-
-    // if (inventoryUpdated[0].length <= 0) return NextResponse.json({error:"error while updating database"});
+      await sql`SELECT * FROM inventory WHERE character_id = ${id}`;
 
     return NextResponse.json({
       success: true,
       inventory: inventoryUpdated.map((n) => ({
         ...n,
         inventory_id: Number(n.inventory_id),
-        user_id: Number(n.user_id),
+        character_id: Number(n.character_id),
         quantity: Number(n.quantity),
       })),
       effectTarget: Number(r[0].target),

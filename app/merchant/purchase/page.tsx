@@ -60,7 +60,7 @@ export default function MerchantPurchase() {
     } else {
       optimisticInventory.push({
         slug: item.slug,
-        user_id: currentUser?.user_id ?? undefined,
+        character_id: character?.character_id ?? undefined,
         quantity: 1,
       });
     }
@@ -70,7 +70,7 @@ export default function MerchantPurchase() {
     //we finally update the database
     //we rollback when an error occurs
     try {
-      const r = await fetch(`../api/inventory/${currentUser?.user_id}`, {
+      const r = await fetch(`../api/inventory/${character?.character_id}`, {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify(item),

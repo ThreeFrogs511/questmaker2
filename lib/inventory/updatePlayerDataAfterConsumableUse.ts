@@ -36,9 +36,9 @@ export async function updatePlayerDataAfterConsumableUse(item:ItemType) {
 
 
     const r = await sql`WITH updt_inv AS (
-    UPDATE inventory SET quantity = quantity - 1 WHERE user_id = ${userId} AND slug = ${item.slug}),
+    UPDATE inventory SET quantity = quantity - 1 WHERE character_id = (SELECT character_id FROM characters WHERE user_id = ${userId}) AND slug = ${item.slug}),
 
-    dlt_inv AS (DELETE FROM inventory WHERE user_id = ${userId} AND slug = ${item.slug} AND quantity <= 1),
+    dlt_inv AS (DELETE FROM inventory WHERE character_id = (SELECT character_id FROM characters WHERE user_id = ${userId}) AND slug = ${item.slug} AND quantity <= 1),
 
     updt_char AS (
     UPDATE characters SET ${sql(target)} = CASE

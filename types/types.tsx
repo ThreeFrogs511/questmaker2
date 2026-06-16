@@ -227,7 +227,7 @@ export type Item = {
   stackable?: boolean;
   tier?: number;
   type?: string;
-  user_id?: number;
+  character_id?: number;
   quantity?: number;
   equipped?: boolean;
   lvl_required?: number;

@@ -49,8 +49,8 @@ export async function updatePlayerDataAfterWeaponUse(item:ItemType, character:Ch
 
     const r = await sql`WITH 
     updt_inv AS (
-    UPDATE inventory set equipped = NOT equipped 
-    WHERE user_id = ${userId} AND slug = ${item.slug} 
+    UPDATE inventory set equipped = NOT equipped
+    WHERE character_id = (SELECT character_id FROM characters WHERE user_id = ${userId}) AND slug = ${item.slug}
     RETURNING equipped),
 
     skills AS (

@@ -31,12 +31,12 @@ export default async function fetchAllData(pathname: string) {
           c.character_id, c.username, c.xp, c.hp, c.user_class, c.lvl, c.race, c.gender,
           c.str, c.dex, c.con, c.int, c.wis, c.cha, c.ac, c.damage_taken,
           c.dopamine, c.dopamine_consumed, c.coins,
-          i.slug, i.user_id AS inventory_user_id, i.quantity::int4 AS quantity, i.item_type as type, i.equipped,
-        (SELECT json_agg(row_to_json(t)) FROM (SELECT * FROM movesets m where m.character_id = c.character_id 
+          i.slug, i.character_id AS inventory_character_id, i.quantity::int4 AS quantity, i.item_type as type, i.equipped,
+        (SELECT json_agg(row_to_json(t)) FROM (SELECT * FROM movesets m where m.character_id = c.character_id
         ) t   ) as movesets
         FROM users u
         LEFT JOIN characters c ON u.user_id = c.user_id
-        LEFT JOIN inventory i ON u.user_id = i.user_id
+        LEFT JOIN inventory i ON c.character_id = i.character_id
         WHERE u.user_id = ${userId}
         `;
 // console.log(r)
@@ -44,7 +44,7 @@ export default async function fetchAllData(pathname: string) {
       .filter((n) => n.quantity > 0)
       .map((n) => ({
         slug: n.slug,
-        user_id: n.inventory_user_id,
+        character_id: n.inventory_character_id,
         quantity: Number(n.quantity),
         type: n.type,
         equipped: n.equipped,
