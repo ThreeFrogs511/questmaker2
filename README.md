@@ -27,6 +27,24 @@ Questmaker is a productivity app with a full RPG layer on top. Create a D&D avat
 
 ---
 
+## Current State
+
+Questmaker is in **open beta**. The core loop is fully functional — you can sign up, build a character, manage quests, and complete the first campaign chapter end-to-end right now.
+
+What's intentionally scoped for this release:
+
+| Area | Status |
+|---|---|
+| Campaign | 1 chapter available; engine supports arbitrarily many |
+| Item catalogue | Starter set only |
+| Inventory UI | Items are tracked and usable in combat — full display UI in progress |
+| Movesets | Stored and applied during combat — viewer UI not yet exposed |
+| Combat | Fully functional |
+| Quest system | Fully functional |
+| Auth & character creation | Fully functional |
+
+---
+
 ## Engineering Highlights
 
 ### Architecture
@@ -151,8 +169,6 @@ database/         # Database conceptual diagram
 test/             # Smoke, unit, and integration tests
 types/            # Shared TypeScript types
 ```
-
-> Currently scoped to one campaign chapter and a starter item catalogue — the architecture is built to support more.
 
 ---
 
