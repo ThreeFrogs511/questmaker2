@@ -55,6 +55,11 @@ jobs:
 
       - run: npm ci
 
+      - name: Seed database schema
+        env:
+          PGPASSWORD: docker
+        run: psql -h localhost -U docker -d questmaker -f data.sql
+
       - name: Run integration tests
         env:
           DATABASE_URL: postgresql://docker:docker@localhost:5432/questmaker
