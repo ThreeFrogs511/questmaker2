@@ -38,13 +38,12 @@ export async function proxy(request: NextRequest) {
     }
 
 
-    if (
-      payload.isCompleted === true &&
-      payload.tutorialCompleted === false &&
-      !authorizedPathnameTutorialIncomplete.includes(pathname)
-    ) {
-      console.log("redirection tutorial");
-      return NextResponse.redirect(new URL("/intro", request.url));
+    if (payload.isCompleted === true && payload.tutorialCompleted === false) {
+      if (!authorizedPathnameTutorialIncomplete.includes(pathname)) {
+        console.log("redirection tutorial");
+        return NextResponse.redirect(new URL("/intro", request.url));
+      }
+      return NextResponse.next();
     }
 
       switch (pathname) {
