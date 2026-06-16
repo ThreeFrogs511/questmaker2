@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import postgres from "postgres";
 import * as jose from "jose";
+import { NextRequest } from "next/server";
 import { POST } from "../../app/api/quests/route";
 import { sql } from "@/server/connexion";
 
@@ -11,7 +12,7 @@ type Payload = {
 };
 
 async function makeTestJwt(userId: number): Promise<string> {
-  const secret = new TextEncoder().encode(process.env.JWT_SECRET);
+  const secret = new TextEncoder().encode(process.env.JWT_SECRET ?? "test-jwt-secret-for-ci");
   return new jose.SignJWT({
     userId,
     email: "test@test.com",
@@ -29,7 +30,7 @@ async function makeTestJwt(userId: number): Promise<string> {
 function makeReq(payload: Payload, jwt?: string) {
   const headers: Record<string, string> = { "content-type": "application/json" };
   if (jwt) headers["cookie"] = `auth=${jwt}`;
-  return new Request("http://localhost/api/quests", {
+  return new NextRequest("http://localhost/api/quests", {
     method: "POST",
     headers,
     body: JSON.stringify(payload),

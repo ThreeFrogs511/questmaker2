@@ -58,5 +58,6 @@ jobs:
       - name: Run integration tests
         env:
           DATABASE_URL: postgresql://docker:docker@localhost:5432/questmaker
+          JWT_SECRET: test-jwt-secret-for-ci
         run: |
           bash -lc 'shopt -s globstar nullglob; npx tsx --test test/integration/**/*.test.ts'
