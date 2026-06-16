@@ -29,7 +29,7 @@ export default class Item {
                 updateCharacter({ [effectTarget]: feedback.effectTarget });
                 updateInventory(feedback.inventory);
             }
-            console.log(feedback);
+            // console.log(feedback);
         }
     }
 }

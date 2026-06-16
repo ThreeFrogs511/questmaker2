@@ -68,7 +68,7 @@ export default class Character {
           ? Math.floor((mainAbilityValue[1] - 10) / 2)
           : 0;
       this.dopamine = Math.round(20 + mainAbilityModifier);
-      console.log(this.dopamine)
+      // console.log(this.dopamine)
       this.updateDraft({ dopamine: this.dopamine });
     }
   }

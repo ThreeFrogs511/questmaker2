@@ -95,12 +95,12 @@ export default function MerchantPurchase() {
         // Rollback optimistic update
         updateInventory(previousInventory);
         updateCharacter({ coins: previousCoins });
-        console.log("error:", feedback.error);
+        // console.log("error:", feedback.error);
       }
     } catch (e) {
       updateInventory(previousInventory);
       updateCharacter({ coins: previousCoins });
-      console.log("error:", (e as Error).message);
+      // console.log("error:", (e as Error).message);
     };
     
     isBuying.current = false;

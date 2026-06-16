@@ -29,7 +29,7 @@ export default function MerchantSell() {
 
   useEffect(() => {
     if (!inventory) return;
-    console.log(inventory)
+    // console.log(inventory)
     const tempInv: Array<Item> = [];
 
     for (let i = 0; i < inventory?.length; i++) {

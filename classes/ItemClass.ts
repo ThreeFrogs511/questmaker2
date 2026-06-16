@@ -296,19 +296,19 @@ export default class ItemClass {
       if (this.item?.type === "consumable") {
         const feedback = await updatePlayerDataAfterConsumableUse(this.item);
         if (feedback.err) {
-          console.log("error:", feedback.err);
+          // console.log("error:", feedback.err);
           return false;
         } else if (feedback.success) {
-          console.log(feedback)
+          // console.log(feedback)
           return true;
         };
       } else if (this.item?.type === "weapon") {
         const feedback = await updatePlayerDataAfterWeaponUse(this.item, useCharacterStore.getState().character);
         if (feedback.err) {
-          console.log("error:", feedback.err);
+          // console.log("error:", feedback.err);
           return false;
         } else if (feedback.success) {
-          console.log(feedback)
+          // console.log(feedback)
           return true;
         };
       }

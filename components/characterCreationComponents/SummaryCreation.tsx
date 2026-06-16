@@ -53,7 +53,7 @@ export default function SummaryCreation({
         hydrateCharacter(newCharacter);
         router.push("/intro");
       } else if (feedback.err) {
-        console.log("error while creating your character");
+        // console.log("error while creating your character");
       }
     }
   }

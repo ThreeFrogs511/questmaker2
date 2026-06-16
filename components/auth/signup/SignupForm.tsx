@@ -40,7 +40,7 @@ export default function SignupForm() {
     }
 
     if (feedback.err) {
-      console.log(feedback.err);
+      // console.log(feedback.err);
       setError(feedback.err);
     }
   }

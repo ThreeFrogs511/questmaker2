@@ -91,7 +91,7 @@ export default function InventoryClient() {
             <div
               className="underline cursor-pointer hover:text-amber-300"
               onPointerDown={async () => {
-                console.log(item)
+                // console.log(item)
                 const itemToUse = new ItemClass(item);
                 const r = await itemToUse.handler();
                 if (r?.success === false) {

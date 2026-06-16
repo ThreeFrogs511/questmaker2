@@ -41,7 +41,7 @@ export default async function logNewCharacter(data: Character) {
     //
 
     // await sql`UPDATE users SET profile_completed = true WHERE user_id = ${user_id}`;
-    console.log(result);
+    // console.log(result);
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const alg = "HS256";
 
@@ -75,7 +75,7 @@ export default async function logNewCharacter(data: Character) {
     return { success: true };
   } catch (err) {
     const error = String((err as Error).message);
-    console.log("error : ", error)
+    // console.log("error : ", error)
     return { err: error };
   }
 }

@@ -64,7 +64,7 @@ export default class Reward {
         const updatedTempMovesets: Moveset[] = movesetsDuringCampaign
         .filter(n => n.type)
         .map(n=> ({...n, character_id:character_id}))
-        console.log(updatedTempMovesets)
+        // console.log(updatedTempMovesets)
         updatedTempMovesets.push(newSkill);
         while (updatedTempMovesets.length < 12) {
             updatedTempMovesets.push({});

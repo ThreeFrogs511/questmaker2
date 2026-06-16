@@ -173,7 +173,7 @@ export async function DELETE(
       });
 
     const d = await sql`DELETE FROM sessions WHERE token = ${token}`;
-    console.log(d);
+    // console.log(d);
 
     cookie.delete("session");
     cookie.delete("csrf");

@@ -34,8 +34,8 @@ export async function PATCH(
 
     const data = await request.json();
 
-    console.log("data.taskUserId = ", data.taskUserId)
-    console.log("data.currentUser.user_id  = ", data.currentUser?.user_id)
+    // console.log("data.taskUserId = ", data.taskUserId)
+    // console.log("data.currentUser.user_id  = ", data.currentUser?.user_id)
 
     if (data.completed === undefined)
       return NextResponse.json({ error: "Missing field: completed" });

@@ -28,6 +28,6 @@ export default async function useConsumable(item: Item) {
             updateCharacter({ [effectTarget]: feedback.effectTarget });
             updateInventory(feedback.inventory);
         }
-        console.log(feedback);
+        // console.log(feedback);
     }
 }

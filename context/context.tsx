@@ -53,7 +53,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
     fetchAllData(pathname)
       .then((data) => {
         if (data.authenticated) {
-          console.log("data:", data);
+          // console.log("data:", data);
           login({ ...data.user });
           hydrateCharacter({ ...data.character });
           updateInventory(data.inventory ?? []);
@@ -66,7 +66,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
         }
 
         if (data.err) {
-          console.log("error:", data.err);
+          // console.log("error:", data.err);
           if (pathname === "/signup") {
             router.push("/signup");
           } else if (pathname === "/login") {
@@ -77,7 +77,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
         }
       })
       .catch((err) => {
-        console.log("error:", err);
+        // console.log("error:", err);
         router.push("/titleScreen");
       })
       .finally(() => {

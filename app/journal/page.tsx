@@ -60,7 +60,7 @@ export default function Journal() {
         setAreQuestsLoaded(true);
       })
       .catch((err) => {
-        console.log("error : ", err);
+        // console.log("error : ", err);
       });
    
   }, []);

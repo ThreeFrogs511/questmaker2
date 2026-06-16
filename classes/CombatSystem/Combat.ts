@@ -169,7 +169,7 @@ export default class Combat {
     if (!move || !move.dmg) return;
     const dmgMax = move.dmg;
     const modifierValue = this.calcutateModifierValue(move)
-    console.log("modifier value = ", modifierValue)
+    // console.log("modifier value = ", modifierValue)
 
     let finalDmg = Math.floor(Math.random() * dmgMax + 1 + (modifierValue ?? 0));
     return finalDmg;
@@ -303,7 +303,7 @@ export default class Combat {
         const classData = characterPresets.classes.find(
           (n) => n.class === user_class,
         );
-        console.log("classData = ", classData);
+        // console.log("classData = ", classData);
         const mainAttribute = classData?.mainAbility;
         if (!mainAttribute) return;
 

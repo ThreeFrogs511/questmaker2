@@ -77,7 +77,7 @@ export default function List() {
 
     if (feedback.error) {
       // revert optimistic update on error
-      console.log(feedback)
+      // console.log(feedback)
       setAllQuests(previousList);
       updateCharacter({ coins: previousCoins });
 

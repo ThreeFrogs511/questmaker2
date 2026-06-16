@@ -116,7 +116,7 @@ export default function CampaignRunning({
     //safeguard if somehow the player have no basic or weapon skills in his set
     const basic_skill = movesetsBeforeCampaign.filter(n => n.type === "basic_skill" || n.type ==="weapon_skill");
     if (basic_skill.length <= 0) {
-      console.log("adding safeguard skill")
+      // console.log("adding safeguard skill")
       const added_basic_skill = character.race === "Felinois" ? movesetsTemplate[0] as Moveset : movesetsTemplate[1] as Moveset;
       added_basic_skill.character_id=character_id;
       added_basic_skill.is_skill_activated=true;
@@ -148,12 +148,12 @@ export default function CampaignRunning({
       .then((values) => {
         if (!values) return;
         updateNode(values.firstNode);
-        // updateNode("remembering_how_to_fight");
+        updateNode("remembering_how_to_fight");
         // updateNode("killing_regalus")
         setCampaignTitle(values.title);
         hydrateTempGameData();
       })
-      .catch((err) => console.log("error: ", err));
+      .catch(() => { /* console.log("error: ", err) */ });
   }, []);
 
   return <>{hasCampaignLaunched ? <CampaignHandler /> : <Loading />}</>;

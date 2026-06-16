@@ -22,7 +22,12 @@ Questmaker is a productivity app with a full RPG layer on top. Create a D&D avat
 - **Quest system** — add real-life tasks, complete them to earn coins and XP, undo completions if needed
 - **Shop & inventory** — spend coins on items; use consumables in the overworld or mid-combat
 - **Branching campaign** — a text-based chapter where your race, class, and past choices shape available paths
+
+  ![Narration demo](docs/questmaker_demo.gif)
+
 - **Turn-based combat** — D20 initiative, attack rolls vs. AC, and game-over recovery via stat snapshots
+
+  ![Combat demo](docs/questmaker_combat_demo.gif)
 - **Rate limiting** — completions capped at 5 quests/hour to prevent coin farming
 
 ---

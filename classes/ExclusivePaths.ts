@@ -46,7 +46,7 @@ export default class ExclusivePaths {
             break;
 
           case "class":
-            console.log("class")
+            // console.log("class")
             altNode = this.handlingClassPaths(
               alt[i].value,
               userClass ?? "",

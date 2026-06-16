@@ -56,7 +56,7 @@ export async function updatePlayerDataAfterConsumableUse(item:ItemType) {
     return {success:true, character:r[0]};
 
   } catch (err) {
-    console.log((err as Error).message)
+    // console.log((err as Error).message)
     return { err: "Internal error"};
   }
 }

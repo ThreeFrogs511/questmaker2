@@ -25,9 +25,9 @@ export default function AbilityScoresSelection({ indexTitle, setIndexTitleAction
     function usingAbilityPoints(e:React.PointerEvent<HTMLSpanElement>) {
         type targetAbility = keyof Attributes;
         const targetAbility:targetAbility = e.currentTarget.id as keyof Attributes;
-        console.log(targetAbility)
+        // console.log(targetAbility)
         if (e.currentTarget.dataset.id === "minus") {
-            console.log(targetAbility)
+            // console.log(targetAbility)
             // we reduce the target ability score, but we stop at 7
             if (abilityScores[targetAbility] > 7) {
                 removePoint(targetAbility);

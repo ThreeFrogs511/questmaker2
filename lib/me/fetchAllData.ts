@@ -50,7 +50,7 @@ export default async function fetchAllData(pathname: string) {
         equipped: n.equipped,
       }));
 
-      console.log(inventory)
+      // console.log(inventory)
     if (!r || r.length === 0) return { err: "pas d'user existant" };
 
 

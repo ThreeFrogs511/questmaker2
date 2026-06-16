@@ -7,11 +7,11 @@ export default async function launchCampaign() {
   const currentNode = useNarrationStore.getState().currentNode;
   const updateNode = useNarrationStore.getState().updateNode;
   try {
-    console.log("launchCampaign activated!")
+    // console.log("launchCampaign activated!")
     const response = await fetch(`http://localhost:3000/campaigns/a_terrible_hangover.json`);
-    console.log("response:", response)
+    // console.log("response:", response)
     const campaign = await response.json();
-    console.log(campaign)
+    // console.log(campaign)
 
     if (!campaign) return "issou";
 

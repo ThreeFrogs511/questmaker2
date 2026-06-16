@@ -54,7 +54,7 @@ export default async function savePlayerProgress(
    //we update the player's data : character, movesets, inventory (if it's not empty)
     let r;
     if (formattedInventoryArrayForSql.length <= 0) {
-      console.log("empty inventory")
+      // console.log("empty inventory")
       r = await sql`WITH 
       updt_user AS (
       update users set tutorial_completed = TRUE WHERE user_id = ${userId}
@@ -94,7 +94,7 @@ export default async function savePlayerProgress(
 
         SELECT user_id FROM updt_char`;
     } else {
-      console.log("normal inventory")
+      // console.log("normal inventory")
       r = await sql`WITH  
       updt_user AS (
       update users set tutorial_completed = TRUE WHERE user_id = ${userId}
@@ -169,7 +169,7 @@ export default async function savePlayerProgress(
 
     return { success: true };
   } catch (err) {
-    console.log((err as Error).message);
+    // console.log((err as Error).message);
     return { err: (err as Error).message };
   }
 }

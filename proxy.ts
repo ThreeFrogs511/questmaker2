@@ -31,7 +31,7 @@ export async function proxy(request: NextRequest) {
 
     if (payload.isCompleted === false) {
       if (pathname !== "/characterCreation") {
-        console.log("redirection char creation");
+        // console.log("redirection char creation");
         return NextResponse.redirect(new URL("/characterCreation", request.url));
       }
       return NextResponse.next();
@@ -40,7 +40,7 @@ export async function proxy(request: NextRequest) {
 
     if (payload.isCompleted === true && payload.tutorialCompleted === false) {
       if (!authorizedPathnameTutorialIncomplete.includes(pathname)) {
-        console.log("redirection tutorial");
+        // console.log("redirection tutorial");
         return NextResponse.redirect(new URL("/intro", request.url));
       }
       return NextResponse.next();
@@ -66,7 +66,7 @@ export async function proxy(request: NextRequest) {
     
 
   } catch (err) {
-    console.log((err as Error).message)
+    // console.log((err as Error).message)
     const pathname = request.nextUrl.pathname;
     switch (pathname) {
       case "/signup":

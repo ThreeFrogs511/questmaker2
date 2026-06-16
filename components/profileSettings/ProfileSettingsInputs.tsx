@@ -35,10 +35,10 @@ export default function ProfileSettingsInputs() {
       .then((r) => r.json())
       .then((data) => {
         if (data.success) {
-          console.log("cookie créé");
+          // console.log("cookie créé");
         }
       })
-      .catch((err) => console.log(err));
+      .catch(() => { /* console.log(err) */ });
   }, []);
 
   async function submitProfileChanges() {

@@ -19,7 +19,7 @@ export default function nameGenderSelection({indexTitle, setIndexTitleAction }: 
 
 
     useEffect(() => {
-        console.log(draft.username)
+        // console.log(draft.username)
     }, [draft, draft.username])
 
     return(
