@@ -78,7 +78,7 @@ flowchart LR
 
 ### Campaign engine
 
-Campaign content is a graph of **nodes** in MongoDB, each with narrative text and an array of choices. The `Engine` class orchestrates traversal — when a player picks a choice, it inspects the choice's properties and dispatches to the right sub-system:
+Campaign content is a graph of **nodes** stored as static JSON, each with narrative text and an array of choices. The `Engine` class orchestrates traversal — when a player picks a choice, it inspects the choice's properties and dispatches to the right sub-system:
 
 | Choice type | Handler | What happens |
 |---|---|---|
@@ -137,7 +137,7 @@ Six Zustand stores with non-overlapping responsibilities:
 
 ## Running Locally
 
-The app connects to a cloud PostgreSQL database and MongoDB cluster — you'll need the environment variables to run it. If you just want to explore, the **[live demo](https://questmaker2.vercel.app)** is fully functional.
+The app connects to a cloud PostgreSQL database — you'll need the environment variables to run it. If you just want to explore, the **[live demo](https://questmaker2.vercel.app)** is fully functional.
 
 **With Docker:**
 ```bash
@@ -147,7 +147,7 @@ docker compose up
 **Without Docker:**
 ```bash
 npm install
-# Create .env.local with DATABASE_URL, MONGODB_URI, and related variables
+# Create .env.local with DATABASE_URL and related variables
 npm run dev
 ```
 
