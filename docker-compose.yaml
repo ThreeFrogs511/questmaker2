@@ -9,25 +9,18 @@ services:
       - .env.docker
     depends_on:
       - db
-      - mongo
+    command: npx next dev --webpack
+
 
   db:
     image: postgres:18
-    environment:
-        POSTGRES_USER: docker
-        POSTGRES_PASSWORD: docker
-        POSTGRES_DB: questmaker
-        DATABASE_URL: postgresql://docker:docker@db:5432/questmaker
+    env_file:
+      - .env.docker
     ports:
     - "5433:5432"
     volumes:
       - db_data:/var/lib/postgresql
-      - ./db.sql:/docker-entrypoint-initdb.d/001_dump.sql:ro
-
-  mongo:
-    image: mongo:7
-    env_file:
-      - .env.docker
+      - ./seed:/docker-entrypoint-initdb.d
 
 volumes:
   db_data:
