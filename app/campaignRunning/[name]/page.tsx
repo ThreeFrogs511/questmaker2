@@ -130,6 +130,7 @@ export default function CampaignRunning({
     while (userConcatMoves.length < 12) {
       userConcatMoves.push({});
     };
+    console.log("userConcatMoves:", userConcatMoves)
     updateTempMovesets([...userConcatMoves]);
   };
 
@@ -151,10 +152,16 @@ export default function CampaignRunning({
         // updateNode("remembering_how_to_fight");
         // updateNode("killing_regalus")
         setCampaignTitle(values.title);
-        hydrateTempGameData();
       })
       .catch(() => { /* console.log("error: ", err) */ });
   }, []);
+
+  useEffect(() => {
+    if (!hasCampaignLaunched) return;
+    if (!character.character_id) return;
+    if (!inventoryBeforeCampaign) return;
+    hydrateTempGameData();
+  }, [hasCampaignLaunched, character.character_id, inventoryBeforeCampaign]);
 
   return <>{hasCampaignLaunched ? <CampaignHandler /> : <Loading />}</>;
 }
