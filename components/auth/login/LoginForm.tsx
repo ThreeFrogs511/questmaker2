@@ -4,8 +4,7 @@ import { loginUser } from "@/lib/auth/login";
 import { useRouter } from "next/navigation";
 import { User } from "@/types/types";
 import localFont from "next/font/local";
-import { useActionState, useEffect } from "react";
-import { useJournalStore } from "@/stores/useJournalStore";
+import { useActionState } from "react";
 import Form from "next/form";
 const retroGaming = localFont({
   src: "../../../public/fonts/retro_gaming.ttf",
@@ -21,12 +20,14 @@ export default function LoginForm() {
 
   const router = useRouter();
 
-  const allQuests = useJournalStore((state) => state.allQuests);
 
   async function submitHandler(
+    
     previousState: { email: string; password: string; err: string },
     formData: FormData,
   ): Promise<{ email: string; password: string; err: string }> {
+
+    
     const inputEmail = formData.get("email") as string;
     const inputPassword = formData.get("password") as string;
 

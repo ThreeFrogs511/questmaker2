@@ -2,6 +2,7 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import * as jose from "jose";
 import { PayloadType } from "./types/types";
+import { revalidatePath } from "next/cache";
 
 export async function proxy(request: NextRequest) {
   try {
@@ -18,6 +19,10 @@ export async function proxy(request: NextRequest) {
     );
 
     const pathname = request.nextUrl.pathname;
+
+    if (pathname === "/journal") console.log("go to journal")
+    revalidatePath(pathname);
+
     const authorizedPathnameTutorialIncomplete = [
       "/intro",
       "/campaignRunning/a_terrible_hangover",
@@ -25,6 +30,7 @@ export async function proxy(request: NextRequest) {
     ];
 
     if (!payload || !payload.email || !payload.userId) {
+      console.log("pas de payload")
       throw new Error("Authentification error");
     }
 

@@ -18,8 +18,8 @@ interface isDataLoadedType {
 }
 
 interface userContextType {
-  isFetchingDone: boolean;
-  setIsDataLoaded:  Dispatch<SetStateAction<isDataLoadedType>>;
+  setIsFetchingDone: Dispatch<SetStateAction<boolean>>;
+  setIsDataLoaded: Dispatch<SetStateAction<isDataLoadedType>>;
 }
 
 const UserDataContext = createContext<userContextType | null>(null);
@@ -36,7 +36,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const hydrateCharacter = useCharacterStore((state) => state.hydrateCharacter);
   const hydrateMovesets = useCombatStore((state) => state.hydrateMovesets);
   // states for user data and fetching status
-  const [isFetchingDone, setIsFetchingDone] = useState(false);
+  const [isFetchingDone, setIsFetchingDone] = useState(true);
   const [isDataLoaded, setIsDataLoaded] = useState<isDataLoadedType>({
     isPlayerDataLoaded: false,
     isInventoryDataLoaded: false,
@@ -44,12 +44,24 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   });
 
   useEffect(() => {
+    console.log("isFetchingDone est ", isFetchingDone);
+  }, [isFetchingDone]);
+
+
+  useEffect(() => {
     if (
       isDataLoaded.isPlayerDataLoaded &&
       isDataLoaded.isInventoryDataLoaded &&
       isDataLoaded.isMovesetsDataLoaded
     ) {
-      console.log("already cached")
+      return;
+    }
+
+    if (
+      pathname === "/titleScreen" ||
+      pathname === "/login" ||
+      pathname === "/signup"
+    ) {
       return;
     }
 
@@ -96,13 +108,12 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
     updateInventory,
   ]);
 
-
   return (
     <>
       <UserDataContext.Provider
         value={{
-          isFetchingDone,
-          setIsDataLoaded
+          setIsFetchingDone,
+          setIsDataLoaded,
         }}
       >
         {isFetchingDone ? children : <Loading />}

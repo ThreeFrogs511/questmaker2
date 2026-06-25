@@ -18,7 +18,7 @@ export default function Menu({
   const style = "text-xl! sm:text-2xl! md:ml-10!";
   const pathname = usePathname();
 
-  const { setIsDataLoaded } = useUserContext();
+  const { setIsDataLoaded, setIsFetchingDone } = useUserContext();
 
   const resetCharacter = useCharacterStore((state) => state.resetCharacter);
   const resetQuests = useJournalStore((state) => state.resetQuests);
@@ -34,22 +34,12 @@ export default function Menu({
 
       const feedback = await response.json();
       if (feedback.success) {
-        resetCharacter();
-        resetQuests();
-        resetInventory();
-        resetMovesets();
-        setIsDataLoaded({
-          isPlayerDataLoaded: false,
-          isInventoryDataLoaded: false,
-          isMovesetsDataLoaded: false,
-        });
-        setAreQuestsLoaded(false);
+        window.location.href="/titleScreen";
+
       }
     } catch (err) {
       console.log((err as Error).message);
-    } finally {
-      router.push("/titleScreen");
-    }
+    } 
   }
 
   function navigationHandler(destination: string) {
