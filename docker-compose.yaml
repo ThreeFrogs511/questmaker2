@@ -9,7 +9,7 @@ services:
       - .env.docker
     depends_on:
       - db
-    command: npx next dev --webpack
+    # command: npx next dev --webpack
 
 
   db:

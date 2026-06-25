@@ -4,10 +4,8 @@ import Title from "./Title";
 import Character from "@/classes/Character";
 import { useRouter } from "next/navigation";
 import presets from "../../assets/characterPresets.json";
-import { useUserStore } from "@/stores/useUserStore";
 import { useCharacterStore } from "@/stores/useCharacterStore";
-import { useEffect } from "react";
-import { User, Draft } from "@/types/types";
+import { useEffect, useState } from "react";
 import localFont from "next/font/local";
 
 type feedback = {
@@ -36,31 +34,41 @@ export default function SummaryCreation({
   ];
 
   // import the login function from dedicated zustand store
-  const login = useUserStore((state) => state.login);
+  const [error, setError] = useState("");
+  const [isPending, setIsPending] = useState(false);
   const draft = useCharacterStore((state) => state.draft);
   const hydrateCharacter = useCharacterStore((state) => state.hydrateCharacter);
   const updateDraft = useCharacterStore((state) => state.updateDraft);
   const abilityScores = useCharacterStore((state) => state.abilityScores);
   const classes = presets.classes;
 
-  async function handleCharacterCreation2() {
+  async function createNewCharacter() {
     if (draft.race && draft.user_class && draft.username && draft.gender) {
+      setError("");
+      setIsPending(true);
       const player = new Character({ ...draft });
 
-      const feedback: feedback = await player.completeProfile(draft, classes);
-      if (feedback.success) {
-        const newCharacter = player.buildCharacterFromDraft(draft);
-        hydrateCharacter(newCharacter);
-        router.push("/intro");
-      } else if (feedback.err) {
-        // console.log("error while creating your character");
+      try {
+        const feedback: feedback = await player.completeProfile(draft, classes);
+        if (feedback.success) {
+          const newCharacter = player.buildCharacterFromDraft(draft);
+          hydrateCharacter(newCharacter);
+          router.push("/intro");
+        } else if (feedback.err) {
+          setError(feedback.err);
+          // console.log("error while creating your character");
+        }
+      } catch (err) {
+        setError("An unexpected error occurred. Please try again.");
+      } finally {
+        setIsPending(false);
       }
+    } else {
+      setError("Please add the missing details for your character.");
     }
   }
 
-  // updating stats in real time
-  // we do it in this component to avoid infinite loop
-  // in the abilityScoresSelection component
+  // updating attributes in real time
   useEffect(() => {
     updateDraft({ ...abilityScores });
   }, [abilityScores, updateDraft]);
@@ -130,11 +138,13 @@ export default function SummaryCreation({
             borderColor="white"
             shadow="white"
             className="grow lg:text-2xl!"
-            onPointerDown={handleCharacterCreation2}
+            disabled={isPending}
+            onPointerDown={createNewCharacter}
           >
-            Confirm my character
+            {isPending ? "Creating your character..." : "Create my character"}
           </Button>
         </div>
+        <p className="text-center text-red-600">{error}</p>
       </section>
     </>
   );

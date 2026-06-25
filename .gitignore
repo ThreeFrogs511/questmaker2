@@ -46,8 +46,10 @@ next-env.d.ts
 *.sql
 .env*.local
 /database
-
 #md
 
 CLAUDE.md
 walkthrough.md
+
+#claude
+/.claude

@@ -1,12 +1,12 @@
 "use client";
 import TypeWriter from "typewriter-effect";
 import { useCharacterStore } from "@/stores/useCharacterStore";
-import { useRef, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import AudioManager from "@/classes/AudioManager";
 import { useRouter } from "next/navigation";
 
 export default function IntroPage() {
-    const character = useCharacterStore.getState().character;
+    const character = useCharacterStore((state) => state.character)
     const [overlayOn, setOverlay] = useState(false);
     const introTxt = [
     `<p style='margin-bottom:.5rem'">Hello, <span style=\"color:#fbbf24\">${character.username}</span>. Welcome to the Globe.</p>`,
@@ -20,7 +20,14 @@ export default function IntroPage() {
     const router = useRouter();
     const hasActivated = useRef(false);
 
- 
+  
+       useEffect(() => {
+        console.log('character = ', character)
+    }, [character])
+
+
+
+  
 
   return (
     <>

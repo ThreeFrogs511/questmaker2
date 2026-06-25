@@ -23,7 +23,6 @@ export default async function logNewCharacter(data: Character) {
 
     if (!user_id || !email) return { err: "User not found" };
 
-   
     const result = await sql`
     WITH 
     chr AS (
@@ -38,15 +37,15 @@ export default async function logNewCharacter(data: Character) {
       VALUES ('basic_skill', (CASE WHEN ${data.race} = 'Felinois' THEN 'scratch' ELSE 'punch' END), (SELECT character_id FROM chr), TRUE)
       )
     SELECT character_id from chr`;
-    //
 
-    // await sql`UPDATE users SET profile_completed = true WHERE user_id = ${user_id}`;
-    // console.log(result);
     const secret = new TextEncoder().encode(process.env.JWT_SECRET);
     const alg = "HS256";
 
-    if (!result[0].character_id) throw new Error("Server error while trying to create the character. Please try again.")
-
+    if (!result[0].character_id)
+      throw new Error(
+        "Server error while trying to create the character. Please try again.",
+      );
+    const characterId = Number(result[0].character_id);
     const newPayload = {
       userId: user_id,
       email: email,
@@ -72,10 +71,9 @@ export default async function logNewCharacter(data: Character) {
       maxAge: 60 * 60 * 24 * 7,
     });
 
-    return { success: true };
+    return { success: true, character_id: characterId };
   } catch (err) {
-    const error = String((err as Error).message);
-    // console.log("error : ", error)
-    return { err: error };
+    console.log("error : ", (err as Error).message);
+    return { err: "Server error. Please try again later." };
   }
 }

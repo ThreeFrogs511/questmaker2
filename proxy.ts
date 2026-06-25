@@ -17,7 +17,6 @@ export async function proxy(request: NextRequest) {
       secretKey,
     );
 
-
     const pathname = request.nextUrl.pathname;
     const authorizedPathnameTutorialIncomplete = [
       "/intro",
@@ -32,11 +31,12 @@ export async function proxy(request: NextRequest) {
     if (payload.isCompleted === false) {
       if (pathname !== "/characterCreation") {
         // console.log("redirection char creation");
-        return NextResponse.redirect(new URL("/characterCreation", request.url));
+        return NextResponse.redirect(
+          new URL("/characterCreation", request.url),
+        );
       }
       return NextResponse.next();
     }
-
 
     if (payload.isCompleted === true && payload.tutorialCompleted === false) {
       if (!authorizedPathnameTutorialIncomplete.includes(pathname)) {
@@ -46,25 +46,23 @@ export async function proxy(request: NextRequest) {
       return NextResponse.next();
     }
 
-      switch (pathname) {
-        case "/signup":
-          return NextResponse.redirect(new URL("/journal", request.url));
-        case "/login":
-          return NextResponse.redirect(new URL("/journal", request.url));
-        case "/titleScreen":
-          return NextResponse.redirect(new URL("/journal", request.url));
-        case "/":
-          return NextResponse.redirect(new URL("/journal", request.url));
-        case "/characterCreation":
-          return NextResponse.redirect(new URL("/journal", request.url));
-        case "/intro":
-          return NextResponse.redirect(new URL("/journal", request.url));
+    switch (pathname) {
+      case "/signup":
+        return NextResponse.redirect(new URL("/journal", request.url));
+      case "/login":
+        return NextResponse.redirect(new URL("/journal", request.url));
+      case "/titleScreen":
+        return NextResponse.redirect(new URL("/journal", request.url));
+      case "/":
+        return NextResponse.redirect(new URL("/journal", request.url));
+      case "/characterCreation":
+        return NextResponse.redirect(new URL("/journal", request.url));
+      case "/intro":
+        return NextResponse.redirect(new URL("/journal", request.url));
 
-        default:
-          return NextResponse.next();
-      }
-    
-
+      default:
+        return NextResponse.next();
+    }
   } catch (err) {
     // console.log((err as Error).message)
     const pathname = request.nextUrl.pathname;
@@ -82,6 +80,7 @@ export async function proxy(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/((?!api|_next/static|_next/image|favicon.ico|.*\\.json|.*\\.mp3|.*\\.wav|.*\\.m4a|.*\\.svg).*)"],
-
+  matcher: [
+    "/((?!api|_next/static|_next/image|favicon.ico|.*\\.json|.*\\.mp3|.*\\.wav|.*\\.m4a|.*\\.svg).*)",
+  ],
 };

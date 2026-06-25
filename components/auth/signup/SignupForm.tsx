@@ -1,11 +1,14 @@
 "use client";
 import { Button, Input } from "pixel-retroui";
-import { useState } from "react";
+import { useActionState } from "react";
 import { signupUser } from "@/lib/auth/signup";
 import { useRouter } from "next/navigation";
-import localFont from 'next/font/local'
+import localFont from "next/font/local";
+import Form from "next/form";
 
-const retroGaming = localFont({ src: '../../../public/fonts/retro_gaming.ttf' })
+const retroGaming = localFont({
+  src: "../../../public/fonts/retro_gaming.ttf",
+});
 
 type FeedbackType = {
   success?: boolean;
@@ -14,41 +17,72 @@ type FeedbackType = {
 };
 
 export default function SignupForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [confirm, setConfirm] = useState("");
-  const [error, setError] = useState("");
-  const inputStyle =
-    "w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!";
   const router = useRouter();
 
-  async function submitHandler(e: React.SyntheticEvent) {
-    e.preventDefault();
-    setError("");
-    const inputEmail = email.trim();
-    const inputPassword = password.trim();
-    const inputConfirm = confirm.trim();
+  async function submitHandler(
+    previousState: {
+      email: string;
+      password: string;
+      confirm: string;
+      err: string;
+    },
+    formData: FormData,
+  ): Promise<{
+    email: string;
+    password: string;
+    confirm: string;
+    err: string;
+  }> {
+    const inputEmail = (formData.get("email") as string).trim();
+    const inputPassword = (formData.get("password") as string).trim();
+    const inputConfirm = (formData.get("confirm") as string).trim();
 
-    const feedback: FeedbackType = await signupUser(
-      inputEmail,
-      inputPassword,
-      inputConfirm,
-    );
+    try {
+      const feedback: FeedbackType = await signupUser(
+        inputEmail,
+        inputPassword,
+        inputConfirm,
+      );
 
-    if (feedback.success) {
-      router.push("/characterCreation");
-    }
+      if (feedback.success) {
+        router.push("/characterCreation");
+      }
 
-    if (feedback.err) {
-      // console.log(feedback.err);
-      setError(feedback.err);
+      if (feedback.err) {
+        return {
+          email: inputEmail,
+          password: inputPassword,
+          confirm: inputConfirm,
+          err: feedback.err,
+        };
+      }
+      return {
+        email: "",
+        password: "",
+        confirm: "",
+        err: "",
+      };
+    } catch (err) {
+      return {
+        email: inputEmail,
+        password: inputPassword,
+        confirm: inputConfirm,
+        err: "An unexpected error occurred. Please try again.",
+      };
     }
   }
 
+  const [formState, signUpAction, isPending] = useActionState(submitHandler, {
+    email: "",
+    password: "",
+    confirm: "",
+    err: "",
+  });
+
   return (
-    <form
+    <Form
       className={`flex flex-col gap-8 min-h-80 items-center w-[90%] sm:w-[90%] lg:w-[50%] ${retroGaming.className}`}
-      onSubmit={submitHandler}
+      action={signUpAction}
     >
       <div className="w-full flex flex-col gap-6">
         <div className="w-[90%] mx-auto">
@@ -58,9 +92,9 @@ export default function SignupForm() {
             borderColor="white"
             id="email"
             type="email"
-            className={inputStyle}
+            name="email"
+            className="w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!"
             placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
@@ -71,9 +105,9 @@ export default function SignupForm() {
             borderColor="white"
             id="password"
             type="password"
-            className={inputStyle}
+            name="password"
+            className="w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!"
             placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
           />
         </div>
 
@@ -84,9 +118,9 @@ export default function SignupForm() {
             borderColor="white"
             id="confirm"
             type="password"
-            className={inputStyle}
+            name="confirm"
+            className="w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!"
             placeholder="Confirm password"
-            onChange={(e) => setConfirm(e.target.value)}
           />
         </div>
       </div>
@@ -98,12 +132,15 @@ export default function SignupForm() {
         borderColor="white"
         shadow="white"
         type="submit"
+        disabled={isPending}
         className="w-full p-2! mx-auto!"
       >
-        Begin my adventure
+        {isPending ? "Loading..." : "Begin my adventure"}
       </Button>
 
-      <div className="text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">{error}</div>
-    </form>
+      <div className="text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">
+        {formState.err}
+      </div>
+    </Form>
   );
 }

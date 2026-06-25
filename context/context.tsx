@@ -18,7 +18,7 @@ interface isDataLoadedType {
 
 interface userContextType {
   isFetchingDone: boolean;
-};
+}
 
 const UserDataContext = createContext<userContextType | null>(null);
 
@@ -50,7 +50,8 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       return;
     }
 
-    fetchAllData(pathname)
+    setIsFetchingDone(false);
+    fetchAllData()
       .then((data) => {
         if (data.authenticated) {
           // console.log("data:", data);
@@ -91,6 +92,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
     setAreQuestsLoaded,
     updateInventory,
   ]);
+
 
   return (
     <>

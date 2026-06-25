@@ -1,12 +1,11 @@
 "use client";
 import { Button, Input } from "pixel-retroui";
-import { useState } from "react";
 import { loginUser } from "@/lib/auth/login";
 import { useRouter } from "next/navigation";
-import { useUserStore } from "@/stores/useUserStore";
 import { User } from "@/types/types";
 import localFont from "next/font/local";
-
+import { useActionState } from "react";
+import Form from "next/form";
 const retroGaming = localFont({
   src: "../../../public/fonts/retro_gaming.ttf",
 });
@@ -18,45 +17,58 @@ type FeedbackType = {
 };
 
 export default function LoginForm() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const [hasClicked, setHasClicked] = useState(false);
-  const inputStyle =
-    "w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!";
+
   const router = useRouter();
-  const login = useUserStore((state) => state.login);
 
-  async function submitHandler(e: React.SyntheticEvent) {
-    e.preventDefault();
-    if (hasClicked) return;
-    setError("");
-    const inputEmail = email.trim();
-    const inputPassword = password.trim();
+  async function submitHandler(
+    previousState: { email: string; password: string; err: string },
+    formData: FormData,
+  ): Promise<{ email: string; password: string; err: string }> {
+    const inputEmail = formData.get("email") as string;
+    const inputPassword = formData.get("password") as string;
 
+    try {
+      const feedback: FeedbackType = await loginUser(inputEmail, inputPassword);
 
-    const feedback: FeedbackType = await loginUser(inputEmail, inputPassword);
-
-    if (feedback.success && feedback.userData) {
-      setHasClicked(true);
-      if (!feedback.userData.profile_completed) {
-        router.push("/characterCreation");
-      } else {
-        login({ ...feedback.userData });
-        router.push("/journal");
+      if (feedback.success && feedback.userData) {
+        if (!feedback.userData.profile_completed) {
+          router.push("/characterCreation");
+        } else if (
+          feedback.userData.profile_completed &&
+          !feedback.userData.tutorial_completed
+        ) {
+          router.push("/intro");
+        } else {
+          router.push("/journal");
+        }
       }
-    };
 
-    if (feedback.err) {
-      setError(feedback.err);
-      setHasClicked(false);
-    };
+      if (feedback.err) {
+        return { email: inputEmail, password: "", err: feedback.err };
+      }
+    } catch (err) {
+      console.log((err as Error).message);
+      return {
+        email: inputEmail,
+        password: "",
+        err: "An unexpected error occurred. Please try again.",
+      };
+    }
+
+    return { email: inputEmail, password: "", err: "" };
   }
 
+  const [formState, loginAction, isPending] = useActionState(submitHandler, {
+    email: "",
+    password: "",
+    err: "",
+  });
+
+
   return (
-    <form
+    <Form
       className={`flex flex-col gap-8 min-h-80 items-center w-[90%] sm:w-[90%] lg:w-[50%] ${retroGaming.className}`}
-      onSubmit={submitHandler}
+      action={loginAction}
     >
       <div className="w-full flex flex-col gap-6">
         <div className="w-[90%] mx-auto">
@@ -65,10 +77,11 @@ export default function LoginForm() {
             textColor="white"
             borderColor="white"
             id="email"
+            name="email"
             type="email"
-            className={inputStyle}
+            defaultValue={formState?.email}
+            className="w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!"
             placeholder="Email"
-            onChange={(e) => setEmail(e.target.value)}
           />
         </div>
 
@@ -78,10 +91,11 @@ export default function LoginForm() {
             textColor="white"
             borderColor="white"
             id="password"
+            name="password"
             type="password"
-            className={inputStyle}
+            defaultValue={""}
+            className="w-full focus:outline-none text-sm! sm:text-lg! md:text-lg!"
             placeholder="Password"
-            onChange={(e) => setPassword(e.target.value)}
           />
           {/* <a
             href="/forgot"
@@ -99,14 +113,15 @@ export default function LoginForm() {
         borderColor="white"
         shadow="white"
         type="submit"
+        disabled={isPending}
         className="w-full p-2! mx-auto!"
       >
-        {hasClicked ? "Loading..." : "Resume my adventure"}
+        {isPending ? "Loading..." : "Resume my adventure"}
       </Button>
 
       <div className="text-center h-20 md:mt-5! text-sm lg:text-base text-red-600">
-        {error}
+        {formState.err}
       </div>
-    </form>
+    </Form>
   );
 }

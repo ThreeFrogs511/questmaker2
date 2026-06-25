@@ -29,8 +29,6 @@ export default function CampaignRunning({
     return result;
   }
 
-  const pathname = usePathname();
-
 
 
   // narration store
@@ -67,6 +65,7 @@ export default function CampaignRunning({
   function hydrateTempGameData() {
     //player's stats
     hydrateTempPlayerData({ ...character });
+    console.log("character temp : ", character)
     const character_id = character.character_id;
     if (!character_id) return;
 
@@ -91,7 +90,7 @@ export default function CampaignRunning({
       }
     }
     updateTempInventory([...tempInv]);
-
+    console.log("temp inventory : ", tempInv)
     //player's movesets 
     const userInventoryAction: Moveset[] = [{ type: "action", name: "inventory", url:"icons/inventory.svg" }];
 
@@ -148,6 +147,7 @@ export default function CampaignRunning({
       })
       .then((values) => {
         if (!values) return;
+        hydrateTempGameData();
         updateNode(values.firstNode);
         // updateNode("remembering_how_to_fight");
         // updateNode("killing_regalus")

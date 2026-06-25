@@ -4,11 +4,10 @@ import { cookies } from "next/headers";
 import * as jose from "jose";
 import { PayloadType } from "@/types/types";
 
-export default async function fetchAllData(pathname: string) {
+export default async function fetchAllData() {
   try {
     // cookies
     const cookieStore = await cookies();
-    // const token = cookieStore.get("session")?.value;
     const jwt = cookieStore.get("auth")?.value;
 
     // checking if the token exists
@@ -24,7 +23,6 @@ export default async function fetchAllData(pathname: string) {
 
     if (!userId || !email) return { err: "No user id attached" };
 
-    if (!pathname) return { err: "Wrong URL" };
     // fetching user's data and handling errors
     const r = await sql`SELECT
           u.user_id, u.email, u.profile_completed, u.tutorial_completed, u.last_chapter_done,
@@ -39,7 +37,7 @@ export default async function fetchAllData(pathname: string) {
         LEFT JOIN inventory i ON c.character_id = i.character_id
         WHERE u.user_id = ${userId}
         `;
-// console.log(r)
+
     const inventory = r
       .filter((n) => n.quantity > 0)
       .map((n) => ({
@@ -50,7 +48,6 @@ export default async function fetchAllData(pathname: string) {
         equipped: n.equipped,
       }));
 
-      // console.log(inventory)
     if (!r || r.length === 0) return { err: "pas d'user existant" };
 
 

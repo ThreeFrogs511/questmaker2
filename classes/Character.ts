@@ -1,4 +1,4 @@
-import { Draft, Class } from "@/types/types";
+import { Draft, Class, Character as CharacterType } from "@/types/types";
 import { useCharacterStore } from "@/stores/useCharacterStore";
 import logNewCharacter from "@/lib/auth/character/logNewCharacter";
 
@@ -105,13 +105,15 @@ export default class Character {
           damage_taken:0,
 
         }
-      const feedback = await logNewCharacter(newCharacter);
+      const feedback:{err?:string; success?:boolean; character_id?:number} = await logNewCharacter(newCharacter);
+      feedback.character_id && (this.character_id = feedback.character_id);
       return feedback;
  
   }
 
   buildCharacterFromDraft(draft: Draft) {
-    const newUser = {
+    const newChar:CharacterType = {
+      character_id: this.character_id,
       username: draft.username ?? null,
       xp: 0,
       hp: this.hp ?? null,
@@ -128,11 +130,9 @@ export default class Character {
       wis: draft.wis ?? 10,
       cha: draft.cha ?? 10,
       ac: this.ac ?? null,
-      profile_completed: true,
       damage_taken: 0,
       coins: 0,
-      last_chapter_done: null
     };
-    return newUser;
+    return newChar;
   }
 }
