@@ -9,6 +9,7 @@ import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useCombatStore } from "@/stores/useCombatStore";
 import fetchAllData from "@/lib/me/fetchAllData";
 import { Dispatch, SetStateAction } from "react";
+import Loading from "@/app/loading";
 
 interface isDataLoadedType {
   isPlayerDataLoaded: boolean;
@@ -104,7 +105,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
           setIsDataLoaded
         }}
       >
-        {isFetchingDone && children}
+        {isFetchingDone ? children : <Loading />}
       </UserDataContext.Provider>
     </>
   );

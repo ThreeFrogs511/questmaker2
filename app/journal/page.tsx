@@ -4,15 +4,12 @@ import List from "@/components/journal/List";
 import Toolbar from "@/components/journal/Toolbar";
 import { useJournalStore } from "@/stores/useJournalStore";
 import useSound from "use-sound";
-import Loading from "@/app/loading";
-import localFont from 'next/font/local'
+import localFont from "next/font/local";
 import { useCharacterStore } from "@/stores/useCharacterStore";
 import { fetchQuests } from "@/lib/quests/fetchQuests";
-const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
-import prepareQuests from "@/lib/quests/prepareQuests";
+const retroGaming = localFont({ src: "../../public/fonts/retro_gaming.ttf" });
 
 export default function Journal() {
-  
   const character = useCharacterStore((state) => state.character);
   const journalError = useJournalStore((state) => state.journalError);
   const setJournalError = useJournalStore((state) => state.setJournalError);
@@ -20,15 +17,16 @@ export default function Journal() {
   const setWhichPage = useJournalStore((state) => state.setWhichPage);
   const resetPage = useJournalStore((state) => state.resetPage);
   const allQuests = useJournalStore((state) => state.allQuests);
-  const displayedQuests = useJournalStore((state) => state.displayedQuests);
   const setDisplayedQuests = useJournalStore(
     (state) => state.setDisplayedQuests,
   );
   const areQuestsLoaded = useJournalStore((state) => state.areQuestsLoaded);
-  const setAreQuestsLoaded = useJournalStore((state) => state.setAreQuestsLoaded);
+  const setAreQuestsLoaded = useJournalStore(
+    (state) => state.setAreQuestsLoaded,
+  );
   const errorAnim = useJournalStore((state) => state.errorAnim);
   const setErrorAnim = useJournalStore((state) => state.setErrorAnim);
-  
+
   const [isPending, setIsPending] = useState(false);
 
   const [turnPage] = useSound("/sounds/page.mp3");
@@ -47,9 +45,6 @@ export default function Journal() {
     clearTimeout(t);
   }, [journalError]);
 
-  function fetchQuests2() {
-
-  }
 
   useEffect(() => {
     setJournalError("");
@@ -60,18 +55,23 @@ export default function Journal() {
         if (data.err) throw new Error(data.err);
         const quests = data.quests ?? [];
         const listOrdered = quests.sort(
-          (a: { quest_id: number }, b: { quest_id: number }) => b.quest_id - a.quest_id
+          (a: { quest_id: number }, b: { quest_id: number }) =>
+            b.quest_id - a.quest_id,
         );
-        prepareQuests(listOrdered.length > 0 && !listOrdered[0].body ? [] : listOrdered);
+        const setAllQuests = useJournalStore.getState().setAllQuests;
+        const setDisplayedQuests = useJournalStore.getState().setDisplayedQuests;
+        setAllQuests(listOrdered);
+
+        const currentQuests = listOrdered.filter((n) => n.completed === false);
+        setDisplayedQuests(currentQuests);
         setAreQuestsLoaded(true);
       })
       .catch((err) => {
         // console.log("error : ", err);
       })
-      .finally(()=> {
-        setIsPending(true);
-      })
-   
+      .finally(() => {
+        setIsPending(false);
+      });
   }, []);
 
   useEffect(() => {
@@ -116,9 +116,7 @@ export default function Journal() {
             fill="currentColor"
           />
         </svg>
-        <h2
-          className="col-span-1 text-center text-xs! lg:text-base! text-stone-300"
-        >
+        <h2 className="col-span-1 text-center text-xs! lg:text-base! text-stone-300">
           {journal[whichPage]}
         </h2>
         <svg
@@ -138,10 +136,7 @@ export default function Journal() {
       <Toolbar />
       <div className="flex items-center gap-5 mb-2">
         <span>
-          coins :{" "}
-          <span className="text-amber-300">
-            {character?.coins}
-          </span>
+          coins : <span className="text-amber-300">{character?.coins}</span>
         </span>
         <span
           className={`text-red-600 text-sm ${errorAnim ? "error-animate" : ""}`}
@@ -150,20 +145,7 @@ export default function Journal() {
         </span>
       </div>
 
-
-      {!isPending? (
-        <List />
-      ) : (
-        <div className="w-full h-full flex flex-col justify-center text-base lg:text-xl! ">
-          {areQuestsLoaded ? (
-            <div className="flex flex-col items-center">
-              <p>No quests to display.</p>
-            </div>
-          ) : (
-            <p className="text-center">Loading quests...</p>
-          )}
-        </div>
-      )}
+      {!isPending ? <List /> : <p className="text-center">Loading quests...</p>}
     </>
   );
 }

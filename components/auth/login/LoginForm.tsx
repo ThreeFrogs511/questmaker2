@@ -67,10 +67,6 @@ export default function LoginForm() {
     err: "",
   });
 
-  useEffect(() => {
-    console.log("all quests = ", allQuests)
-  }, [allQuests])
-
 
   return (
     <Form
