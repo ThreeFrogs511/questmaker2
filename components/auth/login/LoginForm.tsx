@@ -4,7 +4,8 @@ import { loginUser } from "@/lib/auth/login";
 import { useRouter } from "next/navigation";
 import { User } from "@/types/types";
 import localFont from "next/font/local";
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { useJournalStore } from "@/stores/useJournalStore";
 import Form from "next/form";
 const retroGaming = localFont({
   src: "../../../public/fonts/retro_gaming.ttf",
@@ -19,6 +20,8 @@ type FeedbackType = {
 export default function LoginForm() {
 
   const router = useRouter();
+
+  const allQuests = useJournalStore((state) => state.allQuests);
 
   async function submitHandler(
     previousState: { email: string; password: string; err: string },
@@ -63,6 +66,10 @@ export default function LoginForm() {
     password: "",
     err: "",
   });
+
+  useEffect(() => {
+    console.log("all quests = ", allQuests)
+  }, [allQuests])
 
 
   return (

@@ -9,7 +9,7 @@ type CharacterCreationStore = {
   ) => void;
   hydrateCharacter: (character: Character) => void;
   updateCharacter: (patch: Partial<Character>) => void;
-  resetCharacter: (patch: Partial<Character>) => void;
+  resetCharacter: () => void;
   abilityScores: Attributes;
   addPoint: (patch: keyof Attributes) => void;
   removePoint: (patch: keyof Attributes) => void;

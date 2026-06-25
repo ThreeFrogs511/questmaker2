@@ -29,6 +29,7 @@ type useCombatStore = {
 
   movesets: Moveset[] | [];
   hydrateMovesets: (movesets: Moveset[]) => void;
+  resetMovesets: () => void;
 
   tempMovesets: Moveset[] | [];
   updateTempMovesets: (movesets: Moveset[]) => void;
@@ -38,7 +39,6 @@ type useCombatStore = {
   updateTempPlayerData: (patch: Partial<Character>) => void;
   hydrateTempPlayerData: (data: Character) => void;
 
-  resetMovesets: ([]) => void;
   resetAll: () => void;
 
   tempInventory: Array<Item> | null;
@@ -82,6 +82,7 @@ export const useCombatStore = create<useCombatStore>((set) => ({
 
   movesets: [],
   hydrateMovesets: (movesets) => set({ movesets: movesets }),
+  resetMovesets: () => set({movesets:[]}),
 
   tempPlayerData: {
     character_id: null,
@@ -116,7 +117,6 @@ export const useCombatStore = create<useCombatStore>((set) => ({
     }),
 
   hydrateTempPlayerData: (data) => set({ tempPlayerData: data }),
-  resetMovesets: () => set({ movesets: [] }),
 
   tempMovesets: [],
   updateTempMovesets: (movesets) => set({ tempMovesets: movesets }),

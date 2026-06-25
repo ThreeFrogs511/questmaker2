@@ -1,5 +1,4 @@
 import { NextResponse } from 'next/server';
-import { sql } from '@/server/connexion';
 import { cookies } from "next/headers";
 
 

@@ -16,6 +16,7 @@ interface UseJournalStore {
     setAreQuestsLoaded: (b: boolean) => void;
     errorAnim:boolean;
     setErrorAnim: (errorAnim:boolean) => void;
+    resetQuests: () => void;
 }
 
 
@@ -35,6 +36,7 @@ export const useJournalStore = create<UseJournalStore>((set) => ({
             allQuests: s.allQuests
         };
     }),
+    resetQuests: () => set({allQuests:null}),
     areQuestsLoaded: false,
     setAreQuestsLoaded: (b) => set({areQuestsLoaded: b}),
     errorAnim:false,

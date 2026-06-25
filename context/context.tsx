@@ -3,12 +3,12 @@ import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useUserStore } from "@/stores/useUserStore";
-import prepareQuests from "@/lib/quests/prepareQuests";
 import { useJournalStore } from "@/stores/useJournalStore";
 import { useInventoryStore } from "@/stores/useInventoryStore";
 import { useCharacterStore } from "@/stores/useCharacterStore";
 import { useCombatStore } from "@/stores/useCombatStore";
 import fetchAllData from "@/lib/me/fetchAllData";
+import { Dispatch, SetStateAction } from "react";
 
 interface isDataLoadedType {
   isPlayerDataLoaded: boolean;
@@ -18,6 +18,7 @@ interface isDataLoadedType {
 
 interface userContextType {
   isFetchingDone: boolean;
+  setIsDataLoaded:  Dispatch<SetStateAction<isDataLoadedType>>;
 }
 
 const UserDataContext = createContext<userContextType | null>(null);
@@ -47,6 +48,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       isDataLoaded.isInventoryDataLoaded &&
       isDataLoaded.isMovesetsDataLoaded
     ) {
+      console.log("already cached")
       return;
     }
 
@@ -99,6 +101,7 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
       <UserDataContext.Provider
         value={{
           isFetchingDone,
+          setIsDataLoaded
         }}
       >
         {isFetchingDone && children}

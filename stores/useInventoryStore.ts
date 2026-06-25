@@ -5,6 +5,7 @@ type useInventoryStore = {
     inventory: Array<Item> | null;
     updateInventory: (i: Array<Item>) => void;
     decrementInventory: (slug: string) => void;
+    resetInventory: () => void;
 }
 
 export const useInventoryStore = create<useInventoryStore>((set) => ({
@@ -18,4 +19,5 @@ export const useInventoryStore = create<useInventoryStore>((set) => ({
             .filter(item => (item.quantity ?? 0) > 0);
         return {inventory: updated};
     }),
+    resetInventory: () => set({inventory:[]})
 }));

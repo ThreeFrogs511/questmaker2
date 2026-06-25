@@ -1,25 +1,55 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
-import localFont from 'next/font/local'
+import { useCharacterStore } from "@/stores/useCharacterStore";
+import { useJournalStore } from "@/stores/useJournalStore";
+import { useInventoryStore } from "@/stores/useInventoryStore";
+import { useCombatStore } from "@/stores/useCombatStore";
+import localFont from "next/font/local";
+import { useUserContext } from "@/context/context";
+const retroGaming = localFont({ src: "../../public/fonts/retro_gaming.ttf" });
 
-const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
-
-export default function Menu({setIsMenuOpenAction} : {setIsMenuOpenAction: React.Dispatch<React.SetStateAction<boolean>>}) {
+export default function Menu({
+  setIsMenuOpenAction,
+}: {
+  setIsMenuOpenAction: React.Dispatch<React.SetStateAction<boolean>>;
+}) {
   const router = useRouter();
   const style = "text-xl! sm:text-2xl! md:ml-10!";
   const pathname = usePathname();
 
+  const { setIsDataLoaded } = useUserContext();
+
+  const resetCharacter = useCharacterStore((state) => state.resetCharacter);
+  const resetQuests = useJournalStore((state) => state.resetQuests);
+  const setAreQuestsLoaded = useJournalStore((state) => state.setAreQuestsLoaded);
+  const resetInventory = useInventoryStore((state) => state.resetInventory);
+  const resetMovesets = useCombatStore((state) => state.resetMovesets);
 
   async function logout() {
-    setIsMenuOpenAction(false);
-    const response = await fetch("api/logout", {
-      method: "DELETE",
-    });
-    const feedback = await response.json();
-    if (feedback.success) {
+    try {
+      const response = await fetch("api/logout", {
+        method: "DELETE",
+      });
+
+      const feedback = await response.json();
+      if (feedback.success) {
+        resetCharacter();
+        resetQuests();
+        resetInventory();
+        resetMovesets();
+        setIsDataLoaded({
+          isPlayerDataLoaded: false,
+          isInventoryDataLoaded: false,
+          isMovesetsDataLoaded: false,
+        });
+        setAreQuestsLoaded(false);
+      }
+    } catch (err) {
+      console.log((err as Error).message);
+    } finally {
       router.push("/titleScreen");
-    };
+    }
   }
 
   function navigationHandler(destination: string) {
@@ -28,7 +58,7 @@ export default function Menu({setIsMenuOpenAction} : {setIsMenuOpenAction: React
     } else {
       router.push(destination);
     }
-  };
+  }
 
   return (
     <>
@@ -73,7 +103,7 @@ export default function Menu({setIsMenuOpenAction} : {setIsMenuOpenAction: React
 
           {/* store */}
           <div
-            onPointerDown={() => navigationHandler("/merchant")}  
+            onPointerDown={() => navigationHandler("/merchant")}
             className="cursor-pointer w-full flex hover:text-amber-300!"
           >
             <p className={style}>Merchant</p>

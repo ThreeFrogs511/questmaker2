@@ -1,5 +1,5 @@
 "use client";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import List from "@/components/journal/List";
 import Toolbar from "@/components/journal/Toolbar";
 import { useJournalStore } from "@/stores/useJournalStore";
@@ -9,7 +9,6 @@ import localFont from 'next/font/local'
 import { useCharacterStore } from "@/stores/useCharacterStore";
 import { fetchQuests } from "@/lib/quests/fetchQuests";
 const retroGaming = localFont({ src: '../../public/fonts/retro_gaming.ttf' })
-import { Quest } from "@/types/types";
 import prepareQuests from "@/lib/quests/prepareQuests";
 
 export default function Journal() {
@@ -29,6 +28,8 @@ export default function Journal() {
   const setAreQuestsLoaded = useJournalStore((state) => state.setAreQuestsLoaded);
   const errorAnim = useJournalStore((state) => state.errorAnim);
   const setErrorAnim = useJournalStore((state) => state.setErrorAnim);
+  
+  const [isPending, setIsPending] = useState(false);
 
   const [turnPage] = useSound("/sounds/page.mp3");
   const journal = ["Current quests", "Archived quests", "All quests"];
@@ -46,9 +47,14 @@ export default function Journal() {
     clearTimeout(t);
   }, [journalError]);
 
+  function fetchQuests2() {
+
+  }
+
   useEffect(() => {
     setJournalError("");
     if (areQuestsLoaded) return;
+    setIsPending(true);
     fetchQuests()
       .then((data) => {
         if (data.err) throw new Error(data.err);
@@ -61,7 +67,10 @@ export default function Journal() {
       })
       .catch((err) => {
         // console.log("error : ", err);
-      });
+      })
+      .finally(()=> {
+        setIsPending(true);
+      })
    
   }, []);
 
@@ -142,7 +151,7 @@ export default function Journal() {
       </div>
 
 
-      {displayedQuests && displayedQuests.length > 0 ? (
+      {!isPending? (
         <List />
       ) : (
         <div className="w-full h-full flex flex-col justify-center text-base lg:text-xl! ">
@@ -151,7 +160,7 @@ export default function Journal() {
               <p>No quests to display.</p>
             </div>
           ) : (
-            <Loading />
+            <p className="text-center">Loading quests...</p>
           )}
         </div>
       )}
