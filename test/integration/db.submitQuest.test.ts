@@ -46,7 +46,7 @@ test("POST /api/quests rejects missing auth token", async () => {
   assert.equal(res.status, 200);
 
   const json = await res.json();
-  assert.equal(json.error, "No token");
+  assert.equal(json.error, "Not authenticated");
 });
 
 test("POST /api/quests rejects missing completed", async () => {
