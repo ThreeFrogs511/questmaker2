@@ -3,6 +3,7 @@ import { sql } from "@/server/connexion";
 import { cookies } from "next/headers";
 import bcrypt from "bcrypt";
 import * as jose from "jose";
+import { checkAuth } from "@/lib/auth/checkAuth";
 
 
 
@@ -68,9 +69,11 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const userId = await checkAuth();
     const { id } = await params;
     const data = await request.json();
     if (!id) return NextResponse.json({ err: "no user id found" });
+    if (userId !== parseInt(id)) return NextResponse.json({ err: "Not authorized" }, { status: 401 });
 
     const email = data.email.trim();
     const currentPassword = data.currentPassword
@@ -133,14 +136,16 @@ export async function PATCH(
   }
 }
 
-//fetching email 
+//fetching email
 export async function GET(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const userId = await checkAuth();
     const { id } = await params;
     if (!id) return NextResponse.json({ err: "no user id found" });
+    if (userId !== parseInt(id)) return NextResponse.json({ err: "Not authorized" }, { status: 401 });
 
     const r = await sql`SELECT email FROM users WHERE user_id = ${id}`;
     if (!r[0].email) return NextResponse.json({ err: "no email found" });
@@ -158,24 +163,17 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    const userId = await checkAuth();
     const { id } = await params;
     if (!id) return NextResponse.json({ error: "Undefined user id" });
+    if (userId !== parseInt(id)) return NextResponse.json({ error: "Not authorized" }, { status: 401 });
 
     await sql`
       DELETE FROM users
-      WHERE user_id = ${id}`;
+      WHERE user_id = ${userId}`;
 
     const cookie = await cookies();
-    const token: string | undefined = cookie.get("session")?.value;
-    if (!token)
-      return NextResponse.json({
-        error: "No sessions detected. Please login.",
-      });
-
-    const d = await sql`DELETE FROM sessions WHERE token = ${token}`;
-    // console.log(d);
-
-    cookie.delete("session");
+    cookie.delete("auth");
     cookie.delete("csrf");
 
     return NextResponse.json({ success: true });

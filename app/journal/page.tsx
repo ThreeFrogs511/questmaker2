@@ -50,7 +50,7 @@ export default function Journal() {
     setJournalError("");
     if (areQuestsLoaded) return;
     setIsPending(true);
-    fetchQuests()
+    fetchQuests(1, 1)
       .then((data) => {
         if (data.err) throw new Error(data.err);
         const quests = data.quests ?? [];

@@ -1,8 +1,7 @@
 "use server";
 import { sql } from "@/server/connexion";
-import { cookies } from "next/headers";
-import { PayloadType, Item as ItemType, Character } from "@/types/types";
-import * as jose from "jose";
+import { Item as ItemType, Character } from "@/types/types";
+import { checkAuth } from "@/lib/auth/checkAuth";
 import movesets from '@/assets/movesets.json';
 
 export async function updatePlayerDataAfterWeaponUse(item:ItemType, character:Character) {
@@ -17,16 +16,7 @@ export async function updatePlayerDataAfterWeaponUse(item:ItemType, character:Ch
     )
       return {err:"Invalid item data"};
 
-    const cookie = (await cookies()).get("auth");
-    const jwt = cookie?.value;
-    if (!jwt) return {err:"Authentification error"};
-    const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
-    const { payload }: { payload: PayloadType } = await jose.jwtVerify(
-      jwt,
-      secretKey,
-    );
-    const userId = payload.userId;
-    if (!userId) return {err:"Authentification error"}
+    const userId = await checkAuth();
 
 
     //equip or desequip

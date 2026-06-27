@@ -1,12 +1,9 @@
 "use client";
 import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
-import { useCharacterStore } from "@/stores/useCharacterStore";
-import { useJournalStore } from "@/stores/useJournalStore";
-import { useInventoryStore } from "@/stores/useInventoryStore";
-import { useCombatStore } from "@/stores/useCombatStore";
 import localFont from "next/font/local";
-import { useUserContext } from "@/context/context";
+
+
 const retroGaming = localFont({ src: "../../public/fonts/retro_gaming.ttf" });
 
 export default function Menu({
@@ -17,14 +14,6 @@ export default function Menu({
   const router = useRouter();
   const style = "text-xl! sm:text-2xl! md:ml-10!";
   const pathname = usePathname();
-
-  const { setIsDataLoaded, setIsFetchingDone } = useUserContext();
-
-  const resetCharacter = useCharacterStore((state) => state.resetCharacter);
-  const resetQuests = useJournalStore((state) => state.resetQuests);
-  const setAreQuestsLoaded = useJournalStore((state) => state.setAreQuestsLoaded);
-  const resetInventory = useInventoryStore((state) => state.resetInventory);
-  const resetMovesets = useCombatStore((state) => state.resetMovesets);
 
   async function logout() {
     try {
@@ -38,6 +27,7 @@ export default function Menu({
 
       }
     } catch (err) {
+      router.refresh();
       console.log((err as Error).message);
     } 
   }

@@ -1,5 +1,6 @@
 import { MongoClient, ObjectId } from "mongodb";
 import { NextResponse } from "next/server";
+import { checkAuth } from "@/lib/auth/checkAuth";
 
 async function fetchingCampaign(id: string) {
   const client = new MongoClient(process.env.MONGODB_URI as string);
@@ -23,6 +24,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    await checkAuth();
     const { id } = await params;
     if (!id) return NextResponse.json({ error: "no id found" });
 

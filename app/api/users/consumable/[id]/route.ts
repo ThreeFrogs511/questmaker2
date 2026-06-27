@@ -1,11 +1,13 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/server/connexion";
+import { checkAuth } from "@/lib/auth/checkAuth";
 
 export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    await checkAuth();
     const { id } = await params;
     const data = await request.json();
 

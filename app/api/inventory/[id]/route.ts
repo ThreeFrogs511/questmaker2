@@ -1,5 +1,6 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/server/connexion";
+import { checkAuth } from "@/lib/auth/checkAuth";
 
 
 export async function POST(
@@ -7,6 +8,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    await checkAuth();
     const { id } = await params;
     if (!id) return NextResponse.json({ error: "no character id found" });
     const item = await request.json();
@@ -83,6 +85,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    await checkAuth();
     const { id } = await params;
     if (!id) return NextResponse.json({ error: "no character id found" });
 
@@ -116,6 +119,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
+    await checkAuth();
     const { id } = await params;
     if (!id) return NextResponse.json({ error: "no id found" });
 

@@ -35,17 +35,18 @@ export function UserDataProvider({ children }: { children: React.ReactNode }) {
   const updateInventory = useInventoryStore((state) => state.updateInventory);
   const hydrateCharacter = useCharacterStore((state) => state.hydrateCharacter);
   const hydrateMovesets = useCombatStore((state) => state.hydrateMovesets);
-  // states for user data and fetching status
-  const [isFetchingDone, setIsFetchingDone] = useState(true);
+  const isAuthPage =
+    pathname === "/titleScreen" ||
+    pathname === "/login" ||
+    pathname === "/signup";
+
+  // start true only on auth pages (no fetch needed); all other pages start with Loading
+  const [isFetchingDone, setIsFetchingDone] = useState(isAuthPage);
   const [isDataLoaded, setIsDataLoaded] = useState<isDataLoadedType>({
     isPlayerDataLoaded: false,
     isInventoryDataLoaded: false,
     isMovesetsDataLoaded: false,
   });
-
-  useEffect(() => {
-    console.log("isFetchingDone est ", isFetchingDone);
-  }, [isFetchingDone]);
 
 
   useEffect(() => {

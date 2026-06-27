@@ -2,7 +2,6 @@ import { NextResponse } from "next/server";
 import { NextRequest } from "next/server";
 import * as jose from "jose";
 import { PayloadType } from "./types/types";
-import { revalidatePath } from "next/cache";
 
 export async function proxy(request: NextRequest) {
   try {
@@ -20,8 +19,7 @@ export async function proxy(request: NextRequest) {
 
     const pathname = request.nextUrl.pathname;
 
-    if (pathname === "/journal") console.log("go to journal")
-    revalidatePath(pathname);
+  
 
     const authorizedPathnameTutorialIncomplete = [
       "/intro",

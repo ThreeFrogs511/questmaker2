@@ -1,13 +1,16 @@
 import { sql } from "@/server/connexion";
 import { NextResponse } from "next/server";
+import { checkAuth } from "@/lib/auth/checkAuth";
 
 export async function GET(
 request: Request,
 { params }: { params: Promise<{ userId: string }> }) 
 {
   try {
+    const authUserId = await checkAuth();
     const {userId} = await params;
     if (!userId) return NextResponse.json({err:"no user id found"});
+    if (authUserId !== parseInt(userId)) return NextResponse.json({err:"Not authorized"}, {status: 401});
 
     const r = await sql`SELECT last_chapter_done FROM users WHERE user_id = ${userId}`;
     // console.log(r)

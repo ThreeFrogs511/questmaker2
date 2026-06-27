@@ -1,18 +1,18 @@
 import { NextResponse } from "next/server";
 import { sql } from "@/server/connexion";
+import { checkAuth } from "@/lib/auth/checkAuth";
 
 export async function GET(
   request: Request,
-  { params }: { params: Promise<{ quest_id: string }> },
+  { params: _params }: { params: Promise<{ quest_id: string }> },
 ) {
   try {
-    const { quest_id } = await params;
-    if (!quest_id) return NextResponse.json({ error: "id null" });
+    const userId = await checkAuth();
 
     const quests = await sql`
         SELECT quest_id, body, completed, user_id
         FROM quests
-        WHERE user_id = ${quest_id}
+        WHERE user_id = ${userId}
         ORDER BY quest_id DESC`;
 
     if (quests.length === 0) return NextResponse.json({ error: "No quests yet" });
@@ -28,31 +28,22 @@ export async function PATCH(
   { params }: { params: Promise<{ quest_id: string }> },
 ) {
   try {
+    const userId = await checkAuth();
     const { quest_id } = await params;
 
     if (!quest_id) return NextResponse.json({ error: "id null" });
 
     const data = await request.json();
 
-    // console.log("data.taskUserId = ", data.taskUserId)
-    // console.log("data.currentUser.user_id  = ", data.currentUser?.user_id)
-
     if (data.completed === undefined)
       return NextResponse.json({ error: "Missing field: completed" });
-    if (!data.taskUserId || !data.currentUser || !data.currentUser?.user_id)
-    
-      return NextResponse.json({ error: "missing id" });
-    if (data.taskUserId !== parseInt(data.currentUser?.user_id))
-      return NextResponse.json({
-        error: "You are not authorized to use this action",
-      });
 
     const result = await sql`
       WITH
         rl AS (
           SELECT count, window_start
           FROM quest_rate_limit
-          WHERE user_id = ${data.currentUser.user_id}
+          WHERE user_id = ${userId}
         ),
         state AS (
           SELECT
@@ -94,7 +85,7 @@ export async function PATCH(
         ),
         rl_upd AS (
           INSERT INTO quest_rate_limit (user_id, count, window_start)
-          SELECT ${data.currentUser.user_id}, new_count, new_window_start FROM rl_values
+          SELECT ${userId}, new_count, new_window_start FROM rl_values
           ON CONFLICT (user_id) DO UPDATE
             SET count        = EXCLUDED.count,
                 window_start = EXCLUDED.window_start
@@ -105,7 +96,7 @@ export async function PATCH(
             coins + CASE WHEN ${data.completed}::boolean THEN 1 ELSE -1 END,
             0
           )
-          WHERE user_id = ${data.currentUser.user_id}
+          WHERE user_id = ${userId}
             AND EXISTS (SELECT 1 FROM quest_upd)
           RETURNING coins
         )
@@ -129,12 +120,14 @@ export async function DELETE(
   { params }: { params: Promise<{ quest_id: string }> },
 ) {
   try {
+    const userId = await checkAuth();
     const { quest_id } = await params;
     if (quest_id === undefined) throw new Error("Undefined quest id");
 
     await sql`
       DELETE FROM quests
-      WHERE quest_id = ${quest_id}`;
+      WHERE quest_id = ${quest_id}
+      AND user_id = ${userId}`;
 
     return NextResponse.json({ success: true });
   } catch (error) {

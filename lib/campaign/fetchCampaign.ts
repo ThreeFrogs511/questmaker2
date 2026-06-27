@@ -1,26 +1,10 @@
 "use server";
 import { sql } from "@/server/connexion";
-import * as jose from "jose";
-import { cookies } from "next/headers";
-import { PayloadType } from "@/types/types";
+import { checkAuth } from "@/lib/auth/checkAuth";
 
 export default async function fetchCampaign() {
   try {
-    // const {userId} = await params;
-    const cookie = (await cookies()).get("auth");
-    const jwt = cookie?.value;
-
-    // if no token, redirect to title screen
-    if (!jwt) return {err :"No token"};
-
-    const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
-    const { payload }: { payload: PayloadType } = await jose.jwtVerify(
-      jwt,
-      secretKey,
-    );
-    
-    if (!payload || !payload?.userId) return { err: "no user found" };
-    let userId = payload.userId;
+    const userId = await checkAuth();
 
     const r =
       await sql`SELECT last_chapter_done FROM users WHERE user_id = ${userId}`;

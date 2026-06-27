@@ -1,27 +1,10 @@
 "use server";
 import { sql } from "@/server/connexion";
-import { cookies } from "next/headers";
-import * as jose from "jose";
-import { PayloadType } from "@/types/types";
+import { checkAuth } from "@/lib/auth/checkAuth";
 
 export default async function fetchAllData() {
   try {
-    // cookies
-    const cookieStore = await cookies();
-    const jwt = cookieStore.get("auth")?.value;
-
-    // checking if the token exists
-    if (!jwt) return { err: "Not authenticated" };
-
-    const secretKey = new TextEncoder().encode(process.env.JWT_SECRET);
-    const { payload }: { payload: PayloadType } = await jose.jwtVerify(
-      jwt,
-      secretKey,
-    );
-    const userId: number = payload.userId;
-    const email: string = payload.email;
-
-    if (!userId || !email) return { err: "No user id attached" };
+    const userId = await checkAuth();
 
     // fetching user's data and handling errors
     const r = await sql`SELECT
@@ -49,8 +32,6 @@ export default async function fetchAllData() {
       }));
 
     if (!r || r.length === 0) return { err: "pas d'user existant" };
-
-
 
     return {
       authenticated: true,
@@ -90,6 +71,7 @@ export default async function fetchAllData() {
       inventory: inventory.length === 0 ? [] : inventory,
     };
   } catch (err) {
-    return { err: (err as Error).message };
+    console.log((err as Error).message)
+    return { err: "Server error. Please try again later." };
   }
 }
