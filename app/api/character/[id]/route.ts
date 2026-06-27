@@ -7,7 +7,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const userId = await checkAuth();
+    const userId = await checkAuth(request);
     const { id } = await params;
     if (!id) return NextResponse.json({ error: "no user id found" });
     if (userId !== parseInt(id)) return NextResponse.json({ error: "Action not allowed" }, { status: 401 });

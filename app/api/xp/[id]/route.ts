@@ -7,7 +7,7 @@ export async function PATCH(
   request: Request,
   { params }: { params: Promise<{ id: string }> }
 ) {
-  const userId = await checkAuth();
+  const userId = await checkAuth(request);
   const { id } = await params;
   if (userId !== parseInt(id)) return NextResponse.json({ error: "Action not allowed" }, { status: 401 });
   const data = await request.json();

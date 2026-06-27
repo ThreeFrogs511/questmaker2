@@ -4,7 +4,7 @@ import { checkAuth } from "@/lib/auth/checkAuth";
 
 export async function POST(request: NextRequest) {
   try {
-    const user_id = await checkAuth();
+    const user_id = await checkAuth(request);
     const data = await request.json();
 
     if (data.completed === null || data.completed === undefined)

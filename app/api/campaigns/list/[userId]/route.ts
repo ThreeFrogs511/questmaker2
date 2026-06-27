@@ -7,7 +7,7 @@ request: Request,
 { params }: { params: Promise<{ userId: string }> }) 
 {
   try {
-    const authUserId = await checkAuth();
+    const authUserId = await checkAuth(request);
     const {userId} = await params;
     if (!userId) return NextResponse.json({err:"no user id found"});
     if (authUserId !== parseInt(userId)) return NextResponse.json({err:"Not authorized"}, {status: 401});

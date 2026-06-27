@@ -1,13 +1,12 @@
-import { NextResponse } from "next/server";
 import { cookies } from "next/headers";
+import { NextRequest } from "next/server";
 import { PayloadType } from "@/types/types";
 import * as jose from "jose";
 
-//check if a user is allowed to perform an API call
-//protection against malicious api calls
-export async function checkAuth() {
-  const cookieStore = await cookies();
-  const jwt = cookieStore.get("auth")?.value;
+export async function checkAuth(request?: Request) {
+  const jwt = request
+    ? (request as NextRequest).cookies.get("auth")?.value
+    : (await cookies()).get("auth")?.value;
 
   if (!jwt) throw new Error("Not authenticated");
 

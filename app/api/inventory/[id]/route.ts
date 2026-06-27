@@ -8,7 +8,7 @@ export async function POST(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    await checkAuth();
+    await checkAuth(request);
     const { id } = await params;
     if (!id) return NextResponse.json({ error: "no character id found" });
     const item = await request.json();
@@ -85,7 +85,7 @@ export async function PUT(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    await checkAuth();
+    await checkAuth(request);
     const { id } = await params;
     if (!id) return NextResponse.json({ error: "no character id found" });
 
@@ -119,7 +119,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    await checkAuth();
+    await checkAuth(request);
     const { id } = await params;
     if (!id) return NextResponse.json({ error: "no id found" });
 

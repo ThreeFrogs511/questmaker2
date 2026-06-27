@@ -24,7 +24,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    await checkAuth();
+    await checkAuth(request);
     const { id } = await params;
     if (!id) return NextResponse.json({ error: "no id found" });
 

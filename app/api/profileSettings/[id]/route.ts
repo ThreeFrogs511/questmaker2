@@ -69,7 +69,7 @@ export async function PATCH(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const userId = await checkAuth();
+    const userId = await checkAuth(request);
     const { id } = await params;
     const data = await request.json();
     if (!id) return NextResponse.json({ err: "no user id found" });
@@ -142,7 +142,7 @@ export async function GET(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const userId = await checkAuth();
+    const userId = await checkAuth(request);
     const { id } = await params;
     if (!id) return NextResponse.json({ err: "no user id found" });
     if (userId !== parseInt(id)) return NextResponse.json({ err: "Not authorized" }, { status: 401 });
@@ -163,7 +163,7 @@ export async function DELETE(
   { params }: { params: Promise<{ id: string }> },
 ) {
   try {
-    const userId = await checkAuth();
+    const userId = await checkAuth(request);
     const { id } = await params;
     if (!id) return NextResponse.json({ error: "Undefined user id" });
     if (userId !== parseInt(id)) return NextResponse.json({ error: "Not authorized" }, { status: 401 });

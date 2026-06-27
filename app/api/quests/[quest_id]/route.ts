@@ -7,7 +7,7 @@ export async function GET(
   { params: _params }: { params: Promise<{ quest_id: string }> },
 ) {
   try {
-    const userId = await checkAuth();
+    const userId = await checkAuth(request);
 
     const quests = await sql`
         SELECT quest_id, body, completed, user_id
@@ -28,7 +28,7 @@ export async function PATCH(
   { params }: { params: Promise<{ quest_id: string }> },
 ) {
   try {
-    const userId = await checkAuth();
+    const userId = await checkAuth(request);
     const { quest_id } = await params;
 
     if (!quest_id) return NextResponse.json({ error: "id null" });
@@ -120,7 +120,7 @@ export async function DELETE(
   { params }: { params: Promise<{ quest_id: string }> },
 ) {
   try {
-    const userId = await checkAuth();
+    const userId = await checkAuth(request);
     const { quest_id } = await params;
     if (quest_id === undefined) throw new Error("Undefined quest id");
 
