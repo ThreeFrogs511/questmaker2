@@ -1,6 +1,7 @@
 import { useUserStore } from "@/stores/useUserStore";
 
 export default class Quest {
+  
   async insert(body: string) {
     try {
       const response = await fetch(`/api/quests/`, {
@@ -13,7 +14,7 @@ export default class Quest {
       const feedback = await response.json();
       return feedback;
     } catch {
-      return { success: false, error: "server error" };
+      return { success: false, err: "server error" };
     }
   }
 

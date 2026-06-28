@@ -1,11 +1,5 @@
 @import "tailwindcss";
 
-/* @font-face {
-  font-family: 'retroGaming' !important;
-  src: url('../public/fonts/retro_gaming.ttf');
-  font-display: swap;
-}   */
-/* @import "pixel-retroui/dist/fonts.css"; */
 
 :root {
   height: 100%;
@@ -80,7 +74,9 @@ body {
   border-radius: 100% !important;  
 }
 
-
+.Card-module__pixelCard___RY5ZX {
+  border-width: 3px !important;      
+}
 
 .Input-module__pixelContainer___q-uvd {
   border-width: 0.2rem !important;

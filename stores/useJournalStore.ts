@@ -17,6 +17,23 @@ interface UseJournalStore {
     errorAnim:boolean;
     setErrorAnim: (errorAnim:boolean) => void;
     resetQuests: () => void;
+
+    page:number;
+    setPage: (page:number) => void;
+
+    lastQuestId:number;
+    setLastQuestId: (questId:number) => void;
+
+    numberOfPages:number;
+    setNumberOfPages : (nb:number) => void;
+
+    filter: string[];
+    addFilter: (f:string) => void;
+    removeFilter: (f:string) => void;
+    resetFilter : () => void;
+
+    status: "All" | "Active" | "Archived";
+    setStatus: (st: "All" | "Active" | "Archived") => void
 }
 
 
@@ -36,10 +53,26 @@ export const useJournalStore = create<UseJournalStore>((set) => ({
             allQuests: s.allQuests
         };
     }),
-    resetQuests: () => set({allQuests:null}),
+    resetQuests: () => set({allQuests:[]}),
     areQuestsLoaded: false,
     setAreQuestsLoaded: (b) => set({areQuestsLoaded: b}),
     errorAnim:false,
-    setErrorAnim: (b) => set({errorAnim:b})
+    setErrorAnim: (b) => set({errorAnim:b}),
 
+    page:1,
+    setPage : (n) => set({page:n <=0 ? 1 : n}),
+
+    lastQuestId: 0,
+    setLastQuestId: (n) => set({lastQuestId:n}),
+
+    numberOfPages:1,
+    setNumberOfPages: (n) => set({numberOfPages:n}),
+
+    filter: [],
+    addFilter : (f) => set((state) => ({filter: [...state.filter, f] })),
+    removeFilter: (f) => set((state) => ({filter: state.filter.filter(n => n !== f) })),
+    resetFilter: () => set({filter: []}),
+
+    status: "All",
+    setStatus: (st) => set({status: st})
 }))

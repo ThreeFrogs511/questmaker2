@@ -3,7 +3,6 @@ import Menu from "@/components/global/Menu";
 import { useState } from "react";
 export default function Header() {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  
 
   return (
     <>

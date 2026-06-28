@@ -1,151 +1,117 @@
 "use client";
-import { useEffect, useState } from "react";
-import List from "@/components/journal/List";
+import { useEffect, useTransition } from "react";
+import Quest from "@/components/journal/Quest";
 import Toolbar from "@/components/journal/Toolbar";
 import { useJournalStore } from "@/stores/useJournalStore";
-import useSound from "use-sound";
 import localFont from "next/font/local";
-import { useCharacterStore } from "@/stores/useCharacterStore";
 import { fetchQuests } from "@/lib/quests/fetchQuests";
+import Pages from "@/components/journal/Pages";
+import SkeletonQuest from "@/components/journal/SkeletonQuest";
+
 const retroGaming = localFont({ src: "../../public/fonts/retro_gaming.ttf" });
 
 export default function Journal() {
-  const character = useCharacterStore((state) => state.character);
-  const journalError = useJournalStore((state) => state.journalError);
   const setJournalError = useJournalStore((state) => state.setJournalError);
-  const whichPage = useJournalStore((state) => state.whichPage);
-  const setWhichPage = useJournalStore((state) => state.setWhichPage);
-  const resetPage = useJournalStore((state) => state.resetPage);
-  const allQuests = useJournalStore((state) => state.allQuests);
-  const setDisplayedQuests = useJournalStore(
-    (state) => state.setDisplayedQuests,
-  );
+  const displayedQuests = useJournalStore((state) => state.displayedQuests);
   const areQuestsLoaded = useJournalStore((state) => state.areQuestsLoaded);
   const setAreQuestsLoaded = useJournalStore(
     (state) => state.setAreQuestsLoaded,
   );
-  const errorAnim = useJournalStore((state) => state.errorAnim);
-  const setErrorAnim = useJournalStore((state) => state.setErrorAnim);
+  const page = useJournalStore((state) => state.page);
+  const setNumberOfPages = useJournalStore((state) => state.setNumberOfPages);
+  const status = useJournalStore((state) => state.status);
+  const filter = useJournalStore((state) => state.filter);
 
-  const [isPending, setIsPending] = useState(false);
+  const [isPending, startTransition] = useTransition();
 
-  const [turnPage] = useSound("/sounds/page.mp3");
-  const journal = ["Current quests", "Archived quests", "All quests"];
-  const [error] = useSound("/sounds/error.mp3");
+  const skeletonUINbOfQuest = [
+    1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15,
+  ];
 
-  useEffect(() => {
-    if (journalError !== "") {
-      setErrorAnim(false);
-      error();
-      requestAnimationFrame(() => setErrorAnim(true));
-    }
-    const t = setTimeout(() => {
-      setErrorAnim(false);
-    }, 1000);
-    clearTimeout(t);
-  }, [journalError]);
+  const listContainer = document.getElementById("quests-list");
 
+  function loadQuests(
+    page: number,
+    statuses: "All" | "Active" | "Archived",
+    filter: string[],
+  ) {
+    startTransition(async () => {
+      if (page <= 1) {
+        const data = await fetchQuests(1, statuses, filter);
+        if (data.err || !data.quests) {
+          setJournalError(data.err);
+          return;
+        }
 
-  useEffect(() => {
-    setJournalError("");
-    if (areQuestsLoaded) return;
-    setIsPending(true);
-    fetchQuests(1, 1)
-      .then((data) => {
-        if (data.err) throw new Error(data.err);
-        const quests = data.quests ?? [];
-        const listOrdered = quests.sort(
-          (a: { quest_id: number }, b: { quest_id: number }) =>
-            b.quest_id - a.quest_id,
-        );
+        const rawQuests = data.quests ?? [];
+
         const setAllQuests = useJournalStore.getState().setAllQuests;
-        const setDisplayedQuests = useJournalStore.getState().setDisplayedQuests;
-        setAllQuests(listOrdered);
+        const setDisplayedQuests =
+          useJournalStore.getState().setDisplayedQuests;
+        setAllQuests(rawQuests);
 
-        const currentQuests = listOrdered.filter((n) => n.completed === false);
-        setDisplayedQuests(currentQuests);
+        setDisplayedQuests(rawQuests);
+        setNumberOfPages(data.pages ?? 0);
         setAreQuestsLoaded(true);
-      })
-      .catch((err) => {
-        // console.log("error : ", err);
-      })
-      .finally(() => {
-        setIsPending(false);
-      });
-  }, []);
+        return;
+      } else if (page > 1) {
+        const data = await fetchQuests(page, statuses, filter);
+        if (data.err || !data.quests) {
+          setJournalError(data.err);
+          return;
+        }
 
-  useEffect(() => {
-    if (allQuests) {
-      switch (whichPage) {
-        case 0:
-          const currentQuests = allQuests.filter((n) => n.completed === false);
-          setDisplayedQuests(currentQuests);
-          break;
+        const rawQuests = data.quests ?? [];
 
-        case 1:
-          const archivedQuests = allQuests.filter((n) => n.completed === true);
-          setDisplayedQuests(archivedQuests);
-          break;
+        const setAllQuests = useJournalStore.getState().setAllQuests;
+        const setDisplayedQuests =
+          useJournalStore.getState().setDisplayedQuests;
+        setAllQuests(rawQuests);
 
-        case 2:
-          setDisplayedQuests(allQuests);
-          break;
+        setDisplayedQuests(rawQuests);
+        setNumberOfPages(data.pages ?? 1);
+        setAreQuestsLoaded(true);
+        return;
       }
-    }
-  }, [whichPage, allQuests]);
+    });
+  }
 
   useEffect(() => {
-    turnPage();
-  }, [whichPage]);
+    if (areQuestsLoaded) return;
+    loadQuests(page, status, filter);
+    listContainer?.scrollTo(0, 0);
+  }, [page, filter, status]);
 
   return (
     <>
-      <div
-        id="journal-navigation"
-        className={`flex justify-between items-center mb-0 ${retroGaming.className}`}
-      >
-        <svg
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          className="size-8 cursor-pointer"
-          onClick={() => (whichPage === 0 ? resetPage(2) : setWhichPage(-1))}
-        >
-          <path
-            d="M20 11v2H8v2H6v-2H4v-2h2V9h2v2h12zM10 7H8v2h2V7zm0 0h2V5h-2v2zm0 10H8v-2h2v2zm0 0h2v2h-2v-2z"
-            fill="currentColor"
-          />
-        </svg>
-        <h2 className="col-span-1 text-center text-xs! lg:text-base! text-stone-300">
-          {journal[whichPage]}
-        </h2>
-        <svg
-          fill="none"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 24 24"
-          className="size-8 cursor-pointer"
-          onClick={() => (whichPage === 2 ? resetPage(0) : setWhichPage(1))}
-        >
-          <path
-            d="M4 11v2h12v2h2v-2h2v-2h-2V9h-2v2H4zm10-4h2v2h-2V7zm0 0h-2V5h2v2zm0 10h2v-2h-2v2zm0 0h-2v2h2v-2z"
-            fill="currentColor"
-          />
-        </svg>
-      </div>
+      <Toolbar loadQuests={loadQuests} />
 
-      <Toolbar />
-      <div className="flex items-center gap-5 mb-2">
-        <span>
-          coins : <span className="text-amber-300">{character?.coins}</span>
-        </span>
-        <span
-          className={`text-red-600 text-sm ${errorAnim ? "error-animate" : ""}`}
+      {/* the list */}
+      {displayedQuests && !isPending ? (
+        <div
+          id="quests-list"
+          className={`scrollingContainer h-full!  flex flex-col gap-2 ${retroGaming.className}`}
         >
-          {journalError}
-        </span>
-      </div>
-
-      {!isPending ? <List /> : <p className="text-center">Loading quests...</p>}
+          {displayedQuests.length > 0 ? (
+            displayedQuests?.map((item, index) => (
+              <Quest item={item} key={index} />
+            ))
+          ) : (
+            <p className="text-center h-full flex items-center justify-center">
+              No quests found in your journal.
+            </p>
+          )}
+          <Pages />
+        </div>
+      ) : (
+        <div
+          className={`scrollingContainer h-full! flex flex-col gap-2 ${retroGaming.className}`}
+        >
+          {skeletonUINbOfQuest.map((item, index) => (
+            <SkeletonQuest key={index} />
+          ))}
+        </div>
+      )}
     </>
   );
 }
