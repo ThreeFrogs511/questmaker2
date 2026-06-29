@@ -1,6 +1,6 @@
 "use client";
 import { useRef } from "react";
-import QuestClass from "@/classes/Quest";
+import { completeQuest, deleteQuest } from "@/lib/quests/questActions";
 import { Quest as QuestType, ListType } from "@/types/types";
 import { useJournalStore } from "@/stores/useJournalStore";
 import { Card } from "pixel-retroui";
@@ -11,25 +11,37 @@ export default function Quest({ item }: { item: ListType }) {
   const character = useCharacterStore((state) => state.character);
   const updateCharacter = useCharacterStore((state) => state.updateCharacter);
   const setJournalError = useJournalStore((state) => state.setJournalError);
-  const allQuests = useJournalStore((state) => state.allQuests);
-  const setAllQuests = useJournalStore((state) => state.setAllQuests);
+  const questsCache = useJournalStore((state) => state.questsCache);
+  const setQuestsCache = useJournalStore((state) => state.setQuestsCache);
   const displayedQuests = useJournalStore((state) => state.displayedQuests);
   const setDisplayedQuests = useJournalStore(
     (state) => state.setDisplayedQuests,
   );
+  const page = useJournalStore((state) => state.page);
+  const setPage = useJournalStore((state) => state.setPage);
+  const status = useJournalStore((state) => state.status);
+  const numberOfPages = useJournalStore((state) => state.numberOfPages);
+  const setNumberOfPages = useJournalStore((state) => state.setNumberOfPages);
+  const nbOfQuestsTotal = useJournalStore((state) => state.nbOfQuestsTotal);
+  const setNbOfQuestsTotal = useJournalStore((state) => state.setNbOfQuestsTotal);
+  const lastQuestId = useJournalStore((state) => state.lastQuestId);
+  const setLastQuestId = useJournalStore((state) => state.setLastQuestId);
+  const setAreQuestsLoaded = useJournalStore(
+    (state) => state.setAreQuestsLoaded,
+  );
+
 
   const isLocked = useRef(false);
 
   async function completion(
     currentCompleted: boolean | null,
     quest_id: number | null,
-    user_id: number | null,
   ) {
     if (isLocked.current) return;
     if (
       !quest_id ||
       currentCompleted === null ||
-      !allQuests ||
+      !questsCache ||
       !displayedQuests
     )
       return;
@@ -43,27 +55,60 @@ export default function Quest({ item }: { item: ListType }) {
       new JournalAudioManager().playSfx("untickingSound");
     }
 
-    const previousList = [...allQuests];
+    //snapshot
+    const previousList = [...displayedQuests];
     const previousCoins = character?.coins ?? 0;
-    const optimisticList = allQuests.map((n) =>
+
+    //optimistic logic
+    let optimisticList: ListType[];
+    optimisticList = displayedQuests.map((n) =>
       n.quest_id === quest_id ? { ...n, completed: completionState } : n,
     );
-    setAllQuests(optimisticList);
 
-    if (!currentCompleted) {
+    //removing completed/uncompleted quest based on the status filter
+    if (completionState === true) {
       updateCharacter({ coins: (Number(character?.coins) ?? 0) + 1 });
+      if (status === "Active") {
+        setDisplayedQuests(optimisticList); // we show the tick one second before removal
+
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, 1000);
+        }).then(() => {
+          optimisticList = optimisticList.filter(
+            (n: ListType) => n.quest_id !== quest_id,
+          );
+          return;
+        });
+      }
     } else {
       updateCharacter({
         coins: Number(character?.coins) <= 0 ? 0 : Number(character?.coins) - 1,
       });
+      if (status === "Archived") {
+        setDisplayedQuests(optimisticList); // we show the tick one second before removal
+
+        await new Promise<void>((resolve) => {
+          setTimeout(() => {
+            resolve();
+          }, 1000);
+        }).then(() => {
+          optimisticList = optimisticList.filter(
+            (n: ListType) => n.quest_id !== quest_id,
+          );
+          return;
+        });
+      }
     }
+
+    setDisplayedQuests(optimisticList);
     setJournalError("");
 
-    const quest = new QuestClass();
-    const feedback = await quest.complete(quest_id, completionState, user_id);
+    const feedback = await completeQuest(quest_id, completionState);
 
     if (feedback.error) {
-      setAllQuests(previousList);
+      setDisplayedQuests(previousList);
       updateCharacter({ coins: previousCoins });
 
       if (feedback.error === "limit") {
@@ -83,23 +128,44 @@ export default function Quest({ item }: { item: ListType }) {
     isLocked.current = false;
   }
 
-  async function deletion(id: number | null) {
-    if (!id || !allQuests) return;
-
-    const quest = new QuestClass();
-    const feedback = await quest.delete(id);
+  async function deletion(questId: number | null) {
+    if (!questId || !questsCache) return;
+    const feedback = await deleteQuest(questId, lastQuestId);
 
     if (feedback.success) {
       new JournalAudioManager().playSfx("deletingQuestSound");
 
-      const updatedList: Array<ListType> = allQuests.filter(
-        (n) => n.quest_id !== id,
+      if (!displayedQuests) return;
+      
+      //we first remove the deleted quest from the client-side list
+      const updatedList: Array<ListType> = displayedQuests.filter(
+        (n) => n.quest_id !== questId,
       );
-      setAllQuests(updatedList);
-      const updatedCurrentList: Array<ListType> = updatedList.filter(
-        (n) => n.completed === false,
-      );
-      setDisplayedQuests(updatedCurrentList);
+
+      //decrement the nb of quests
+      setNbOfQuestsTotal(nbOfQuestsTotal - 1);
+
+      //handle the case where there is only one quest in the page
+      //in that case, we need to delete the quest AND the page
+      //we simply force a database query to synch client/server data
+      if (displayedQuests.length<=1) {
+        setPage(page - 1)
+        setAreQuestsLoaded(false);
+      };
+
+      //we add the quest from the next page to fill the now empty slot
+      //only relevant if there are more than 1 page
+      if (feedback.lastQuest && feedback.lastQuest.quest_id && numberOfPages > 1) {
+        updatedList.push(feedback.lastQuest);
+        setLastQuestId(feedback.lastQuest.quest_id);
+      }
+
+      //we update the lists
+      setQuestsCache(updatedList);
+      setDisplayedQuests(updatedList);
+
+    } else if (feedback.err) {
+      console.log("error: ", feedback.err);
     }
   }
 
@@ -121,9 +187,7 @@ export default function Quest({ item }: { item: ListType }) {
               ? ` p-1 cursor-pointer bg-green-500 inline-block min-w-5 h-5 border border-white mr-5 `
               : ` p-1 cursor-pointer inline-block min-w-5 h-5 border border-white mr-5 `
           }
-          onClick={() =>
-            completion(item.completed, item.quest_id, item?.user_id)
-          }
+          onClick={() => completion(item.completed, item.quest_id)}
         ></span>
 
         <p className={`text-xs! lg:text-sm! tracking-widest wrap-anywhere`}>

@@ -1,43 +1,49 @@
-import { NextResponse } from "next/server";
+"use server";
 import { sql } from "@/server/connexion";
 import { checkAuth } from "@/lib/auth/checkAuth";
+import { ListType } from "@/types/types";
 
-export async function GET(
-  request: Request,
-  { params: _params }: { params: Promise<{ quest_id: string }> },
-) {
+
+
+
+export async function insertQuest(body: string, isCompleted:boolean) {
   try {
-    const userId = await checkAuth(request);
+    const user_id = await checkAuth();
 
-    const quests = await sql`
-        SELECT quest_id, body, completed, user_id
-        FROM quests
-        WHERE user_id = ${userId}
-        ORDER BY quest_id DESC`;
+    if (body === null || body === undefined)
+      throw new Error("error while sending quest completion state");
+    if (!body || body.trim() === "") throw new Error("quests can not be empty");
 
-    if (quests.length === 0) return NextResponse.json({ error: "No quests yet" });
+    const result = await sql`
+      INSERT INTO quests (body, completed, user_id)
+      VALUES (${body}, ${isCompleted}, ${user_id})
+      RETURNING quest_id, body, completed, user_id
+    `;
 
-    return NextResponse.json(quests);
-  } catch (error) {
-    return NextResponse.json({ error: (error as Error).message });
+    const insertedQuest = result[0];
+
+    if (!insertedQuest) throw new Error("error while submitting the quest");
+
+    return {
+      success: true,
+      quest: {
+        quest_id: Number(insertedQuest.quest_id),
+        body: String(insertedQuest.body),
+        completed: Boolean(insertedQuest.completed),
+        user_id: Number(insertedQuest.user_id),
+      },
+    };
+  } catch (err) {
+    return { err: (err as Error).message };
   }
 }
 
-export async function PATCH(
-  request: Request,
-  { params }: { params: Promise<{ quest_id: string }> },
-) {
+export async function completeQuest(quest_id: number, isCompleted: boolean) {
   try {
-    const RATE_LIMIT = 500
-    const userId = await checkAuth(request);
-    const { quest_id } = await params;
+    const RATE_LIMIT = 500;
+    const userId = await checkAuth();
 
-    if (!quest_id) return NextResponse.json({ error: "id null" });
-
-    const data = await request.json();
-
-    if (data.completed === undefined)
-      return NextResponse.json({ error: "Missing field: completed" });
+    if (!quest_id) throw new Error("no quest id found");
 
     const result = await sql`
       WITH
@@ -59,13 +65,13 @@ export async function PATCH(
             (
               current_count >= ${RATE_LIMIT}
               AND EXTRACT(EPOCH FROM (NOW() - window_start)) < 3600
-              AND ${data.completed}::boolean
+              AND ${isCompleted}::boolean
             ) AS is_limited
           FROM state
         ),
         quest_upd AS (
           UPDATE quests
-          SET completed = ${data.completed}
+          SET completed = ${isCompleted}
           WHERE quest_id = ${quest_id}
             AND NOT (SELECT is_limited FROM derived)
           RETURNING quest_id
@@ -73,12 +79,12 @@ export async function PATCH(
         rl_values AS (
           SELECT
             CASE
-              WHEN NOT ${data.completed}::boolean         THEN GREATEST(current_count - 1, 0)
+              WHEN NOT ${isCompleted}::boolean         THEN GREATEST(current_count - 1, 0)
               WHEN current_count >= ${RATE_LIMIT} AND one_hour_passed THEN 1
               ELSE                                             current_count + 1
             END AS new_count,
             CASE
-              WHEN NOT ${data.completed}::boolean THEN window_start
+              WHEN NOT ${isCompleted}::boolean THEN window_start
               ELSE                                    NOW()
             END AS new_window_start
           FROM derived
@@ -94,7 +100,7 @@ export async function PATCH(
         coins_upd AS (
           UPDATE characters
           SET coins = GREATEST(
-            coins + CASE WHEN ${data.completed}::boolean THEN 1 ELSE -1 END,
+            coins + CASE WHEN ${isCompleted}::boolean THEN 1 ELSE -1 END,
             0
           )
           WHERE user_id = ${userId}
@@ -108,30 +114,36 @@ export async function PATCH(
     `;
 
     if (result[0].is_limited) throw new Error("limit");
-    if (!result[0].quest_id)  throw new Error("Server error. Please try later.");
+    if (!result[0].quest_id) throw new Error("Server error. Please try later.");
 
-    return NextResponse.json({ success: true, coins: Number(result[0].coins) });
+    return { success: true, coins: Number(result[0].coins) };
   } catch (error) {
-    return NextResponse.json({ error: (error as Error).message });
+    return { error: (error as Error).message };
   }
 }
 
-export async function DELETE(
-  request: Request,
-  { params }: { params: Promise<{ quest_id: string }> },
-) {
+export async function deleteQuest(quest_id: number, cursor: number) {
   try {
-    const userId = await checkAuth(request);
-    const { quest_id } = await params;
-    if (quest_id === undefined) throw new Error("Undefined quest id");
+    const userId = await checkAuth();
+    if (!quest_id|| !cursor) return { err: "Undefined quest" };
 
-    await sql`
+    const r = await sql`
+    WITH 
+    fetch_cursor AS (
+    SELECT * FROM quests 
+    WHERE user_id = ${userId} AND quest_id = ${cursor - 1} LIMIT 1
+    ),
+    delete_quest AS (
       DELETE FROM quests
       WHERE quest_id = ${quest_id}
-      AND user_id = ${userId}`;
+      AND user_id = ${userId}
+    )
+    SELECT * FROM fetch_cursor`;
 
-    return NextResponse.json({ success: true });
-  } catch (error) {
-    return NextResponse.json({ error: String(error) });
+
+    return { success: true, lastQuest: r[0] as ListType };
+  } catch (err) {
+    console.log((err as Error).message);
+    return { err: "An unexpected error occurred. Please try again." };
   }
 }

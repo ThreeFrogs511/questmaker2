@@ -2,8 +2,8 @@ import { create } from 'zustand'
 import { ListType } from "@/types/types";
 
 interface UseJournalStore {
-    allQuests: Array<ListType> | null;
-    setAllQuests: (q: Array<ListType>) => void;
+    questsCache: Array<ListType> | null;
+    setQuestsCache: (q: Array<ListType>) => void;
     displayedQuests : Array<ListType> | null;
     setDisplayedQuests : (dq : Array<ListType>) => void;
     whichPage : number;
@@ -32,28 +32,32 @@ interface UseJournalStore {
     removeFilter: (f:string) => void;
     resetFilter : () => void;
 
-    status: "All" | "Active" | "Archived";
-    setStatus: (st: "All" | "Active" | "Archived") => void
+    status: "" | "Active" | "Archived";
+    setStatus: (st: "" | "Active" | "Archived") => void;
+
+    nbOfQuestsTotal:number;
+    setNbOfQuestsTotal: (nb:number) => void;
 }
 
 
 export const useJournalStore = create<UseJournalStore>((set) => ({
-    allQuests: null,
+    questsCache: null,
     displayedQuests: null,
+
     whichPage:2,
-    setAllQuests : (q) => set({allQuests : q}),
+    setQuestsCache : (q) => set({questsCache : q}),
     setDisplayedQuests : (dq) => set({displayedQuests: dq}),
     setWhichPage: (delta) => set((s) => ({whichPage: s.whichPage + delta})),
     resetPage : (n) => set({whichPage:n}),
     journalError:'',
     setJournalError : (err) => set({journalError:err}),
     addNewQuest: (nq) => set((s) => {
-        if (!s.allQuests) return s;
+        if (!s.questsCache) return s;
         return {
-            allQuests: s.allQuests
+            questsCache: s.questsCache
         };
     }),
-    resetQuests: () => set({allQuests:[]}),
+    resetQuests: () => set({questsCache:[]}),
     areQuestsLoaded: false,
     setAreQuestsLoaded: (b) => set({areQuestsLoaded: b}),
     errorAnim:false,
@@ -73,6 +77,10 @@ export const useJournalStore = create<UseJournalStore>((set) => ({
     removeFilter: (f) => set((state) => ({filter: state.filter.filter(n => n !== f) })),
     resetFilter: () => set({filter: []}),
 
-    status: "All",
-    setStatus: (st) => set({status: st})
+    status: "",
+    setStatus: (st) => set({status: st}),
+
+    nbOfQuestsTotal: 0,
+    setNbOfQuestsTotal : (nb) => set({nbOfQuestsTotal:nb})
+
 }))

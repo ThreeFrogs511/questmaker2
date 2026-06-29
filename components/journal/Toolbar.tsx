@@ -1,12 +1,12 @@
 "use client";
 import { useEffect, useState } from "react";
-import { Button, Input } from "pixel-retroui";
-import Quest from "@/classes/Quest";
+import { Button } from "pixel-retroui";
+import { insertQuest } from "@/lib/quests/questActions";
 import { Quest as QuestType } from "@/types/types";
 import { useJournalStore } from "@/stores/useJournalStore";
 import { useCharacterStore } from "@/stores/useCharacterStore";
 import localFont from "next/font/local";
-import { Plus, Search } from "lucide-react";
+import { Plus, Search, Info } from "lucide-react";
 import useSound from "use-sound";
 const retroGaming = localFont({ src: "../../public/fonts/retro_gaming.ttf" });
 
@@ -15,28 +15,37 @@ export default function Toolbar({
 }: {
   loadQuests: (
     page: number,
-    statuses: "All" | "Active" | "Archived",
+    statuses: "" | "Active" | "Archived",
     filter: string[],
+    cursor: number,
   ) => void;
 }) {
   //store imports
   const character = useCharacterStore((state) => state.character);
-  const allQuests = useJournalStore((state) => state.allQuests);
+  const questsCache = useJournalStore((state) => state.questsCache);
   const displayedQuests = useJournalStore((state) => state.displayedQuests);
   const setDisplayedQuests = useJournalStore(
     (state) => state.setDisplayedQuests,
   );
-  const setAllQuests = useJournalStore((state) => state.setAllQuests);
+  const setQuestsCache = useJournalStore((state) => state.setQuestsCache);
   const journalError = useJournalStore((state) => state.journalError);
   const setJournalError = useJournalStore((state) => state.setJournalError);
   const [error] = useSound("/sounds/error.mp3");
   const setErrorAnim = useJournalStore((state) => state.setErrorAnim);
   const errorAnim = useJournalStore((state) => state.errorAnim);
   const setPage = useJournalStore((state) => state.setPage);
+  const nbOfPages = useJournalStore((state) => state.numberOfPages);
+  const lastQuestId = useJournalStore((state) => state.lastQuestId);
+  const setLastQuestId = useJournalStore((state) => state.setLastQuestId);
 
-  const questsStatus = ["All", "Active", "Archived"];
+  const questsStatus = ["Active", "Archived"];
   const setAreQuestsLoaded = useJournalStore(
     (state) => state.setAreQuestsLoaded,
+  );
+
+  const nbOfQuestsTotal = useJournalStore((state) => state.nbOfQuestsTotal);
+  const setNbOfQuestsTotal = useJournalStore(
+    (state) => state.setNbOfQuestsTotal,
   );
 
   const [searchOpen, setSearchOpen] = useState(false);
@@ -46,36 +55,52 @@ export default function Toolbar({
   const setStatus = useJournalStore((state) => state.setStatus);
 
   async function submitQuest() {
+    setJournalError("");
+    setSearchOpen(false);
+
     const value = (document.getElementById("quest-input") as HTMLInputElement)
       .value;
-    if (!value || value === "") return;
-    const quest = new Quest();
-    const feedback: { success?: boolean; err?: boolean; quest?: QuestType } =
-      await quest.insert(value);
+    if (!value || value === "") {
+      setJournalError("You can't submit an empty quest.");
+      return;
+    }
+
+    //If "Archived" status filter is on, the user can add
+    //a completed quest directly, else it's false by default;
+
+    const feedback = await insertQuest(
+      value,
+      status === "Archived" ? true : false,
+    );
 
     if (feedback.success && feedback.quest) {
-      setAreQuestsLoaded(false);
       setPage(1);
-      setStatus("All");
-      addNewQuestDynamically(feedback.quest);
+      updateListDynamicallyAfterNewQuest(feedback.quest);
+      setNbOfQuestsTotal(Number(nbOfQuestsTotal) + 1);
+
+      if (nbOfPages > 1) {
+        const newLastQuestId = lastQuestId + 1;
+        setLastQuestId(newLastQuestId);
+      }
+
       (document.getElementById("quest-input") as HTMLInputElement).value = "";
     } else {
       setJournalError("Server error. Please try again later.");
     }
   }
 
-  function addNewQuestDynamically(newQuest: QuestType) {
-    const q = allQuests ? [...allQuests] : [];
-    q.unshift(newQuest);
-    q.pop();
-    setAllQuests(q)
-    setDisplayedQuests(q);
-  };
+  function updateListDynamicallyAfterNewQuest(newQuest: QuestType) {
+    const q = questsCache ? [...questsCache] : [];
 
-  function search(searchInput:string) {
-    const q = allQuests ? [...allQuests] : [];
-    const newList = q.filter((n) => n.body?.includes(searchInput));
-    setDisplayedQuests([...newList]);
+    if (nbOfPages > 1 || nbOfQuestsTotal === 15) {
+      q.unshift(newQuest);
+      q.pop();
+      setQuestsCache(q);
+    } else {
+      q.unshift(newQuest);
+      setQuestsCache(q);
+    }
+    setDisplayedQuests(q);
   }
 
   useEffect(() => {
@@ -92,36 +117,46 @@ export default function Toolbar({
 
   useEffect(() => {
     if (searchInput === "") {
-      setDisplayedQuests(allQuests ? [...allQuests] : []);
+      setDisplayedQuests(questsCache ? [...questsCache] : []);
       return;
-    };
-    search(searchInput);
-  }, [searchInput, searchOpen])
+    }
+    const q = questsCache ? [...questsCache] : [];
+    const newList = q.filter((n) => n.body?.startsWith(searchInput));
+    setDisplayedQuests([...newList]);
+  }, [searchInput, searchOpen]);
 
   return (
     <>
       <section className="flex flex-col gap-1  w-[95%] mx-auto">
         <div
-          className={`flex items-center gap-2 pb-5 mb-2 border-b-2! border-neutral-900! ${retroGaming.className}`}
+          className={`flex flex-col gap-2 pb-2 mb-2 border-b-2! border-neutral-900! ${retroGaming.className}`}
         >
-          <input
-            type="text"
-            id="quest-input"
-            placeholder="Your new quest..."
-            maxLength={300}
-            className="grow text-xs! border border-transparent! pl-3! outline-0! rounded bg-neutral-900 h-full! "
-          />
+          <div className="flex items-center gap-2">
+            <input
+              type="text"
+              id="quest-input"
+              placeholder="Your new quest..."
+              maxLength={300}
+              className={`${journalError === "You can't submit an empty quest." ? "grow text-xs! border pl-3! outline-0! rounded border-red-700! bg-neutral-900 h-full! " : "grow text-xs! border border-transparent! pl-3! outline-0! rounded bg-neutral-900 h-full! "}`}
+            />
 
-          {/* submit button */}
-          <Button
-            bg="black"
-            textColor="white"
-            borderColor="white"
-            className="w-1/10 md:w-1/15 h-[70%]! text-xs! flex justify-center "
-            onClick={() => submitQuest()}
+            {/* submit button */}
+            <Button
+              bg="black"
+              textColor="white"
+              borderColor="white"
+              className="w-1/10 md:w-1/15 h-[70%]! text-xs! flex justify-center "
+              onClick={() => submitQuest()}
+            >
+              <Plus />
+            </Button>
+          </div>
+          <span
+          id="error-message"
+            className={`text-red-600 min-h-5 text-sm ${errorAnim ? "error-animate" : ""}`}
           >
-            <Plus />
-          </Button>
+            {journalError ==="" ? "" : <p className="flex! items-center gap-3 "> <Info size={18} /> {journalError}</p>}
+          </span>
         </div>
 
         <div
@@ -137,9 +172,11 @@ export default function Toolbar({
                 onPointerDown={() => {
                   setAreQuestsLoaded(false);
                   setPage(1);
-                  setStatus(s as "All" | "Active" | "Archived");
+                  setStatus(
+                    status === s ? "" : (s as "" | "Active" | "Archived"),
+                  );
                 }}
-                className={`${status === s ? "border! border-amber-300! text-amber-300 cursor-pointer rounded p-1 mx-1 max-h-full" : "border! cursor-pointer rounded p-1 mx-1 max-h-full"}`}
+                className={`${status === s ? "border! border-amber-300! text-amber-300 cursor-pointer rounded p-1 mx-1 max-h-full" : "border! cursor-pointer rounded border-neutral-900! text-neutral-900! p-1 mx-1 max-h-full"}`}
                 key={index}
               >
                 {s}
@@ -165,8 +202,7 @@ export default function Toolbar({
                     className="bg-transparent outline-none w-full px-2"
                     value={searchInput}
                     onChange={(e) => {
-                      setSearchInput(e.target.value)
-                      search(searchInput);
+                      setSearchInput(e.target.value);
                     }}
                   />
                 </div>
@@ -176,17 +212,11 @@ export default function Toolbar({
                 className="cursor-pointer"
                 onPointerDown={() => {
                   searchOpen && setSearchInput("");
-                  setSearchOpen((prev) => !prev)
+                  setSearchOpen((prev) => !prev);
                 }}
               />
             </span>
           </div>
-
-          <span
-            className={`text-red-600 text-sm ${errorAnim ? "error-animate" : ""}`}
-          >
-            {journalError}
-          </span>
         </div>
       </section>
     </>

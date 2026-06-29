@@ -2,6 +2,7 @@
 import { useEffect, useTransition } from "react";
 import Quest from "@/components/journal/Quest";
 import Toolbar from "@/components/journal/Toolbar";
+import { Quest as QuestType } from "@/types/types";
 import { useJournalStore } from "@/stores/useJournalStore";
 import localFont from "next/font/local";
 import { fetchQuests } from "@/lib/quests/fetchQuests";
@@ -11,6 +12,10 @@ import SkeletonQuest from "@/components/journal/SkeletonQuest";
 const retroGaming = localFont({ src: "../../public/fonts/retro_gaming.ttf" });
 
 export default function Journal() {
+
+  const setQuestsCache = useJournalStore((state) => state.setQuestsCache);
+  const setDisplayedQuests = useJournalStore((state) => state.setDisplayedQuests);
+
   const setJournalError = useJournalStore((state) => state.setJournalError);
   const displayedQuests = useJournalStore((state) => state.displayedQuests);
   const areQuestsLoaded = useJournalStore((state) => state.areQuestsLoaded);
@@ -18,9 +23,16 @@ export default function Journal() {
     (state) => state.setAreQuestsLoaded,
   );
   const page = useJournalStore((state) => state.page);
+  const numberOfPages = useJournalStore((state) => state.numberOfPages)
   const setNumberOfPages = useJournalStore((state) => state.setNumberOfPages);
   const status = useJournalStore((state) => state.status);
   const filter = useJournalStore((state) => state.filter);
+
+  //cursor
+  const setLastQuestId = useJournalStore((state) => state.setLastQuestId);
+
+  const nbOfQuestsTotal = useJournalStore((state) => state.nbOfQuestsTotal);
+  const setNbOfQueststotal = useJournalStore((state) => state.setNbOfQuestsTotal);
 
   const [isPending, startTransition] = useTransition();
 
@@ -32,55 +44,46 @@ export default function Journal() {
 
   function loadQuests(
     page: number,
-    statuses: "All" | "Active" | "Archived",
+    statuses: "" | "Active" | "Archived",
     filter: string[],
   ) {
     startTransition(async () => {
-      if (page <= 1) {
-        const data = await fetchQuests(1, statuses, filter);
-        if (data.err || !data.quests) {
-          setJournalError(data.err);
-          return;
-        }
-
-        const rawQuests = data.quests ?? [];
-
-        const setAllQuests = useJournalStore.getState().setAllQuests;
-        const setDisplayedQuests =
-          useJournalStore.getState().setDisplayedQuests;
-        setAllQuests(rawQuests);
-
-        setDisplayedQuests(rawQuests);
-        setNumberOfPages(data.pages ?? 0);
-        setAreQuestsLoaded(true);
+      const data = await fetchQuests(page, statuses, filter);
+      if (data.err || !data.quests) {
+        setJournalError(data.err);
         return;
-      } else if (page > 1) {
-        const data = await fetchQuests(page, statuses, filter);
-        if (data.err || !data.quests) {
-          setJournalError(data.err);
-          return;
-        }
+      };
 
-        const rawQuests = data.quests ?? [];
+      const rawQuests: QuestType[] = data.quests ?? [];
+      setQuestsCache(rawQuests);
+      setDisplayedQuests(rawQuests);
 
-        const setAllQuests = useJournalStore.getState().setAllQuests;
-        const setDisplayedQuests =
-          useJournalStore.getState().setDisplayedQuests;
-        setAllQuests(rawQuests);
+      setNbOfQueststotal(data.count);
 
-        setDisplayedQuests(rawQuests);
-        setNumberOfPages(data.pages ?? 1);
-        setAreQuestsLoaded(true);
-        return;
-      }
+      //adding a cursor to know which quest to add in the updated list when
+      //the user remove one
+      if (rawQuests.length > 0) {
+        setLastQuestId(rawQuests.at(-1)?.quest_id ?? 0);
+      };
+
+      setAreQuestsLoaded(true);
+      return;
     });
-  }
+  };
 
+  //hydrating the quests after database query
   useEffect(() => {
     if (areQuestsLoaded) return;
     loadQuests(page, status, filter);
     listContainer?.scrollTo(0, 0);
-  }, [page, filter, status]);
+  }, [page, filter, status, areQuestsLoaded]);
+
+  //calculating the number of pages in real-time
+  //if a user add or remove a quest, the number of pages can be impacted 
+  useEffect(() => {
+    setNumberOfPages(nbOfQuestsTotal ? Math.ceil(nbOfQuestsTotal / 15) : 1);
+  }, [nbOfQuestsTotal])
+
 
   return (
     <>
@@ -90,7 +93,7 @@ export default function Journal() {
       {displayedQuests && !isPending ? (
         <div
           id="quests-list"
-          className={`scrollingContainer h-full!  flex flex-col gap-2 ${retroGaming.className}`}
+          className={`scrollingContainer h-full! flex flex-col gap-2 ${retroGaming.className}`}
         >
           {displayedQuests.length > 0 ? (
             displayedQuests?.map((item, index) => (

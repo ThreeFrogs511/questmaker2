@@ -1,6 +1,6 @@
 "use client";
 import { useJournalStore } from "@/stores/useJournalStore";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 
 
@@ -13,7 +13,7 @@ export default function Pages() {
   const numberOfPages = useJournalStore((state) => state.numberOfPages);
 
 
-  function calculatingNumberOfPagesSamples() {
+  function calculatingNumberOfPages() {
     switch (numberOfPages) {
       case 1:
         return [];
@@ -37,8 +37,12 @@ export default function Pages() {
     }
   };
 
-  const [pagesNumber] = useState(calculatingNumberOfPagesSamples);
+  const [pagesNumber, setPagesNumber] = useState(calculatingNumberOfPages);
 
+  //update the number of pages in real-time based on the number of quests 
+  useEffect(() => {
+    setPagesNumber(calculatingNumberOfPages());
+  }, [numberOfPages]);
 
   return (
     <div className="w-full flex justify-center ">

@@ -2,7 +2,7 @@
 import { sql } from "@/server/connexion";
 import { checkAuth } from "@/lib/auth/checkAuth";
 
-type Statuses = "All" | "Active" | "Archived";
+type Statuses = "" | "Active" | "Archived";
 
 export async function fetchQuests(
   page: number = 1,
@@ -21,7 +21,6 @@ export async function fetchQuests(
     const numberOfQuestsPerPage = 15;
     const offset = page * numberOfQuestsPerPage - numberOfQuestsPerPage;
 
-    //  ${statusesOn ? sql`AND completed  = ${typeOfStatus === "Active"}`}
 
     r = await sql`
           WITH qst AS (
@@ -47,22 +46,20 @@ export async function fetchQuests(
     if (!r) return { err: "Error while fetching user's quests" };
     if (r.length === 0) return { success: true, quests: [], pages: 1 };
 
-    console.log(r);
     const numberOfPages = Math.ceil(r[0].count / numberOfQuestsPerPage);
-    console.log(numberOfPages);
     const allQuests = r.map((n) => {
       return {
-        quest_id: n.quest_id,
-        body: n.body,
-        completed: n.completed,
-        user_id: n.user_id,
+        quest_id: Number(n.quest_id),
+        body: String(n.body),
+        completed: Boolean(n.completed),
+        user_id: Number(n.user_id),
       };
     });
 
     return {
       success: true,
       quests: allQuests,
-      pages: numberOfPages,
+      count:r[0].count,
     };
   } catch (err) {
     console.log((err as Error).message);
