@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import postgres from "postgres";
 import * as jose from "jose";
+import { NextRequest } from "next/server";
 import { DELETE } from "../../app/api/quests/[quest_id]/route";
 import { sql } from "@/server/connexion";
 
@@ -26,11 +27,11 @@ async function makeTestJwt(userId: number): Promise<string> {
 function makeReq(
   questId: string,
   jwt?: string,
-): [Request, { params: Promise<{ quest_id: string }> }] {
+): [NextRequest, { params: Promise<{ quest_id: string }> }] {
   const headers: Record<string, string> = {};
   if (jwt) headers["cookie"] = `auth=${jwt}`;
   return [
-    new Request(`http://localhost/api/quests/${questId}`, {
+    new NextRequest(`http://localhost/api/quests/${questId}`, {
       method: "DELETE",
       headers,
     }),

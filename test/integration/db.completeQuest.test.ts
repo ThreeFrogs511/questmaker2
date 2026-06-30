@@ -2,6 +2,7 @@ import test from "node:test";
 import assert from "node:assert/strict";
 import postgres from "postgres";
 import * as jose from "jose";
+import { NextRequest } from "next/server";
 import { PATCH } from "../../app/api/quests/[quest_id]/route";
 import { sql } from "@/server/connexion";
 
@@ -27,11 +28,11 @@ function makeReq(
   questId: string,
   body: object,
   jwt?: string,
-): [Request, { params: Promise<{ quest_id: string }> }] {
+): [NextRequest, { params: Promise<{ quest_id: string }> }] {
   const headers: Record<string, string> = { "content-type": "application/json" };
   if (jwt) headers["cookie"] = `auth=${jwt}`;
   return [
-    new Request(`http://localhost/api/quests/${questId}`, {
+    new NextRequest(`http://localhost/api/quests/${questId}`, {
       method: "PATCH",
       headers,
       body: JSON.stringify(body),
