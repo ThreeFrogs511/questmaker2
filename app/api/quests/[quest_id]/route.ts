@@ -132,6 +132,6 @@ export async function DELETE(
 
     return NextResponse.json({ success: true });
   } catch (error) {
-    return NextResponse.json({ error: String(error) });
+    return NextResponse.json({ error: (error as Error).message });
   }
 }

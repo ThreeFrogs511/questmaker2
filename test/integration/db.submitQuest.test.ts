@@ -79,7 +79,7 @@ test("POST /api/quests inserts row when input is valid", async () => {
     assert.equal(res.status, 200);
 
     const json = await res.json();
-    if (json.error) throw new Error(`API error: ${json.error}`);
+    if (json.err) throw new Error(`API error: ${json.err}`);
 
     assert.equal(json.success, true);
     assert.equal(json.quest.body, "test value");
