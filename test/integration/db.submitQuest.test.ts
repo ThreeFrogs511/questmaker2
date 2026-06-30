@@ -46,7 +46,7 @@ test("POST /api/quests rejects missing auth token", async () => {
   assert.equal(res.status, 200);
 
   const json = await res.json();
-  assert.equal(json.error, "Not authenticated");
+  assert.equal(json.err, "Not authenticated");
 });
 
 test("POST /api/quests rejects missing completed", async () => {
@@ -55,7 +55,7 @@ test("POST /api/quests rejects missing completed", async () => {
   assert.equal(res.status, 200);
 
   const json = await res.json();
-  assert.equal(json.error, "error while sending quest completion state");
+  assert.equal(json.err, "error while sending quest completion state");
 });
 
 test("POST /api/quests rejects empty body", async () => {
@@ -64,7 +64,7 @@ test("POST /api/quests rejects empty body", async () => {
   assert.equal(res.status, 200);
 
   const json = await res.json();
-  assert.equal(json.error, "quests can not be empty");
+  assert.equal(json.err, "quests can not be empty");
 });
 
 test("POST /api/quests inserts row when input is valid", async () => {

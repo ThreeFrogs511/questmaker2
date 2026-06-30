@@ -3,10 +3,7 @@ import { sql } from "@/server/connexion";
 import { checkAuth } from "@/lib/auth/checkAuth";
 import { ListType } from "@/types/types";
 
-
-
-
-export async function insertQuest(body: string, isCompleted:boolean) {
+export async function insertQuest(body: string, isCompleted: boolean) {
   try {
     const user_id = await checkAuth();
 
@@ -125,7 +122,7 @@ export async function completeQuest(quest_id: number, isCompleted: boolean) {
 export async function deleteQuest(quest_id: number, cursor: number) {
   try {
     const userId = await checkAuth();
-    if (!quest_id|| !cursor) return { err: "Undefined quest" };
+    if (!quest_id || !cursor) return { err: "Undefined quest" };
 
     const r = await sql`
     WITH 
@@ -139,7 +136,6 @@ export async function deleteQuest(quest_id: number, cursor: number) {
       AND user_id = ${userId}
     )
     SELECT * FROM fetch_cursor`;
-
 
     return { success: true, lastQuest: r[0] as ListType };
   } catch (err) {

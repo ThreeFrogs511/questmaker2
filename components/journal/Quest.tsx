@@ -21,7 +21,6 @@ export default function Quest({ item }: { item: ListType }) {
   const setPage = useJournalStore((state) => state.setPage);
   const status = useJournalStore((state) => state.status);
   const numberOfPages = useJournalStore((state) => state.numberOfPages);
-  const setNumberOfPages = useJournalStore((state) => state.setNumberOfPages);
   const nbOfQuestsTotal = useJournalStore((state) => state.nbOfQuestsTotal);
   const setNbOfQuestsTotal = useJournalStore((state) => state.setNbOfQuestsTotal);
   const lastQuestId = useJournalStore((state) => state.lastQuestId);
@@ -178,7 +177,7 @@ export default function Quest({ item }: { item: ListType }) {
       data-id={item.quest_id}
       data-completion={item.completed}
       data-user-id={item?.user_id}
-      className="flex justify-between items-center border-neutral-900!  md:py-5! px-2! mb-3! md:mx-5!"
+      className="flex justify-between items-center gap-2 border-neutral-900!  md:py-5! px-2! py-5! mb-3! md:mx-5! min-h-25 max-h-25 md:min-h-20 md:max-h-20"
     >
       <div className="flex items-center gap-3">
         <span

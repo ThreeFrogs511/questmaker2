@@ -3,7 +3,6 @@ import { useJournalStore } from "@/stores/useJournalStore";
 import { useEffect, useState } from "react";
 import { ChevronsLeft, ChevronsRight } from "lucide-react";
 
-
 export default function Pages() {
   const setAreQuestsLoaded = useJournalStore(
     (state) => state.setAreQuestsLoaded,
@@ -11,7 +10,6 @@ export default function Pages() {
   const page = useJournalStore((state) => state.page);
   const setPage = useJournalStore((state) => state.setPage);
   const numberOfPages = useJournalStore((state) => state.numberOfPages);
-
 
   function calculatingNumberOfPages() {
     switch (numberOfPages) {
@@ -35,17 +33,17 @@ export default function Pages() {
         }
         return arr;
     }
-  };
+  }
 
   const [pagesNumber, setPagesNumber] = useState(calculatingNumberOfPages);
 
-  //update the number of pages in real-time based on the number of quests 
+  //update the number of pages in real-time based on the number of quests
   useEffect(() => {
     setPagesNumber(calculatingNumberOfPages());
   }, [numberOfPages]);
 
   return (
-    <div className="w-full flex justify-center ">
+    <div className="w-full flex justify-center mb-5">
       <div className="w-full xl:w-[25%]! xl:min-w-[25%]! grid grid-rows-1 grid-cols-3 gap-2">
         <button
           className={`${page <= 1 ? "" : "flex justify-center cursor-pointer hover:text-amber-300"}`}
@@ -54,7 +52,7 @@ export default function Pages() {
             setPage(page - 1);
           }}
         >
-          {page <= 1 ? " " : <ChevronsLeft />}
+          {page <= 1 ? " " : <ChevronsLeft className="hover:text-amber-300" />}
         </button>
 
         <ul className="flex justify-center">
@@ -79,7 +77,7 @@ export default function Pages() {
             setPage(page + 1);
           }}
         >
-          {page >= numberOfPages ? "" : <ChevronsRight />}
+          {page >= numberOfPages ? "" : <ChevronsRight className="hover:text-amber-300"/>}
         </button>
       </div>
     </div>

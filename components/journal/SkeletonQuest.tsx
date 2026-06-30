@@ -8,7 +8,7 @@ export default function SkeletonQuest() {
       borderColor="white"
       shadowColor="transparent"
       textColor="white"
-      className="flex justify-between items-center md:py-5! px-2! mb-3! md:mx-5!"
+      className="flex justify-between items-center md:py-5! px-2! py-5! mb-3! md:mx-5!"
     >
       <div className="flex items-center gap-3 w-full">
         {/* Fake checkbox */}

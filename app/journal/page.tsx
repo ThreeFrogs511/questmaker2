@@ -8,6 +8,7 @@ import localFont from "next/font/local";
 import { fetchQuests } from "@/lib/quests/fetchQuests";
 import Pages from "@/components/journal/Pages";
 import SkeletonQuest from "@/components/journal/SkeletonQuest";
+import { start } from "node:repl";
 
 const retroGaming = localFont({ src: "../../public/fonts/retro_gaming.ttf" });
 
@@ -34,6 +35,7 @@ export default function Journal() {
   const nbOfQuestsTotal = useJournalStore((state) => state.nbOfQuestsTotal);
   const setNbOfQueststotal = useJournalStore((state) => state.setNbOfQuestsTotal);
 
+  const searchInput = useJournalStore((state) => state.searchInput);
   const [isPending, startTransition] = useTransition();
 
   const skeletonUINbOfQuest = [
@@ -46,11 +48,12 @@ export default function Journal() {
     page: number,
     statuses: "" | "Active" | "Archived",
     filter: string[],
+    searchInput:string
   ) {
     startTransition(async () => {
-      const data = await fetchQuests(page, statuses, filter);
+      const data = await fetchQuests(page, statuses, filter, searchInput);
       if (data.err || !data.quests) {
-        setJournalError(data.err);
+        setJournalError(data.err ?? "Internal error. Please try again.");
         return;
       };
 
@@ -74,7 +77,7 @@ export default function Journal() {
   //hydrating the quests after database query
   useEffect(() => {
     if (areQuestsLoaded) return;
-    loadQuests(page, status, filter);
+    loadQuests(page, status, filter, searchInput);
     listContainer?.scrollTo(0, 0);
   }, [page, filter, status, areQuestsLoaded]);
 
@@ -87,13 +90,13 @@ export default function Journal() {
 
   return (
     <>
-      <Toolbar loadQuests={loadQuests} />
+      <Toolbar startTransition={startTransition}/>
 
       {/* the list */}
       {displayedQuests && !isPending ? (
         <div
           id="quests-list"
-          className={`scrollingContainer h-full! flex flex-col gap-2 ${retroGaming.className}`}
+          className={`scrollingContainer h-full! flex flex-col grow-0! gap-2 ${retroGaming.className}`}
         >
           {displayedQuests.length > 0 ? (
             displayedQuests?.map((item, index) => (

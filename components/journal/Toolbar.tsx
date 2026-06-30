@@ -8,17 +8,13 @@ import { useCharacterStore } from "@/stores/useCharacterStore";
 import localFont from "next/font/local";
 import { Plus, Search, Info } from "lucide-react";
 import useSound from "use-sound";
+import { TransitionStartFunction } from "react";
 const retroGaming = localFont({ src: "../../public/fonts/retro_gaming.ttf" });
 
 export default function Toolbar({
-  loadQuests,
+  startTransition,
 }: {
-  loadQuests: (
-    page: number,
-    statuses: "" | "Active" | "Archived",
-    filter: string[],
-    cursor: number,
-  ) => void;
+  startTransition: TransitionStartFunction;
 }) {
   //store imports
   const character = useCharacterStore((state) => state.character);
@@ -48,8 +44,9 @@ export default function Toolbar({
     (state) => state.setNbOfQuestsTotal,
   );
 
+  const searchInput = useJournalStore((state) => state.searchInput);
+  const setSearchInput = useJournalStore((state) => state.setSearchInput);
   const [searchOpen, setSearchOpen] = useState(false);
-  const [searchInput, setSearchInput] = useState("");
 
   const status = useJournalStore((state) => state.status);
   const setStatus = useJournalStore((state) => state.setStatus);
@@ -115,16 +112,13 @@ export default function Toolbar({
     clearTimeout(t);
   }, [journalError]);
 
+  //reset the displayed list properly if a user closes the search bar
   useEffect(() => {
-    if (searchInput === "") {
-      setDisplayedQuests(questsCache ? [...questsCache] : []);
-      return;
+    if (searchInput.trim() !== "" && !searchOpen) {
+      setSearchInput("");
+      setAreQuestsLoaded(false);
     }
-    const q = questsCache ? [...questsCache] : [];
-    const newList = q.filter((n) => n.body?.startsWith(searchInput));
-    setDisplayedQuests([...newList]);
-  }, [searchInput, searchOpen]);
-
+  }, [searchOpen]);
   return (
     <>
       <section className="flex flex-col gap-1  w-[95%] mx-auto">
@@ -135,8 +129,9 @@ export default function Toolbar({
             <input
               type="text"
               id="quest-input"
+              onPointerDown={() => setSearchOpen(false)}
               placeholder="Your new quest..."
-              maxLength={300}
+              maxLength={100}
               className={`${journalError === "You can't submit an empty quest." ? "grow text-xs! border pl-3! outline-0! rounded border-red-700! bg-neutral-900 h-full! " : "grow text-xs! border border-transparent! pl-3! outline-0! rounded bg-neutral-900 h-full! "}`}
             />
 
@@ -152,21 +147,36 @@ export default function Toolbar({
             </Button>
           </div>
           <span
-          id="error-message"
+            id="error-message"
             className={`text-red-600 min-h-5 text-sm ${errorAnim ? "error-animate" : ""}`}
           >
-            {journalError ==="" ? "" : <p className="flex! items-center gap-3 "> <Info size={18} /> {journalError}</p>}
+            {journalError === "" ? (
+              ""
+            ) : (
+              <p className="flex! items-center gap-3 ">
+                {" "}
+                <Info size={18} /> {journalError}
+              </p>
+            )}
           </span>
         </div>
 
         <div
           id="tools"
-          className="grid grid-cols-7 items-center gap-1 border-b-2! border-neutral-900! pb-2 mb-5 "
+          className="grid grid-cols-7 items-center gap-1 border-b-2! border-neutral-900! pb-3 mb-5 "
         >
-          <span id="coins">
-            coins : <span className="text-amber-300">{character?.coins}</span>
+          <span id="coins-wide-screen" className=" hidden! md:block!">
+            coins: <span className="text-amber-300">{character?.coins}</span>
           </span>
-          <div id="statuses" className="flex col-span-3">
+
+          <span id="coins-smartphone" className="md:hidden!">
+            c: <span className="text-amber-300">{character?.coins}</span>
+          </span>
+
+          <div
+            id="statuses"
+            className=" flex md:flex-row md:justify-center flex-col items-center col-span-3  gap-2 md:gap-0"
+          >
             {questsStatus.map((s, index) => (
               <span
                 onPointerDown={() => {
@@ -176,7 +186,7 @@ export default function Toolbar({
                     status === s ? "" : (s as "" | "Active" | "Archived"),
                   );
                 }}
-                className={`${status === s ? "border! border-amber-300! text-amber-300 cursor-pointer rounded p-1 mx-1 max-h-full" : "border! cursor-pointer rounded border-neutral-900! text-neutral-900! p-1 mx-1 max-h-full"}`}
+                className={`${status === s ? " border-amber-300! text-amber-300!" : "border-neutral-900! text-neutral-900!"} border! max-w-[50%] min-w-[50%]  md:max-w-[25%] md:min-w-[25%] cursor-pointer rounded p-1 mx-1 max-h-full text-center text-xs overflow-hidden`}
                 key={index}
               >
                 {s}
@@ -184,7 +194,10 @@ export default function Toolbar({
             ))}
           </div>
 
-          <div id="sb-container" className="justify-end col-span-3 flex">
+          <div
+            id="sb-container"
+            className="justify-end col-span-3 flex shrink-0!"
+          >
             <span
               id="search-bar"
               className="flex justify-end items-center bg-neutral-900 p-2 rounded-full"
@@ -203,18 +216,21 @@ export default function Toolbar({
                     value={searchInput}
                     onChange={(e) => {
                       setSearchInput(e.target.value);
+                      setPage(1);
+                      setAreQuestsLoaded(false);
                     }}
                   />
                 </div>
               </div>
-              <Search
-                size={22}
-                className="cursor-pointer"
+
+              <div
+                className={`cursor-pointer ${searchOpen ? "w-[75%] flex justify-end  md:w-fit" : ""}`}
                 onPointerDown={() => {
-                  searchOpen && setSearchInput("");
                   setSearchOpen((prev) => !prev);
                 }}
-              />
+              >
+                <Search size={22} />
+              </div>
             </span>
           </div>
         </div>

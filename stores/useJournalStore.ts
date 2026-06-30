@@ -37,6 +37,9 @@ interface UseJournalStore {
 
     nbOfQuestsTotal:number;
     setNbOfQuestsTotal: (nb:number) => void;
+
+    setSearchInput : (str:string) => void;
+    searchInput:string;
 }
 
 
@@ -81,6 +84,9 @@ export const useJournalStore = create<UseJournalStore>((set) => ({
     setStatus: (st) => set({status: st}),
 
     nbOfQuestsTotal: 0,
-    setNbOfQuestsTotal : (nb) => set({nbOfQuestsTotal:nb})
+    setNbOfQuestsTotal : (nb) => set({nbOfQuestsTotal:nb}),
+
+    searchInput:"",
+    setSearchInput: (str) => set({searchInput:str})
 
 }))

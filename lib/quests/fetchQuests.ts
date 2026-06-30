@@ -8,12 +8,15 @@ export async function fetchQuests(
   page: number = 1,
   status: Statuses,
   filter: string[],
+  searchInput:string
 ) {
   try {
     const userId = await checkAuth();
 
     const statusesOn =
       status === "Active" || status === "Archived" ? true : false;
+
+    const isThereStringToSearch = (searchInput.trim() === "" || searchInput === undefined) ? false : true;
 
     let r;
 
@@ -37,9 +40,12 @@ export async function fetchQuests(
             END)`
                 : sql``
             }
-            
+            ${
+              isThereStringToSearch ? sql`AND LOWER(body) LIKE ${searchInput.trim().toLowerCase() + "%"}` : sql``
+            }
+
           )
-          SELECT quest_id, body, completed, user_id, (SELECT count(*) FROM qst) AS count FROM qst 
+          SELECT quest_id, body, completed, user_id, (SELECT count(*) FROM qst) AS count FROM qst
           ORDER BY quest_id DESC 
           ${sql`OFFSET ${offset}`} LIMIT ${numberOfQuestsPerPage}`;
 
