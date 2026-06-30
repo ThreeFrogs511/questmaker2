@@ -8,7 +8,7 @@ export default function RootLayoutClient({
 }) {
   return (
     <UserDataProvider>
-      <div className="px-3! lg:px-10! max-w-400 w-full! mx-auto h-dvh! overflow-x-hidden">
+      <div className="px-2! max-w-400 w-full! mx-auto h-dvh! overflow-x-hidden">
         {children}
       </div>
     </UserDataProvider>

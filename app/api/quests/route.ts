@@ -24,6 +24,6 @@ export async function POST(request: NextRequest) {
 
     return NextResponse.json({ success: true, quest: insertedQuest });
   } catch (err) {
-    return NextResponse.json({ error: (err as Error).message });
+    return NextResponse.json({ err: (err as Error).message });
   }
 }

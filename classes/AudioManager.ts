@@ -15,6 +15,8 @@ export default class AudioManager {
   private potionSound: Howl = new Howl({ src: ["/sounds/potion.mp3"] });
   private thumpSound: Howl =new Howl({ src: ["/sounds/dramatic-thump.mp3"], volume: 0.9 });
 
+  
+
   private backgroundMusic: Howl = new Howl({
     src: ["/music/ost2.mp3"],
     loop: true,
